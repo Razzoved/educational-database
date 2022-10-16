@@ -49,4 +49,18 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
     }
+
+    /**
+     * Function that packs the given view (given as string name) in this format:
+     * <pre>
+     * header
+     * given view
+     * footer
+     * </pre>
+     */
+    protected function wrapView(string $view, array $data) {
+        echo view('header', $data);
+        echo view($view, $data);
+        echo view('footer');
+    }
 }
