@@ -41,7 +41,7 @@ abstract class BaseController extends Controller
      * Link to the base page of parent website, if this is
      * a standalone app, set it to '\'
      */
-    private $homeURL = 'https://www.academicintegrity.eu/wp';
+    public static $homeURL = 'https://www.academicintegrity.eu/wp';
 
     /**
      * Constructor.
@@ -54,20 +54,5 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
-    }
-
-    /**
-     * Function that packs the given view (given as string name) in this format:
-     * <pre>
-     * header
-     * given view
-     * footer
-     * </pre>
-     */
-    protected function wrapView(string $view, array $data) {
-        $data['homeURL'] = $this->homeURL;
-        echo view('templates/header', $data);
-        echo view($view, $data);
-        echo view('templates/footer');
     }
 }

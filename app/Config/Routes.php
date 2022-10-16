@@ -45,6 +45,8 @@ $routes->group('/', function($routes) {
     $routes->add('(:num)', 'Materials::post/$1');
 });
 
+$routes->add('welcome', 'Welcome::index');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
