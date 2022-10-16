@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\MaterialModel;
+
 class Materials extends BaseController
 {
     public function index()
@@ -28,8 +30,8 @@ class Materials extends BaseController
         ];
 
         $data = [
-            'meta_title' => 'All materials',
-            'title' => 'All materials',
+            'meta_title' => 'Materials',
+            'title' => 'Materials',
             'posts' => $posts
         ];
 
@@ -37,10 +39,46 @@ class Materials extends BaseController
     }
 
     public function post($id) {
-        $data = [
-            'meta_title' => "Material: $id",
-            'title' => $id
-        ];
+        $model = new MaterialModel();
+        $post = $model->find($id);
+        if ($post) {
+            $data = [
+                'meta_title' => "Material: $id",
+                'title' => $id,
+                'post' => $post
+            ];
+        } else {
+            $data = [
+                'meta_title' => "Material not found",
+            ];
+        }
+
         return view('single_material', $data);
+    }
+
+    public function new() {
+        $data = [
+            'meta_title' => 'New material',
+            'title' => 'Create new material'
+        ];
+
+        if ($this->request->getPost()) {
+            echo '<pre>';
+                print_r($_POST);
+            echo '</pre>';
+            $model = new MaterialModel();
+            $model->save($_POST);
+        }
+
+        return view('new_material', $data);
+    }
+
+    public function delete($id) {
+        $model = new MaterialModel();
+        $post = $model->find($id);
+        if ($post) {
+            $model->delete($id);
+            return redirect()->to('/');
+        }
     }
 }
