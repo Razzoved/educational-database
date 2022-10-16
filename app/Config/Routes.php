@@ -45,6 +45,7 @@ $routes->group('/', function($routes) {
     $routes->add('(:num)', 'Materials::post/$1');
     $routes->add('new', 'Materials::new');
     $routes->add('delete/(:num)', 'Materials::delete/$1');
+    $routes->add('edit/(:num)', 'Materials::edit/$1');
 });
 
 $routes->add('welcome', 'Welcome::index');
