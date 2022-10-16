@@ -1,7 +1,10 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h1>This is an E-learning materials page</h1>
+<div class="container" style="margin-bottom: 5vh;">
+    <h1>Materials</h1>
+    <?= $this->include('/widgets/search_bar') ?>
+</div>
 
 <div class="container">
     <!-- Presents all materials in a nicer html --->

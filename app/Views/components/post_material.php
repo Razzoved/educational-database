@@ -1,9 +1,9 @@
-<div class="card h-100 w-90 mb-4 text-bg-light">
-    <div class="row g-0">
+<div class="card h-100 w-90 mb-4 text-bg-light" style="min-width:30vw;">
+    <div class="row g-0 m-1">
 
         <!-- draw image -->
-        <div class="col-md-2 text-center m-1" style="overflow:hidden">
-            <img src=<?= $post['img'] ?> class="image-fluid rounded" alt="Missing image" style="max-height:200px; max-width:100%; object-fit:contain;">
+        <div class="col-md-2 text-center" style="overflow:clip; max-width:100%; max-height:200px; object-fit:contain;">
+            <img src=<?= $post['img'] ?> class="img-fluid rounded" alt="Missing image">
         </div>
 
         <!-- draw body of material -->
