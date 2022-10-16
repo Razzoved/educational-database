@@ -38,6 +38,12 @@ abstract class BaseController extends Controller
     protected $helpers = [];
 
     /**
+     * Link to the base page of parent website, if this is
+     * a standalone app, set it to '\'
+     */
+    private $homeURL = 'https://www.academicintegrity.eu/wp';
+
+    /**
      * Constructor.
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
@@ -59,8 +65,9 @@ abstract class BaseController extends Controller
      * </pre>
      */
     protected function wrapView(string $view, array $data) {
-        echo view('header', $data);
+        $data['homeURL'] = $this->homeURL;
+        echo view('templates/header', $data);
         echo view($view, $data);
-        echo view('footer');
+        echo view('templates/footer');
     }
 }
