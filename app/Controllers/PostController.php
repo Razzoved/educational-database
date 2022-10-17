@@ -1,14 +1,18 @@
 <?php
+declare(strict_types = 1);
 
 namespace App\Controllers;
 
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
+
 use App\Models\MaterialModel;
+use App\Models\PostModel;
 
-class Materials extends BaseController
+class PostController extends BaseController
 {
-    public function index()
-    {
-
+    public function index() : string {
         $text = 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam quibusdam quae atque laudantium sit nisi pariatur impedit aperiam odit illo, alias saepe facere! Illum magni deserunt nemo id quis aliquam!';
 
         $posts = [
@@ -39,20 +43,15 @@ class Materials extends BaseController
     }
 
     public function post($id) {
-        $model = new MaterialModel();
-        $post = $model->find($id);
+        $data = ['meta_title' => 'Material not found'];
+        $post = (new postModel())->find($id);
         if ($post) {
             $data = [
                 'meta_title' => $post['post_title'],
-                'title' => $id,
+                'title' => $post['post_title'],
                 'post' => $post
             ];
-        } else {
-            $data = [
-                'meta_title' => "Material not found",
-            ];
         }
-
         return view('single_material', $data);
     }
 
@@ -63,18 +62,14 @@ class Materials extends BaseController
         ];
 
         if ($this->request->getPost()) {
-            echo '<pre>';
-                print_r($_POST);
-            echo '</pre>';
-            $model = new MaterialModel();
-            $model->save($_POST);
+            (new PostModel())->save($_POST);
         }
 
         return view('new_material', $data);
     }
 
     public function edit($id) {
-        $model = new MaterialModel();
+        $model = new PostModel();
 
         if ($this->request->getPost()) {
             $_POST['post_id'] = $id;
@@ -85,7 +80,7 @@ class Materials extends BaseController
         if ($post) {
             $data = [
                 'meta_title' => $post['post_title'],
-                'title' => $id,
+                'title' => $post['post_title'],
                 'post' => $post
             ];
             return view('edit_material', $data);
@@ -95,7 +90,7 @@ class Materials extends BaseController
     }
 
     public function delete($id) {
-        $model = new MaterialModel();
+        $model = new PostModel();
         $post = $model->find($id);
         if ($post) {
             $model->delete($id);

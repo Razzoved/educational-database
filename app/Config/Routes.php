@@ -40,15 +40,13 @@ $routes->set404Override();
 //$routes->get('/', 'Home::index');
 
 $routes->group('/', function($routes) {
-    $routes->add('', 'Materials::index');
-    $routes->add('all', 'Materials::index');
-    $routes->add('(:num)', 'Materials::post/$1');
-    $routes->add('new', 'Materials::new');
-    $routes->add('delete/(:num)', 'Materials::delete/$1');
-    $routes->add('edit/(:num)', 'Materials::edit/$1');
+    $routes->add('', 'PostController::index');
+    $routes->add('all', 'PostController::index');
+    $routes->add('(:num)', 'PostController::post/$1');
+    $routes->add('new', 'PostController::new');
+    $routes->add('delete/(:num)', 'PostController::delete/$1');
+    $routes->add('edit/(:num)', 'PostController::edit/$1');
 });
-
-$routes->add('welcome', 'Welcome::index');
 
 /*
  * --------------------------------------------------------------------
