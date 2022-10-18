@@ -1,19 +1,19 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PostTagModel extends Model
+class MaterialProperty extends Model
 {
-    protected $table = 'post_tags';
+    protected $table = 'material_property';
     //protected $primaryKey = '';
     //protected $useAutoIncrement = true;
 
     // protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['post_id', 'tag_id', 'tag_order'];
+    protected $allowedFields = ['material_id', 'property_id'];
 
     // protected $useTimestamps = false;
     // protected $createdField  = 'post_created_at';

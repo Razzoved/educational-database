@@ -1,16 +1,10 @@
-<?php
-declare(strict_types = 1);
+<?php declare(strict_types = 1);
 
 namespace App\Controllers;
 
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
-
-use App\Models\MaterialModel;
 use App\Models\PostModel;
 
-class PostController extends BaseController
+class Post extends BaseController
 {
     public function index() : string {
         $text = 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam quibusdam quae atque laudantium sit nisi pariatur impedit aperiam odit illo, alias saepe facere! Illum magni deserunt nemo id quis aliquam!';
@@ -39,12 +33,12 @@ class PostController extends BaseController
             'posts' => $posts
         ];
 
-        return view('all_materials', $data);
+        return view('post_view_all', $data);
     }
 
     public function post($id) {
-        $data = ['meta_title' => 'Material not found'];
-        $post = (new postModel())->find($id);
+        $data = ['meta_title' => 'Post not found'];
+        $post = (new PostModel())->find($id);
         if ($post) {
             $data = [
                 'meta_title' => $post['post_title'],
@@ -52,20 +46,20 @@ class PostController extends BaseController
                 'post' => $post
             ];
         }
-        return view('single_material', $data);
+        return view('post_view_one', $data);
     }
 
     public function new() {
         $data = [
-            'meta_title' => 'New material',
-            'title' => 'Create new material'
+            'meta_title' => 'New post',
+            'title' => 'Create new post'
         ];
 
         if ($this->request->getPost()) {
             (new PostModel())->save($_POST);
         }
 
-        return view('new_material', $data);
+        return view('post_new', $data);
     }
 
     public function edit($id) {
@@ -83,7 +77,7 @@ class PostController extends BaseController
                 'title' => $post['post_title'],
                 'post' => $post
             ];
-            return view('edit_material', $data);
+            return view('post_edit', $data);
         }
 
         return redirect()->to("/$id");

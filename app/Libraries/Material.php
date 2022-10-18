@@ -1,4 +1,6 @@
-<?php namespace App\Libraries;
+<?php declare(strict_types = 1);
+
+namespace App\Libraries;
 
 class Material
 {

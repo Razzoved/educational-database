@@ -40,12 +40,12 @@ $routes->set404Override();
 //$routes->get('/', 'Home::index');
 
 $routes->group('/', function($routes) {
-    $routes->add('', 'PostController::index');
-    $routes->add('all', 'PostController::index');
-    $routes->add('(:num)', 'PostController::post/$1');
-    $routes->add('new', 'PostController::new');
-    $routes->add('delete/(:num)', 'PostController::delete/$1');
-    $routes->add('edit/(:num)', 'PostController::edit/$1');
+    $routes->add('', 'Post::index');
+    $routes->add('all', 'Post::index');
+    $routes->add('(:num)', 'Post::post/$1');
+    $routes->add('new', 'Post::new');
+    $routes->add('delete/(:num)', 'Post::delete/$1');
+    $routes->add('edit/(:num)', 'Post::edit/$1');
 });
 
 /*

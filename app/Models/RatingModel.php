@@ -1,19 +1,19 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class TagModel extends Model
+class RatingModel extends Model
 {
-    protected $table      = 'tags';
-    protected $primaryKey = 'tag_id';
-    protected $useAutoIncrement = true;
+    protected $table = 'ratings';
+    //protected $primaryKey = '';
+    //protected $useAutoIncrement = true;
 
     // protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['tag_id', 'tag_title'];
+    protected $allowedFields = ['client_token', 'post_id', 'client_rating'];
 
     // protected $useTimestamps = false;
     // protected $createdField  = 'post_created_at';
