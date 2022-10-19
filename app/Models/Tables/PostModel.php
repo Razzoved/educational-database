@@ -1,19 +1,19 @@
 <?php declare(strict_types = 1);
 
-namespace App\Models;
+namespace App\Models\Tables;
 
 use CodeIgniter\Model;
 
-class PropertyModel extends Model
+class PostModel extends Model
 {
-    protected $table      = 'properties';
-    protected $primaryKey = 'property_id';
+    protected $table      = 'posts';
+    protected $primaryKey = 'post_id';
     protected $useAutoIncrement = true;
 
     // protected $returnType     = 'array';
     // protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['property_type', 'property_value'];
+    protected $allowedFields = ['post_title', 'post_type', 'post_content'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'post_created_at';

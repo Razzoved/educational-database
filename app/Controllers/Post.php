@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\PostModel;
+use App\Models\Tables\PostModel;
 
 class Post extends BaseController
 {
