@@ -4,12 +4,12 @@ namespace App\Models;
 
 use CodeIgniter\Database\ConnectionInterface;
 
-class CustomModel
+class FilterModel
 {
 
-    protected $db;
+    protected ConnectionInterface $db;
 
-    public function __construct($db) {
+    public function __construct(ConnectionInterface $db) {
         $this->db = $db;
     }
 
