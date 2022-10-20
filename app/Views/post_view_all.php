@@ -4,14 +4,7 @@
 <!-- Menu bar -->
 <div class="container" style="margin-bottom: 1em;">
     <h1><?= $title ?></h1>
-    <div class="row g-0">
-        <div class="col">
-            <?= $this->include('/widgets/bar_search') ?>
-        </div>
-        <div class="col">
-            <?= $this->include('/widgets/bar_filters') ?>
-        </div>
-    </div>
+    <?= $this->include('filtering') ?>
     <hr>
 </div>
 

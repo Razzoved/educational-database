@@ -40,12 +40,17 @@ class Post extends BaseController
         ];
 
         if ($this->request->getPost()) {
+            // var_dump($_POST);
             $data['posts'] = $this->postGetter->filtered($_POST['search']);
         } else {
             $data['posts'] = $this->postGetter->all();
         }
 
         return view('post_view_all', $data);
+    }
+
+    public function search() {
+        $this->load->view('search');
     }
 
     public function post($id) : string {

@@ -20,13 +20,9 @@ class PostGetter
         // todo add filtering from filters aside from search
         return $this->db->table('posts')
             ->orLike(
-                ['post_title' => $userInput],
+                ['post_title' => $userInput, 'post_content' => $userInput],
                 escape: true, insensitiveSearch: true)
             ->get()
             ->getResult('array');
-    }
-
-    private function getLast($table) : array {
-        return $table->orderBy(['post_id', 'DESC'])->get()->getRow();
     }
 }

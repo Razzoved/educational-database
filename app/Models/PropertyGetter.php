@@ -8,11 +8,13 @@ class PropertyGetter
 {
     protected ConnectionInterface $db;
 
-    public function __construct(ConnectionInterface $db) {
+    public function __construct(ConnectionInterface $db)
+    {
         $this->db = $db;
     }
 
-    public function getByType(string $type) : array {
+    public function getByType(string $type) : array
+    {
         return $this->db->table('properties')
             ->select('property_value')
             ->where('property_type', $type, true)
@@ -21,7 +23,8 @@ class PropertyGetter
             ->getResult('array');
     }
 
-    public function getTypes() : array {
+    public function getTypes() : array
+    {
         return $this->db->table('properties')
             ->select('property_type')
             ->distinct()
