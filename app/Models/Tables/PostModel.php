@@ -11,14 +11,15 @@ class PostModel extends Model
     protected $useAutoIncrement = true;
 
     // protected $returnType     = 'array';
-    // protected $useSoftDeletes = true;
+    protected $useSoftDeletes = false;
 
-    protected $allowedFields = ['post_title', 'post_type', 'post_content'];
+    // TODO: might need to add views and rating here
+    protected $allowedFields = ['post_title', 'post_thumbnail', 'post_type', 'post_content', 'post_is_public'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'post_created_at';
     protected $updatedField  = 'post_updated_at';
-    protected $deletedField  = 'post_deleted_at';
+    // protected $deletedField  = 'post_deleted_at';
 
     // protected $validationRules    = [];
     // protected $validationMessages = [];

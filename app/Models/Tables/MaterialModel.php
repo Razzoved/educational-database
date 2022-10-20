@@ -11,14 +11,14 @@ class MaterialModel extends Model
     protected $useAutoIncrement = true;
 
     // protected $returnType     = 'array';
-    // protected $useSoftDeletes = true;
+    protected $useSoftDeletes = false;
 
     protected $allowedFields = ['post_id', 'material_title', 'material_path'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'material_created_at';
     protected $updatedField  = 'material_updated_at';
-    protected $deletedField  = 'material_deleted_at';
+    // protected $deletedField  = 'material_deleted_at';
 
     // protected $validationRules    = [];
     // protected $validationMessages = [];
