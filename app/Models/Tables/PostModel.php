@@ -24,4 +24,20 @@ class PostModel extends Model
     // protected $validationRules    = [];
     // protected $validationMessages = [];
     // protected $skipValidation     = false;
+
+    public function search()
+    {
+        $search_input = $this->input->GET('search');
+        return $this->filtered($search_input);
+    }
+
+    private function filtered(string $userInput) : array {
+        // todo add filtering from filters aside from search
+        return $this->db->table('posts')
+            ->orLike(
+                ['post_title' => $userInput],
+                escape: true, insensitiveSearch: true)
+            ->get()
+            ->getResult('array');
+    }
 }

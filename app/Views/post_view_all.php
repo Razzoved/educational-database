@@ -4,9 +4,13 @@
 <!-- Menu bar -->
 <div class="container" style="margin-bottom: 1em;">
     <h1><?= $title ?></h1>
-    <div>
-        <?= $this->include('/widgets/search_bar') ?>
-        <?= $this->include('/widgets/filter_sidebar') ?>
+    <div class="row g-0">
+        <div class="col">
+            <?= $this->include('/widgets/bar_search') ?>
+        </div>
+        <div class="col">
+            <?= $this->include('/widgets/bar_filters') ?>
+        </div>
     </div>
     <hr>
 </div>
@@ -14,7 +18,7 @@
 <!-- Presents all materials in a nicer html --->
 <div class="container">
     <?php foreach($posts as $post) : ?>
-        <?= view_cell('\App\Libraries\Material::postItem', ['post' => $post]); ?>
+        <?= view_cell('\App\Libraries\Material::postItem', ['post' => $post]) ?>
     <?php endforeach; ?>
 
     <!-- Paging PLACEHOLDER -->
