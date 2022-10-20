@@ -24,7 +24,7 @@
                 <p class="card-text"><small class="text-muted">Rating: <?= $post['post_rating'] ?></small></h5>
 
                 <!-- draw details -->
-                <p class="card-text"><?= (strlen($post['post_content'] > 120)) ? substr($post['post_content'], 0, 117) . '...' : $post['post_content'] ?></p>
+                <p class="card-text"><?= (strlen($post['post_content'] > 140)) ? substr($post['post_content'], 0, 137) . '...' : $post['post_content'] ?></p>
             </div>
         </div>
     </div>
