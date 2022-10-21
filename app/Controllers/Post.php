@@ -39,12 +39,12 @@ class Post extends BaseController
             'filters' => $this->propertyGetter->getTypes()
         ];
 
+        // echo '<pre>'; print_r($_POST); echo '</pre>';
         if ($this->request->getPost()) {
             $filters = [];
             foreach ($_POST as $k => $v) {
                 if ($k == 'search') continue;
-                $explosion = explode('/', $k, 2);
-                $filters[$explosion[0]][] = str_replace('_', ' ', $explosion[1]);
+                $filters[$k] = $v;
             }
             $data['posts'] = $this->postGetter->filtered($_POST['search'], $filters);
         } else {
