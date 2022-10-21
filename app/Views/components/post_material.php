@@ -1,10 +1,10 @@
 <!-- MATERIAL DISPLAYED AS A CARD -->
 
-<div class="card h-100 w-90 mb-4 text-bg-light" style="min-width:30vw;">
+<div class="card h-100 w-90 mb-4 text-bg-light" style="min-width:30vw">
     <div class="row g-0 m-1">
 
         <!-- draw image -->
-        <div class="col-md-2 text-center" style="overflow:clip; max-width:100%; max-height:200px; object-fit:contain;">
+        <div class="col-md-2 text-center" style="overflow:clip; max-width:80%; max-height:200px; object-fit:contain;">
             <img src=<?= $post['post_thumbnail'] ?> class="img-fluid rounded" alt="Missing image">
         </div>
 
@@ -30,7 +30,7 @@
     </div>
 
     <!-- draw footer -->
-    <div class="card-footer mh-10">
+    <div class="card-footer">
         <div style="float:left; width:50%;">
             <p class="card-text"><small class="text-muted">Viewed: <?= $post['post_views'] ?>x</small></p>
         </div>
