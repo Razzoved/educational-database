@@ -20,16 +20,16 @@ class PropertyGetter
             ->where('property_type', $type, true)
             ->orderBy('property_value')
             ->get()
-            ->getResult('array');
+            ->getResultArray();
     }
 
     public function getTypes() : array
     {
         return $this->db->table('properties')
             ->select('property_type')
-            ->distinct()
             ->orderBy('property_type')
+            ->distinct()
             ->get()
-            ->getResult('array');
+            ->getResultArray();
     }
 }
