@@ -4,8 +4,8 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class MaterialProperty extends Model
+class MaterialsProperties extends Model
 {
-    protected $table = 'material_property';
+    protected $table = 'materials_properties';
     protected $allowedFields = ['material_id', 'property_id'];
 }

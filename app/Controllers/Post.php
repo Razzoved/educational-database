@@ -7,23 +7,27 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 use App\Models\PostModel;
+use App\Models\PostsPropertiesModel;
 use App\Models\PropertyGetter;
 
 class Post extends BaseController
 {
-    protected PostModel $postModel;
-    protected PropertyGetter $propertyGetter;
+    private PostModel $postModel;
+    private PostsPropertiesModel $postsPropertiesModel;
+
+    private PropertyGetter $propertyGetter;
 
     /**
      * Constructor.
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
         $this->postModel = new PostModel();
+        $this->postsPropertiesModel = new PostsPropertiesModel();
+
         $this->propertyGetter = new PropertyGetter(db_connect());
 
         // E.g.: $this->session = \Config\Services::session();
@@ -48,6 +52,10 @@ class Post extends BaseController
             $data['posts'] = $this->postModel->findAll();
         }
 
+        // echo '<pre>';
+        // print_r($data['posts'][0]->properties);
+        // echo '</pre>';
+
         return view('post_view_all', $data);
     }
 
@@ -62,7 +70,7 @@ class Post extends BaseController
             $data = [
                 'meta_title' => $post->post_title,
                 'title' => $post->post_title,
-                'post' => $post
+                'post' => $post,
             ];
         }
         return view('post_view_one', $data);

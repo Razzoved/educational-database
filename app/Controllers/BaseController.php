@@ -22,6 +22,12 @@ use Psr\Log\LoggerInterface;
 abstract class BaseController extends Controller
 {
     /**
+     * Link to the base page of parent website, if this is
+     * a standalone app, set it to '\'
+     */
+    public static $homeURL = 'https://www.academicintegrity.eu/wp';
+
+    /**
      * Instance of the main Request object.
      *
      * @var CLIRequest|IncomingRequest
@@ -36,12 +42,6 @@ abstract class BaseController extends Controller
      * @var array
      */
     protected $helpers = [];
-
-    /**
-     * Link to the base page of parent website, if this is
-     * a standalone app, set it to '\'
-     */
-    public static $homeURL = 'https://www.academicintegrity.eu/wp';
 
     /**
      * Constructor.

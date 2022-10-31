@@ -17,6 +17,7 @@ class Post extends Entity
         'post_rating'     => null,
         'post_created_at' => null,
         'post_updated_at' => null,
+        'properties'      => null, // not part of table in database
     ];
 
     protected $casts = [
@@ -28,5 +29,6 @@ class Post extends Entity
         'post_is_public'  => 'boolean',
         'post_views'      => 'int',
         'post_rating'     => 'int',
+        'properties'      => 'array'
     ];
 }

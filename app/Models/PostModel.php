@@ -28,18 +28,32 @@ class PostModel extends Model
 
     protected $returnType = Post::class;
 
-    public function search(string $userInput) : array
+    public function findWithTags(int $id) : Post|null
     {
-        return $this->db->table($this->table)
-            ->orLike(
-                ['post_title' => $userInput],
-                escape: true, insensitiveSearch: true)
-            ->get()
-            ->getResultArray();
+        $post = $this->find($id);
+        if ($post) {
+            $post->properties = (new PostsPropertiesModel())->findTags($id);
+        }
+        return $post;
     }
 
     public function filter(string $userInput, array $filters): array
     {
-        return [];
+        $f = (new PostsPropertiesModel())->getCompiledFilter($filters);
+
+        $posts = $this->asObject('Post')
+                      ->select("$this->table.*")
+                      ->join("($f) f", "$this->table.post_id = f.post_id")
+                      ->like(
+                          ['post_title' => $userInput],
+                          escape: true, insensitiveSearch: true)
+                      ->get()
+                      ->getResult();
+
+        foreach ($posts as $post) {
+            $post->properties = (new PostsPropertiesModel())->findTags((int) $post->post_id);
+        }
+
+        return $posts;
     }
 }
