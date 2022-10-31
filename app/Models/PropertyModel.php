@@ -22,4 +22,36 @@ class PropertyModel extends Model
     protected $updatedField  = 'post_updated_at';
 
     protected $returnType = Property::class;
+
+    public function getByType(string $type) : array
+    {
+        return $this->db->query($this->getCompiledByType($type))
+                        ->getResultArray();
+    }
+
+    public function getCompiledByType(string $type) : string
+    {
+        return $this->builder()
+                    ->where('property_tag', $type)
+                    ->orderBy('property_tag')
+                    ->orderBy('property_value')
+                    ->distinct()
+                    ->getCompiledSelect();
+    }
+
+    public function getAll() : array
+    {
+        return $this->db->query($this->getCompiledAll())
+                        ->getResultArray();
+    }
+
+    public function getCompiledAll() : string
+    {
+        return $this->builder()
+                    ->orderBy('property_tag')
+                    ->orderBy('property_value')
+                    ->distinct()
+                    ->getCompiledSelect();
+    }
+
 }

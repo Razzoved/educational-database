@@ -2,14 +2,27 @@
 
 namespace App\Libraries;
 
-use App\Models\PropertyGetter;
+use App\Models\PropertyModel;
 
 class Property
 {
-    public function postFilter(array $data) {
-        return view(
-            'components/post_filter',
-            ['title' => $data['filter'], 'filter' => (new PropertyGetter(db_connect()))->getByType($data['filter'])]
-        );
+    public function postFilters(array $filters) : string {
+        $retVal = "";
+        $last = null;
+        foreach ($filters as $filter) {
+            if ($filter->property_tag != $last && $last != null) {
+                $retVal .= '</ul>';
+                $retVal .= '<hr>';
+            }
+            if ($filter->property_tag != $last) {
+                $retVal .= '<ul>';
+                $retVal .= "<h6>$filter->property_tag</h6>";
+                $retVal .= view('components/post_filter', ['filter' => $filter]);
+                $last = $filter->property_tag;
+            } else {
+                $retVal .= view('components/post_filter', ['filter' => $filter]);
+            }
+        }
+        return $retVal;
     }
 }

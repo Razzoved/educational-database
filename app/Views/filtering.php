@@ -18,13 +18,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <?php foreach($filters as $filter) : ?>
-                <ul>
-                    <h6><?= $filter['property_tag'] ?></h6>
-                    <?= view_cell('\App\Libraries\Property::postFilter', ['filter' => $filter['property_tag']]) ?>
-                    <hr>
-                </ul>
-            <?php endforeach; ?>
+            <?= view_cell('\App\Libraries\Property::postFilters', $filters) ?>
         </div>
     </div>
 </aside>

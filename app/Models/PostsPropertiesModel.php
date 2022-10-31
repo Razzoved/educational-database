@@ -22,17 +22,10 @@ class PostsPropertiesModel extends Model
     {
         return $this->asObject('Property')
                     ->select("$this->properties.*")
-                    ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
-                    ->where("$this->table.post_id", $id, true)
+                    ->join($this->properties, "$this->table.property_id = properties.property_id")
+                    ->where("$this->table.post_id", $id)
                     ->get()
                     ->getResult();
-    }
-
-    public function getCompiledAll() : string
-    {
-        return $this->builder()
-                    ->join('properties', "$this->table.property_id = properties.property_id")
-                    ->getCompiledSelect();
     }
 
     public function getCompiledFilter(array $filters) : string
@@ -60,5 +53,15 @@ class PostsPropertiesModel extends Model
         }
 
         return $builder->getCompiledSelect();
+    }
+
+    public function getUsedProperties() : array
+    {
+        return $this->asObject('Property')
+                    ->select("$this->properties.*")
+                    ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
+                    ->distinct()
+                    ->get()
+                    ->getResult();
     }
 }

@@ -7,15 +7,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 use App\Models\PostModel;
-use App\Models\PostsPropertiesModel;
-use App\Models\PropertyGetter;
 
 class Post extends BaseController
 {
     private PostModel $postModel;
-    private PostsPropertiesModel $postsPropertiesModel;
-
-    private PropertyGetter $propertyGetter;
 
     /**
      * Constructor.
@@ -26,9 +21,6 @@ class Post extends BaseController
 
         // Preload any models, libraries, etc, here.
         $this->postModel = new PostModel();
-        $this->postsPropertiesModel = new PostsPropertiesModel();
-
-        $this->propertyGetter = new PropertyGetter(db_connect());
 
         // E.g.: $this->session = \Config\Services::session();
     }
@@ -37,10 +29,9 @@ class Post extends BaseController
         $data = [
             'meta_title' => 'Materials',
             'title' => 'Materials',
-            'filters' => $this->propertyGetter->getTypes()
+            'filters' => $this->postModel->getUsedProperties()
         ];
 
-        // echo '<pre>'; print_r($_POST); echo '</pre>';
         if ($this->request->getPost()) {
             $filters = [];
             foreach ($_POST as $k => $v) {
@@ -51,10 +42,6 @@ class Post extends BaseController
         } else {
             $data['posts'] = $this->postModel->findAll();
         }
-
-        // echo '<pre>';
-        // print_r($data['posts'][0]->properties);
-        // echo '</pre>';
 
         return view('post_view_all', $data);
     }

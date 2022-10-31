@@ -39,21 +39,21 @@ class PostModel extends Model
 
     public function filter(string $userInput, array $filters): array
     {
-        $f = (new PostsPropertiesModel())->getCompiledFilter($filters);
+        $connector = new PostsPropertiesModel();
+        $f = $connector->getCompiledFilter($filters);
 
         $posts = $this->asObject('Post')
                       ->select("$this->table.*")
                       ->join("($f) f", "$this->table.post_id = f.post_id")
-                      ->like(
-                          ['post_title' => $userInput],
-                          escape: true, insensitiveSearch: true)
+                      ->like('post_title', $userInput, insensitiveSearch: true)
                       ->get()
                       ->getResult();
 
-        foreach ($posts as $post) {
-            $post->properties = (new PostsPropertiesModel())->findTags((int) $post->post_id);
-        }
-
         return $posts;
+    }
+
+    public function getUsedProperties() : array
+    {
+        return (new PostsPropertiesModel())->getUsedProperties();
     }
 }

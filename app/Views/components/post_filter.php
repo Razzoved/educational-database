@@ -1,8 +1,6 @@
-<!-- PROPERTY displayed as a list of items of same type -->
+<!-- PROPERTY display as an element of a list -->
 
-<?php foreach($filter as $f) : ?>
-    <li class="list-group-item">
-        <input class="form-check-input me-2" type="checkbox" name="<?= $title ?>[<?= $f['property_value'] ?>]" label="checkbox-item">
-        <?= $f['property_value'] ?>
-    </li>
-<?php endforeach; ?>
+<li class="list-group-item">
+    <input class="form-check-input me-2" type="checkbox" name="<?= $filter->property_tag ?>[<?= $filter->property_value ?>]" label="checkbox-item">
+    <?= $filter->property_value ?>
+</li>
