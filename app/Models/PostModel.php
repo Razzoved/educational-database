@@ -28,11 +28,6 @@ class PostModel extends Model
 
     protected $returnType = Post::class;
 
-    public function all() : array
-    {
-        return $this->findAll();
-    }
-
     public function search(string $userInput) : array
     {
         return $this->db->table($this->table)

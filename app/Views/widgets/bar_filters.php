@@ -15,8 +15,8 @@
             <div class="offcanvas-body">
                 <?php foreach($filters as $filter) : ?>
                     <ul>
-                        <h6><?= $filter['property_type'] ?></h6>
-                        <?= view_cell('\App\Libraries\Property::postFilter', ['filter' => $filter['property_type']]) ?>
+                        <h6><?= $filter['property_tag'] ?></h6>
+                        <?= view_cell('\App\Libraries\Property::postFilter', ['filter' => $filter['property_tag']]) ?>
                         <hr>
                     </ul>
                 <?php endforeach; ?>

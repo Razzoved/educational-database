@@ -45,7 +45,7 @@ class Post extends BaseController
             }
             $data['posts'] = $this->postModel->filter($_POST['search'], $filters);
         } else {
-            $data['posts'] = $this->postModel->all();
+            $data['posts'] = $this->postModel->findAll();
         }
 
         return view('post_view_all', $data);
@@ -60,8 +60,8 @@ class Post extends BaseController
         $post = $this->postModel->find($id);
         if ($post) {
             $data = [
-                'meta_title' => $post['post_title'],
-                'title' => $post['post_title'],
+                'meta_title' => $post->post_title,
+                'title' => $post->post_title,
                 'post' => $post
             ];
         }
@@ -90,8 +90,8 @@ class Post extends BaseController
         $post = $this->postModel->find($id);
         if ($post) {
             $data = [
-                'meta_title' => $post['post_title'],
-                'title' => $post['post_title'],
+                'meta_title' => $post->post_title,
+                'title' => $post->post_title,
                 'post' => $post
             ];
             return view('post_edit', $data);
