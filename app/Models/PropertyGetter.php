@@ -17,7 +17,7 @@ class PropertyGetter
     {
         return $this->db->table('properties')
             ->select('property_value')
-            ->where('property_type', $type, true)
+            ->where('property_tag', $type, true)
             ->orderBy('property_value')
             ->get()
             ->getResultArray();
@@ -26,8 +26,8 @@ class PropertyGetter
     public function getTypes() : array
     {
         return $this->db->table('properties')
-            ->select('property_type')
-            ->orderBy('property_type')
+            ->select('property_tag')
+            ->orderBy('property_tag')
             ->distinct()
             ->get()
             ->getResultArray();
