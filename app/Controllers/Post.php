@@ -6,14 +6,12 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-use App\Models\Tables\PostModel;
-use App\Models\PostGetter;
+use App\Models\PostModel;
 use App\Models\PropertyGetter;
 
 class Post extends BaseController
 {
     protected PostModel $postModel;
-    protected PostGetter $postGetter;
     protected PropertyGetter $propertyGetter;
 
     /**
@@ -26,7 +24,6 @@ class Post extends BaseController
 
         // Preload any models, libraries, etc, here.
         $this->postModel = new PostModel();
-        $this->postGetter = new PostGetter(db_connect());
         $this->propertyGetter = new PropertyGetter(db_connect());
 
         // E.g.: $this->session = \Config\Services::session();
@@ -46,9 +43,9 @@ class Post extends BaseController
                 if ($k == 'search') continue;
                 $filters[$k] = $v;
             }
-            $data['posts'] = $this->postGetter->filtered($_POST['search'], $filters);
+            $data['posts'] = $this->postModel->filter($_POST['search'], $filters);
         } else {
-            $data['posts'] = $this->postGetter->all();
+            $data['posts'] = $this->postModel->all();
         }
 
         return view('post_view_all', $data);
