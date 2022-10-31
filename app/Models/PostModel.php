@@ -14,7 +14,9 @@ class PostModel extends Model
         'post_thumbnail',
         'post_type',
         'post_content',
-        'post_is_public'
+        'post_is_public',
+        'post_views',
+        'post_rating'
     ];
 
     protected $useAutoIncrement = true;
