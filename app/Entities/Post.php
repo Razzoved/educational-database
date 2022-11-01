@@ -31,4 +31,13 @@ class Post extends Entity
         'post_rating'     => 'int',
         'properties'      => 'array'
     ];
+
+    public function getGroupedProperties() : array
+    {
+        $result = array();
+        foreach ($this->properties as $p) {
+            $result[$p->property_tag][] = $p->property_value;
+        }
+        return $result;
+    }
 }

@@ -41,7 +41,7 @@ class Post extends BaseController
     }
 
     public function post(int $id) : string {
-        $post = $this->postModel->find($id);
+        $post = $this->postModel->findWithTags($id);
 
         if (!$post) throw PageNotFoundException::forPageNotFound();
 
