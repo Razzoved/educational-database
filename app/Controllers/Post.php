@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use Psr\Log\LoggerInterface;
 
 use App\Models\PostModel;
@@ -39,16 +40,17 @@ class Post extends BaseController
         return view('post_view_all', $data);
     }
 
-    public function post($id) : string {
-        $data = ['meta_title' => 'Post not found'];
+    public function post(int $id) : string {
         $post = $this->postModel->find($id);
-        if ($post) {
-            $data = [
-                'meta_title' => $post->post_title,
-                'title' => $post->post_title,
-                'post' => $post,
-            ];
-        }
+
+        if (!$post) throw PageNotFoundException::forPageNotFound();
+
+        $data = [
+            'meta_title' => $post->post_title,
+            'title' => $post->post_title,
+            'post' => $post,
+        ];
+
         return view('post_view_one', $data);
     }
 
@@ -72,16 +74,15 @@ class Post extends BaseController
         }
 
         $post = $this->postModel->find($id);
-        if ($post) {
-            $data = [
-                'meta_title' => $post->post_title,
-                'title' => $post->post_title,
-                'post' => $post
-            ];
-            return view('post_edit', $data);
-        }
+        if (!$post) throw PageNotFoundException::forPageNotFound();
 
-        return redirect()->to("/$id");
+        $data = [
+            'meta_title' => $post->post_title,
+            'title' => $post->post_title,
+            'post' => $post
+        ];
+
+        return view('post_edit', $data);
     }
 
     public function delete($id) : string {
