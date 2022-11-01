@@ -6,21 +6,21 @@ use App\Models\PropertyModel;
 
 class Property
 {
-    public function postFilters(array $filters) : string {
+    public function postFilters(array $properties) : string {
         $retVal = "";
         $last = null;
-        foreach ($filters as $filter) {
-            if ($filter->property_tag != $last && $last != null) {
+        foreach ($properties as $p) {
+            if ($p->property_tag != $last && $last != null) {
                 $retVal .= '</ul>';
                 $retVal .= '<hr>';
             }
-            if ($filter->property_tag != $last) {
+            if ($p->property_tag != $last) {
                 $retVal .= '<ul>';
-                $retVal .= "<h6>$filter->property_tag</h6>";
-                $retVal .= view('components/post_filter', ['filter' => $filter]);
-                $last = $filter->property_tag;
+                $retVal .= "<h6>$p->property_tag</h6>";
+                $retVal .= view('components/post_filter', ['filter' => $p]);
+                $last = $p->property_tag;
             } else {
-                $retVal .= view('components/post_filter', ['filter' => $filter]);
+                $retVal .= view('components/post_filter', ['filter' => $p]);
             }
         }
         return $retVal;
