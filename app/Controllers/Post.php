@@ -18,8 +18,6 @@ class Post extends BaseController
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
-
-        // Preload any models, libraries, etc, here.
         $this->postModel = new PostModel();
 
         // E.g.: $this->session = \Config\Services::session();
@@ -33,21 +31,12 @@ class Post extends BaseController
         ];
 
         if ($this->request->getPost()) {
-            $filters = [];
-            foreach ($_POST as $k => $v) {
-                if ($k == 'search') continue;
-                $filters[$k] = $v;
-            }
-            $data['posts'] = $this->postModel->filter($_POST['search'], $filters);
+            $data['posts'] = $this->postModel->filter($_POST);
         } else {
             $data['posts'] = $this->postModel->findAll();
         }
 
         return view('post_view_all', $data);
-    }
-
-    public function search() {
-        $this->load->view('search');
     }
 
     public function post($id) : string {

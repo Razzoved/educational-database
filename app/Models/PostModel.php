@@ -37,8 +37,11 @@ class PostModel extends Model
         return $post;
     }
 
-    public function filter(string $userInput, array $filters): array
+    public function filter(array $filters): array
     {
+        $userInput = $filters['search'];
+        if (isset($filters['search'])) unset($filters['search']);
+
         $connector = new PostsPropertiesModel();
         $f = $connector->getCompiledFilter($filters);
 
