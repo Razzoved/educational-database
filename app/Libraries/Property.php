@@ -2,14 +2,16 @@
 
 namespace App\Libraries;
 
-use App\Models\PropertyModel;
+use App\Entities\Post;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Property
 {
-    public function postFilters(array $properties) : string {
+    public function postFilters(array $orderedProperties) : string
+    {
         $retVal = "";
         $last = null;
-        foreach ($properties as $p) {
+        foreach ($orderedProperties as $p) {
             if ($p->property_tag != $last && $last != null) {
                 $retVal .= '</ul>';
                 $retVal .= '<hr>';
@@ -23,6 +25,19 @@ class Property
                 $retVal .= view('components/post_filter', ['filter' => $p]);
             }
         }
+        return $retVal;
+    }
+
+    public function postProperties(Post $post) : string
+    {
+        if (!isset($post) || !isset($post->properties)) throw PageNotFoundException::forPageNotFound();
+
+        $retVal = "";
+
+        foreach ($post->getGroupedProperties() as $group) {
+            $retVal .= view('components/post_group', ['group' => $group]);
+        }
+
         return $retVal;
     }
 }

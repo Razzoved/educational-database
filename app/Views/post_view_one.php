@@ -14,9 +14,7 @@
             <!-- Title -->
             <h1><?= $post->post_title ?></h1>
             <!-- Tags -->
-            <div>
-                <pre><?= print_r($post->getGroupedProperties()) ?></pre>
-            </div>
+            <?= $post->groupsToLinks($p->property_tag) ?>
         </div>
     </div>
 

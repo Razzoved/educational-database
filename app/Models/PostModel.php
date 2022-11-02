@@ -28,11 +28,11 @@ class PostModel extends Model
 
     protected $returnType = Post::class;
 
-    public function findWithTags(int $id) : Post|null
+    public function findWithProperties(int $id) : Post|null
     {
         $post = $this->find($id);
         if ($post) {
-            $post->properties = (new PostsPropertiesModel())->findTags($id);
+            $post->properties = (new PostsPropertiesModel())->findProperties($id);
         }
         return $post;
     }
@@ -40,13 +40,12 @@ class PostModel extends Model
     public function filter(array $filters): array
     {
         $userInput = $filters['search'];
-        if (isset($filters['search'])) unset($filters['search']);
+        if (isset($userInput)) unset($filters['search']);
 
         $connector = new PostsPropertiesModel();
         $f = $connector->getCompiledFilter($filters);
 
-        $posts = $this->asObject('Post')
-                      ->select("$this->table.*")
+        $posts = $this->select("$this->table.*")
                       ->join("($f) f", "$this->table.post_id = f.post_id")
                       ->like('post_title', $userInput, insensitiveSearch: true)
                       ->get()

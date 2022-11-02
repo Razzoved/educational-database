@@ -11,7 +11,7 @@
 <!-- Presents all materials in a nicer html --->
 <div class="container">
     <?php foreach($posts as $post) : ?>
-        <?= view_cell('\App\Libraries\Material::postItem', ['post' => $post]) ?>
+        <?= view_cell('\App\Libraries\Post::postItem', ['post' => $post]) ?>
     <?php endforeach; ?>
 
     <!-- Paging PLACEHOLDER -->

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Entities\Property;
 
 class PostsPropertiesModel extends Model
 {
@@ -13,18 +14,20 @@ class PostsPropertiesModel extends Model
 
     /**
      * Looks for ALL properties belonging to a given post. Returns
-     * them in an array of Property class objects.
+     * an array of Property class objects ordered by tag & value.
      *
      * @param int $id posts' id whose tags we want to get
      */
-    public function findTags(int $id) : array
+    public function findProperties(int $id) : array
     {
-        return $this->asObject('Property')
-                    ->select("$this->properties.*")
+        return $this->select("$this->properties.*")
                     ->join($this->properties, "$this->table.property_id = properties.property_id")
                     ->where("$this->table.post_id", $id)
+                    ->orderBy("$this->properties.property_tag")
+                    ->orderBy("$this->properties.property_value")
+                    ->distinct()
                     ->get()
-                    ->getResult();
+                    ->getCustomResultObject(Property::class);
     }
 
     /**
@@ -53,10 +56,11 @@ class PostsPropertiesModel extends Model
                         ->whereIn("$this->properties.property_value", $v)
                         ->groupEnd();
             }
-            // check if it has all require tags
-            $builder->groupBy("$this->table.post_id")
-                    ->having("COUNT(*) >=", $requiredTags);
         }
+
+        // check if it has all require tags
+        $builder->groupBy("$this->table.post_id")
+                ->having("COUNT(*) >=", $requiredTags);
 
         return $builder->getCompiledSelect();
     }
@@ -69,13 +73,12 @@ class PostsPropertiesModel extends Model
      */
     public function getUsedProperties() : array
     {
-        return $this->asObject('Property')
-                    ->select("$this->properties.*")
+        return $this->select("$this->properties.*")
                     ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
                     ->orderBy("$this->properties.property_tag")
                     ->orderBy("$this->properties.property_value")
                     ->distinct()
                     ->get()
-                    ->getResult();
+                    ->getCustomResultObject(Property::class);
     }
 }

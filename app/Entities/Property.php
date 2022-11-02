@@ -16,4 +16,11 @@ class Property extends Entity
         'property_id'  => 'int',
         'property_tag' => 'string',
     ];
+
+    public function valueToLink() : string
+    {
+        return "<form method='post' name='$this->property_tag[$this->property_value]' href='/'>"
+            . $this->property_value
+            . '</form>';
+    }
 }

@@ -41,7 +41,7 @@ class Post extends BaseController
     }
 
     public function post(int $id) : string {
-        $post = $this->postModel->findWithTags($id);
+        $post = $this->postModel->findWithProperties($id);
 
         if (!$post) throw PageNotFoundException::forPageNotFound();
 
@@ -49,7 +49,7 @@ class Post extends BaseController
             'meta_title' => $post->post_title,
             'title' => $post->post_title,
             'post' => $post,
-        ];
+        ]; 
 
         return view('post_view_one', $data);
     }
