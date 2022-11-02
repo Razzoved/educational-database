@@ -39,16 +39,4 @@ class Post extends Entity
         }
         return $result;
     }
-
-    public function groupToLinks(string $tag) : string
-    {
-        $header = "";
-        $result = "";
-        foreach ($this->properties as $p) {
-            if (strcmp($p->property_tag, $tag) != 0) continue;
-            if (strcmp($header, "") == 0) $header = $p->property_tag;
-            $result .= $p->valueToLink();
-        }
-        return $header . $result;
-    }
 }

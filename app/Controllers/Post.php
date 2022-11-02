@@ -32,7 +32,12 @@ class Post extends BaseController
         ];
 
         if ($this->request->getPost()) {
-            $data['posts'] = $this->postModel->filter($_POST);
+            $search = "";
+            if (isset($_POST['search'])) {
+                $search = $_POST['search'];
+                unset($_POST['search']);
+            }
+            $data['posts'] = $this->postModel->filter($search, $_POST);
         } else {
             $data['posts'] = $this->postModel->findAll();
         }

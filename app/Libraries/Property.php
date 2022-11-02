@@ -28,16 +28,21 @@ class Property
         return $retVal;
     }
 
-    public function postProperties(Post $post) : string
+    // public function postProperties(Post $post) : string
+    // {
+    //     if (!isset($post) || !isset($post->properties)) throw PageNotFoundException::forPageNotFound();
+
+    //     $retVal = "";
+
+    //     foreach ($post->getGroupedProperties() as $group) {
+    //         $retVal .= view('components/post_group', ['group' => $group]);
+    //     }
+
+    //     return $retVal;
+    // }
+
+    public function postGroup(array $params) : string
     {
-        if (!isset($post) || !isset($post->properties)) throw PageNotFoundException::forPageNotFound();
-
-        $retVal = "";
-
-        foreach ($post->getGroupedProperties() as $group) {
-            $retVal .= view('components/post_group', ['group' => $group]);
-        }
-
-        return $retVal;
+        return view('components/post_group', ['tag' => $params['tag'], 'values' => $params['values']]);
     }
 }
