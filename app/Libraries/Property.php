@@ -19,10 +19,10 @@ class Property
             if ($p->property_tag != $last) {
                 $retVal .= '<ul>';
                 $retVal .= "<h6>$p->property_tag</h6>";
-                $retVal .= view('components/post_filter', ['filter' => $p]);
+                $retVal .= view('components/property_as_checkbox', ['filter' => $p]);
                 $last = $p->property_tag;
             } else {
-                $retVal .= view('components/post_filter', ['filter' => $p]);
+                $retVal .= view('components/property_as_checkbox', ['filter' => $p]);
             }
         }
         return $retVal;
@@ -43,6 +43,6 @@ class Property
 
     public function postGroup(array $params) : string
     {
-        return view('components/post_group', ['tag' => $params['tag'], 'values' => $params['values']]);
+        return view('components/property_as_list', ['tag' => $params['tag'], 'values' => $params['values']]);
     }
 }

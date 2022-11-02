@@ -1,7 +1,7 @@
 <li class="mb-1">
 
-    <!-- toggle -->
-    <button class="btn btn-toggle align-items-center rounded collapsed"
+    <!-- toggler that shows or hides groups' value list -->
+    <a class="btn btn-toggle align-items-center rounded collapsed"
             style="justify-content: center; display: flex"
             data-bs-toggle="collapse"
             data-bs-target="#<?= str_replace(' ', '__', $tag) ?>-collapse"
@@ -16,10 +16,11 @@
              xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
         </svg>
+        <!-- property group tag -->
         <strong style="font-size: 1.2em;"><?= $tag ?></strong>
-    </button>
+    </a>
 
-    <!-- tag list -->
+    <!-- hideable value list -->
     <div class="collapse show" id='<?= str_replace(' ', '__', $tag) ?>-collapse'>
         <ul class="btn-toggle-nav list-unstyled">
             <?php foreach ($values as $value) : ?>

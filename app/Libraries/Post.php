@@ -6,6 +6,6 @@ class Post
 {
     public function postItem(array $params) : string
     {
-        return view('components/post_post', $params);
+        return view('components/post_as_card', $params);
     }
 }
