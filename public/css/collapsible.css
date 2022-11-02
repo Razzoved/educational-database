@@ -1,0 +1,15 @@
+a[aria-expanded=false] .collapse-hide {
+    display: none;
+}
+
+a[aria-expanded=true] .collapse-show {
+    display: none;
+}
+
+button[aria-expanded=false] .collapse-hide {
+    display: none;
+}
+
+button[aria-expanded=true] .collapse-show {
+    display: none;
+}

@@ -33,7 +33,7 @@
     <!-- Materials -->
     <div>
         <h4>Downloadable files:</h4>
-        <h4>
+        <h4></h4>
     </div>
 
     <hr>
