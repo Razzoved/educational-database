@@ -2,10 +2,12 @@
 
 namespace App\Libraries;
 
+use App\Entities\Post as EntitiesPost;
+
 class Post
 {
-    public function postItem(array $params) : string
+    public function postItem(EntitiesPost $post) : string
     {
-        return view('components/post_as_card', $params);
+        return view('components/post_as_card', ['post' => $post]);
     }
 }

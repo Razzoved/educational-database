@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\MaterialModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -12,6 +13,7 @@ use App\Models\PostModel;
 class Post extends BaseController
 {
     private PostModel $postModel;
+    private MaterialModel $materialModel;
 
     /**
      * Constructor.
@@ -20,6 +22,7 @@ class Post extends BaseController
     {
         parent::initController($request, $response, $logger);
         $this->postModel = new PostModel();
+        $this->materialModel = new MaterialModel();
 
         // E.g.: $this->session = \Config\Services::session();
     }
@@ -50,11 +53,13 @@ class Post extends BaseController
 
         if (!$post) throw PageNotFoundException::forPageNotFound();
 
+        $post->materials = $this->materialModel->findMaterials($id);
+
         $data = [
             'meta_title' => $post->post_title,
             'title' => $post->post_title,
             'post' => $post,
-        ]; 
+        ];
 
         return view('post_view_one', $data);
     }

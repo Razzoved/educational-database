@@ -12,6 +12,7 @@ class MaterialModel extends Model
     protected $allowedFields = [
         'post_id',
         'material_title',
+        'material_type',
         'material_path'
     ];
 
@@ -23,4 +24,14 @@ class MaterialModel extends Model
     protected $updatedField  = 'material_updated_at';
 
     protected $returnType = Material::class;
+
+    public function findMaterials(int $postId) : array
+    {
+        return $this->select("*")
+                    ->where('post_id', $postId)
+                    ->orderBy('material_type')
+                    ->orderBy('material_title')
+                    ->get()
+                    ->getResult();
+    }
 }

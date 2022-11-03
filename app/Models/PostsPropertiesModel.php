@@ -31,6 +31,23 @@ class PostsPropertiesModel extends Model
     }
 
     /**
+     * Returns all properties that are currently in use. Discards all
+     * duplicates, returend values are ordered firt by tag, then by value.
+     *
+     * @return array all used properties (array of Property class objects)
+     */
+    public function getUsedProperties() : array
+    {
+        return $this->select("$this->properties.*")
+                    ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
+                    ->orderBy("$this->properties.property_tag")
+                    ->orderBy("$this->properties.property_value")
+                    ->distinct()
+                    ->get()
+                    ->getCustomResultObject(Property::class);
+    }
+
+    /**
      * Compiles an SQL query, which returns all id's of posts, whose
      * proterties meet the filtering criteria. This query is not exectured
      * and is returned as string.
@@ -63,22 +80,5 @@ class PostsPropertiesModel extends Model
                 ->having("COUNT(*) >=", $requiredTags);
 
         return $builder->getCompiledSelect();
-    }
-
-    /**
-     * Returns all properties that are currently in use. Discards all
-     * duplicates, returend values are ordered firt by tag, then by value.
-     *
-     * @return array all used properties (array of Property class objects)
-     */
-    public function getUsedProperties() : array
-    {
-        return $this->select("$this->properties.*")
-                    ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
-                    ->orderBy("$this->properties.property_tag")
-                    ->orderBy("$this->properties.property_value")
-                    ->distinct()
-                    ->get()
-                    ->getCustomResultObject(Property::class);
     }
 }

@@ -10,6 +10,7 @@ class Material extends Entity
         'material_id'         => null,
         'post_id'             => null,
         'material_title'      => null,
+        'material_type'       => null,
         'material_path'       => null,
         'material_created_at' => null,
         'material_updated_at' => null,
@@ -19,6 +20,7 @@ class Material extends Entity
         'material_id'    => 'int',
         'post_id'        => 'int',
         'material_title' => 'string',
+        'material_type'  => 'string',
         'material_path'  => 'string',
     ];
 }

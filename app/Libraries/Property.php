@@ -2,9 +2,6 @@
 
 namespace App\Libraries;
 
-use App\Entities\Post;
-use CodeIgniter\Exceptions\PageNotFoundException;
-
 class Property
 {
     public function postFilters(array $orderedProperties) : string
@@ -41,8 +38,8 @@ class Property
     //     return $retVal;
     // }
 
-    public function postGroup(array $params) : string
+    public function postGroup(string $tag, array $values) : string
     {
-        return view('components/property_as_list', ['tag' => $params['tag'], 'values' => $params['values']]);
+        return view('components/property_as_list', ['tag' => $tag, 'values' => $values]);
     }
 }

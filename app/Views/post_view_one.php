@@ -32,8 +32,7 @@
 
     <!-- Materials -->
     <div>
-        <h4>Downloadable files:</h4>
-        <h4></h4>
+        <?= view_cell('App\Libraries\Material::getMaterialsList', ['post' => $post]) ?>
     </div>
 
     <hr>
