@@ -66,8 +66,8 @@ class PostsPropertiesModel extends Model
         // if any filters are active, apply them
         if ($filters != []) {
             foreach ($filters as $k => $v) {
-                $requiredTags++;
                 $v = array_keys($v);
+                $requiredTags += count($v);
                 $builder->orGroupStart()
                         ->where("$this->properties.property_tag", $k)
                         ->whereIn("$this->properties.property_value", $v)
