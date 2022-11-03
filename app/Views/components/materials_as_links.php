@@ -5,11 +5,11 @@
     <li>
     <?php
         // TODO: make it pretty
-        if ($material->material_type == 'link') {
-            echo "<a href=$material->material_path>$material->material_title</a>";
-        } else {
-            echo "<p><a href=$material->material_path download>$material->material_title</a> of type: $material->material_type</p>";
+        echo "<a href=\"$material->material_path\"";
+        if ($material->material_type != 'link') {
+            echo "download";
         }
+        echo "><span class=\"badge badge-secondary\">$material->material_type</span> $material->material_title</a>";
     ?>
     </li>
     <?php endforeach; ?>

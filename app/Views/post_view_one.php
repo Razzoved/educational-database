@@ -7,19 +7,24 @@
 <!-- Post container -->
 <div class="container" style="margin-bottom: 5vh;">
 
-    <!-- Header with image and tags -->
-    <div>
+    <!-- Post top view: img, header -->
+    <div class="row g-0 m-1">
+
+        <!-- img -->
         <?= isset($post->referTo) ? "<a href='$post->referTo'>" : "" ?>
-        <img class="img-fluid rounded float-left" alt="thumbnail"
+        <img class="col-sm-12 col-md-4 img-fluid rounded float-left m-2" alt="thumbnail"
              src=<?= $post->post_thumbnail ?>>
         <?= isset($post->referTo) ? "</a>" : "" ?>
 
-        <header style="margin-bottom: 1vh;">
+        <!-- header: title, date, views, rating -->
+        <header class="col bg-light m-2" style="align-items: center; justify-content: center; margin-bottom: 1vh;">
             <a href='/' class="btn btn-info">Back to main page</a>
             <h1><?= $post->post_title ?></h1>
-            <!-- Tags if screen too small -->
         </header>
+
     </div>
+
+    <!-- Tags if screen too small -->
 
     <hr>
 
@@ -39,8 +44,8 @@
 
     <!-- Actions -->
     <div>
-        <!-- <a href="/edit/$post->post_id" class="btn btn-primary">Edit</a>
-        <a href="/delete/$post->post_id" class="btn btn-danger">Delete</a> -->
+        <a href="/edit/<?= $post->post_id ?>" class="btn btn-primary">Edit</a>
+        <a href="/delete/<?= $post->post_id ?>" class="btn btn-danger">Delete</a>
         <a href='/' class="btn btn-info">Back to main page</a>
     </div>
 </div>

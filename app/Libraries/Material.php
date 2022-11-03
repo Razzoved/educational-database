@@ -13,7 +13,7 @@ class Material
 
     public function getMaterialsList(Post $post) : string
     {
-        if (!isset($post)) return 'NOT SET';
+        if (!isset($post) || $post->materials == null || $post->materials == []) return 'NOT SET';
         return view('components/materials_as_links', ['materials' => $post->materials]);
     }
 }

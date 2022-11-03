@@ -46,7 +46,7 @@ class PostModel extends Model
                       ->join("($f) f", "$this->table.post_id = f.post_id")
                       ->like('post_title', $search, insensitiveSearch: true)
                       ->get()
-                      ->getResult();
+                      ->getCustomResultObject(Post::class);
 
         return $posts;
     }
