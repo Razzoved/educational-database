@@ -1,41 +1,45 @@
 <!-- MATERIAL DISPLAYED AS A CARD -->
 
-<div class="card h-100 w-90 mb-4 text-bg-light" style="min-width:30vw">
-    <div class="row g-0 m-1">
+<div class="card w-100 mb-4">
+    <div class="row g-0 m-2">
 
         <!-- draw image -->
-        <div class="col-md-2 text-center" style="overflow:clip; max-width:80%; max-height:200px; object-fit:contain;">
+        <div class="col-sm-12 col-md-4 col-lg-2 text-center">
             <img src=<?= $post->post_thumbnail ?> class="img-fluid rounded" alt="Missing image">
         </div>
 
         <!-- draw body of material -->
-        <div class="col">
-
-            <!-- draw title -->
-            <div class="card-header text-bg-light">
+        <div class="col ms-2 bg-white">
+            <!-- header -->
+            <div class="card-header bg-light rounded">
                 <h5 class="card-title"><?= $post->post_title ?></h5>
             </div>
-
-            <div class="card-body">
-                <!-- draw upload date -->
-                <p class="card-text"><small class="text-muted"><?= $post->post_created_at ?></small></p>
-
-                <!-- draw rating -->
-                <p class="card-text"><small class="text-muted">Rating: <?= $post->post_rating ?></small></h5>
-
-                <!-- draw truncated details -->
-                <p class="card-text"><?= (strlen($post->post_content > 140)) ? substr($post->post_content, 0, 137) . '...' : $post->post_content ?></p>
+            <!-- body -->
+            <div class="card-body text-bg-white rounded">
+                <p class="card-text">
+                    <small class="text-muted">Upload date: <?= $post->createdToDate() ?></small>
+                </p>
+                <p class="card-text">
+                    <?= (strlen($post->post_content) > 280) ? substr($post->post_content, 0, 277) . '...' : $post->post_content ?>
+                </p>
             </div>
         </div>
+
     </div>
 
     <!-- draw footer -->
     <div class="card-footer">
-        <div style="float:left; width:50%;">
-            <p class="card-text"><small class="text-muted">Viewed: <?= $post->post_views ?>x</small></p>
-        </div>
-        <div style="float:right; width:50%;">
-            <a href=<?= "/" . $post->post_id ?> class="btn btn-primary stretched-link" style="float:right">Details</a>
+        <!-- draw rating, views, details -->
+        <div class="row g-1" style="align-items: center; justify-content: center">
+            <i class="col-auto bi bi-star-fill"></i>
+            <i class="col-auto bi bi-star-fill"></i>
+            <i class="col-auto bi bi-star-fill"></i>
+            <i class="col-auto bi bi-star"></i>
+            <i class="col-auto bi bi-star" style="margin-right: 0.2em"></i>
+            <small class="col-auto" style="margin-right: 0.5em"><?= $post->post_rating?></small>
+            <small class="col"><u><?= $post->post_rating?> ratings</u></small> <!-- TODO: implement this table and query -->
+            <small class="col-auto text-muted" style="margin-right: 1em">Viewed: <?= $post->post_views ?>x</small>
+            <a class="col-auto btn btn-dark btn-sm stretched-link" href=<?= "/" . $post->post_id ?>>Details</a>
         </div>
     </div>
 

@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
+use DateTime;
 
 class Post extends Entity
 {
@@ -39,5 +40,31 @@ class Post extends Entity
             $result[$p->property_tag][] = $p->property_value;
         }
         return $result;
+    }
+
+    public function createdToDate() : string
+    {
+        return date_format($this->created_at, "d.m.Y");
+    }
+
+    public function updatedToDate() : string
+    {
+        return date_format($this->updated_at, "d.m.Y");
+    }
+
+    function sinceLastUpdate() {
+        $time_ago = '';
+        $diff = $this->updated_at->diff(new DateTime('now'));
+
+        if (($t = $diff->format("%m")) > 0)
+          $time_ago = $t . ' months';
+        else if (($t = $diff->format("%d")) > 0)
+          $time_ago = $t . ' days';
+        else if (($t = $diff->format("%H")) > 0)
+          $time_ago = $t . ' hours';
+        else
+          $time_ago = 'minutes';
+
+        return $time_ago . ' ago (' . $this->updated_at->format('M j, Y') . ')';
     }
 }

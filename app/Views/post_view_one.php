@@ -26,10 +26,7 @@
             </div>
 
             <!-- date -->
-            <small ><p class="text-muted"><?= date_format($post->created_at, "d.m.Y") ?></p></small>
-
-            <div class="row-auto" style="align-items: center; justify-content: center">
-            </div>
+            <p class="text-muted"><small><?= $post->createdToDate() ?></small></p>
 
             <!-- rating, views -->
             <div class="row g-1" style="align-items: center; justify-content: center">
