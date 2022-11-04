@@ -62,7 +62,7 @@
     <hr>
 
     <!-- Actions -->
-    <div>
+    <div class="mb-2">
         <a href="/edit/<?= $post->post_id ?>" class="btn btn-primary">Edit</a>
         <a href="/delete/<?= $post->post_id ?>" class="btn btn-danger">Delete</a>
         <a href='/' class="btn btn-info">Back to main page</a>
