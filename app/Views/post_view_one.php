@@ -5,7 +5,7 @@
 <div class="parent-container d-flex">
 
 <!-- Post container -->
-<div class="container bg-light m-0" style="height: 100vh">
+<div class="container bg-light m-0" style="min-height: 100vh">
 
     <!-- Post top view: img, header -->
     <div class="row g-0 mt-2">

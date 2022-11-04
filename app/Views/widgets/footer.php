@@ -1,8 +1,7 @@
 <footer class="footer bg-dark text-center text-white">
-    <div class="container p-4 pb-0">
-
+    <div class="container p-2 pb-0">
         <!-- Section: Social media -->
-        <section class="mb-4">
+        <section class="mb-2">
             <!-- Facebook -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
                 <i class="bi bi-facebook"></i>
