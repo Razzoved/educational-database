@@ -8,7 +8,7 @@ class Material
 {
     public function relatedMaterials(int $postId) : void
     {
-
+        // TODO
     }
 
     public function getMaterialsList(Post $post) : string

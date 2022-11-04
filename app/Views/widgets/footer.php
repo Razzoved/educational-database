@@ -5,32 +5,22 @@
         <section class="mb-4">
             <!-- Facebook -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="fab fa-facebook-f"></i>
+                <i class="bi bi-facebook"></i>
             </a>
 
             <!-- Twitter -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="fab fa-twitter"></i>
-            </a>
-
-            <!-- Google -->
-            <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="fab fa-google"></i>
+                <i class="bi bi-twitter"></i>
             </a>
 
             <!-- Instagram -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="fab fa-instagram"></i>
+                <i class="bi bi-instagram"></i>
             </a>
 
-            <!-- Linkedin -->
+            <!-- Mail -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="fab fa-linkedin-in"></i>
-            </a>
-
-            <!-- Github -->
-            <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="fab fa-github"></i>
+                <i class="bi bi-envelope-fill"></i>
             </a>
         </section>
     </div>
