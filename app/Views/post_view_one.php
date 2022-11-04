@@ -12,7 +12,7 @@
 
         <!-- img -->
         <?= isset($post->referTo) ? "<a href='$post->referTo'>" : "" ?>
-        <img class="col-sm-12 col-md-4 img-fluid rounded float-left" alt="thumbnail"
+        <img class="col-sm-12 col-md-4 img-fluid rounded" alt="thumbnail"
              src=<?= $post->post_thumbnail ?>>
         <?= isset($post->referTo) ? "</a>" : "" ?>
 
