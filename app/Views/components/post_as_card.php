@@ -9,9 +9,9 @@
         </div>
 
         <!-- draw body of material -->
-        <div class="col ms-2 bg-white">
+        <div class="col mt-2 mt-md-0 ms-0 ms-md-2 bg-white">
             <!-- header -->
-            <div class="card-header bg-light rounded">
+            <div class="card-header text-bg-light rounded pt-2 pb-1 pe-0 pw-0">
                 <h5 class="card-title"><?= $post->post_title ?></h5>
             </div>
             <!-- body -->
