@@ -20,8 +20,8 @@ class MaterialModel extends Model
     protected $useSoftDeletes   = false;
     protected $useTimestamps    = true;
 
-    protected $createdField  = 'material_created_at';
-    protected $updatedField  = 'material_updated_at';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 
     protected $returnType = Material::class;
 

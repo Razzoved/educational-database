@@ -7,13 +7,14 @@ use CodeIgniter\Entity\Entity;
 class Material extends Entity
 {
     protected $attributes = [
-        'material_id'         => null,
-        'post_id'             => null,
-        'material_title'      => null,
-        'material_type'       => null,
-        'material_path'       => null,
-        'material_created_at' => null,
-        'material_updated_at' => null,
+        'material_id'    => null,
+        'post_id'        => null,
+        'material_title' => null,
+        'material_type'  => null,
+        'material_path'  => null,
+        'created_at'     => null,
+        'updated_at'     => null,
+        'deleted_at'     => null,
     ];
 
     protected $casts = [

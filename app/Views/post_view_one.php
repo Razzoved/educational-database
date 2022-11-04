@@ -26,7 +26,7 @@
             </div>
 
             <!-- date -->
-            <small ><p class="text-muted"><?= $post->post_created_at ?></p></small>
+            <small ><p class="text-muted"><?= date_format($post->created_at, "d.m.Y") ?></p></small>
 
             <div class="row-auto" style="align-items: center; justify-content: center">
             </div>

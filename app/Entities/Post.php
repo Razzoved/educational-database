@@ -15,8 +15,8 @@ class Post extends Entity
         'post_is_public'  => null,
         'post_views'      => null,
         'post_rating'     => null,
-        'post_created_at' => null,
-        'post_updated_at' => null,
+        'created_at'      => null,
+        'updated_at'      => null,
         'properties'      => null, // not part of table in DB
         'materials'       => null, // not part of table in DB
     ];

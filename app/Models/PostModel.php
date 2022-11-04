@@ -23,8 +23,8 @@ class PostModel extends Model
     protected $useSoftDeletes   = false;
     protected $useTimestamps    = true;
 
-    protected $createdField  = 'post_created_at';
-    protected $updatedField  = 'post_updated_at';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 
     protected $returnType = Post::class;
 
