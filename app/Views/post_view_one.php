@@ -17,19 +17,19 @@
         <?= isset($post->referTo) ? "</a>" : "" ?>
 
         <!-- header: title, date, views, rating -->
-        <header class="col p-3" style="align-items: center; justify-content: center">
+        <header class="col ms-sm-0 ms-md-2" style="display: flex; flex-direction: column">
 
             <!-- title, goBack -->
             <div class="row g-0">
                 <div class="col"><h1><?= $post->post_title ?></h1></div>
-                <div class="col-auto d-none d-md-inline"><a href='/' class="btn btn-dark">Go back</a></div>
+                <div class="col-auto ms-2 d-none d-md-inline"><a href='/' class="btn btn-dark">Go back</a></div>
             </div>
 
             <!-- date -->
-            <p class="text-muted"><small><?= $post->createdToDate() ?></small></p>
+            <p class="row p-1 text-muted"><small><?= $post->createdToDate() ?></small></p>
 
             <!-- rating, views -->
-            <div class="row g-1" style="align-items: center; justify-content: center">
+            <div class="row g-1 align-self-end mt-auto w-100" style="align-items: center; justify-content: center">
                 <i class="col-auto bi bi-star-fill"></i>
                 <i class="col-auto bi bi-star-fill"></i>
                 <i class="col-auto bi bi-star-fill"></i>
