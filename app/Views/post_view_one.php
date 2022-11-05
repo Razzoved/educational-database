@@ -74,13 +74,7 @@
 </div>
 
 <!-- Tags sidebar shown ONLY on lg -->
-<div class="flex-shrink-0 p-3 bg-light d-none d-lg-inline" style="height: 100vh; width: 280px;">
-    <ul class="list-unstyled ps-0">
-        <?php foreach ($post->getGroupedProperties() as $k => $v) : ?>
-            <?= view_cell('App\Libraries\Property::postGroup', ['tag' => $k, 'values' => $v]) ?>
-        <?php endforeach; ?>
-    </ul>
-</div>
+<?= view('widgets/sidebar_tags', ['properties' => $post->getGroupedProperties()]) ?>
 
 </div>
 <!-- END OF PAGE SPLIT -->

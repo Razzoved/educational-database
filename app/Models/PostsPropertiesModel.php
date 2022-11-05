@@ -34,17 +34,22 @@ class PostsPropertiesModel extends Model
      * Returns all properties that are currently in use. Discards all
      * duplicates, returend values are ordered firt by tag, then by value.
      *
-     * @return array all used properties (array of Property class objects)
+     * @return array all used properties in an array with [keys = tags]
+     *               and [values = all property values of the tag]
      */
     public function getUsedProperties() : array
     {
-        return $this->select("$this->properties.*")
-                    ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
-                    ->orderBy("$this->properties.property_tag")
-                    ->orderBy("$this->properties.property_value")
-                    ->distinct()
-                    ->get()
-                    ->getCustomResultObject(Property::class);
+        $query = $this->select("$this->properties.*")
+                       ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
+                       ->orderBy("$this->properties.property_tag")
+                       ->orderBy("$this->properties.property_value")
+                       ->distinct()
+                       ->get();
+        $result = array();
+        foreach ($query->getCustomResultObject(Property::class) as $property) {
+            $result[$property->property_tag][] = $property->property_value;
+        }
+        return $result;
     }
 
     /**

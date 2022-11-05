@@ -40,9 +40,9 @@ class Post extends BaseController
                 $search = $_POST['search'];
                 unset($_POST['search']);
             }
-            $data['posts'] = $this->postModel->filter($search, $_POST);
+            $data['posts'] = $this->postModel->filter($search, $_POST, 10, 0); // TODO paging
         } else {
-            $data['posts'] = $this->postModel->findAll();
+            $data['posts'] = $this->postModel->findAll(10, 0); // TODO paging
         }
 
         return view('post_view_all', $data);

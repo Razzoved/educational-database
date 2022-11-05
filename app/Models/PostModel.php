@@ -37,7 +37,7 @@ class PostModel extends Model
         return $post;
     }
 
-    public function filter(string $search, array $filters): array
+    public function filter(string $search, array $filters, int $limit, int $offset): array
     {
         $connector = new PostsPropertiesModel();
         $f = $connector->getCompiledFilter($filters);
@@ -45,6 +45,7 @@ class PostModel extends Model
         $posts = $this->select("$this->table.*")
                       ->join("($f) f", "$this->table.post_id = f.post_id")
                       ->like('post_title', $search, insensitiveSearch: true)
+                      ->limit($limit, $offset * $limit)
                       ->get()
                       ->getCustomResultObject(Post::class);
 

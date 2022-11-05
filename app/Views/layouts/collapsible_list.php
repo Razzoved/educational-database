@@ -21,15 +21,8 @@
     <div class="collapse show" id='<?= str_replace(' ', '_', $tag) ?>-collapse'>
         <ul class="btn-toggle-nav list-unstyled">
             <!-- dynamic loading of values -->
-             <?php foreach ($values as $value) : ?>
-            <li class="mb-1">
-                <!-- automatic filter call on all materials when clicked -->
-                <form method="post" action='/'>
-                    <input type="submit" class="btn btn-fluid btn-outline-secondary w-100"
-                           name="<?= $tag ?>[<?= $value ?>]" value="<?= $value ?>"
-                           style="white-space:normal; word-wrap: normal">
-                </form>
-            </li>
+            <?php foreach ($values as $value) : ?>
+                <?= $this->renderSection('item') ?>
             <?php endforeach; ?>
         </ul>
     </div>
