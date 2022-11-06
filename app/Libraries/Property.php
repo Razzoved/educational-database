@@ -2,55 +2,28 @@
 
 namespace App\Libraries;
 
+use CodeIgniter\View\View;
+
 class Property
 {
-    /**
-     * Returns a view of a properties with given tag. Each checkbox is clickable,
-     * but does not call the filter function. Checked values are used on next
-     * search.
-     *
-     * @param string $tag   tag of properties, used as name of group
-     * @param array $values property values, used as checkboxes
-     */
-    public function collapsibleCheckboxes(string $tag, array $values) : string
+    public function buttons(string $tag, array $values) : string
     {
-        $result = "";
+        $result = '';
         foreach ($values as $value) {
-            $result .= view('components/property_as_checkbox', ['tag' => $tag, 'value' => $value]);
+            $result .= '<li class="mb-1">';
+            $result .= view('components/property_button', ['tag' => $tag, 'value' => $value]);
+            $result .= '</li>';
         }
         return $result;
     }
 
-    public function checkboxList(array $groupedProperties) : string
+    public function checkboxes(string $tag, array $values) : string
     {
-        $result = "<form method='post' action='/'>";
-        foreach ($groupedProperties as $tag => $values) {
-            $result .= $this->collapsibleCheckboxes($tag, $values);
-        }
-        return $result . "</form>";
-    }
-
-    /**
-     * Returns a view of a properties with given tag. Each button is clickable
-     * and automatically calls the filter function on all posts.
-     *
-     * @param string $tag   tag of properties, used as name of group
-     * @param array $values property values, used as buttons
-     */
-    public function collapsibleButtons(string $tag, array $values) : string
-    {
-        $result = "";
+        $result = '';
         foreach ($values as $value) {
-            $result .= view('components/property_as_button', ['tag' => $tag, 'value' => $value]);
-        }
-        return $result;
-    }
-
-    public function buttonList(array $groupedProperties) : string
-    {
-        $result = "";
-        foreach ($groupedProperties as $tag => $values) {
-            $result .= $this->collapsibleButtons($tag, $values);
+            $result .= '<li class="list-group-item">';
+            $result .= view('components/property_checkbox', ['tag' => $tag, 'value' => $value]);
+            $result .= '</li>';
         }
         return $result;
     }

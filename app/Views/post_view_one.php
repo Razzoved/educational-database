@@ -43,7 +43,19 @@
         </header>
     </div>
 
-    <!-- Tags if screen too small -->
+    <!-- SMALL SCREEN -->
+    <span class="row d-sm-inline d-md-none m-2">
+        <a class="btn btn-dark"
+           data-bs-toggle="offcanvas"
+           href="#offcanvasSidebar"
+           aria-controls="offcanvasSidebar">
+           Show all tags
+        </a>
+    </span>
+    <span class="row d-sm-inline d-md-none m-2">
+        <a href='/' class="btn btn-dark">Go back</a>
+        </a>
+    </span>
 
     <hr>
 
@@ -73,8 +85,12 @@
 <div class="bg-white d-none d-lg-inline" style="height: 100vh; width: 10px;">
 </div>
 
-<!-- Tags sidebar shown ONLY on lg -->
-<?= view('widgets/sidebar_tags', ['properties' => $post->getGroupedProperties()]) ?>
+<!-- Tags -->
+<?php
+    $properties = $post->getGroupedProperties();
+    echo view('widgets/sidebar_buttons', ['properties' => $properties]);
+    echo view('widgets/offcanvas_buttons', ['properties' => $properties]);
+?>
 
 </div>
 <!-- END OF PAGE SPLIT -->

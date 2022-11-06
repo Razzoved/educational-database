@@ -21,9 +21,10 @@
     <div class="collapse show" id='<?= str_replace(' ', '_', $tag) ?>-collapse'>
         <ul class="btn-toggle-nav list-unstyled">
             <!-- dynamic loading of values -->
-            <?php foreach ($values as $value) : ?>
-                <?= $this->renderSection('item') ?>
-            <?php endforeach; ?>
+            <?= ($type == 'button') ? view_cell('\App\Libraries\Property::buttons',
+                                                ['tag' => $tag, 'values' => $values])
+                                    : view_cell('\App\Libraries\Property::checkboxes',
+                                                ['tag' => $tag, 'values' => $values]) ?>
         </ul>
     </div>
 
