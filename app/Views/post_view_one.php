@@ -5,7 +5,7 @@
 <div class="parent-container d-flex">
 
 <!-- Post container -->
-<div class="container bg-light m-0" style="min-height: 100vh">
+<div class="container bg-light m-0 border" style="min-height: 100vh">
 
     <!-- Post top view: img, header -->
     <div class="row g-0 mt-2">
@@ -22,7 +22,7 @@
             <!-- title, goBack -->
             <div class="row g-0">
                 <div class="col"><h1><?= $post->post_title ?></h1></div>
-                <div class="col-auto ms-2 d-none d-md-inline"><a href='/' class="btn btn-dark">Go back</a></div>
+                <div class="col-auto ms-2 d-none d-lg-block"><a href='/' class="btn btn-dark">Go back</a></div>
             </div>
 
             <!-- date -->
@@ -44,7 +44,8 @@
     </div>
 
     <!-- SMALL SCREEN -->
-    <span class="row d-sm-inline d-md-none m-2">
+    <div>
+    <span class="row g-0 d-md-block d-lg-none mt-2">
         <a class="btn btn-dark"
            data-bs-toggle="offcanvas"
            href="#offcanvasSidebar"
@@ -52,10 +53,11 @@
            Show all tags
         </a>
     </span>
-    <span class="row d-sm-inline d-md-none m-2">
+    <span class="row g-0 d-md-block d-lg-none mt-2">
         <a href='/' class="btn btn-dark">Go back</a>
         </a>
     </span>
+    </div>
 
     <hr>
 
