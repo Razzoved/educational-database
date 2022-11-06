@@ -5,17 +5,17 @@
 <form method="post" action="/">
 
 <!-- Menu bar -->
-<div class="container" style="margin-bottom: 1em;">
+<div>
     <h1><?= $title ?></h1>
 
-    <div class="row">
-        <div class="col" style="margin-right:-1em">
+    <div class="row g-0">
+        <div class="col">
             <input class="form-control" name="search" value="" placeholder="Search"/>
         </div>
-        <div class="col-auto">
+        <div class="col-auto me-2 me-md-0 ms-2">
             <button class="btn btn-dark" type="submit">Search</button>
         </div>
-        <div class="col-auto">
+        <div class="col-auto d-block d-md-none">
             <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
         </div>
     </div>
