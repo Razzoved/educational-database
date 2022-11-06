@@ -62,21 +62,24 @@
     <hr>
 
     <!-- Content -->
-    <div>
-        <p><?= $post->post_content ?></p>
+    <div class="p-2">
+        <pre style="white-space: pre-wrap; font-family: Sans-serif, arial, monospace; font-size: 1rem"><?= $post->post_content ?></pre>
     </div>
 
-    <hr>
-
-    <!-- Materials -->
+    <!-- Links -->
     <div>
-        <?= view_cell('App\Libraries\Material::getMaterialsList', ['post' => $post]) ?>
+        <?= view_cell('App\Libraries\Material::getLinks', ['post' => $post]) ?>
+    </div>
+
+    <!-- Downloadable -->
+    <div>
+        <?= view_cell('App\Libraries\Material::getFiles', ['post' => $post]) ?>
     </div>
 
     <hr>
 
     <!-- Actions -->
-    <div class="mb-2">
+    <div class="mb-5">
         <a href="/edit/<?= $post->post_id ?>" class="btn btn-primary">Edit</a>
         <a href="/delete/<?= $post->post_id ?>" class="btn btn-danger">Delete</a>
         <a href='/' class="btn btn-info">Back to main page</a>

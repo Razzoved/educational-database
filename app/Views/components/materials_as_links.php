@@ -1,15 +1,13 @@
 <!-- group of MATERIALS shown as clickable links -->
-
-<ul class="list-unstyled">
+<?= ($materials == []) ? "" : "<hr><h5>$title</h5>" ?>
+<ul class="list-unstyled ms-2">
     <?php foreach ($materials as $material) : ?>
     <li>
     <?php
-        echo "<span class=\"badge bg-secondary\">$material->material_type</span>";
+        echo "<span class=\"badge bg-primary me-1\">$material->material_type</span>";
         echo "  ";
         echo "<a href=\"$material->material_path\"";
-        if ($material->material_type != 'link') {
-            echo "download";
-        }
+        if ($material->material_type != 'link') echo "download";
         echo ">$material->material_title</a>";
     ?>
     </li>

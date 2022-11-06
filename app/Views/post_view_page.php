@@ -12,11 +12,11 @@
         <div class="col">
             <input class="form-control" name="search" value="" placeholder="Search"/>
         </div>
-        <div class="col-auto me-2 me-md-0 ms-2">
-            <button class="btn btn-dark" type="submit">Search</button>
+        <div class="col-auto me-2 me-md-0 ms-2 w-25">
+            <button class="btn btn-success w-100" type="submit">Search</button>
         </div>
-        <div class="col-auto d-block d-md-none">
-            <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
+        <div class="col-auto d-block d-md-none w-25">
+            <a class="btn btn-dark w-100" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
         </div>
     </div>
 
