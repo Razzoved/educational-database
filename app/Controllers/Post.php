@@ -27,11 +27,12 @@ class Post extends BaseController
         // E.g.: $this->session = \Config\Services::session();
     }
 
-    public function index() : string {
+    public function index(int $page) : string {
         $data = [
             'meta_title' => 'Materials',
             'title' => 'Materials',
-            'filters' => $this->postModel->getUsedProperties()
+            'filters' => $this->postModel->getUsedProperties(),
+            'page' => max($page, 0)
         ];
 
         if ($this->request->getPost()) {
@@ -40,12 +41,12 @@ class Post extends BaseController
                 $search = $_POST['search'];
                 unset($_POST['search']);
             }
-            $data['posts'] = $this->postModel->filter($search, $_POST, 10, 0); // TODO paging
+            $data['posts'] = $this->postModel->filter($search, $_POST, 10, $page); // TODO paging
         } else {
-            $data['posts'] = $this->postModel->findAll(10, 0); // TODO paging
+            $data['posts'] = $this->postModel->findAll(10, 10 * $page); // TODO paging
         }
 
-        return view('post_view_all', $data);
+        return view('post_view_page', $data);
     }
 
     public function post(int $id) : string {

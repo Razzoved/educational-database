@@ -40,9 +40,9 @@ $routes->set404Override();
 //$routes->get('/', 'Home::index');
 
 $routes->group('/', function($routes) {
-    $routes->add('', 'Post::index');
-    $routes->add('all', 'Post::index');
-    $routes->add('(:num)', 'Post::post/$1');
+    $routes->add('', 'Post::index/0');
+    $routes->add('(:num)', 'Post::index/$1');
+    $routes->add('posts/(:num)', 'Post::post/$1');
     $routes->add('new', 'Post::new');
     $routes->add('delete/(:num)', 'Post::delete/$1');
     $routes->add('edit/(:num)', 'Post::edit/$1');

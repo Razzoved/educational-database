@@ -1,6 +1,7 @@
 <!-- MATERIAL DISPLAYED AS A CARD -->
 
 <div class="card w-100 mb-4">
+    <!-- draw header, contents -->
     <div class="row g-0 m-2">
 
         <!-- draw image -->
@@ -39,7 +40,7 @@
             <small class="col-auto" style="margin-right: 0.5em"><?= $post->post_rating?></small>
             <small class="col"><u><?= $post->post_rating?> ratings</u></small> <!-- TODO: implement this table and query -->
             <small class="col-auto text-muted" style="margin-right: 1em">Viewed: <?= $post->post_views ?>x</small>
-            <a class="col-auto btn btn-dark btn-sm stretched-link" href=<?= "/" . $post->post_id ?>>Details</a>
+            <a class="col-auto btn btn-dark btn-sm stretched-link" href="/posts/<?= $post->post_id?>">Details</a>
         </div>
     </div>
 
