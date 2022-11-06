@@ -50,10 +50,18 @@
                 // paging
                 $prevPage = max($page - 1, 0);
                 $nextPage = $page + 1;
+
+                echo '<nav aria-label="pagesLabel">';
                 echo '<ul class="pagination justify-content-center">';
-                echo "<li class='page-item'><a class='page-link' href='/$prevPage'>Previous</a></li>";
+                if ($page == 0) {
+                    echo '<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Previous</a></li>';
+                } else {
+                    echo "<li class='page-item'><a class='page-link' href='/$prevPage'>Previous</a></li>";
+                }
+                echo "<li class='page-item'><a class='page-link' href='#'>$page</a></li>";
                 echo "<li class='page-item'><a class='page-link' href='/$nextPage'>Next</a></li>";
                 echo '</ul>';
+                echo '</nav>';
             }
         ?>
 
