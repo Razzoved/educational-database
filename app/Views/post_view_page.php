@@ -36,7 +36,13 @@
     <div class="container-fluid border p-2 bg-light">
         <?php
             if ($posts == []) {
-                echo '<div class="text-center h-50"><h5>Nothing was found!</h5></div>';
+                echo '<div class="text-center">';
+                echo '<br>';
+                echo '<hr>';
+                echo '<h1>Nothing was found!</h1>';
+                echo '<hr>';
+                echo '<br>';
+                echo '</div>';
             } else {
                 foreach($posts as $post) {
                     echo view_cell('\App\Libraries\Post::postItem', ['post' => $post]);

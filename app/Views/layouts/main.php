@@ -24,7 +24,7 @@
 <?= $this->include('widgets/navigation_bar') ?>
 
 <!-- Dynamic part of the layout -->
-<div class="container" style="height: 100%">
+<div class="container" style="height: 100%; min-height: 100vh">
     <?= $this->renderSection('content') ?>
 </div>
 
