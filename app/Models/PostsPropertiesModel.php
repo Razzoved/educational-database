@@ -37,18 +37,21 @@ class PostsPropertiesModel extends Model
      * @return array all used properties in an array with [keys = tags]
      *               and [values = all property values of the tag]
      */
-    public function getUsedProperties() : array
+    public function getUsedProperties(array $visibleIds) : array
     {
         $query = $this->select("$this->properties.*")
-                       ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
-                       ->orderBy("$this->properties.property_tag")
-                       ->orderBy("$this->properties.property_value")
-                       ->distinct()
-                       ->get();
+                      ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
+                      ->whereIn('post_id', $visibleIds)
+                      ->orderBy("$this->properties.property_tag")
+                      ->orderBy("$this->properties.property_value")
+                      ->distinct()
+                      ->get();
+
         $result = array();
         foreach ($query->getCustomResultObject(Property::class) as $property) {
             $result[$property->property_tag][] = $property->property_value;
         }
+
         return $result;
     }
 

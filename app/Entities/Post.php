@@ -9,15 +9,16 @@ class Post extends Entity
 {
     protected $attributes = [
         'post_id'         => null,
+        'post_is_public'  => null,
         'post_title'      => null,
         'post_thumbnail'  => null,
         'post_type'       => null,
         'post_content'    => null,
-        'post_is_public'  => null,
         'post_views'      => null,
-        'post_rating'     => null,
         'created_at'      => null,
         'updated_at'      => null,
+        'rating'          => null, // not part of table in DB
+        'rating_count'    => null, // not part of table in DB
         'properties'      => null, // not part of table in DB
         'materials'       => null, // not part of table in DB
     ];
@@ -30,7 +31,10 @@ class Post extends Entity
         'post_content'    => 'string',
         'post_is_public'  => 'boolean',
         'post_views'      => 'int',
-        'post_rating'     => 'int',
+        'rating'          => 'int',   // not part of table in DB
+        'rating_count'    => 'int',   // not part of table in DB
+        'properties'      => 'array', // not part of table in DB
+        'materials'       => 'array', // not part of table in DB
     ];
 
     public function getGroupedProperties() : array

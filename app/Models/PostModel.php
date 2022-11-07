@@ -10,13 +10,12 @@ class PostModel extends Model
     protected $table         = 'posts';
     protected $primaryKey    = 'post_id';
     protected $allowedFields = [
+        'post_is_public',
         'post_title',
         'post_thumbnail',
         'post_type',
         'post_content',
-        'post_is_public',
         'post_views',
-        'post_rating'
     ];
 
     protected $useAutoIncrement = true;
@@ -28,12 +27,19 @@ class PostModel extends Model
 
     protected $returnType = Post::class;
 
+    public function findAll(int $limit = 0, int $offset = 0) : array
+    {
+        return $this->select('*')
+                    ->where('post_is_public !=', false)
+                    ->get()
+                    ->getCustomResultObject(Post::class);
+    }
+
     public function findWithProperties(int $id) : Post|null
     {
         $post = $this->find($id);
-        if ($post) {
-            $post->properties = (new PostsPropertiesModel())->findProperties($id);
-        }
+        if (!$post || $post->post_is_public == false) return null;
+        $post->properties = (new PostsPropertiesModel())->findProperties($id);
         return $post;
     }
 
@@ -45,6 +51,7 @@ class PostModel extends Model
         $posts = $this->select("$this->table.*")
                       ->join("($f) f", "$this->table.post_id = f.post_id")
                       ->like('post_title', $search, insensitiveSearch: true)
+                      ->where('post_is_public !=', false)
                       ->limit($limit, $offset * $limit)
                       ->get()
                       ->getCustomResultObject(Post::class);
@@ -54,6 +61,12 @@ class PostModel extends Model
 
     public function getUsedProperties() : array
     {
-        return (new PostsPropertiesModel())->getUsedProperties();
+        $visibleIds = $this->select('post_id')
+                           ->where('post_is_public !=', false)
+                           ->get()
+                           ->getResultArray();
+        helper('array');
+        $visibleIds = dot_array_search('*.post_id', $visibleIds);
+        return (new PostsPropertiesModel())->getUsedProperties($visibleIds);
     }
 }
