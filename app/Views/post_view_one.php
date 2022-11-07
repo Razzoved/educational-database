@@ -63,7 +63,9 @@
 
     <!-- Content -->
     <div class="p-2">
-        <pre style="white-space: pre-wrap; font-family: Sans-serif, arial, monospace; font-size: 1rem"><?= $post->post_content ?></pre>
+        <pre style="white-space: pre-wrap; font-family: Sans-serif, arial, monospace; font-size: 1rem">
+            <?= null ?>
+        </pre>
     </div>
 
     <!-- Links -->

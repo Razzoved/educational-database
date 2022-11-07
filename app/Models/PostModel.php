@@ -67,6 +67,7 @@ class PostModel extends Model
                            ->getResultArray();
         helper('array');
         $visibleIds = dot_array_search('*.post_id', $visibleIds);
+        if ($visibleIds == []) return array();
         return (new PostsPropertiesModel())->getUsedProperties($visibleIds);
     }
 }
