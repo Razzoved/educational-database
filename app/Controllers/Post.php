@@ -36,14 +36,14 @@ class Post extends BaseController
         ];
 
         if ($this->request->getPost()) {
-            $search = "";
-            if (isset($_POST['search'])) {
-                $search = $_POST['search'];
-                unset($_POST['search']);
-            }
-            $data['posts'] = $this->postModel->filter($search, $_POST, 10, $page); // TODO paging
+            $data['posts'] = $this->postModel->filter(
+                (isset($_POST['search'])) ? $_POST['search'] : "",
+                (isset($_POST['filters'])) ? $_POST['filters'] : [],
+                10,
+                $page
+            );
         } else {
-            $data['posts'] = $this->postModel->findAll(10, 10 * $page); // TODO paging
+            $data['posts'] = $this->postModel->findAll(10, 10 * $page);
         }
 
         return view('post_view_page', $data);
