@@ -9,7 +9,7 @@ class Material extends Entity
     protected $attributes = [
         'material_id'    => null,
         'post_id'        => null,
-        'material_title' => null,
+        'material_path'  => null,
         'material_type'  => null,
         'created_at'     => null,
         'updated_at'     => null,
@@ -19,7 +19,7 @@ class Material extends Entity
     protected $casts = [
         'material_id'    => 'int',
         'post_id'        => 'int',
-        'material_title' => 'string',
+        'material_path'  => 'string',
         'material_type'  => 'string',
     ];
 
@@ -31,7 +31,7 @@ class Material extends Entity
     public function getPath() : string
     {
         return ($this->isLink())
-            ? $this->material_title
-            : '/uploads/' . $this->post_id . '/' . $this->material_title . '.' . $this->material_type;
+            ? $this->material_path
+            : '/uploads/' . $this->post_id . '/' . $this->material_path . '.' . $this->material_type;
     }
 }

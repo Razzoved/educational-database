@@ -11,7 +11,7 @@ class MaterialModel extends Model
     protected $primaryKey    = 'material_id';
     protected $allowedFields = [
         'post_id',
-        'material_title',
+        'material_path',
         'material_type',
     ];
 
@@ -29,7 +29,7 @@ class MaterialModel extends Model
         return $this->select("*")
                     ->where('post_id', $postId)
                     ->orderBy('material_type')
-                    ->orderBy('material_title')
+                    ->orderBy('material_path')
                     ->get()
                     ->getCustomResultObject(Material::class);
     }

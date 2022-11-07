@@ -7,8 +7,9 @@
         echo "<span class=\"badge bg-primary me-1\">$material->material_type</span>";
         echo "<a href='";
         echo $material->getPath();
-        echo ($material->material_type != 'link') ? "'" : "' download";
-        echo ">$material->material_title</a>";
+        echo ($material->material_type != 'link') ? "'>" : "' download>";
+        echo $material->material_path;
+        echo "</a>";
     ?>
     </li>
     <?php endforeach; ?>
