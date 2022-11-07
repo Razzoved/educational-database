@@ -64,7 +64,7 @@
     <!-- Content -->
     <div class="p-2">
         <pre style="white-space: pre-wrap; font-family: Sans-serif, arial, monospace; font-size: 1rem">
-            <?= null ?>
+            <?= $post->post_content ?>
         </pre>
     </div>
 
