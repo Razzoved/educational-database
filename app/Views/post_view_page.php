@@ -6,16 +6,20 @@
 
 <!-- Menu bar -->
 <div>
-    <h1><?= $title ?></h1>
+    <div class="row g-0">
+        <div class="d-none d-lg-inline" style="width: 290px"></div>
+        <div class="col"><h1><?= $title ?></h1></div>
+    </div>
 
     <div class="row g-0">
+        <div class="d-none d-lg-inline" style="width: 290px"></div>
         <div class="col">
             <input class="form-control" name="search" value="" placeholder="Search"/>
         </div>
-        <div class="col-auto me-2 me-md-0 ms-2 w-25">
+        <div class="col-auto me-2 me-lg-0 ms-2" style="width: 20%">
             <button class="btn btn-success w-100" type="submit">Search</button>
         </div>
-        <div class="col-auto d-block d-md-none w-25">
+        <div class="col-auto d-block d-lg-none" style="width: 20%">
             <a class="btn btn-dark w-100" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
         </div>
     </div>

@@ -19,7 +19,7 @@
     <title><?= (isset($meta_title) ? $meta_title : 'Fallback title') ?></title>
 </head>
 
-<body>
+<body class="bg-white">
 <!-- bootstrap navigation bar -->
 <?= $this->include('widgets/navigation_bar') ?>
 
