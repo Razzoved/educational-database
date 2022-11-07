@@ -6,7 +6,7 @@
 
         <!-- draw image -->
         <div class="col-sm-12 col-md-4 col-lg-2 text-center">
-            <img src=<?= $post->post_thumbnail ?> class="img-fluid rounded" alt="Missing image">
+            <img src=<?= $post->getThumbnail() ?> class="img-fluid rounded" alt="Missing image">
         </div>
 
         <!-- draw body of material -->

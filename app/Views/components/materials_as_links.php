@@ -5,9 +5,9 @@
     <li>
     <?php
         echo "<span class=\"badge bg-primary me-1\">$material->material_type</span>";
-        echo "  ";
-        echo "<a href=\"$material->material_path\"";
-        if ($material->material_type != 'link') echo "download";
+        echo "<a href='";
+        echo $material->getPath();
+        echo ($material->material_type != 'link') ? "'" : "' download";
         echo ">$material->material_title</a>";
     ?>
     </li>

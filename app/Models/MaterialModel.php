@@ -13,7 +13,6 @@ class MaterialModel extends Model
         'post_id',
         'material_title',
         'material_type',
-        'material_path'
     ];
 
     protected $useAutoIncrement = true;
@@ -32,6 +31,6 @@ class MaterialModel extends Model
                     ->orderBy('material_type')
                     ->orderBy('material_title')
                     ->get()
-                    ->getResult();
+                    ->getCustomResultObject(Material::class);
     }
 }

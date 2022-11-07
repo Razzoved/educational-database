@@ -31,6 +31,7 @@ class PostModel extends Model
     {
         return $this->select('*')
                     ->where('post_is_public !=', false)
+                    ->limit($limit, $offset * $limit)
                     ->get()
                     ->getCustomResultObject(Post::class);
     }
@@ -68,6 +69,7 @@ class PostModel extends Model
         helper('array');
         $visibleIds = dot_array_search('*.post_id', $visibleIds);
         if ($visibleIds == []) return array();
+        if (gettype($visibleIds) != 'array') $visibleIds = array($visibleIds);
         return (new PostsPropertiesModel())->getUsedProperties($visibleIds);
     }
 }

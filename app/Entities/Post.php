@@ -46,6 +46,13 @@ class Post extends Entity
         return $result;
     }
 
+    public function getThumbnail() : string
+    {
+        return (strncmp($this->post_thumbnail, "http", 4) == 0)
+            ? $this->post_thumbnail
+            : '/uploads/' . $this->post_id . '/' . $this->post_thumbnail;
+    }
+
     public function createdToDate() : string
     {
         return date_format($this->created_at, "d.m.Y");

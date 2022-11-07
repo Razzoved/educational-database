@@ -13,7 +13,7 @@
         <!-- img -->
         <?= isset($post->referTo) ? "<a href='$post->referTo'>" : "" ?>
         <img class="col-sm-12 col-md-4 img-fluid rounded" alt="thumbnail"
-             src=<?= $post->post_thumbnail ?>>
+             src=<?= $post->getThumbnail() ?>>
         <?= isset($post->referTo) ? "</a>" : "" ?>
 
         <!-- header: title, date, views, rating -->
@@ -63,7 +63,7 @@
 
     <!-- Content -->
     <div class="p-2">
-        <pre style="white-space: pre-wrap; font-family: Sans-serif, arial, monospace; font-size: 1rem">
+        <pre style="white-space: pre-line; font-family: Sans-serif, arial, monospace; font-size: 1rem">
             <?= $post->post_content ?>
         </pre>
     </div>

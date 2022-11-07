@@ -11,7 +11,6 @@ class Material extends Entity
         'post_id'        => null,
         'material_title' => null,
         'material_type'  => null,
-        'material_path'  => null,
         'created_at'     => null,
         'updated_at'     => null,
         'deleted_at'     => null,
@@ -22,6 +21,17 @@ class Material extends Entity
         'post_id'        => 'int',
         'material_title' => 'string',
         'material_type'  => 'string',
-        'material_path'  => 'string',
     ];
+
+    public function isLink() : bool
+    {
+        return $this->material_type == 'link';
+    }
+
+    public function getPath() : string
+    {
+        return ($this->isLink())
+            ? $this->material_title
+            : '/uploads/' . $this->post_id . '/' . $this->material_title . '.' . $this->material_type;
+    }
 }
