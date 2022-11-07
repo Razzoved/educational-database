@@ -12,17 +12,17 @@
 
         <!-- img -->
         <?= isset($post->referTo) ? "<a href='$post->referTo'>" : "" ?>
-        <img class="col-sm-12 col-md-4 img-fluid rounded" alt="thumbnail"
+        <img class="col-sm-12 col-md-2 img-fluid rounded" style="object-fit:cover" alt="thumbnail"
              src=<?= $post->getThumbnail() ?>>
         <?= isset($post->referTo) ? "</a>" : "" ?>
 
         <!-- header: title, date, views, rating -->
-        <header class="col ms-sm-0 ms-md-2" style="display: flex; flex-direction: column">
+        <header class="col ms-sm-0 ms-md-4" style="display: flex; flex-direction: column">
 
             <!-- title, goBack -->
             <div class="row g-0">
-                <div class="col"><h1><?= $post->post_title ?></h1></div>
-                <div class="col-auto ms-2 d-none d-lg-block"><a href='/' class="btn btn-dark">Go back</a></div>
+                <div class="col" style="max-width: 80%; word-wrap: break-word"><h1><?= $post->post_title ?></h1></div>
+                <div class="col-auto d-none d-lg-block ms-auto"><a href='/' class="btn btn-dark">Go back</a></div>
             </div>
 
             <!-- date -->
