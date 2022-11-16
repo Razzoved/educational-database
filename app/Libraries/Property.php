@@ -2,8 +2,6 @@
 
 namespace App\Libraries;
 
-use CodeIgniter\View\View;
-
 class Property
 {
     public function buttons(string $tag, array $values) : string

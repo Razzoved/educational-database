@@ -30,8 +30,8 @@
 <!-- Presents all materials in a nicer html --->
 <div class="parent-container d-flex" style="height:100%">
 
-    <?= view('widgets/sidebar_checkboxes', ['properties' => $filters]) ?>
-    <?= view('widgets/offcanvas_checkboxes', ['properties' => $filters]) ?>
+    <?= view('widgets/sidebar_checkboxes', [$filters]) ?>
+    <?= view('widgets/offcanvas_checkboxes', [$filters]) ?>
 
     <!-- Padding -->
     <div class="bg-white d-none d-lg-inline" style="height: 100%; width: 10px;"></div>
@@ -39,7 +39,7 @@
     <!-- Contents -->
     <div class="container-fluid border p-2 bg-light">
         <?php
-            if ($posts == []) {
+            if ($materials == []) {
                 echo '<div class="text-center">';
                 echo '<br>';
                 echo '<hr>';
@@ -48,8 +48,8 @@
                 echo '<br>';
                 echo '</div>';
             } else {
-                foreach($posts as $post) {
-                    echo view_cell('\App\Libraries\Post::postItem', ['post' => $post]);
+                foreach($materials as $material) {
+                    echo view_cell('\App\Libraries\Material::toCard', [$material]);
                 }
                 // paging
                 $prevPage = max($page - 1, 0);

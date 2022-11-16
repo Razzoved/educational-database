@@ -7,24 +7,22 @@ use App\Entities\Property;
 
 class PostsPropertiesModel extends Model
 {
-    protected $table = 'posts_properties';
-    protected $allowedFields = ['post_id', 'property_id'];
-
-    private $properties = 'properties';
+    protected $table = 'material_property';
+    protected $allowedFields = ['material_id', 'property_id'];
 
     /**
-     * Looks for ALL properties belonging to a given post. Returns
+     * Looks for ALL properties belonging to a given material. Returns
      * an array of Property class objects ordered by tag & value.
      *
-     * @param int $id posts' id whose tags we want to get
+     * @param int $id materials' id whose tags we want to get
      */
     public function findProperties(int $id) : array
     {
-        return $this->select("$this->properties.*")
-                    ->join($this->properties, "$this->table.property_id = properties.property_id")
-                    ->where("$this->table.post_id", $id)
-                    ->orderBy("$this->properties.property_tag")
-                    ->orderBy("$this->properties.property_value")
+        return $this->select('properties.*')
+                    ->join('properties', "$this->table.property_id = properties.property_id")
+                    ->where("$this->table.material_id", $id)
+                    ->orderBy("properties.property_tag")
+                    ->orderBy("properties.property_value")
                     ->distinct()
                     ->get()
                     ->getCustomResultObject(Property::class);
@@ -39,11 +37,11 @@ class PostsPropertiesModel extends Model
      */
     public function getUsedProperties(array $visibleIds) : array
     {
-        $query = $this->select("$this->properties.*")
-                      ->join($this->properties, "$this->table.property_id = $this->properties.property_id")
-                      ->whereIn('post_id', $visibleIds)
-                      ->orderBy("$this->properties.property_tag")
-                      ->orderBy("$this->properties.property_value")
+        $query = $this->select('properties.*')
+                      ->join('properties', "$this->table.property_id = properties.property_id")
+                      ->whereIn('material_id', $visibleIds)
+                      ->orderBy('properties.property_tag')
+                      ->orderBy('properties.property_value')
                       ->distinct()
                       ->get();
 
@@ -56,7 +54,7 @@ class PostsPropertiesModel extends Model
     }
 
     /**
-     * Compiles an SQL query, which returns all id's of posts, whose
+     * Compiles an SQL query, which returns all id's of materials, whose
      * proterties meet the filtering criteria. This query is not exectured
      * and is returned as string.
      *
@@ -68,8 +66,8 @@ class PostsPropertiesModel extends Model
 
         // build basic query from two tables
         $builder = $this->builder()
-                        ->select("$this->table.post_id")
-                        ->join($this->properties, "$this->table.property_id = $this->properties.property_id");
+                        ->select("$this->table.material_id")
+                        ->join('properties', "$this->table.property_id = properties.property_id");
 
         // if any filters are active, apply them
         if ($filters != []) {
@@ -77,15 +75,15 @@ class PostsPropertiesModel extends Model
                 $v = array_keys($v);
                 $requiredTags += count($v);
                 $builder->orGroupStart()
-                        ->where("$this->properties.property_tag", $k)
-                        ->whereIn("$this->properties.property_value", $v)
+                        ->where('properties.property_tag', $k)
+                        ->whereIn('properties.property_value', $v)
                         ->groupEnd();
             }
         }
 
         // check if it has all require tags
-        $builder->groupBy("$this->table.post_id")
-                ->having("COUNT(*) >=", $requiredTags);
+        $builder->groupBy("$this->table.material_id")
+                ->having('COUNT(*) >=', $requiredTags);
 
         return $builder->getCompiledSelect();
     }

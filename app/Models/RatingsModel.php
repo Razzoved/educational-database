@@ -31,7 +31,7 @@ class MaterialModel extends Model
                     ->getResult();
     }
 
-    public function findRating(int $postId, string $userId) : Rating|null
+    public function getRating(int $postId, string $userId) : Rating|null
     {
         return $this->find(['post_id' => $postId, 'rating_uid' => $userId]);
     }

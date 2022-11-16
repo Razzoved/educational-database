@@ -22,10 +22,11 @@ use Psr\Log\LoggerInterface;
 abstract class BaseController extends Controller
 {
     /**
-     * Link to the base page of parent website, if this is
-     * a standalone app, set it to '\'
+     * Default number of elements shown per page
+     *
+     * @var int
      */
-    public static $homeURL = 'https://www.academicintegrity.eu/wp';
+    protected $pageSize = 10;
 
     /**
      * Instance of the main Request object.

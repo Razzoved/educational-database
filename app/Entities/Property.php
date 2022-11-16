@@ -12,8 +12,14 @@ class Property extends Entity
         'property_value' => null,
     ];
 
+    protected $datamap = [
+        'id'    => 'property_id',
+        'tag'   => 'property_tag',
+        'value' => 'property_value',
+    ];
+
     protected $casts = [
-        'property_id'  => 'int',
-        'property_tag' => 'string',
+        'id'  => 'int',
+        'tag' => 'string',
     ];
 }

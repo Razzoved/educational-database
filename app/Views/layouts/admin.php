@@ -16,12 +16,16 @@
     <!-- Bootsrap icons CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
-    <title><?= (isset($meta_title) ? $meta_title : 'Missing title') ?></title>
+    <title><?= (isset($meta_title) ? $meta_title : 'Admin - Missing title') ?></title>
 </head>
 
 <body class="bg-white">
-<!-- bootstrap navigation bar -->
-<?= $this->include('widgets/navigation_bar') ?>
+
+<!-- admin menu sidebar -->
+<div class="container" style="height: 100%; min-height: 100vh">
+    <?= $this->renderSection('sidebar_image') ?>
+    <?= $this->renderSection('sidebar_content') ?>
+</div>
 
 <!-- Dynamic part of the layout -->
 <div class="container" style="height: 100%; min-height: 100vh">

@@ -16,10 +16,7 @@ class PropertyModel extends Model
 
     protected $useAutoIncrement = true;
     protected $useSoftDeletes   = false;
-    protected $useTimestamps    = true;
-
-    protected $createdField  = 'post_created_at';
-    protected $updatedField  = 'post_updated_at';
+    protected $useTimestamps    = false;
 
     protected $returnType = Property::class;
 
