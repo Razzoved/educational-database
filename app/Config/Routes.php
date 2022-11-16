@@ -19,7 +19,7 @@ if (is_file(SYSTEMPATH . 'Config/Routes.php')) {
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
+$routes->setDefaultController('Material');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
@@ -37,15 +37,13 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-//$routes->get('/', 'Home::index');
-
 $routes->group('/', function($routes) {
-    $routes->add('', 'Post::index/0');
-    $routes->add('(:num)', 'Post::index/$1');
-    $routes->add('posts/(:num)', 'Post::post/$1');
-    $routes->add('new', 'Post::new');
-    $routes->add('delete/(:num)', 'Post::delete/$1');
-    $routes->add('edit/(:num)', 'Post::edit/$1');
+    $routes->add('', 'Material::index/0');
+    $routes->add('(:num)', 'Material::index/$1');
+    $routes->add('material/(:num)', 'Material::material/$1');
+    // $routes->add('new', 'Material::new');
+    // $routes->add('delete/(:num)', 'Material::delete/$1');
+    // $routes->add('edit/(:num)', 'Material::edit/$1');
 });
 
 /*
