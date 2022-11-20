@@ -4,22 +4,22 @@
         <section class="mb-2">
             <!-- Facebook -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="bi bi-facebook"></i>
+                <i class="fa-brands fa-facebook"></i>
             </a>
 
             <!-- Twitter -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="bi bi-twitter"></i>
+                <i class="fa-brands fa-twitter"></i>
             </a>
 
             <!-- Instagram -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="bi bi-instagram"></i>
+                <i class="fa-brands fa-instagram"></i>
             </a>
 
             <!-- Mail -->
             <a class="btn btn-outline-light btn-floating m-1" href="#" role="button">
-                <i class="bi bi-envelope-fill"></i>
+                <i class="fa-solid fa-envelope"></i>
             </a>
         </section>
     </div>

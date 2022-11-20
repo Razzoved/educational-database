@@ -32,11 +32,11 @@
     <div class="card-footer">
         <!-- draw rating, views, details -->
         <div class="row g-1" style="align-items: center; justify-content: center">
-            <i class="col-auto bi bi-star-fill"></i>
-            <i class="col-auto bi bi-star-fill"></i>
-            <i class="col-auto bi bi-star-fill"></i>
-            <i class="col-auto bi bi-star"></i>
-            <i class="col-auto bi bi-star" style="margin-right: 0.2em"></i>
+            <i class="col-auto fa-solid fa-star"></i>
+            <i class="col-auto fa-solid fa-star"></i>
+            <i class="col-auto fa-solid fa-star"></i>
+            <i class="col-auto fa-regular fa-star"></i>
+            <i class="col-auto fa-regular fa-star" style="margin-right: 0.2em"></i>
             <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating?></small>
             <small class="col"><u><?= $material->rating?> ratings</u></small> <!-- TODO: implement this table and query -->
             <small class="col-auto text-muted" style="margin-right: 1em">Viewed: <?= $material->views ?>x</small>

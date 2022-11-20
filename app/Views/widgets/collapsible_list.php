@@ -8,10 +8,10 @@
             aria-expanded="true">
 
         <!-- triangle right -->
-        <i class="bi bi-caret-right-fill collapse-show"></i>
+        <i class="fa-solid fa-caret-right collapse-show"></i>
 
         <!-- triangle down -->
-        <i class="bi bi-caret-down-fill collapse-hide"></i>
+        <i class="fa-solid fa-caret-down collapse-hide"></i>
 
         <!-- property group tag -->
         <strong style="font-size: 1.2em;"><?= $tag ?></strong>

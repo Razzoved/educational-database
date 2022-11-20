@@ -1,29 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <!-- metadata -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?= base_url('/css/collapsible.css') ?>" type="text/css">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-          crossorigin="anonymous">
-
-    <!-- Bootsrap icons CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-
-    <title><?= (isset($meta_title) ? $meta_title : 'Admin - Missing title') ?></title>
-</head>
+<?= $this->include('layouts/head') ?>
 
 <body class="container-fluid g-0">
-    <!-- header -->
+
     <?= $this->include('admin/user_bar') ?>
 
     <!-- main body -->
@@ -31,8 +12,7 @@
         <?php $sideBar = 280; $padding = 20 ?>
         <!-- admin menu sidebar -->
         <div class="col-auto bg-info d-none d-md-block" style="height: 100%; min-height: 100vh; width: <?= $sideBar ?>px">
-            <?= $this->renderSection('sidebar_image') ?>
-            <?= $this->renderSection('sidebar_content') ?>
+            <?= $this->include('admin/sidebar') ?>
         </div>
 
         <div class="col-auto bg-white d-none d-md-block" style="width: <? $padding ?>px"></div>

@@ -40,11 +40,11 @@
 
             <!-- rating, views -->
             <div class="row g-1 align-self-end mt-auto w-100" style="align-items: center; justify-content: center">
-                <i class="col-auto bi bi-star-fill"></i>
-                <i class="col-auto bi bi-star-fill"></i>
-                <i class="col-auto bi bi-star-fill"></i>
-                <i class="col-auto bi bi-star"></i>
-                <i class="col-auto bi bi-star" style="margin-right: 0.2em"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="col-auto fa-solid fa-star" style="margin-right: 0.2em"></i>
                 <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating ?></small>
                 <small class="col"><u><?= $material->rating_count ?> ratings</u></small> <!-- TODO: implement this table and query -->
                 <small class="col-auto text-muted">Viewed: <?= $material->views ?>x</small>
