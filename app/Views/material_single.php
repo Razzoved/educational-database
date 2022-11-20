@@ -4,6 +4,16 @@
 <!-- START OF PAGE SPLIT --->
 <div class="parent-container d-flex">
 
+<!-- All tags -->
+<?php
+    $properties = $material->getGroupedProperties();
+    echo view('widgets/sidebar_buttons', ['properties' => $properties]);
+    echo view('widgets/offcanvas_buttons', ['properties' => $properties]);
+?>
+
+<!-- Padding -->
+<div class="bg-white d-none d-lg-inline" style="height: 100vh; width: 10px;"></div>
+
 <!-- Post container -->
 <div class="container bg-light m-0 border" style="min-height: 100vh">
 
@@ -79,26 +89,7 @@
     </div>
 
     <hr>
-
-    <!-- Actions -->
-    <div class="mb-5">
-        <a href="/edit/<?= $material->id ?>" class="btn btn-primary">Edit</a>
-        <a href="/delete/<?= $material->id ?>" class="btn btn-danger">Delete</a>
-        <a href='/' class="btn btn-info">Back to main page</a>
-    </div>
 </div>
-
-<!-- Padding -->
-<div class="bg-white d-none d-lg-inline" style="height: 100vh; width: 10px;">
-</div>
-
-<!-- Tags -->
-<?php
-    $properties = $material->getGroupedProperties();
-    echo view('widgets/sidebar_buttons', ['properties' => $properties]);
-    echo view('widgets/offcanvas_buttons', ['properties' => $properties]);
-?>
-
 </div>
 <!-- END OF PAGE SPLIT -->
 
