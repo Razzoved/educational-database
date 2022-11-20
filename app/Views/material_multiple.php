@@ -1,7 +1,6 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
-
 <form method="post" action="/">
 
 <!-- Menu bar -->
@@ -30,8 +29,8 @@
 <!-- Presents all materials in a nicer html --->
 <div class="parent-container d-flex" style="height:100%">
 
-    <?= view('widgets/sidebar_checkboxes', [$filters]) ?>
-    <?= view('widgets/offcanvas_checkboxes', [$filters]) ?>
+    <?= view('widgets/sidebar_checkboxes', ['properties' => $filters]) ?>
+    <?= view('widgets/offcanvas_checkboxes', ['properties' => $filters]) ?>
 
     <!-- Padding -->
     <div class="bg-white d-none d-lg-inline" style="height: 100%; width: 10px;"></div>
@@ -49,7 +48,7 @@
                 echo '</div>';
             } else {
                 foreach($materials as $material) {
-                    echo view_cell('\App\Libraries\Material::toCard', [$material]);
+                    echo view_cell('\App\Libraries\Material::toCard', ['material' => $material]);
                 }
                 // paging
                 $prevPage = max($page - 1, 0);

@@ -20,7 +20,7 @@ class Material extends Entity
         'rating'             => null, // not part of table in DB
         'rating_count'       => null, // not part of table in DB
         'properties'         => null, // not part of table in DB
-        'materials'          => null, // not part of table in DB
+        'resources'          => null, // not part of table in DB
     ];
 
     protected $datamap = [

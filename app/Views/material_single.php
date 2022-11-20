@@ -35,8 +35,8 @@
                 <i class="col-auto bi bi-star-fill"></i>
                 <i class="col-auto bi bi-star"></i>
                 <i class="col-auto bi bi-star" style="margin-right: 0.2em"></i>
-                <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating?></small>
-                <small class="col"><u><?= $material->rating_count?> ratings</u></small> <!-- TODO: implement this table and query -->
+                <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating ?></small>
+                <small class="col"><u><?= $material->rating_count ?> ratings</u></small> <!-- TODO: implement this table and query -->
                 <small class="col-auto text-muted">Viewed: <?= $material->views ?>x</small>
             </div>
 
@@ -70,20 +70,20 @@
 
     <!-- Links -->
     <div>
-        <?= view_cell('App\Libraries\Material::getLinks', [$material]) ?>
+        <?= view_cell('App\Libraries\Material::getLinks', ['material' => $material]) ?>
     </div>
 
     <!-- Downloadable -->
     <div>
-        <?= view_cell('App\Libraries\Material::getFiles', [$material]) ?>
+        <?= view_cell('App\Libraries\Material::getFiles', ['material' => $material]) ?>
     </div>
 
     <hr>
 
     <!-- Actions -->
     <div class="mb-5">
-        <a href="/edit/<?= $material->post_id ?>" class="btn btn-primary">Edit</a>
-        <a href="/delete/<?= $material->post_id ?>" class="btn btn-danger">Delete</a>
+        <a href="/edit/<?= $material->id ?>" class="btn btn-primary">Edit</a>
+        <a href="/delete/<?= $material->id ?>" class="btn btn-danger">Delete</a>
         <a href='/' class="btn btn-info">Back to main page</a>
     </div>
 </div>
@@ -95,8 +95,8 @@
 <!-- Tags -->
 <?php
     $properties = $material->getGroupedProperties();
-    echo view('widgets/sidebar_buttons', [$properties]);
-    echo view('widgets/offcanvas_buttons', [$properties]);
+    echo view('widgets/sidebar_buttons', ['properties' => $properties]);
+    echo view('widgets/offcanvas_buttons', ['properties' => $properties]);
 ?>
 
 </div>

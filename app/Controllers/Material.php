@@ -34,11 +34,10 @@ class Material extends BaseController
             'page' => max($page, 0)
         ];
 
-
         $request = $this->request->getPost();
         if ($request) {
-            var_dump($request);
-            $data['materials'] = $this->materials->filter(
+            // var_dump($request);
+            $data['materials'] = $this->materials->findFiltered(
                 (isset($_POST['search'])) ? $_POST['search'] : "",
                 (isset($_POST['filters'])) ? $_POST['filters'] : [],
                 10,
@@ -51,17 +50,17 @@ class Material extends BaseController
         return view('material_multiple', $data);
     }
 
-    public function post(int $id) : string {
-        $post = $this->materials->findWithProperties($id);
+    public function get(int $id) : string {
+        $material = $this->materials->findWithProperties($id);
 
-        if (!$post) throw PageNotFoundException::forPageNotFound();
+        if (!$material) throw PageNotFoundException::forPageNotFound();
 
-        $post->materials = $this->resources->getMaterials($id);
+        $material->resources = $this->resources->getResources($id);
 
         $data = [
-            'meta_title' => $post->post_title,
-            'title' => $post->post_title,
-            'post' => $post,
+            'meta_title' => $material->title,
+            'title' => $material->title,
+            'material' => $material,
         ];
 
         return view('material_single', $data);

@@ -27,7 +27,7 @@ class ResourceModel extends Model
     public function getResources(int $postId) : array
     {
         return $this->select("*")
-                    ->where('post_id', $postId)
+                    ->where('material_id', $postId)
                     ->orderBy('resource_type')
                     ->orderBy('resource_path')
                     ->get()

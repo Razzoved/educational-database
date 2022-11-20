@@ -9,7 +9,7 @@ class MaterialModel extends Model
 {
     protected $table         = 'ratings';
     protected $allowedFields = [
-        'post_id',
+        'material_id',
         'rating_uid',
         'rating_value'
     ];
@@ -18,7 +18,7 @@ class MaterialModel extends Model
     public function getRatingAvg(int $postId) : int
     {
         return $this->selectAvg('rating_value')
-                    ->where('post_id', $postId)
+                    ->where('material_id', $postId)
                     ->get()
                     ->getResult();
     }
@@ -26,13 +26,13 @@ class MaterialModel extends Model
     public function getRatingCount(int $postId) : int
     {
         return $this->selectCount('*')
-                    ->where('post_id', $postId)
+                    ->where('material_id', $postId)
                     ->get()
                     ->getResult();
     }
 
     public function getRating(int $postId, string $userId) : Rating|null
     {
-        return $this->find(['post_id' => $postId, 'rating_uid' => $userId]);
+        return $this->find(['material_id' => $postId, 'rating_uid' => $userId]);
     }
 }
