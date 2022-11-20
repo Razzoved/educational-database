@@ -22,16 +22,27 @@
     <title><?= (isset($meta_title) ? $meta_title : 'Admin - Missing title') ?></title>
 </head>
 
-<body class="container-fluid bg-white">
-    <!-- admin menu sidebar -->
-    <div class="container bg-dark" style="height: 100%; min-height: 100vh; width: 10vw">
-        <?= $this->renderSection('sidebar_image') ?>
-        <?= $this->renderSection('sidebar_content') ?>
-    </div>
+<body class="container-fluid g-0">
+    <!-- header -->
+    <?= $this->include('admin/user_bar') ?>
 
-    <!-- Dynamic part of the layout -->
-    <div class="container bg-primary" style="margin-left: 10vw; margin-right: 10vw; height: 100%; min-height: 100vh">
-        <?= $this->renderSection('content') ?>
+    <!-- main body -->
+    <div class="row">
+        <?php $sideBar = 280; $padding = 20 ?>
+        <!-- admin menu sidebar -->
+        <div class="col-auto bg-info d-none d-md-block" style="height: 100%; min-height: 100vh; width: <?= $sideBar ?>px">
+            <?= $this->renderSection('sidebar_image') ?>
+            <?= $this->renderSection('sidebar_content') ?>
+        </div>
+
+        <div class="col-auto bg-white d-none d-md-block" style="width: <? $padding ?>px"></div>
+
+        <!-- Dynamic part of the layout -->
+        <div class="col bg-primary" style="height: 100%; min-height: 100vh">
+            <?= $this->renderSection('content') ?>
+        </div>
+
+        <div class="col-auto bg-white d-none d-xxl-block" style="width: <?= $sideBar + $padding ?>px"></div>
     </div>
 
     <!-- Separate footer -->

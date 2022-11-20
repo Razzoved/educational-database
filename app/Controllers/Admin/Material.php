@@ -19,15 +19,16 @@ class Material extends AdminController
     {
         parent::initController($request, $response, $logger);
         $this->materialModel = model(MaterialModel::class);
-
+        $this->all = "material_multiple";
+        $this->single = "material_single";
         // E.g.: $this->session = \Config\Services::session();
     }
 
     public function index(int $page) : string
     {
-        return parent::index(
-            'Materials editor',
-            $this->materialModel->findAll($this->$pageSize, $page * $this->$pageSize)
+        return parent::viewMultiple(
+            'Admin all material',
+            $this->materialModel->findAll($this->pageSize, $page * $this->pageSize)
         );
     }
 
@@ -35,9 +36,13 @@ class Material extends AdminController
     // {
     // }
 
-    // public function edit($id) : string
-    // {
-    // }
+    public function edit($id) : string
+    {
+        return parent::viewOne(
+            'Admin single material',
+            $this->materialModel->find($id)
+        );
+    }
 
     // public function delete($id) : string
     // {

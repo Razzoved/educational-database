@@ -41,9 +41,11 @@ $routes->group('/', function($routes) {
     $routes->add('', 'Material::index/0');
     $routes->add('(:num)', 'Material::index/$1');
     $routes->add('materials/(:num)', 'Material::get/$1');
-    // $routes->add('new', 'Material::new');
-    // $routes->add('delete/(:num)', 'Material::delete/$1');
-    // $routes->add('edit/(:num)', 'Material::edit/$1');
+});
+
+$routes->group('/admin', function($routes) {
+    $routes->get('', 'Admin\Material::index/0');
+    $routes->add('(:num)', 'Admin\Material::edit/$1');
 });
 
 /*

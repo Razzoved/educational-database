@@ -10,6 +10,12 @@ use RuntimeException;
 
 class AdminController extends \App\Controllers\BaseController
 {
+
+    protected $all;
+    protected $single;
+
+    protected $pageSize = 100;
+
     /**
      * Constructor.
      */
@@ -20,7 +26,7 @@ class AdminController extends \App\Controllers\BaseController
         $this->session = \Config\Services::session();
     }
 
-    protected function viewAll(string $title, array $entities) : string
+    protected function viewMultiple(string $title, array $entities) : string
     {
         if (!isset($title)) throw new RuntimeException("page title not set");
         if (!isset($entities)) throw new RuntimeException("entities not set");
@@ -31,28 +37,19 @@ class AdminController extends \App\Controllers\BaseController
             'isEmpty'  => ($entities == []),
         ];
 
-        return view('admin_all', $data);
+        return view('admin/' . $this->all, $data);
     }
 
-    protected function viewOne(Entity $entity) : string
+    protected function viewOne(string $title, Entity $entity) : string
     {
+        if (!isset($title)) throw new RuntimeException("page title not set");
         if (!isset($entity)) throw new RuntimeException("page title not set");
 
         $data = [
-
+            'title'  => $title,
+            'entity' => $entity,
         ];
 
-        return view('admin_one', $data);
-    }
-
-    protected function viewForm(Entity $entity) : string
-    {
-        if (!isset($entity)) throw new RuntimeException("page title not set");
-
-        $data = [
-
-        ];
-
-        return view('admin_form', $data);
+        return view('admin/' . $this->single, $data);
     }
 }
