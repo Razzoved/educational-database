@@ -4,7 +4,7 @@
 <!-- takes meta_title -->
 <?= $this->include('layouts/head') ?>
 
-<body class="bg-white">
+<body>
     <!-- bootstrap navigation bar -->
     <?= $this->include('widgets/navigation_bar') ?>
 

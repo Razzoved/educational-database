@@ -7,22 +7,13 @@
 
     <?= $this->include('admin/user_bar') ?>
 
-    <!-- main body -->
-    <div class="row">
-        <?php $sideBar = 280; $padding = 20 ?>
-        <!-- admin menu sidebar -->
-        <div class="col-auto bg-info d-none d-md-block" style="height: 100%; min-height: 100vh; width: <?= $sideBar ?>px">
+    <div class="row g-0">
+        <div class="col-auto side_dr">
             <?= $this->include('admin/sidebar') ?>
         </div>
-
-        <div class="col-auto bg-white d-none d-md-block" style="width: <? $padding ?>px"></div>
-
-        <!-- Dynamic part of the layout -->
         <div class="col bg-primary" style="height: 100%; min-height: 100vh">
             <?= $this->renderSection('content') ?>
         </div>
-
-        <div class="col-auto bg-white d-none d-xxl-block" style="width: <?= $sideBar + $padding ?>px"></div>
     </div>
 
     <!-- Separate footer -->

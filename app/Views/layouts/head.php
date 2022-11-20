@@ -4,10 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?= base_url('/css/style.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/css/collapsible.css') ?>">
-
     <!-- Font Awesome kit CSS -->
     <script src="https://kit.fontawesome.com/b3b08eaee3.js" crossorigin="anonymous"></script>
 
@@ -17,5 +13,10 @@
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
           crossorigin="anonymous">
 
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?= base_url('/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/css/collapsible.css') ?>">
+
+    <!-- Tab title -->
     <title><?= (isset($meta_title) ? $meta_title : 'Admin - Missing title') ?></title>
 </head>
