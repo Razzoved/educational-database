@@ -4,16 +4,14 @@
 <form method="post" action="/">
 
 <!-- Menu bar -->
-<div class="container-fluid mb-4">
-    <div class="row g-0">
+<div class="container-fluid g-0 mb-4">
+    <div class="row g-0 ms-4">
         <div class="d-none d-lg-inline" style="width: 280px"></div>
-        <div class="d-none d-lg-inline wpad2"></div>
         <div class="col"><h1><?= $title ?></h1></div>
     </div>
 
-    <div class="row g-0">
+    <div class="row g-0 ms-4">
         <div class="d-none d-lg-inline" style="width: 280px"></div>
-        <div class="d-none d-lg-inline wpad2"></div>
         <div class="col">
             <input class="form-control" name="search" value="" placeholder="Search"/>
         </div>
@@ -32,11 +30,8 @@
     <?= view('widgets/sidebar_checkboxes', ['properties' => $filters]) ?>
     <?= view('widgets/offcanvas_checkboxes', ['properties' => $filters]) ?>
 
-    <!-- Padding -->
-    <div class="d-none d-lg-inline vh100 wpad2"></div>
-
     <!-- Contents -->
-    <div class="container-fluid">
+    <div class="container-fluid g-0 ms-4">
         <?php
             if ($materials == []) {
                 echo '<div class="text-center">';

@@ -40,6 +40,9 @@ body {
 .wpad20 {
   width: 20px;
 }
+.wpad30 {
+  width: 30px;
+}
 .wpad40 {
   width: 40px;
 }
@@ -48,6 +51,12 @@ body {
 }
 .wpad2 {
   width: 2rem;
+}
+.wpad3 {
+  width: 3rem;
+}
+.wpad4 {
+  width: 4rem;
 }
 
 .side {
