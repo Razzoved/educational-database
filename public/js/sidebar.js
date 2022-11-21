@@ -3,8 +3,8 @@ let sideExpand = document.querySelector('.side_expand');
 let sideListItem = document.querySelectorAll('.side_listitem');
 
 // Add EventListener to expand icon
-sideExpand.addEventListener('click', () => {
-    side.classList.toggle('side-closed');
+sideExpand?.addEventListener('click', () => {
+    side?.classList.toggle('side-closed');
 });
 
 // Loop through LIs

@@ -4,14 +4,16 @@
 <form method="post" action="/">
 
 <!-- Menu bar -->
-<div>
+<div class="container-fluid mb-4">
     <div class="row g-0">
-        <div class="d-none d-lg-inline" style="width: 290px"></div>
+        <div class="d-none d-lg-inline" style="width: 280px"></div>
+        <div class="d-none d-lg-inline wpad2"></div>
         <div class="col"><h1><?= $title ?></h1></div>
     </div>
 
     <div class="row g-0">
-        <div class="d-none d-lg-inline" style="width: 290px"></div>
+        <div class="d-none d-lg-inline" style="width: 280px"></div>
+        <div class="d-none d-lg-inline wpad2"></div>
         <div class="col">
             <input class="form-control" name="search" value="" placeholder="Search"/>
         </div>
@@ -22,21 +24,19 @@
             <a class="btn btn-dark w-100" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
         </div>
     </div>
-
-    <hr>
 </div>
 
 <!-- Presents all materials in a nicer html --->
-<div class="parent-container d-flex" style="height:100%">
+<div class="parent-container d-flex vh100">
 
     <?= view('widgets/sidebar_checkboxes', ['properties' => $filters]) ?>
     <?= view('widgets/offcanvas_checkboxes', ['properties' => $filters]) ?>
 
     <!-- Padding -->
-    <div class="bg-white d-none d-lg-inline" style="height: 100%; width: 10px;"></div>
+    <div class="d-none d-lg-inline vh100 wpad2"></div>
 
     <!-- Contents -->
-    <div class="container-fluid border p-2 bg-light">
+    <div class="container-fluid">
         <?php
             if ($materials == []) {
                 echo '<div class="text-center">';

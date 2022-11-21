@@ -12,7 +12,7 @@
 ?>
 
 <!-- Padding -->
-<div class="bg-white d-none d-lg-inline" style="height: 100vh; width: 10px;"></div>
+<div class="bg-white d-none d-lg-inline vh100" style="height: 100vh; width: 10px;"></div>
 
 <!-- Post container -->
 <div class="container bg-light m-0 border" style="min-height: 100vh">

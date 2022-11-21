@@ -9,7 +9,7 @@
     <?= $this->include('widgets/navigation_bar') ?>
 
     <!-- Dynamic part of the layout -->
-    <div class="container" style="height: 100%; min-height: 100vh">
+    <div class="container vh100">
         <?= $this->renderSection('content') ?>
     </div>
 

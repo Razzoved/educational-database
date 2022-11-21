@@ -8,7 +8,7 @@ class Property
     {
         $result = '';
         foreach ($values as $value) {
-            $result .= '<li class="mb-1">';
+            $result .= '<li class="clps_listitem">';
             $result .= view('components/property_button', ['tag' => $tag, 'value' => $value]);
             $result .= '</li>';
         }
@@ -19,7 +19,7 @@ class Property
     {
         $result = '';
         foreach ($values as $value) {
-            $result .= '<li class="list-group-item">';
+            $result .= '<li class="clps_listitem">';
             $result .= view('components/property_checkbox', ['tag' => $tag, 'value' => $value]);
             $result .= '</li>';
         }

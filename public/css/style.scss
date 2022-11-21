@@ -11,6 +11,7 @@
     --clr-gray400: #767b91;
     --clr-grape200: #f1dcfc;
     --clr-grape300: #be4bdb;
+    --clr-dark: #444444;
 
     /* border radius */
     --radius: 0.2rem;
@@ -28,6 +29,29 @@
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--clr-gray100);
+}
+
+.vh100 {
+    min-height: 100vh;
+    height: 100%;
+}
+
+.wpad {
+    &10 {
+        width: 10px;
+    }
+    &20 {
+        width: 20px;
+    }
+    &40 {
+        width: 40px;
+    }
+    &1 {
+        width: 1rem;
+    }
+    &2 {
+        width: 2rem;
+    }
 }
 
 .side {
@@ -133,5 +157,88 @@ body {
         p {
             display: none;
         }
+    }
+}
+
+.clps {
+    position: relative;
+    justify-content: left;
+    align-items: left;
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #fafafa;
+    box-shadow: 0px 0px 10px var(--clr-gray300);
+
+    * {
+        color: var(--clr-dark);
+        transition: all 250ms ease-in-out;
+    }
+
+    &_expand {
+        padding: 0.5rem 0.5rem;
+        display: flex;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 250ms ease-in-out;
+        cursor: pointer;
+
+        .fa-caret-right {
+            margin-right: 0.5rem;
+            font-size: 30px;
+        }
+
+        &:hover * {
+            color: var(--clr-primary-hover);
+        }
+    }
+
+
+    &_list {
+        padding: 0.5rem 0.5rem;
+        display: none;
+        flex-direction: column;
+        list-style: none;
+        cursor: pointer;
+
+        &item {
+            &:hover * {
+                color: var(--clr-primary-hover);
+            }
+
+            input[type='checkbox'] {
+                width: 1rem;
+                float: left;
+                cursor: pointer;
+            }
+
+            input[type='checkbox'] + label {
+                display: block;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            input[type='submit'] {
+                width: 100%;
+                padding: 0.2rem;
+                margin-top: 0.2rem;
+                border-radius: 0.5rem;
+                background-color: var(--clr-gray200);
+                border-color: var(--clr-gray100);
+                justify-content: center;
+                text-decoration: none;
+
+                &:hover {
+                    background-color: var(--clr-gray300);
+                }
+            }
+        }
+    }
+
+    &-active &_expand .fa-caret-right {
+        transform: rotateZ(90deg);
+    }
+
+    &-active &_list {
+        display: block;
     }
 }

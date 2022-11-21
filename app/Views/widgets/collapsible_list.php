@@ -1,31 +1,20 @@
-<li class="mb-1">
-
+<li class="clps<?= ($type == 'button') ? ' clps-active' : '' ?>">
     <!-- toggler that shows or hides groups' value list -->
-    <a class="btn btn-toggle align-items-center rounded collapsed"
-            style="justify-content: center; display: flex"
-            data-bs-toggle="collapse"
-            data-bs-target="#<?= str_replace(' ', '_', $tag) ?>-collapse"
-            aria-expanded="true">
+    <a class="clps_expand">
 
         <!-- triangle right -->
-        <i class="fa-solid fa-caret-right collapse-show"></i>
-
-        <!-- triangle down -->
-        <i class="fa-solid fa-caret-down collapse-hide"></i>
+        <i class="fa-solid fa-caret-right"></i>
 
         <!-- property group tag -->
         <strong style="font-size: 1.2em;"><?= $tag ?></strong>
     </a>
 
-    <!-- collapsible list -->
-    <div class="collapse show" id='<?= str_replace(' ', '_', $tag) ?>-collapse'>
-        <ul class="btn-toggle-nav list-unstyled">
-            <!-- dynamic loading of values -->
-            <?= ($type == 'button') ? view_cell('\App\Libraries\Property::buttons',
-                                                ['tag' => $tag, 'values' => $values])
-                                    : view_cell('\App\Libraries\Property::checkboxes',
-                                                ['tag' => $tag, 'values' => $values]) ?>
-        </ul>
-    </div>
-
+    <ul class="clps_list">
+        <!-- dynamic loading of values -->
+        <?= ($type == 'button') ? view_cell('\App\Libraries\Property::buttons',
+                                            ['tag' => $tag, 'values' => $values])
+                                : view_cell('\App\Libraries\Property::checkboxes',
+                                            ['tag' => $tag, 'values' => $values]) ?>
+    </ul>
+    <script src=<?= base_url('/js/collapsible.js') ?>></script>
 </li>

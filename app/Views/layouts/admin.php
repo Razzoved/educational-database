@@ -11,8 +11,10 @@
         <div class="col-auto side_dr">
             <?= $this->include('admin/sidebar') ?>
         </div>
-        <div class="col bg-primary" style="height: 100%; min-height: 100vh">
-            <?= $this->renderSection('content') ?>
+        <div class="col vh100">
+            <div class="container bg-primary vh100">
+                <?= $this->renderSection('content') ?>
+            </div>
         </div>
     </div>
 
