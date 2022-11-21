@@ -200,7 +200,7 @@ body {
   padding: 0.2rem;
   margin-top: 0.2rem;
   border-radius: 0.5rem;
-  background-color: var(--clr-gray200);
+  background-color: var(--clr-dark);
   border-color: var(--clr-gray100);
   justify-content: center;
   text-decoration: none;
