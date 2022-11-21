@@ -4,7 +4,7 @@
     <ul class="list-unstyled ps-0 sticky" style="height: fit-content">
         <!-- TODO: this should not do a post method, but a jquery? reset -->
         <li>
-            <a class="btn btn-dark w-100 mb-2" href='/'>Reset all</a>
+            <a class="btn btn-dark w-100 mb-2" href='#'>Reset all</a>
         </li>
         <?php foreach ($properties as $tag => $values) : ?>
             <?= view('widgets/collapsible_list', ['tag' => $tag, 'values' => $values, 'type' => 'checkbox']) ?>

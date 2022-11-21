@@ -28,7 +28,8 @@ class Material extends AdminController
     {
         return parent::viewMultiple(
             'Admin all material',
-            $this->materialModel->findAll($this->pageSize, $page * $this->pageSize)
+            $this->materialModel->findAll($this->pageSize, $page * $this->pageSize),
+            $this->materialModel->getUsedProperties()
         );
     }
 

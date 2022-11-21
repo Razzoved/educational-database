@@ -4,6 +4,7 @@
     box-shadow: 0px 0px 10px var(--clr-gray300);
     min-height: 100vh;
     height: 100%;
+    background-color: #eeeeee;
 
     &_dr {
         margin-right: -2rem;
@@ -17,7 +18,7 @@
         border-radius: 50%;
         position: absolute;
         right: -1.5rem;
-        top: 1.5rem;
+        top: -1.5rem;
         z-index: 99;
         display: flex;
         justify-content: center;

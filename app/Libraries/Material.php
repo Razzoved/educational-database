@@ -11,6 +11,11 @@ class Material
         return view('components/material_as_card', ['material' => $material]);
     }
 
+    public function toItem(EntitiesMaterial $material) : string
+    {
+        return view('components/material_as_item', ['material' => $material]);
+    }
+
     public function getLinks(EntitiesMaterial $material) : string
     {
         if (!isset($material)) return 'ERROR';

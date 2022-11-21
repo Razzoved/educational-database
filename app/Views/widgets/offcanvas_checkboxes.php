@@ -10,7 +10,7 @@
         <div class="offcanvas-body">
             <button class="btn btn-success w-100 mb-2">Apply</button>
             <!-- TODO: this should not do a post method, but a jquery? reset -->
-            <a class="btn btn-dark w-100 mb-2" href='/'>Reset all</a>
+            <a class="btn btn-dark w-100 mb-2" href='#'>Reset all</a>
             <ul class="list-unstyled ps-0">
                 <?php foreach ($properties as $tag => $values) : ?>
                     <?= view('widgets/collapsible_list', ['tag' => $tag, 'values' => $values, 'type' => 'checkbox']) ?>

@@ -10,7 +10,6 @@ use RuntimeException;
 
 class AdminController extends \App\Controllers\BaseController
 {
-
     protected $all;
     protected $single;
 
@@ -26,15 +25,15 @@ class AdminController extends \App\Controllers\BaseController
         $this->session = \Config\Services::session();
     }
 
-    protected function viewMultiple(string $title, array $entities) : string
+    protected function viewMultiple(string $title, array $entities, array $otherData) : string
     {
         if (!isset($title)) throw new RuntimeException("page title not set");
         if (!isset($entities)) throw new RuntimeException("entities not set");
 
         $data = [
-            'title'    => $title,
-            'entities' => $entities,
-            'isEmpty'  => ($entities == []),
+            'title'     => $title,
+            'entities'  => $entities,
+            'otherData' => $otherData,
         ];
 
         return view('admin/' . $this->all, $data);
