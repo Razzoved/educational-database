@@ -1,0 +1,65 @@
+.clps {
+  position: relative;
+  justify-content: left;
+  align-items: left;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0px 0px 10px var(--clr-gray300);
+}
+.clps * {
+  color: var(--clr-dark);
+  transition: all 250ms ease-in-out;
+}
+.clps_expand {
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 250ms ease-in-out;
+  cursor: pointer;
+}
+.clps_expand .fa-caret-right {
+  transform: rotateZ(90deg);
+  margin-right: 0.5rem;
+  font-size: 30px;
+}
+.clps_expand:hover * {
+  color: var(--clr-primary-hover);
+}
+.clps_list {
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  cursor: pointer;
+}
+.clps_listitem:hover * {
+  color: var(--clr-primary-hover);
+  background-color: var(--clr-gray200);
+}
+.clps_listitem input[type=checkbox] {
+  width: 1rem;
+  float: left;
+  cursor: pointer;
+}
+.clps_listitem input[type=checkbox] + label {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+}
+.clps_listitem input[type=submit] {
+  width: 100%;
+  padding: 0.2rem;
+  margin-top: 0.2rem;
+  border-radius: 0.5rem;
+  background-color: var(--clr-gray-100);
+  border-color: var(--clr-gray100);
+  justify-content: center;
+  text-decoration: none;
+}
+.clps-closed .clps_expand .fa-caret-right {
+  transform: rotateZ(0deg);
+}
+.clps-closed .clps_list {
+  display: none;
+}/*# sourceMappingURL=collapsible.css.map */

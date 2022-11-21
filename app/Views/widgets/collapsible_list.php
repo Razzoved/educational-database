@@ -1,4 +1,4 @@
-<li class="clps<?= ($type == 'button') ? ' clps-active' : '' ?>">
+<li class="clps<?= ($type == 'button') ? '' : ' clps-closed' ?>">
     <!-- toggler that shows or hides groups' value list -->
     <a class="clps_expand">
 

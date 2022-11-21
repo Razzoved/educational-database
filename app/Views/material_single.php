@@ -11,14 +11,11 @@
     echo view('widgets/offcanvas_buttons', ['properties' => $properties]);
 ?>
 
-<!-- Padding -->
-<div class="bg-white d-none d-lg-inline vh100" style="height: 100vh; width: 10px;"></div>
-
 <!-- Post container -->
-<div class="container bg-light m-0 border" style="min-height: 100vh">
+<div class="container ms-lg-4 mt-2 rounded" style="min-height: 100vh">
 
     <!-- Post top view: img, header -->
-    <div class="row g-0 mt-2">
+    <div class="row g-0 mt-3">
 
         <!-- img -->
         <?= isset($material->referTo) ? "<a href='$material->referTo'>" : "" ?>

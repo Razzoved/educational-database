@@ -11,6 +11,6 @@
         if (parent && !(parent.classList.contains('clps'))) parent = parent.parentElement;
         if (!parent || !(parent.classList.contains('clps'))) return;
 
-        parent.classList.toggle('clps-active');
+        parent.classList.toggle('clps-closed');
     }
 }
