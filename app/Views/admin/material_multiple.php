@@ -3,13 +3,13 @@
 <?= $this->section('content') ?>
 <form method="post" action="/">
 
-<div class="parent-container d-flex p-4">
+<div class="d-flex p-4">
 
-    <table class="table table-striped table-bordered g-0 me-4" style="vertical-align: middle; height: fit-content">
+    <table class="table table-striped g-0 me-4" style="vertical-align: middle; height: fit-content">
         <thead clas="table-dark">
-            <th scope="col"><input type="checkbox" id="materials_bulk"></th>
-            <th scope="col">Title</th>
+            <th scope="col" style="width: 30px; height: 30px"><input type="checkbox" id="materials_bulk" style="width: 20px; height: 20px"></th>
             <th scope="col">Thumbnail</th>
+            <th scope="col">Title</th>
             <th scope="col">Date</th>
             <th scope="col">Views</th>
             <th scope="col" colspan="2">Ratings</th>

@@ -12,7 +12,7 @@
             <?= $this->include('admin/sidebar') ?>
         </div>
         <div class="col vh100">
-            <div class="container-fluid bg-light vh100">
+            <div class="container-fluid vh100">
                 <?= $this->renderSection('content') ?>
             </div>
         </div>
