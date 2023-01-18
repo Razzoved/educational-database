@@ -5,8 +5,8 @@
     <div class="row g-0 m-2">
 
         <!-- draw image -->
-        <div class="col-sm-12 col-md-4 col-lg-2 text-center">
-            <img src=<?= $material->getThumbnail() ?> class="img-fluid rounded" alt="Missing image">
+        <div class="col-sm-12 col-md-3 text-center">
+            <img class="rounded me-1" src="<?= $material->getThumbnail()->getPath() ?>" style="width: 10rem; height: 10rem; object-fit: scale-down" alt="Missing image">
         </div>
 
         <!-- draw body of material -->
@@ -21,7 +21,10 @@
                     <small class="text-muted">Upload date: <?= $material->createdToDate() ?></small>
                 </p>
                 <p class="card-text">
-                    <?= (strlen($material->content) > 280) ? substr($material->content, 0, 277) . '...' : $material->content ?>
+                    <?php
+                        $content = strip_tags($material->content);
+                        echo (strlen($content) > 300) ? substr($content, 0, 297) . '...' : `$content`;
+                    ?>
                 </p>
             </div>
         </div>
@@ -32,15 +35,15 @@
     <div class="card-footer">
         <!-- draw rating, views, details -->
         <div class="row g-1" style="align-items: center; justify-content: center">
-            <i class="col-auto fa-solid fa-star"></i>
-            <i class="col-auto fa-solid fa-star"></i>
-            <i class="col-auto fa-solid fa-star"></i>
-            <i class="col-auto fa-regular fa-star"></i>
-            <i class="col-auto fa-regular fa-star" style="margin-right: 0.2em"></i>
+            <i class="col-auto <?= $material->rating >= 1 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+            <i class="col-auto <?= $material->rating >= 2 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+            <i class="col-auto <?= $material->rating >= 3 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+            <i class="col-auto <?= $material->rating >= 4 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+            <i class="col-auto <?= $material->rating >= 5 ? 'fa-solid' : 'fa-regular' ?> fa-star" style="margin-right: 0.2em"></i>
             <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating?></small>
-            <small class="col"><u><?= $material->rating?> ratings</u></small> <!-- TODO: implement this table and query -->
+            <small class="col"><u><?= $material->rating_count ?> ratings</u></small>
             <small class="col-auto text-muted" style="margin-right: 1em">Viewed: <?= $material->views ?>x</small>
-            <a class="col-auto btn btn-dark btn-sm stretched-link" href="/materials/<?= $material->id?>">Details</a>
+            <a class="col-auto btn btn-dark btn-sm stretched-link" href="<?= base_url('materials/' . $material->id) ?>">Details</a>
         </div>
     </div>
 

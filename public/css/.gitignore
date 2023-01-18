@@ -1,0 +1,11 @@
+*
+
+# self
+!.gitignore
+
+# scss subfolder
+!scss/
+!scss/*.scss
+
+# css
+!*.css

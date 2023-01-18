@@ -2,50 +2,42 @@
 
 namespace App\Controllers\Admin;
 
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
-
+use App\Controllers\Material as ControllersMaterial;
+use App\Entities\Material as EntitiesMaterial;
 use App\Models\MaterialModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
-class Material extends AdminController
+class Material extends ControllersMaterial
 {
-    private MaterialModel $materialModel;
-
-    /**
-     * Constructor.
-     */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    public function index() : string
     {
-        parent::initController($request, $response, $logger);
-        $this->materialModel = model(MaterialModel::class);
-        $this->all = "material_multiple";
-        $this->single = "material_single";
-        // E.g.: $this->session = \Config\Services::session();
+        $data = [
+            'meta_title' => 'Administration - Materials',
+            'title'      => 'Materials',
+            'filters'    => $this->materialProperties->getUsedProperties(false),
+            'materials'  => $this->getMaterials(current_url(), Config::PAGE_SIZE),
+            'pager'      => $this->materials->pager,
+        ];
+
+        return view(Config::VIEW . 'material/table', $data);
     }
 
-    public function index(int $page) : string
+    protected function getMaterial(int $id) : EntitiesMaterial
     {
-        return parent::viewMultiple(
-            'Admin all material',
-            $this->materialModel->findAll($this->pageSize, $page * $this->pageSize),
-            $this->materialModel->getUsedProperties()
-        );
+        $material = $this->materials->getById($id, true);
+        if (!$material) throw PageNotFoundException::forPageNotFound();
+        return $material;
     }
 
-    // public function new() : string
-    // {
-    // }
-
-    public function edit($id) : string
+    protected function loadMaterials() : MaterialModel
     {
-        return parent::viewOne(
-            'Admin single material',
-            $this->materialModel->find($id)
-        );
-    }
+        $sort = $this->request->getPost('sort');
+        $sortDir = $this->request->getPost('sortDir') ?? 'ASC';
+        $search = $this->request->getPost('search') ?? "";
+        $filters = $this->request->getPost('filters') ?? [];
 
-    // public function delete($id) : string
-    // {
-    // }
+        return ($search !== "" || $filters !== [])
+            ? $this->materials->getByFilters($sort, $sortDir, $search, $filters, false)
+            : $this->materials->getData($sort, $sortDir, false);
+    }
 }

@@ -8,37 +8,42 @@ class Material
 {
     public function toCard(EntitiesMaterial $material) : string
     {
-        return view('components/material_as_card', ['material' => $material]);
+        return view(
+            'components/material_as_card',
+            ['material' => $material]
+        );
     }
 
-    public function toItem(EntitiesMaterial $material) : string
+    public function getRowTemplate() : string
     {
-        return view('components/material_as_item', ['material' => $material]);
+        return Templates::wrapHtml($this->toRow(new EntitiesMaterial()));
     }
 
-    public function getLinks(EntitiesMaterial $material) : string
+    public function toRow(EntitiesMaterial $material, int $index = 0) : string
     {
-        if (!isset($material)) return 'ERROR';
-
-        $resources = array();
-
-        foreach ($material->resources as $r) {
-            if ($r->type == 'link') $resources[] = $r;
-        }
-
-        return view('components/resources_as_links', ['resources' => $resources, 'title' => 'Attached links']);
+        return view(
+            'components/material_as_row',
+            ['material' => $material, 'showButtons' => true, 'index' => $index]
+        );
     }
 
-    public function getFiles(EntitiesMaterial $material) : string
+    public function listLinks(EntitiesMaterial $material) : string
     {
         if (!isset($material)) return 'ERROR';
 
-        $resources = array();
+        return view(
+            'components/resources_as_links',
+            ['resources' => $material->getLinks(), 'title' => 'Attached links']
+        );
+    }
 
-        foreach ($material->resources as $r) {
-            if ($r->type != 'link') $resources[] = $r;
-        }
+    public function listFiles(EntitiesMaterial $material) : string
+    {
+        if (!isset($material)) return 'ERROR';
 
-        return view('components/resources_as_links', ['resources' => $resources, 'title' => 'Downloadable files']);
+        return view(
+            'components/resources_as_links',
+            ['resources' => $material->getFiles(), 'title' => 'Downloadable files']
+        );
     }
 }

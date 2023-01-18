@@ -37,15 +37,67 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+
+/* Viewable by public */
 $routes->group('/', function($routes) {
-    $routes->add('', 'Material::index/0');
-    $routes->add('(:num)', 'Material::index/$1');
+    // ALL materials
+    $routes->addRedirect('', '1');
+    $routes->addRedirect('-(:num)', '$1');
+    $routes->add('(:num)', 'Material::index');
+
+    // SINGLE material
     $routes->add('materials/(:num)', 'Material::get/$1');
+
+    // AUTHENTICATION
+    $routes->get('login', 'Login::index');
+    $routes->post('login', 'Login::authenticate');
+
+    // RESOURCE VIEWER (writeable folder only)
+    $routes->get('writable/(:any)', 'Resource::index/$1');
 });
 
-$routes->group('/admin', function($routes) {
-    $routes->get('', 'Admin\Material::index/0');
-    $routes->add('(:num)', 'Admin\Material::edit/$1');
+/* Viewable by authorised users */
+$routes->group('admin', function($routes) {
+    $routes->addRedirect('', 'admin/dashboard');
+    $routes->add('dashboard', 'Admin\Dashboard::index');
+    $routes->add('logout', 'Admin\User::logout');
+    $routes->add('profile', 'Admin\User::profile');
+
+    $routes->group('materials', function($routes) {
+        $routes->addRedirect('', 'admin/materials/1');
+        $routes->addRedirect('-(:num)', 'admin/materials/$1');
+        $routes->add('(:num)', 'Admin\Material::index');
+        $routes->add('preview/(:num)', 'Admin\Material::get/$1');
+        $routes->get('edit', 'Admin\MaterialEditor::index');
+        $routes->post('edit', 'Admin\MaterialEditor::save');
+        $routes->add('edit/(:num)', 'Admin\MaterialEditor::loadMaterial/$1');
+        $routes->add('delete', 'Admin\MaterialEditor::delete');
+    });
+
+    $routes->group('tags', function($routes) {
+        $routes->addRedirect('', 'admin/tags/1');
+        $routes->addRedirect('-(:num)', 'admin/tags/$1');
+        $routes->add('(:num)', 'Admin\Property::index');
+        $routes->get('edit/(:num)', 'Admin\Property::edit/$1');
+        $routes->add('update', 'Admin\Property::update');
+        $routes->add('save', 'Admin\Property::save');
+        $routes->add('delete', 'Admin\Property::delete');
+    });
+
+    $routes->group('files', function($routes) {
+        $routes->add('', 'Admin\Resource::index');
+        $routes->post('upload', 'Admin\Resource::upload');
+    });
+
+    $routes->group('users', function($routes) {
+        $routes->addRedirect('', 'admin/users/1');
+        $routes->addRedirect('-(:num)', 'admin/users/$1');
+        $routes->add('(:num)', 'Admin\User::index');
+        $routes->get('edit', 'Admin\User::getUser');
+        $routes->post('new', 'Admin\User::create');
+        $routes->post('edit', 'Admin\User::update');
+        $routes->post('delete', 'Admin\User::delete');
+    });
 });
 
 /*

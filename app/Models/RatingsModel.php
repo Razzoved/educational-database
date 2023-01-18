@@ -5,7 +5,7 @@ namespace App\Models;
 use CodeIgniter\Model;
 use App\Entities\Rating;
 
-class MaterialModel extends Model
+class RatingsModel extends Model
 {
     protected $table         = 'ratings';
     protected $allowedFields = [
@@ -15,24 +15,37 @@ class MaterialModel extends Model
     ];
     protected $returnType = Rating::class;
 
-    public function getRatingAvg(int $postId) : int
+    public function getRatingAvg(int $postId) : float
     {
-        return $this->selectAvg('rating_value')
-                    ->where('material_id', $postId)
-                    ->get()
-                    ->getResult();
+        return array_sum(array_column(
+            $this->builder()->selectAvg('rating_value', 'rating')
+                            ->where('material_id', $postId)
+                            ->groupBy('material_id')
+                            ->get()
+                            ->getResult(),
+            'rating'
+        ));
     }
 
     public function getRatingCount(int $postId) : int
     {
-        return $this->selectCount('*')
-                    ->where('material_id', $postId)
-                    ->get()
-                    ->getResult();
+        return array_sum(array_column(
+            $this->builder()
+                 ->selectCount('rating_value', 'count')
+                 ->where('material_id', $postId)
+                 ->groupBy('material_id')
+                 ->get()
+                 ->getResult(),
+            'count'
+        ));
     }
 
     public function getRating(int $postId, string $userId) : Rating|null
     {
-        return $this->find(['material_id' => $postId, 'rating_uid' => $userId]);
+        return $this->builder()
+                     ->where('material_id', $postId)
+                     ->where('rating_uid', $userId)
+                     ->get(1)
+                     ->getCustomResultObject(Rating::class);
     }
 }

@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
+use CodeIgniter\Model;
 
 class MaterialModel extends Model
 {
     protected $table         = 'materials';
     protected $primaryKey    = 'material_id';
     protected $allowedFields = [
-        'material_is_public',
+        'material_status',
         'material_title',
-        'material_thumbnail',
         'material_type',
         'material_content',
         'material_views',
@@ -27,52 +27,99 @@ class MaterialModel extends Model
 
     protected $returnType = Material::class;
 
-    public function findAll(int $limit = 0, int $offset = 0) : array
+    /**
+     * Returns all materials WITHOUT any associated properties or resources.
+     *
+     * @param bool $onlyPublic whether to get only materials marked as public
+     * @return MaterialModel requires calling either 'paginate' or 'get'
+     */
+    public function getData(?string $sort = null, ?string $sortDir = null, bool $onlyPublic = true) : MaterialModel
     {
-        return $this->select('*')
-                    ->where('material_is_public !=', false)
-                    ->limit($limit, $offset * $limit)
-                    ->get()
-                    ->getCustomResultObject(Material::class);
+        $show = $onlyPublic ? array(StatusCast::PUBLIC) : StatusCast::VALID_VALUES;
+
+        $sortDir = $sortDir === 'DESC' ? $sortDir : 'ASC';
+        $sort = $sort === $this->createdField || $sort === $this->updatedField
+            ? $sort
+            : (in_array('material_' . $sort, $this->allowedFields) || ('material_' . $sort === $this->primaryKey) ? ('material_' .  $sort) : null);
+
+        $this->builder()
+             ->whereIn('material_status', $show)
+             ->orderBy($sort ?? $this->primaryKey, $sortDir);
+
+        return $this;
     }
 
-    public function findWithProperties(int $id) : Material|null
+    /**
+     * Returns all materials WITHOUT any associated properties or resources.
+     *
+     * @param string $search title to search for
+     * @param array $filters filters to search with (has to match all)
+     *
+     * @return MaterialModel requires calling either 'paginate' or 'get'
+     */
+    public function getByFilters(?string $sort, ?string $sortDir, string $search, array $filters, bool $onlyPublic = true): MaterialModel
+    {
+        $builder = $this->getData($sort, $sortDir, $onlyPublic)->builder()
+            ->select("$this->table.*")
+            ->like('material_title', $search, insensitiveSearch: true);
+
+        if ($filters !== []) {
+            $filter = model(MaterialPropertyModel::class)->getCompiledFilter($filters);
+            $builder->join("($filter) f", "$this->table.material_id = f.material_id");
+        }
+
+        return $this;
+    }
+
+    public function getById(int $id, bool $showHidden = false) : Material|null
     {
         $material = $this->find($id);
-        if (!$material || $material->material_is_public == false) {
+
+        if (!$material || ($material->status != StatusCast::PUBLIC && !$showHidden)) {
             return null;
         }
-        $material->properties = model(MaterialPropertyModel::class)->findProperties($id);
+
+        $this->loadData($material);
         return $material;
     }
 
-    public function findFiltered(string $search, array $filters, int $limit, int $offset): array
+    public function getByTitle(string $title, bool $showHidden = false) : Material|null
     {
-        $connector = model(MaterialPropertyModel::class);
-        $filter = $connector->getCompiledFilter($filters);
-        return $this->select("$this->table.*")
-                    ->join("($filter) f", "$this->table.material_id = f.material_id")
-                    ->like('material_title', $search, insensitiveSearch: true)
-                    ->where('material_is_public !=', false)
-                    ->limit($limit, $offset * $limit)
-                    ->get()
-                    ->getCustomResultObject(Material::class);
+        $material = $this->builder()
+                         ->where('material_title', $title)
+                         ->get(1)
+                         ->getCustomResultObject(Material::class);
+
+        if (!$material || ($material->status != StatusCast::PUBLIC && !$showHidden)) {
+            return null;
+        }
+
+        $this->loadData($material);
+        return $material;
     }
 
-    public function getUsedProperties() : array
+    public function handleUpdate(Material $material) : bool
     {
-        $visibleIds = $this->select('material_id')
-                           ->where('material_is_public !=', false)
-                           ->get()
-                           ->getResultArray();
+        $this->db->transStart();
 
-        // unpack ids into array
-        helper('array');
-        $visibleIds = dot_array_search('*.material_id', $visibleIds);
-        if (gettype($visibleIds) != 'array') $visibleIds = array($visibleIds);
+        if ($material->id !== 0) {
+            $this->update($material->id, $material);
+        } else {
+            $material->id = $this->insert($material, true);
+        }
 
-        return ($visibleIds == [])
-            ? $visibleIds
-            : model(MaterialPropertyModel::class)->getUsedProperties($visibleIds);
+        model(MaterialPropertyModel::class)->handleUpdate($material, $this->db);
+        model(ResourceModel::class)->handleUpdate($material, $this->db);
+
+        $this->db->transComplete();
+
+        return $this->db->transStatus();
+    }
+
+    private function loadData(Material $material) {
+        $material->properties = model(MaterialPropertyModel::class)->getByMaterial($material->id);
+        $material->resources = model(ResourceModel::class)->getResources($material->id);
+        $material->rating = model(RatingsModel::class)->getRatingAvg($material->id);
+        $material->rating_count = model(RatingsModel::class)->getRatingCount($material->id);
     }
 }

@@ -26,7 +26,7 @@ abstract class BaseController extends Controller
      *
      * @var int
      */
-    protected $pageSize = 10;
+    protected int $pageSize = 10;
 
     /**
      * Instance of the main Request object.

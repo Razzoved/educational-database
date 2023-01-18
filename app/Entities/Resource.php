@@ -6,6 +6,12 @@ use CodeIgniter\Entity\Entity;
 
 class Resource extends Entity
 {
+    public const NO_THUMBNAIL_PATH = 'assets/no_thumbnail.png';
+    public const NO_THUMBNAIL = [
+        'resource_path' => Resource::NO_THUMBNAIL_PATH,
+        'resource_type' => 'thumbnail',
+    ];
+
     protected $attributes = [
         'resource_id'    => null,
         'material_id'    => null,
@@ -14,6 +20,14 @@ class Resource extends Entity
         'created_at'     => null,
         'updated_at'     => null,
         'deleted_at'     => null,
+        'tmp_path'       => null, // not a part of db
+    ];
+
+    protected $casts = [
+        'resource_id'   => 'int',
+        'material_id'   => 'int',
+        'resource_path' => 'string',
+        'resource_type' => 'string',
     ];
 
     protected $datamap = [
@@ -23,22 +37,31 @@ class Resource extends Entity
         'type'     => 'resource_type',
     ];
 
-    protected $casts = [
-        'id'       => 'int',
-        'parentId' => 'int',
-        'path'     => 'string',
-        'type'     => 'string',
-    ];
-
     public function isLink() : bool
     {
         return $this->type == 'link';
     }
 
-    public function getPath() : string
+    public function isThumbnail() : bool
     {
-        return ($this->isLink())
-            ? $this->path
-            : '/uploads/' . $this->parentId . '/' . $this->path . '.' . $this->type;
+        return $this->type == 'thumbnail';
+    }
+
+    public function getName() : string
+    {
+        return $this->path;
+    }
+
+    public function getPath(bool $src = true) : string
+    {
+        $path = $this->path;
+
+        if (!$this->isLink()) {
+            $path = $src ? (base_url() . '/') : '';
+            $path .= isset($this->parentId) ? ('uploads/' . $this->parentId . '/') : '';
+            $path .= $this->getName();
+        }
+
+        return $path;
     }
 }

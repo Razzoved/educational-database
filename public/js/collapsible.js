@@ -1,16 +1,18 @@
+async function toggleGroup(element)
 {
-    let clpsExpand = document.querySelectorAll('.clps_expand');
-    if (clpsExpand.length > 0) {
-        clpsExpand.item(clpsExpand.length - 1).addEventListener('click', toggleGroup);
-    }
+    let parent = element.parentElement;
+    if (!parent || !(parent.classList.contains('clps'))) console.debug('invalid group', element);
+    parent.classList.toggle('clps-closed');
+}
 
-    function toggleGroup(ev) {
-        if (!(ev.target instanceof Element)) return;
-        let parent = ev.target.parentElement;
+async function toggleOverflow(element)
+{
+    element.innerHTML = element.innerHTML.indexOf("more") !== -1
+        ? element.innerHTML.replace('more', 'less')
+        : element.innerHTML.replace('less', 'more');
+    let parent = element.parentElement.parentElement;
 
-        if (parent && !(parent.classList.contains('clps'))) parent = parent.parentElement;
-        if (!parent || !(parent.classList.contains('clps'))) return;
+    if (!parent || !(parent.classList.contains('clps'))) console.debug('invalid group', element);
 
-        parent.classList.toggle('clps-closed');
-    }
+    parent.classList.toggle('clps-closed');
 }

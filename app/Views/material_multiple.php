@@ -1,70 +1,43 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
-<form method="post" action="/">
 
-<!-- Menu bar -->
-<div class="container-fluid g-0 mb-4">
-    <div class="row g-0 ms-4">
-        <div class="d-none d-lg-inline" style="width: 280px"></div>
-        <div class="col"><h1><?= $title ?></h1></div>
-    </div>
+<form method="post" action="">
 
-    <div class="row g-0 ms-4">
-        <div class="d-none d-lg-inline" style="width: 280px"></div>
-        <div class="col">
-            <input class="form-control" name="search" value="" placeholder="Search"/>
-        </div>
-        <div class="col-auto me-2 me-lg-0 ms-2" style="width: 20%">
-            <button class="btn btn-success w-100" type="submit">Search</button>
-        </div>
-        <div class="col-auto d-block d-lg-none" style="width: 20%">
-            <a class="btn btn-dark w-100" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
-        </div>
-    </div>
-</div>
-
-<!-- Presents all materials in a nicer html --->
-<div class="parent-container d-flex vh100">
-
-    <?= view('widgets/sidebar_checkboxes', ['properties' => $filters]) ?>
+<div class="page">
     <?= view('widgets/offcanvas_checkboxes', ['properties' => $filters]) ?>
 
-    <!-- Contents -->
-    <div class="container-fluid g-0 ms-4">
-        <?php
-            if ($materials == []) {
-                echo '<div class="text-center">';
-                echo '<br>';
-                echo '<hr>';
-                echo '<h1>Nothing was found!</h1>';
-                echo '<hr>';
-                echo '<br>';
-                echo '</div>';
-            } else {
-                foreach($materials as $material) {
-                    echo view_cell('\App\Libraries\Material::toCard', ['material' => $material]);
-                }
-                // paging
-                $prevPage = max($page - 1, 0);
-                $nextPage = $page + 1;
+    <div class="page-sidebar">
+        <div class="row g-0"><h1 style="opacity: 0"><?= $title ?></h1></div>
+        <?= view('widgets/sidebar_checkboxes', ['properties' => $filters]) ?>
+    </div>
 
-                echo '<nav aria-label="pagesLabel">';
-                echo '<ul class="pagination justify-content-center">';
-                if ($page == 0) {
-                    echo '<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Previous</a></li>';
-                } else {
-                    echo "<li class='page-item'><a class='page-link' href='/$prevPage'>Previous</a></li>";
-                }
-                echo "<li class='page-item'><a class='page-link' href='#'>$page</a></li>";
-                echo "<li class='page-item'><a class='page-link' href='/$nextPage'>Next</a></li>";
-                echo '</ul>';
-                echo '</nav>';
+    <div class="page-content">
+        <div class="row g-0"><h1><?= $title ?></h1></div>
+        <div class="row g-0" style="margin-bottom: 1rem">
+            <input class="col form-control" name="search" value="" placeholder="Search"/>
+            <button class="col-auto btn btn-success ms-2" style="width: 20%" type="submit">Search</button>
+            <a class="col-auto btn btn-dark d-block d-lg-none ms-2" style="width: 20%" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
+        </div>
+
+        <div id="items">
+        <?php
+            foreach($materials as $material) {
+                echo view_cell('\App\Libraries\Material::toCard', ['material' => $material]);
             }
         ?>
+        </div>
 
+        <?= $pager->links('default', 'full') ?>
     </div>
 </div>
 
 </form>
+
+<script>
+    // prevent resubmit on page
+    if (window.history.replaceState) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
 <?= $this->endSection() ?>

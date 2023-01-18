@@ -2,34 +2,36 @@
 <?= $this->section('content') ?>
 
 <!-- START OF PAGE SPLIT --->
-<div class="parent-container d-flex">
+<div class="page">
 
-<!-- All tags -->
 <?php
     $properties = $material->getGroupedProperties();
-    echo view('widgets/sidebar_buttons', ['properties' => $properties]);
     echo view('widgets/offcanvas_buttons', ['properties' => $properties]);
 ?>
 
+<!-- All tags -->
+<div class="page-sidebar">
+    <?= view('widgets/sidebar_buttons', ['properties' => $properties]) ?>
+</div>
+
 <!-- Post container -->
-<div class="container ms-lg-4 mt-2 rounded" style="min-height: 100vh">
+<div class="page-content">
 
     <!-- Post top view: img, header -->
-    <div class="row g-0 mt-3">
+    <div class="row g-0">
 
         <!-- img -->
         <?= isset($material->referTo) ? "<a href='$material->referTo'>" : "" ?>
-        <img class="col-sm-12 col-md-2 img-fluid rounded" style="object-fit:cover" alt="thumbnail"
-             src=<?= $material->getThumbnail() ?>>
+        <img class="col-sm-12 col-md-2 img-fluid rounded" src="<?= $material->getThumbnail()->getPath() ?>" style="max-height: 15rem; object-fit: scale-down" alt="Missing image">
         <?= isset($material->referTo) ? "</a>" : "" ?>
 
         <!-- header: title, date, views, rating -->
-        <header class="col ms-sm-0 ms-md-4" style="display: flex; flex-direction: column">
+        <header class="col p-2" style="display: flex; flex-direction: column">
 
             <!-- title, goBack -->
             <div class="row g-0">
                 <div class="col" style="max-width: 80%; word-wrap: break-word"><h1><?= $material->title ?></h1></div>
-                <div class="col-auto d-none d-lg-block ms-auto"><a href='/' class="btn btn-dark">Go back</a></div>
+                <div class="col-auto d-none d-lg-block ms-auto"><button type='button' onclick="history.go(-1)" class="btn btn-dark">Go back</button></div>
             </div>
 
             <!-- date -->
@@ -37,11 +39,11 @@
 
             <!-- rating, views -->
             <div class="row g-1 align-self-end mt-auto w-100" style="align-items: center; justify-content: center">
-                <i class="col-auto fa-solid fa-star"></i>
-                <i class="col-auto fa-solid fa-star"></i>
-                <i class="col-auto fa-solid fa-star"></i>
-                <i class="col-auto fa-regular fa-star"></i>
-                <i class="col-auto fa-regular fa-star" style="margin-right: 0.2em"></i>
+                <i class="col-auto <?= $material->rating >= 1 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+                <i class="col-auto <?= $material->rating >= 2 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+                <i class="col-auto <?= $material->rating >= 3 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+                <i class="col-auto <?= $material->rating >= 4 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+                <i class="col-auto <?= $material->rating >= 5 ? 'fa-solid' : 'fa-regular' ?> fa-star" style="margin-right: 0.2em"></i>
                 <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating ?></small>
                 <small class="col"><u><?= $material->rating_count ?> ratings</u></small> <!-- TODO: implement this table and query -->
                 <small class="col-auto text-muted">Viewed: <?= $material->views ?>x</small>
@@ -76,14 +78,10 @@
     </div>
 
     <!-- Links -->
-    <div>
-        <?= view_cell('App\Libraries\Material::getLinks', ['material' => $material]) ?>
-    </div>
+    <?= view_cell('App\Libraries\Material::listLinks', ['material' => $material]) ?>
 
     <!-- Downloadable -->
-    <div>
-        <?= view_cell('App\Libraries\Material::getFiles', ['material' => $material]) ?>
-    </div>
+    <?= view_cell('App\Libraries\Material::listFiles', ['material' => $material]) ?>
 
     <hr>
 </div>

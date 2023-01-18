@@ -31,6 +31,8 @@
   display: flex;
   flex-direction: column;
   list-style: none;
+  word-wrap: break-word;
+  line-break: strict;
   cursor: pointer;
 }
 .clps_listitem:hover * {
@@ -41,6 +43,9 @@
   width: 1rem;
   float: left;
   cursor: pointer;
+}
+.clps_listitem input[type=checkbox]:hover {
+  background-color: var(--clr-primary-hover);
 }
 .clps_listitem input[type=checkbox] + label {
   display: block;
@@ -60,6 +65,9 @@
 .clps-closed .clps_expand .fa-caret-right {
   transform: rotateZ(0deg);
 }
-.clps-closed .clps_list {
+.clps_overflow {
+  opacity: 0.9;
+}
+.clps-closed .clps_list, .clps .clps-closed .clps_overflow {
   display: none;
-}/*# sourceMappingURL=collapsible.css.map */
+}

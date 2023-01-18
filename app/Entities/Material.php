@@ -9,9 +9,8 @@ class Material extends Entity
 {
     protected $attributes = [
         'material_id'        => null,
-        'material_is_public' => null,
+        'material_status'    => null,
         'material_title'     => null,
-        'material_thumbnail' => null,
         'material_type'      => null,
         'material_content'   => null,
         'material_views'     => null,
@@ -23,27 +22,31 @@ class Material extends Entity
         'resources'          => null, // not part of table in DB
     ];
 
+    protected $casts = [
+        'material_id'      => 'int',
+        'material_status'  => 'statusCast',
+        'material_title'   => 'string',
+        'material_type'    => 'typeCast',
+        'material_content' => 'string',
+        'material_views'   => 'int',
+        'rating'           => 'int',   // not part of table in DB
+        'rating_count'     => 'int',   // not part of table in DB
+        'properties'       => 'array', // not part of table in DB
+        'resources'        => 'array', // not part of table in DB
+    ];
+
+    protected $castHandlers = [
+        'statusCast' => \App\Entities\Cast\StatusCast::class,
+        'typeCast'   => \App\Entities\Cast\TypeCast::class,
+    ];
+
     protected $datamap = [
         'id'        => 'material_id',
-        'isPublic'  => 'material_is_public',
+        'status'    => 'material_status',
         'title'     => 'material_title',
-        'thumbnail' => 'material_thumbnail',
         'type'      => 'material_type',
         'content'   => 'material_content',
         'views'     => 'material_views',
-    ];
-
-    protected $casts = [
-        'id'           => 'int',
-        'isPublic'     => 'string',
-        'title'        => 'string',
-        'thumbnail'    => 'int',
-        'content'      => 'string',
-        'views'        => 'int',
-        'rating'       => 'int',   // not part of table in DB
-        'rating_count' => 'int',   // not part of table in DB
-        'properties'   => 'array', // not part of table in DB
-        'resources'    => 'array', // not part of table in DB
     ];
 
     public function getGroupedProperties() : array
@@ -55,25 +58,22 @@ class Material extends Entity
         return $result;
     }
 
-    public function getThumbnail() : string
-    {
-        return (strncmp($this->thumbnail, "http", 4) == 0)
-            ? $this->thumbnail
-            : '/uploads/' . $this->id . '/' . $this->thumbnail;
-    }
-
     public function createdToDate() : string
     {
-        return date_format($this->created_at, "d.m.Y");
+        return $this->created_at ? date_format($this->created_at, "d.m.Y") : "";
     }
 
     public function updatedToDate() : string
     {
-        return date_format($this->updated_at, "d.m.Y");
+        return $this->updated_at ? date_format($this->updated_at, "d.m.Y") : "";
     }
 
-    function sinceLastUpdate() {
-        $time_ago = '';
+    public function sinceLastUpdate() : string
+    {
+        if (is_null($this->updatedAt)) {
+            return 'No updates';
+        }
+
         $diff = $this->updated_at->diff(new DateTime('now'));
 
         if (($t = $diff->format("%m")) > 0)
@@ -86,5 +86,59 @@ class Material extends Entity
           $time_ago = 'minutes';
 
         return $time_ago . ' ago (' . $this->updated_at->format('M j, Y') . ')';
+    }
+
+    public function getPropertiesAsStrings() : array
+    {
+        $result = array();
+        foreach ($this->properties as $p) {
+            $result[$p->tag][] = $p->value;
+        }
+        return $result;
+    }
+
+    public function getThumbnail() : Resource
+    {
+        $thumbnail = null;
+
+        foreach ($this->resources as $r) {
+            if ($r->type == 'thumbnail') {
+                $thumbnail = $r;
+                break;
+            };
+        }
+
+        return is_null($thumbnail)
+            ? new Resource(Resource::NO_THUMBNAIL)
+            : $thumbnail;
+    }
+
+    public function getLinks() : array
+    {
+        $links =  $this->resourcesFilter(
+            function ($type) { return $type == 'link'; },
+            function ($item) { return $item; }
+        );
+
+        return $links;
+    }
+
+    public function getFiles() : array
+    {
+        $files = $this->resourcesFilter(
+            function ($type) { return $type != 'link' && $type != 'thumbnail'; },
+            function ($item) { return $item; }
+        );
+
+        return $files;
+    }
+
+    private function resourcesFilter(callable $inclusionDecider, callable $converter) : array
+    {
+        $result = array();
+        foreach ($this->resources as $r) {
+            if ($inclusionDecider($r->type)) $result[] = $converter($r);
+        }
+        return $result;
     }
 }

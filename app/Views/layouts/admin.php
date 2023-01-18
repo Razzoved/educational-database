@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?= $this->include('layouts/head') ?>
+<head>
+    <?= $this->include('header') ?>
 
-<body class="container-fluid g-0">
+    <?= $this->renderSection('header') ?>
 
-    <?= $this->include('admin/user_bar') ?>
+    <link rel="stylesheet" href="<?= base_url('/css/collapsible.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/css/sidebar.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/css/modal.css') ?>">
 
-    <div class="row g-0">
-        <div class="col-auto side_dr">
-            <?= $this->include('admin/sidebar') ?>
-        </div>
-        <div class="col vh100">
-            <div class="container-fluid vh100">
-                <?= $this->renderSection('content') ?>
-            </div>
-        </div>
+    <!-- Bootstrap TABLE -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.css">
+
+    <script>let lastPost = <?= json_encode($_POST ?? []) ?>;</script>
+</head>
+
+<body>
+    <?= $this->include('admin/navigation_bar') ?>
+
+    <div class="vh100">
+        <?= $this->renderSection('content') ?>
     </div>
 
-    <!-- Separate footer -->
-    <?= $this->include('layouts/footer') ?>
+    <?= $this->renderSection('modals') ?>
 
-    <!-- JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-            crossorigin="anonymous">
-    </script>
+    <?= $this->include('footer') ?>
+    <?= $this->include('scripts') ?>
+
+    <?= $this->renderSection('scripts') ?>
+    <script type="text/javascript" src="<?= base_url('js/tabular.js') ?>"></script>
 </body>
+
 </html>

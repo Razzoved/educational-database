@@ -1,21 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,400&display=swap");
-:root {
-  /* color variables */
-  --clr-primary: #0447ff;
-  --clr-primary-hover: #3575ff;
-  --clr-primary-dark: #0020b1;
-  --clr-gray100: #f9fbff;
-  --clr-gray200: #eef1f6;
-  --clr-gray300: #e1e5ee;
-  --clr-gray400: #767b91;
-  --clr-grape200: #f1dcfc;
-  --clr-grape300: #be4bdb;
-  --clr-dark: #222222;
-  /* border radius */
-  --radius: 0.2rem;
-  --pgap: 5px;
-}
-
 *,
 *::before,
 *::after {
@@ -26,7 +9,15 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  background-color: var(--clr-gray100);
+  background-color: #fff;
+}
+
+input[type=url]:-moz-read-only, input[type=url] :-moz-read-only:focus {
+  background-color: var(--clr-gray200);
+}
+
+input[type=url]:read-only, input[type=url] :read-only:focus {
+  background-color: var(--clr-gray200);
 }
 
 .vh100 {
@@ -57,4 +48,85 @@ body {
 }
 .wpad4 {
   width: 4rem;
-}/*# sourceMappingURL=style.css.map */
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  grid-auto-flow: row;
+}
+
+.page {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 1fr;
+}
+.page-content-only {
+  grid-column: span 2;
+  grid-row: 1;
+  min-width: calc(100vw - 4rem);
+}
+.page-content-only p {
+  transform: translateY(0.5rem);
+}
+.page-content {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: calc(100vw - 4rem - 22rem);
+}
+.page-content p {
+  transform: translateY(0.5rem);
+}
+@media screen and (max-width: 1000px) {
+  .page-content {
+    min-width: calc(100vw - 4rem);
+  }
+}
+@media screen and (min-width: 1001px) and (max-width: 1200px) {
+  .page-content {
+    min-width: calc(100vw - 4rem - 17rem);
+  }
+}
+@media screen and (min-width: 1600px) {
+  .page-content {
+    min-width: calc(100vw - 4rem - 27rem);
+  }
+}
+.page-sidebar {
+  grid-column: 1;
+  grid-row: 1;
+  margin-right: 2rem;
+  width: 20rem;
+}
+@media screen and (max-width: 1000px) {
+  .page-sidebar {
+    display: none;
+  }
+}
+@media screen and (min-width: 1001px) and (max-width: 1200px) {
+  .page-sidebar {
+    width: 15rem;
+  }
+}
+@media screen and (min-width: 1600px) {
+  .page-sidebar {
+    width: 25rem;
+  }
+}
+
+.pagination {
+  margin-top: 1rem;
+}
+
+.footer {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: -10rem;
+  width: 100%;
+  z-index: 1;
+}

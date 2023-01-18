@@ -1,0 +1,137 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,400&display=swap");
+
+
+// BOOTSTRAP SIZINGS
+// @media screen and (max-width: 767px) {} // xs
+// @media screen and (min-width: 768px) and (max-width: 991px) {} // sm
+// @media screen and (min-width: 992px) and (max-width: 1199px) {} // md
+// @media screen and (min-width: 1200px) {} // lg
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #fff;
+}
+
+
+input[type=url]:read-only, input[type=url] :read-only:focus {
+    background-color: var(--clr-gray200);
+}
+
+.vh100 {
+    min-height: 100vh;
+    height: 100%;
+}
+
+.wpad {
+    &10 {
+        width: 10px;
+    }
+    &20 {
+        width: 20px;
+    }
+    &30 {
+        width: 30px;
+    }
+    &40 {
+        width: 40px;
+    }
+    &1 {
+        width: 1rem;
+    }
+    &2 {
+        width: 2rem;
+    }
+    &3 {
+        width: 3rem;
+    }
+    &4 {
+        width: 4rem;
+    }
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    grid-auto-flow: row;
+}
+
+.page {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: 1fr;
+
+    &-content-only {
+        grid-column: span 2;
+        grid-row: 1;
+        min-width: calc(100vw - 4rem);
+
+        p {
+            transform: translateY(0.5rem)
+        }
+    }
+
+    &-content {
+        grid-column: 2;
+        grid-row: 1;
+        min-width: calc(100vw - 4rem - 22rem);
+
+        p {
+            transform: translateY(0.5rem)
+        }
+
+        @media screen and (max-width: 1000px) {
+            min-width: calc(100vw - 4rem);
+        }
+
+        @media screen and (min-width: 1001px) and (max-width: 1200px) {
+            min-width: calc(100vw - 4rem - 17rem);
+        }
+
+        @media screen and (min-width: 1600px) {
+            min-width: calc(100vw - 4rem - 27rem);
+        }
+    }
+
+    &-sidebar {
+        grid-column: 1;
+        grid-row: 1;
+        margin-right: 2rem;
+        width: 20rem;
+
+        @media screen and (max-width: 1000px) {
+            display: none;
+        }
+
+        @media screen and (min-width: 1001px) and (max-width: 1200px) {
+            width: 15rem;
+        }
+
+        @media screen and (min-width: 1600px) {
+            width: 25rem;
+        }
+    }
+}
+
+.pagination {
+    margin-top: 1rem;
+}
+
+.footer {
+    position: sticky;
+    bottom: -10rem;
+    width: 100%;
+    z-index: 1;
+}

@@ -36,6 +36,8 @@
         display: flex;
         flex-direction: column;
         list-style: none;
+        word-wrap: break-word;
+        line-break: strict;
         cursor: pointer;
 
         &item {
@@ -48,6 +50,9 @@
                 width: 1rem;
                 float: left;
                 cursor: pointer;
+                &:hover {
+                    background-color: var(--clr-primary-hover);
+                }
             }
 
             input[type='checkbox'] + label {
@@ -73,7 +78,12 @@
         transform: rotateZ(0deg);
     }
 
-    &-closed &_list {
+    &_overflow {
+        opacity: 0.9;
+    }
+
+    &-closed &_list,
+    & &-closed &_overflow{
         display: none;
     }
 }

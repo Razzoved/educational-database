@@ -9,8 +9,7 @@
         </div>
         <div class="offcanvas-body">
             <button class="btn btn-success w-100 mb-2">Apply</button>
-            <!-- TODO: this should not do a post method, but a jquery? reset -->
-            <a class="btn btn-dark w-100 mb-2" href='#'>Reset all</a>
+            <button type="button" class="btn btn-dark w-100 mb-2" onclick="{ document.querySelectorAll('.clps input[type=checkbox]').forEach(e => e.checked=false); document.querySelectorAll('input[name=search]').forEach(e => e.value=''); }">Reset filters</button>
             <ul class="list-unstyled ps-0">
                 <?php foreach ($properties as $tag => $values) : ?>
                     <?= view('widgets/collapsible_list', ['tag' => $tag, 'values' => $values, 'type' => 'checkbox']) ?>
