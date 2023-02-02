@@ -48,7 +48,8 @@ class MaterialPropertyModel extends Model
             ->select('p.*')
             ->join("($properties) p", "$this->table.property_id = p.property_id")
             ->join("materials", "materials.material_id = $this->table.material_id")
-            ->whereIn('materials.material_status', $show);
+            ->whereIn('materials.material_status', $show)
+            ->distinct();
 
         $result = array();
         foreach ($builder->get()->getCustomResultObject(Property::class) as $property) {
