@@ -6,8 +6,11 @@
      * @var showButtons boolean value indicating whether to display actions
      * @var material object of material entity class
      */
+
+use App\Entities\Cast\StatusCast;
+
 ?>
-<div id="<?= $material->id ?>" class="row p-2 g-0 border rounded <?= $index % 2 == 1 ? '' : 'bg-light' ?>" style="align-items:center; text-align: center;">
+<div id="<?= $material->id ?>" class="row p-2 g-0 border rounded <?= $material->status === StatusCast::PUBLIC ? ($index % 2 == 1 ? '' : 'bg-light') : 'bg-info' ?>" style="align-items:center; text-align: center;">
     <p class="col-1 me-1"><?= $material->id ?></p>
     <img class="col-1 rounded me-1" src="<?= $material->getThumbnail()->getPath() ?>" style="width: 6rem; height: 6rem; object-fit: scale-down" alt="missing_img">
     <p class="col-3 me-1" style="word-break: break-word;"><?= $material->title?></p>
