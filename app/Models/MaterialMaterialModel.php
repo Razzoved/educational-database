@@ -22,34 +22,40 @@ class MaterialMaterialModel extends Model
     public function getRelated(int $id, bool $onlyVisible = true) : array
     {
         $ids = $this->builder()
+                    ->select($this->allowedFields[0] . ' as l, ' . $this->allowedFields[1] . ' as r')
                     ->orWhere('material_id_left', $id)
                     ->orWhere('material_id_right', $id)
                     ->get()
                     ->getResultArray();
 
-        echo json_encode($ids);
+        $result = array();
+        foreach ($ids as $key => $value) {
+            if ($value['l'] === $value['r']) {
+                continue;
+            }
+            $val = $value['l'] == $id ? $value['r'] : $value['l'];
+            $found = model(MaterialModel::class)->find($val);
+            if ($found && ($onlyVisible === false || ($onlyVisible && $found->status === StatusCast::PUBLIC))) {
+                $result[$found->id] = $found->title;
+            }
+        }
 
-        // $result = array();
-        // foreach ($ids as $key => $value) {
-        //     $result[] = model(MaterialModel::class)->find($value);
-        // }
-        // return $result;
-
-        return [];
+        return $result;
     }
 
     /**
      * Automatically decides whether to delete or insert a new property
      * to the material.
      *
-     * @param material $material material to insert/delete with
+     * @param Material $material material to insert/delete with
+     * @param array $newRelations id => title pairs for update
      * @param BaseConnection $db database connection
      */
     public function handleUpdate(Material $material, array $newRelations, BaseConnection $db = null) : void
     {
         if (!isset($db)) $db = $this->db;
 
-        $relations = $this->getRelated($material->id);
+        $relations = $this->getRelated($material->id, false);
 
         $toDelete = array_filter($relations, function($r) use ($newRelations) {
             return $r && !in_array($r, $newRelations);
@@ -59,17 +65,23 @@ class MaterialMaterialModel extends Model
             return $r && !in_array($r, $relations);
         });
 
-        foreach ($toDelete as $p) {
+        foreach ($toDelete as $k => $v) {
             $db->table($this->table)
-               ->where('material_id', $material->id)
-               ->where('property_id', $p->id)
+               ->orGroupStart()
+                    ->where($this->allowedFields[0], $material->id)
+                    ->where($this->allowedFields[1], $k)
+               ->groupEnd()
+               ->orGroupStart()
+                    ->where($this->allowedFields[0], $k)
+                    ->where($this->allowedFields[1], $material->id)
+               ->groupEnd()
                ->delete();
         }
 
-        foreach ($toCreate as $p) {
+        foreach ($toCreate as $k => $v) {
             $db->table($this->table)->insert([
-                'material_id' => $material->id,
-                'property_id' => $p->id,
+                $this->allowedFields[0] => $material->id,
+                $this->allowedFields[1] => $k,
             ]);
         }
     }

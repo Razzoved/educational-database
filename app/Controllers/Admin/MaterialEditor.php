@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Entities\Material as EntitiesMaterial;
 use App\Entities\Property as EntitiesProperty;
 use App\Entities\Resource as EntitiesResource;
+use App\Models\MaterialMaterialModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -44,6 +45,7 @@ class MaterialEditor extends BaseController
             'meta_title'           => MaterialEditor::META_TITLE,
             'validation'           => Services::validation(),
             'available_properties' => $this->getAllPropertiesAsStrings(),
+            'available_relations'  => $this->getAllMaterialsAsStrings(),
         ];
 
         return view(Config::VIEW . 'material/form', $data);
@@ -77,7 +79,7 @@ class MaterialEditor extends BaseController
         $material->properties = $this->loadProperties($this->request->getPost('properties'));
 
         try {
-            $this->materials->handleUpdate($material);
+            $this->materials->handleUpdate($material, $this->request->getPost('relations') ?? []);
             $this->deleteRemovedFiles($this->request->getPost('unused-files'));
             $this->moveTemporaryFiles($material);
         } catch (Exception $e) {
@@ -156,6 +158,7 @@ class MaterialEditor extends BaseController
             'thumbnail' => $material->getThumbnail()->getPath(false),
             'links' => $links,
             'files' => $files,
+            'relations' => model(MaterialMaterialModel::class)->getRelated($material->id, false),
         ];
     }
 
@@ -255,6 +258,21 @@ class MaterialEditor extends BaseController
     }
 
     /**
+     * Gets all materials as an array of ['id' => 'title'] records. This
+     * method should be used before sending material to form.
+     *
+     * @return array array of stringified materials (['id' => 'title'])
+     */
+    private function getAllMaterialsAsStrings() : array
+    {
+        $materials = [];
+        foreach ($this->materials->getData()->get()->getResult(EntitiesMaterial::class) as $material) {
+            $materials[$material->id] = $material->title;
+        }
+        return $materials;
+    }
+
+    /**
      * Moves all temporary files from writable directory to public one
      * belonging to the given material, and renames them back to their
      * original name if possible.
@@ -301,6 +319,7 @@ class MaterialEditor extends BaseController
                 'meta_title'           => MaterialEditor::META_TITLE,
                 'validation'           => $this->validator,
                 'available_properties' => $this->getAllPropertiesAsStrings(),
+                'available_relations'  => $this->getAllMaterialsAsStrings(),
             ]
         );
     }

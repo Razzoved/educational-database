@@ -101,7 +101,7 @@ class MaterialModel extends Model
         return $material;
     }
 
-    public function handleUpdate(Material $material) : bool
+    public function handleUpdate(Material $material, array $relatedMaterials = []) : bool
     {
         $m = $this->find($material->id);
 
@@ -123,6 +123,7 @@ class MaterialModel extends Model
             $material->id = $this->insert($material, true);
         }
 
+        model(MaterialMaterialModel::class)->handleUpdate($material, $relatedMaterials, $this->db);
         model(MaterialPropertyModel::class)->handleUpdate($material, $this->db);
         model(ResourceModel::class)->handleUpdate($material, $this->db);
 

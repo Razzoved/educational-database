@@ -5,7 +5,8 @@
      * Bootstrap should be loaded too.
      *
      * Expects:
-     * @param materials relations to other materials that already exist
+     * @param available all available materials in form of (id => title) pairs
+     * @param relations relations to other materials that already exist
      */
 ?>
 
@@ -22,8 +23,8 @@
     </div>
 
     <datalist id="relation-options">
-        <?php foreach ($materials as $material) : ?>
-            <option value=<?= $material->title ?> data-value=<?= $material->id ?>>
+        <?php foreach ($available as $id => $title) : ?>
+            <option value='<?= $title ?>' data-value='<?= $id ?>'>
         <?php endforeach; ?>
     </datalist>
 
@@ -32,10 +33,8 @@
 
     <div id="relation-group">
     <?php
-        $index = 0;
-        foreach ($links as $link) {
-            echo view('admin/relation_template', ['id' => $index, 'value' => $link, 'hidden' => false, 'readonly' => true]);
-            $index++;
+        foreach ($relations as $id => $title) {
+            echo view('admin/relation_template', ['id' => $id, 'value' => $title, 'hidden' => false, 'readonly' => true]);
         }
     ?>
     </div>

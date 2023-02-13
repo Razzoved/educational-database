@@ -92,8 +92,8 @@
 
         <!-- related materials -->
         <div class="form-edit-floating">
-            <?= form_label('Related materials', 'materials', $label) ?>
-            <?= view('admin/relation_input', ['label' => $label, 'materials' => set_value('relations', [], false)]) ?>
+            <?= form_label('Related materials', 'relations', $label) ?>
+            <?= view('admin/relation_input', ['label' => $label, 'available' => $available_relations, 'relations' => set_value('relations', [], false)]) ?>
         </div>
 
         <!-- hidden attributes (for editing) -->
