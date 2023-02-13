@@ -13,9 +13,12 @@ class MaterialModel extends Model
     protected $allowedFields = [
         'material_status',
         'material_title',
-        'material_type',
+        'material_author',
+        'material_blame',
         'material_content',
         'material_views',
+        'material_rating',
+        'material_rating_count'
     ];
 
     protected $useAutoIncrement = true;
@@ -100,11 +103,23 @@ class MaterialModel extends Model
 
     public function handleUpdate(Material $material) : bool
     {
+        $m = $this->find($material->id);
+
         $this->db->transStart();
 
-        if ($material->id !== 0) {
+        if ($m !== null) {
+            $material->author = $m->author;
+            $material->blame = session('user')->name;
+            $material->views = $m->views;
+            $material->rating = $m->rating;
+            $material->rating_count = $m->rating_count;
             $this->update($material->id, $material);
         } else {
+            $material->author = session('user')->name;
+            $material->blame = null;
+            $material->views = 0;
+            $material->rating = 0;
+            $material->rating_count = 0;
             $material->id = $this->insert($material, true);
         }
 
@@ -119,7 +134,5 @@ class MaterialModel extends Model
     private function loadData(Material $material) {
         $material->properties = model(MaterialPropertyModel::class)->getByMaterial($material->id);
         $material->resources = model(ResourceModel::class)->getResources($material->id);
-        $material->rating = model(RatingsModel::class)->getRatingAvg($material->id);
-        $material->rating_count = model(RatingsModel::class)->getRatingCount($material->id);
     }
 }

@@ -82,6 +82,44 @@ class Material extends BaseController
         return view('material_single', $data);
     }
 
+    /**
+     * AJAX request handler for rating updates. Echoes back the new rating values
+     * (two integers - averaged rating, rating count)
+     *
+     * @uses $_POST['id'] id of material to rate
+     * @uses $_POST['value'] value of rating to set for the user
+     */
+    public function rate() : void
+    {
+        $id = $this->request->getPost('id');
+        $value = $this->request->getPost('value');
+        $material = null;
+
+        if (!$id) {
+            echo "";
+            return;
+        }
+
+        if (session_id() === "") {
+            session(); // create a new session
+        }
+
+        if ($this->ratings->setRating($id, session_id(), $value)) {
+            $material = $this->materials->find($id);
+        }
+
+        if (!$material) {
+            echo "";
+            return;
+        }
+
+        $material->rating = $this->ratings->getRatingAvg($id);
+        $material->rating_count = $this->ratings->getRatingCount($id);
+        $this->materials->update($id, $material);
+
+        echo json_encode(['avg' => $material->rating, 'cnt' => $material->rating_count]);
+    }
+
     protected function getMaterial(int $id) : EntitiesMaterial
     {
         $material = $this->materials->getById($id);
@@ -98,8 +136,6 @@ class Material extends BaseController
 
         foreach ($materials as $m) {
             $m->resources = $this->resources->getThumbnail($m->id);
-            $m->rating = $this->ratings->getRatingAvg($m->id);
-            $m->rating_count = $this->ratings->getRatingCount($m->id);
         }
         return $materials;
     }

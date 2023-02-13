@@ -47,6 +47,7 @@ $routes->group('/', function($routes) {
 
     // SINGLE material
     $routes->add('materials/(:num)', 'Material::get/$1');
+    $routes->post('materials/rate', 'Material::rate');
 
     // AUTHENTICATION
     $routes->get('login', 'Login::index');

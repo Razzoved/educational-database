@@ -11,9 +11,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 use App\Models\MaterialModel;
-use App\Models\MaterialPropertyModel;
 use App\Models\PropertyModel;
-use App\Models\ResourceModel;
 use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
@@ -63,7 +61,6 @@ class MaterialEditor extends BaseController
         $rules = [
             'title'     => "required",
             'status'    => "required",
-            'type'      => "required",
             'content'   => "required",
         ];
 
@@ -154,9 +151,7 @@ class MaterialEditor extends BaseController
             'id' => $material->id,
             'status' => $material->status,
             'title' => $material->title,
-            'type' => $material->type,
             'content' => $material->content,
-            'views' => $material->views,
             'properties' => $material->getPropertiesAsStrings(),
             'thumbnail' => $material->getThumbnail()->getPath(false),
             'links' => $links,

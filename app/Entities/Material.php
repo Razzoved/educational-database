@@ -8,45 +8,49 @@ use DateTime;
 class Material extends Entity
 {
     protected $attributes = [
-        'material_id'        => null,
-        'material_status'    => null,
-        'material_title'     => null,
-        'material_type'      => null,
-        'material_content'   => null,
-        'material_views'     => null,
-        'created_at'         => null,
-        'updated_at'         => null,
-        'rating'             => null, // not part of table in DB
-        'rating_count'       => null, // not part of table in DB
-        'properties'         => null, // not part of table in DB
-        'resources'          => null, // not part of table in DB
+        'material_id'           => null,
+        'material_author'       => null,
+        'material_blame'        => null,
+        'material_status'       => null,
+        'material_title'        => null,
+        'material_content'      => null,
+        'material_views'        => null,
+        'material_rating'       => null,
+        'material_rating_count' => null,
+        'created_at'            => null,
+        'updated_at'            => null,
+        'properties'            => null, // not part of table in DB
+        'resources'             => null, // not part of table in DB
     ];
 
     protected $casts = [
-        'material_id'      => 'int',
-        'material_status'  => 'statusCast',
-        'material_title'   => 'string',
-        'material_type'    => 'typeCast',
-        'material_content' => 'string',
-        'material_views'   => 'int',
-        'rating'           => 'int',   // not part of table in DB
-        'rating_count'     => 'int',   // not part of table in DB
-        'properties'       => 'array', // not part of table in DB
-        'resources'        => 'array', // not part of table in DB
+        'material_id'           => 'int',
+        'material_author'       => 'string',
+        'material_blame'        => 'string',
+        'material_status'       => 'statusCast',
+        'material_title'        => 'string',
+        'material_content'      => 'string',
+        'material_views'        => 'int',
+        'material_rating'       => 'float',
+        'material_rating_count' => 'int',
+        'properties'            => 'array', // not part of table in DB
+        'resources'             => 'array', // not part of table in DB
     ];
 
     protected $castHandlers = [
         'statusCast' => \App\Entities\Cast\StatusCast::class,
-        'typeCast'   => \App\Entities\Cast\TypeCast::class,
     ];
 
     protected $datamap = [
-        'id'        => 'material_id',
-        'status'    => 'material_status',
-        'title'     => 'material_title',
-        'type'      => 'material_type',
-        'content'   => 'material_content',
-        'views'     => 'material_views',
+        'id'           => 'material_id',
+        'author'       => 'material_author',
+        'blame'        => 'material_blame',
+        'status'       => 'material_status',
+        'title'        => 'material_title',
+        'content'      => 'material_content',
+        'views'        => 'material_views',
+        'rating'       => 'material_rating',
+        'rating_count' => 'material_rating_count',
     ];
 
     public function getGroupedProperties() : array

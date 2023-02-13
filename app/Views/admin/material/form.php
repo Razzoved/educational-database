@@ -52,29 +52,19 @@
                 <?= form_label('Thumbnail (click to edit)', 'fThumbnail', $label) ?>
                 <?= view('admin/thumbnail_input', ['label' => $label, 'thumbnail' => $thumbnail]) ?>
             </div>
-            <div class="form-edit-floating col">
+            <div class="col">
                 <!-- title -->
-                <div class="row g-0">
+                <div class="form-edit-floating">
                     <?= form_label('Title', 'fTitle', $label) ?>
                     <?= form_input(['id' => 'fTitle', 'name' => 'title'], set_value('title'), $control) ?>
                 </div>
-                <div class="row g-0" style="margin-top: 2rem">
-                    <!-- status -->
-                    <div class="form-edit-floating col edit-mr" style="width: 50%">
-                        <?= form_label('Status', 'fStatus', $label) ?>
-                        <?= form_dropdown(['id' => 'fStatus', 'name' => 'status'],
-                            \App\Entities\Cast\StatusCast::VALID_VALUES,
-                            \App\Entities\Cast\StatusCast::getIndex(set_value('status')),
-                            $control) ?>
-                    </div>
-                    <!-- type -->
-                    <div class="form-edit-floating col" style="width: 50%">
-                        <?= form_label('Type', 'fType', $label) ?>
-                        <?= form_dropdown(['id' => 'fType', 'name' => 'type'],
-                            \App\Entities\Cast\TypeCast::VALID_VALUES,
-                            \App\Entities\Cast\TypeCast::getIndex(set_value('type')),
-                            $control) ?>
-                    </div>
+                <!-- status -->
+                <div class="form-edit-floating">
+                    <?= form_label('Status', 'fStatus', $label) ?>
+                    <?= form_dropdown(['id' => 'fStatus', 'name' => 'status'],
+                        \App\Entities\Cast\StatusCast::VALID_VALUES,
+                        \App\Entities\Cast\StatusCast::getIndex(set_value('status')),
+                        $control) ?>
                 </div>
             </div>
         </div>
@@ -102,7 +92,6 @@
 
         <!-- hidden attributes (for editing) -->
         <?= form_hidden('id', set_value('id')) ?>
-        <?= form_hidden('views', set_value('views')) ?>
         <div id="unused-files">
         </div>
 

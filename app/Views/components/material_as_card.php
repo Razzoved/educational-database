@@ -35,11 +35,11 @@
     <div class="card-footer">
         <!-- draw rating, views, details -->
         <div class="row g-1" style="align-items: center; justify-content: center">
-            <i class="col-auto <?= $material->rating >= 1 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
-            <i class="col-auto <?= $material->rating >= 2 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
-            <i class="col-auto <?= $material->rating >= 3 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
-            <i class="col-auto <?= $material->rating >= 4 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
-            <i class="col-auto <?= $material->rating >= 5 ? 'fa-solid' : 'fa-regular' ?> fa-star" style="margin-right: 0.2em"></i>
+            <i class="col-auto <?= $material->rating >= 0.8 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+            <i class="col-auto <?= $material->rating >= 1.8 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+            <i class="col-auto <?= $material->rating >= 2.8 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+            <i class="col-auto <?= $material->rating >= 3.8 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
+            <i class="col-auto <?= $material->rating >= 4.8 ? 'fa-solid' : 'fa-regular' ?> fa-star" style="margin-right: 0.2em"></i>
             <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating?></small>
             <small class="col"><u><?= $material->rating_count ?> ratings</u></small>
             <small class="col-auto text-muted" style="margin-right: 1em">Viewed: <?= $material->views ?>x</small>
