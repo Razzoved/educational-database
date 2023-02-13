@@ -206,11 +206,11 @@ class MaterialPropertyModel extends Model
         $oldProperties = $this->getByMaterial($material->id);
 
         $toDelete = array_filter($oldProperties, function($p) use ($material) {
-            return !in_array($p, $material->properties);
+            return $p && !in_array($p, $material->properties);
         });
 
         $toCreate = array_filter($material->properties, function($p) use ($oldProperties) {
-            return !in_array($p, $oldProperties);
+            return $p && !in_array($p, $oldProperties);
         });
 
         foreach ($toDelete as $p) {

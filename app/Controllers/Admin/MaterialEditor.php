@@ -59,7 +59,7 @@ class MaterialEditor extends BaseController
     public function save() : string|RedirectResponse
     {
         $rules = [
-            'title'     => "required",
+            'title'     => "required|string",
             'status'    => "required",
             'content'   => "required",
         ];
@@ -232,7 +232,8 @@ class MaterialEditor extends BaseController
         $result = array();
         foreach ($properties ?? [] as $tag => $values) {
             foreach ($values as $value) {
-                $result[] = $this->properties->getByBoth($tag, $value);
+                $p = $this->properties->getByBoth($tag, $value);
+                if ($p) $result[] = $p;
             }
         }
         return $result;
