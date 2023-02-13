@@ -11,14 +11,6 @@ function deleteId(id)
 
 function toggleSort(attribute)
 {
-    let target = document.querySelector('.page-sidebar');
-    if (!target || window.getComputedStyle(target).display == 'none') {
-        target = document.querySelector('.page-content');
-    }
-    if (!target || window.getComputedStyle(target).display == 'none') {
-        target = document.querySelector('.page-content-only');
-    }
-
     let sort = document.createElement('input');
     sort.type = 'hidden';
     sort.name = 'sort';
@@ -29,7 +21,19 @@ function toggleSort(attribute)
     sortDir.name = 'sortDir';
     sortDir.value = lastPost['sort'] === attribute && lastPost['sortDir'] === 'ASC' ? 'DESC' : 'ASC';
 
+    let target = document.querySelector('.page-sidebar');
+    if (!target || window.getComputedStyle(target).display == 'none') {
+        target = document.querySelector('.page-content');
+    }
+    if (!target || window.getComputedStyle(target).display == 'none') {
+        target = document.querySelector('.page-content-only');
+    }
+
     let form = target.querySelector('form');
+    if (!form) {
+        form = document.querySelector('form');
+    }
+
     form.action = "";
     form.appendChild(sort);
     form.appendChild(sortDir);
