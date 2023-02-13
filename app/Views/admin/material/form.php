@@ -81,13 +81,19 @@
         <!-- links -->
         <div class="form-edit-floating">
             <?= form_label('Links to relevant sites', 'links', $label) ?>
-            <?= view('admin/link_input', ['label' => $label, 'links' => $_POST['links'] ?? []]) ?>
+            <?= view('admin/link_input', ['label' => $label, 'links' => set_value('links', [], false)]) ?>
         </div>
 
         <!-- files -->
         <div class="form-edit-floating">
             <?= form_label('Downloadable files', 'files', $label) ?>
-            <?= view('admin/file_input', ['label' => $label, 'files' => $_POST['files'] ?? []]) ?>
+            <?= view('admin/file_input', ['label' => $label, 'files' => set_value('files', [], false)]) ?>
+        </div>
+
+        <!-- related materials -->
+        <div class="form-edit-floating">
+            <?= form_label('Related materials', 'materials', $label) ?>
+            <?= view('admin/relation_input', ['label' => $label, 'materials' => set_value('relations', [], false)]) ?>
         </div>
 
         <!-- hidden attributes (for editing) -->

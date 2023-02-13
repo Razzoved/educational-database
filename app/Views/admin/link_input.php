@@ -66,7 +66,7 @@
 
         input.disabled = null;
         input.required = true;
-        input.value = value;
+        input.setAttribute('value', value);
 
         button.onclick = () => removeById(id);
 
