@@ -147,7 +147,7 @@ class Material extends BaseController
         $search = $this->request->getPost('search') ?? "";
         $filters = $this->request->getPost('filters') ?? [];
 
-        return ($search !== "" && $filters !== [])
+        return ($search !== "" || $filters !== [])
             ? $this->materials->getByFilters($sort, $sortDir, $search, $filters)
             : $this->materials->getData($sort, $sortDir);
     }
