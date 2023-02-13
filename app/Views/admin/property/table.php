@@ -88,7 +88,10 @@
         template.querySelector('[data-value=id]').innerHTML = data.id;
         template.querySelector('[data-value=tag]').innerHTML = data.tag;
         template.querySelector('[data-value=value]').innerHTML = data.value;
-        template.querySelector('[data-value=usage]').innerHTML = 0;
+        let usg = template.querySelector('[data-value=usage]');
+        usg.setAttribute('innerHTML', usg.innerHTML.replace(/[0-9]+$/, 0));
+        let edt = template.querySelector('a');
+        edt.setAttribute('href', edt.href.replace(/[0-9]+$/, data.id));
         let del = template.querySelector('button[onclick^=deleteOpen]');
         del.setAttribute("onclick", `deleteOpen("${data.id}")`);
         document.getElementById('items').appendChild(template);

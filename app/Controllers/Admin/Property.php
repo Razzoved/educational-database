@@ -76,8 +76,8 @@ class Property extends BaseController
     {
         $rules = [
             'id'       => "required|integer",
-            'tag'      => "required|alpha_numeric_punct",
-            'value'    => "required|alpha_numeric_punct",
+            'tag'      => "required|string",
+            'value'    => "required|string",
         ];
 
         if (!$this->validate($rules)) {
@@ -103,8 +103,8 @@ class Property extends BaseController
     public function save() : void
     {
         $rules = [
-            'tag'      => "required|alpha_numeric_punct",
-            'value'    => "required|alpha_numeric_punct",
+            'tag'      => "required|string",
+            'value'    => "required|string",
         ];
 
         if (!$this->validate($rules)) {
