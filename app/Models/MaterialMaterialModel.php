@@ -44,8 +44,8 @@ class MaterialMaterialModel extends Model
     }
 
     /**
-     * Automatically decides whether to delete or insert a new property
-     * to the material.
+     * Automatically decides whether to delete or insert a new relationship
+     * between two materials.
      *
      * @param Material $material material to insert/delete with
      * @param array $newRelations id => title pairs for update
