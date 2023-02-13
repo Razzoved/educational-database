@@ -74,7 +74,7 @@
         input.disabled = null;
         input.required = true;
         input.setAttribute('value', value);
-        input.setAttribute('data-value', idValue);
+        input.setAttribute('name', input.name.replace(/[0-9]/, idValue));
 
         button.onclick = () => removeById(id);
 

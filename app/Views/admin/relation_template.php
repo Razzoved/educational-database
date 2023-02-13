@@ -1,5 +1,5 @@
 <div id="relation-<?= $id ?? "template"?>" class="row g-0 edit-mt" <?php if (isset($hidden) === false || $hidden === true) echo 'hidden'?>>
-    <input name="relations[]"
+    <input name="relations[<?= $id ?? '0' ?>]"
            type="text"
            class="form-control col"
            value="<?= $value ?? 'TEMPLATE' ?>"
