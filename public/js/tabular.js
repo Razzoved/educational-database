@@ -21,23 +21,26 @@ function toggleSort(attribute)
     sortDir.name = 'sortDir';
     sortDir.value = lastPost['sort'] === attribute && lastPost['sortDir'] === 'ASC' ? 'DESC' : 'ASC';
 
-    let target = document.querySelector('.page-sidebar');
-    if (!target || window.getComputedStyle(target).display == 'none') {
-        target = document.querySelector('.page-content');
-    }
-    if (!target || window.getComputedStyle(target).display == 'none') {
-        target = document.querySelector('.page-content-only');
-    }
-
-    let form = target.querySelector('form');
-    if (!form) {
-        form = document.querySelector('form');
-    }
-
+    let form = getCurrentForm();
     form.action = "";
     form.appendChild(sort);
     form.appendChild(sortDir);
     form.submit();
+}
+
+function getCurrentForm()
+{
+    let target = document.querySelector('.page-sidebar');
+    let content = document.querySelector('.page-content');
+
+    if (!target && !content) {
+        target = document.querySelector('.page-content-only');
+    }
+    if (!target || window.getComputedStyle(target).display == 'none') {
+        if (content.querySelector('form')) target = content;
+    }
+
+    return target.querySelector('form');
 }
 
 /**
