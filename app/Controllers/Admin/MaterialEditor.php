@@ -64,7 +64,7 @@ class MaterialEditor extends BaseController
             'title'     => "required|string",
             'author'    => "required|string",
             'status'    => "required",
-            'content'   => "required",
+            'content'   => "string",
         ];
 
         if (!$this->validate($rules, $this->messages)) {
