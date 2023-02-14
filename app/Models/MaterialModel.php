@@ -103,20 +103,17 @@ class MaterialModel extends Model
 
     public function handleUpdate(Material $material, array $relatedMaterials = []) : bool
     {
+        $material->blame = session('user')->name;
         $m = $this->find($material->id);
 
         $this->db->transStart();
 
         if ($m !== null) {
-            $material->author = $m->author;
-            $material->blame = session('user')->name;
             $material->views = $m->views;
             $material->rating = $m->rating;
             $material->rating_count = $m->rating_count;
             $this->update($material->id, $material);
         } else {
-            $material->author = session('user')->name;
-            $material->blame = null;
             $material->views = 0;
             $material->rating = 0;
             $material->rating_count = 0;

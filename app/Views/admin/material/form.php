@@ -58,13 +58,19 @@
                     <?= form_label('Title', 'fTitle', $label) ?>
                     <?= form_input(['id' => 'fTitle', 'name' => 'title'], set_value('title'), $control) ?>
                 </div>
-                <!-- status -->
-                <div class="form-edit-floating">
-                    <?= form_label('Status', 'fStatus', $label) ?>
-                    <?= form_dropdown(['id' => 'fStatus', 'name' => 'status'],
-                        \App\Entities\Cast\StatusCast::VALID_VALUES,
-                        \App\Entities\Cast\StatusCast::getIndex(set_value('status')),
-                        $control) ?>
+                <!-- sender + status -->
+                <div class="row g-0">
+                    <div class="col form-edit-floating edit-mr">
+                        <?= form_label('Sender', 'fSender', $label) ?>
+                        <?= form_input(['id' => 'fSender', 'name' => 'author'], set_value('author'), $control) ?>
+                    </div>
+                    <div class="col form-edit-floating">
+                        <?= form_label('Status', 'fStatus', $label) ?>
+                        <?= form_dropdown(['id' => 'fStatus', 'name' => 'status'],
+                            \App\Entities\Cast\StatusCast::VALID_VALUES,
+                            \App\Entities\Cast\StatusCast::getIndex(set_value('status')),
+                            $control) ?>
+                    </div>
                 </div>
             </div>
         </div>

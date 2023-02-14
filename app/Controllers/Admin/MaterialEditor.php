@@ -62,6 +62,7 @@ class MaterialEditor extends BaseController
     {
         $rules = [
             'title'     => "required|string",
+            'author'    => "required|string",
             'status'    => "required",
             'content'   => "required",
         ];
@@ -151,6 +152,7 @@ class MaterialEditor extends BaseController
 
         $_POST = [
             'id' => $material->id,
+            'author' => $material->author,
             'status' => $material->status,
             'title' => $material->title,
             'content' => $material->content,
