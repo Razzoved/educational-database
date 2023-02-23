@@ -77,13 +77,7 @@ class MaterialModel extends Model
     public function getById(int $id, bool $showHidden = false) : Material|null
     {
         $material = $this->find($id);
-
-        if (!$material || ($material->status != StatusCast::PUBLIC && !$showHidden)) {
-            return null;
-        }
-
-        $this->loadData($material);
-        return $material;
+        return ($material) ? $this->verifyAndLoad($material, $showHidden) : null;
     }
 
     public function getByTitle(string $title, bool $showHidden = false) : Material|null
@@ -92,13 +86,7 @@ class MaterialModel extends Model
                          ->where('material_title', $title)
                          ->get(1)
                          ->getCustomResultObject(Material::class);
-
-        if (!$material || ($material->status != StatusCast::PUBLIC && !$showHidden)) {
-            return null;
-        }
-
-        $this->loadData($material);
-        return $material;
+        return ($material) ? $this->verifyAndLoad($material, $showHidden) : null;
     }
 
     public function handleUpdate(Material $material, array $relatedMaterials = []) : bool
@@ -129,8 +117,15 @@ class MaterialModel extends Model
         return $this->db->transStatus();
     }
 
-    private function loadData(Material $material) {
+    private function verifyAndLoad(Material $material, bool $showHidden) {
+        if ($material->status != StatusCast::PUBLIC && !$showHidden) {
+            return null;
+        }
+
         $material->properties = model(MaterialPropertyModel::class)->getByMaterial($material->id);
         $material->resources = model(ResourceModel::class)->getResources($material->id);
+        $material->related = model(MaterialMaterialModel::class)->getRelated($material->id, !$showHidden);
+
+        return $material;
     }
 }
