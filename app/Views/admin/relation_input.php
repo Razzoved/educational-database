@@ -24,7 +24,7 @@
 
     <datalist id="relation-options">
         <?php foreach ($available as $id => $title) : ?>
-            <option value='<?= $title ?>' data-value='<?= $id ?>'>
+            <option value='<?= esc($title) ?>' data-value='<?= $id ?>'>
         <?php endforeach; ?>
     </datalist>
 
@@ -51,7 +51,7 @@
             return;
         }
 
-        let option = document.getElementById('relation-options').querySelector('option[value="' + uploader.value + '"]');
+        let option = document.getElementById('relation-options').querySelector(`option[value="${escapeQuotes(uploader.value)}"]`);
         let relation = createRelation(
             `relation-${parseInt(container.lastElementChild?.id.replace(/^\D+/g, '') ?? '0') + 1}`,
             uploader.value,
@@ -87,7 +87,7 @@
     function verifyRelation()
     {
         let uploader = document.getElementById('relation-uploader');
-        let option = document.getElementById('relation-options').querySelector("option[value='" + uploader.value + "']");
+        let option = document.getElementById('relation-options').querySelector(`option[value="${escapeQuotes(uploader.value)}"]`);
         if (option === null && uploader.value !== "") {
             uploader.classList.add('border-danger');
             return false;
@@ -99,8 +99,13 @@
     function verifyRelationDuplicates()
     {
         let uploader = document.getElementById('relation-uploader');
-        let duplicate = document.getElementById('relation-group').querySelector("input[value='" + uploader.value + "']");
+        let duplicate = document.getElementById('relation-group').querySelector('input[value="' + escapeQuotes(uploader.value) + '"]');
         if (duplicate !== null) uploader.value = '';
         return duplicate === null;
+    }
+
+    function escapeQuotes(string)
+    {
+        return string.replaceAll('"', '\\"');
     }
 </script>
