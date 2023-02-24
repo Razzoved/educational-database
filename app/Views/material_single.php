@@ -83,6 +83,9 @@
     <!-- Downloadable -->
     <?= view_cell('App\Libraries\Material::listFiles', ['material' => $material]) ?>
 
+    <!-- Related -->
+    <?= view_cell('App\Libraries\Material::listRelated', ['material' => $material]) ?>
+
     <hr>
 </div>
 </div>

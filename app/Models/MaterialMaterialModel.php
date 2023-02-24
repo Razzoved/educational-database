@@ -33,10 +33,11 @@ class MaterialMaterialModel extends Model
             if ($value['l'] === $value['r']) {
                 continue;
             }
-            $val = $value['l'] == $id ? $value['r'] : $value['l'];
-            $found = model(MaterialModel::class)->find($val);
+            $identifier = $value['l'] == $id ? $value['r'] : $value['l'];
+            $found = model(MaterialModel::class)->find($identifier);
             if ($found && ($onlyVisible === false || ($onlyVisible && $found->status === StatusCast::PUBLIC))) {
-                $result[$found->id] = $found->title;
+                $found->resources = model(ResourceModel::class)->getThumbnail($found->id);
+                $result[$found->id] = $found;
             }
         }
 

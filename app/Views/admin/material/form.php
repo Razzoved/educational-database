@@ -122,10 +122,6 @@
 <?= $this->section('scripts') ?>
 
 <script type='text/javascript'>
-    console.log('Links: ', <?= json_encode($links ?? 'NONE') ?>);
-    console.log('Thumbnail: ', <?= json_encode($thumbnail ?? 'NONE') ?>);
-    console.log('Files: ', <?= json_encode($files ?? 'NONE') ?>);
-
     function addToUnused(filepath)
     {
         let unused = document.getElementById('unused-files');

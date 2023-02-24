@@ -166,7 +166,7 @@ class MaterialEditor extends BaseController
 
     /**
      * Looks through the properties from post and filters them:
-     * - ignores files with paths to NO_THUMBNAIL
+     * - ignores files with paths to MISSING
      * - saves temporary paths to tmp_path
      * - saves normalized (without first 2 segments) original paths to path
      *
@@ -197,7 +197,7 @@ class MaterialEditor extends BaseController
     private function loadFromArray(array &$target, array $items, string $type) : void
     {
         foreach ($items as $tmpPath => $path) {
-            if ($path === EntitiesResource::NO_THUMBNAIL_PATH) continue;
+            if (EntitiesResource::isMissing($path)) continue;
             $target[] = new EntitiesResource([
                 'type'     => $type,
                 'path'     => $type === 'link' ? $path : $this->normalize($path),

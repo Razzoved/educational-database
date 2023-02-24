@@ -35,20 +35,25 @@ class Resource extends BaseController
 
     public function upload() : void
     {
-        $files = array();
+        $views = array();
 
         foreach ($this->request->getFiles() as $file) {
             if ($file->isValid() && !$file->hasMoved()) {
-                $files[$file->getName()] = 'writable/uploads/' . $file->store();
+                $name = $file->getName();
+                $views[$name] = view(Config::VIEW . 'file_template', [
+                    'id' => $this->request->getPostGet('id'),
+                    'path' => 'writable/uploads/' . $file->store(),
+                    'value' => $name,
+                ]);
             }
         }
 
-        if ($files === array()) {
+        if ($views === array()) {
             $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "No files saved");
             return;
         }
 
-        echo json_encode($files);
+        echo json_encode($views);
     }
 
     public function move() : void

@@ -8,7 +8,8 @@
      */
     use App\Entities\Resource;
 
-    $IMG_REGEX = '/.*\.(?:jpg|gif|png|bmp)$/';
+    $IMG_REGEX = '/.*\.(?:jpg|jpeg|tiff|gif|png|bmp)$/';
+    $THUMBNAIL = App\Entities\Resource::strToThumbnail($thumbnail)->getPath();
 ?>
 <div style="align-items: center">
 
@@ -16,11 +17,11 @@
     <image id="thumbnail"
         class="img-fluid rounded edit-mr"
         style="width: 12rem; height: 12rem; object-fit: scale-down"
-        src="<?= base_url() . '/' . ($thumbnail ?? Resource::NO_THUMBNAIL_PATH) ?>"
+        src="<?= $THUMBNAIL ?>"
         alt="No image"
         onclick="document.getElementById('thumbnail-uploader').click()">
     </image>
-    <input id="thumbnail-path" type="hidden" name="thumbnail" value="<?= $thumbnail ?? Resource::NO_THUMBNAIL_PATH ?>">
+    <input id="thumbnail-path" type="hidden" name="thumbnail" value="<?= $THUMBNAIL ?>">
 
     <!-- file uploader -->
     <input id="thumbnail-uploader" name="thumbnail-uploader" type="file" onchange="uploadThumbnail()" hidden>

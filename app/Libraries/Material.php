@@ -46,4 +46,14 @@ class Material
             ['resources' => $material->getFiles(), 'title' => 'Downloadable files']
         );
     }
+
+    public function listRelated(EntitiesMaterial $material) : string
+    {
+        if (!isset($material)) return 'ERROR';
+
+        return view(
+            'components/materials_as_relations',
+            ['materials' => $material->related, 'title' => 'Related materials']
+        );
+    }
 }

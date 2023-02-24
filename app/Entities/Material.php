@@ -19,6 +19,7 @@ class Material extends Entity
         'material_rating_count' => null,
         'created_at'            => null,
         'updated_at'            => null,
+        'related'               => null, // not part of table in DB
         'properties'            => null, // not part of table in DB
         'resources'             => null, // not part of table in DB
     ];
@@ -33,6 +34,7 @@ class Material extends Entity
         'material_views'        => 'int',
         'material_rating'       => 'float',
         'material_rating_count' => 'int',
+        'related'               => 'array', // not part of table in DB
         'properties'            => 'array', // not part of table in DB
         'resources'             => 'array', // not part of table in DB
     ];
@@ -103,18 +105,12 @@ class Material extends Entity
 
     public function getThumbnail() : Resource
     {
-        $thumbnail = null;
-
         foreach ($this->resources as $r) {
             if ($r->type == 'thumbnail') {
-                $thumbnail = $r;
-                break;
+                return $r;
             };
         }
-
-        return is_null($thumbnail)
-            ? new Resource(Resource::NO_THUMBNAIL)
-            : $thumbnail;
+        return Resource::strToThumbnail(null);
     }
 
     public function getLinks() : array
@@ -123,7 +119,6 @@ class Material extends Entity
             function ($type) { return $type == 'link'; },
             function ($item) { return $item; }
         );
-
         return $links;
     }
 
@@ -133,7 +128,6 @@ class Material extends Entity
             function ($type) { return $type != 'link' && $type != 'thumbnail'; },
             function ($item) { return $item; }
         );
-
         return $files;
     }
 

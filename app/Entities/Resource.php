@@ -6,12 +6,6 @@ use CodeIgniter\Entity\Entity;
 
 class Resource extends Entity
 {
-    public const NO_THUMBNAIL_PATH = 'assets/no_thumbnail.png';
-    public const NO_THUMBNAIL = [
-        'resource_path' => Resource::NO_THUMBNAIL_PATH,
-        'resource_type' => 'thumbnail',
-    ];
-
     protected $attributes = [
         'resource_id'    => null,
         'material_id'    => null,
@@ -63,5 +57,90 @@ class Resource extends Entity
         }
 
         return $path;
+    }
+
+    public static function isMissing(?string $path) : bool
+    {
+        return $path === null || $path === 'assets/missing.png';
+    }
+
+    public static function strToThumbnail(?string $path) : Resource
+    {
+        $asset = 'assets/missing.png';
+
+        if ($path && file_exists($path)) {
+            $asset = $path;
+        }
+
+        return new Resource([
+            'resource_path' => $asset,
+            'resource_type' => 'thumbnail',
+        ]);
+    }
+
+    public static function strToFileThumbnail(?string $path) : Resource
+    {
+        $prefix = 'assets/';
+        $asset = 'missing.png';
+
+        if ($path) {
+            $splitPath = explode('.', $path);
+            $fileType = end($splitPath);
+            switch ($fileType) {
+                # images
+                case 'png':
+                case 'jpg':
+                case 'jpeg':
+                case 'bmp':
+                case 'tiff':
+                    $prefix = '';
+                    $asset = $path;
+                    break;
+                # other file types
+                case 'avi':
+                    $asset = 'file_avi.png';
+                    break;
+                case 'cdr':
+                    $asset = 'file_cdr.png';
+                    break;
+                case 'csv':
+                    $asset = 'file_csv.png';
+                    break;
+                case 'doc':
+                case 'docx':
+                    $asset = 'file_doc.png';
+                    break;
+                case 'mp4':
+                case 'mp3':
+                    $asset = 'file_mp3.png';
+                    break;
+                case 'pdf':
+                    $asset = 'file_pdf.png';
+                    break;
+                case 'ppt':
+                case 'pptx':
+                    $asset = 'file_ppt.png';
+                    break;
+                case 'rar':
+                    $asset = 'file_rar.png';
+                    break;
+                case 'txt':
+                    $asset = 'file_txt.png';
+                    break;
+                case 'xls':
+                    $asset = 'file_xls.png';
+                    break;
+                case 'zip':
+                    $asset = 'file_zip.png';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return new Resource([
+            'resource_path' => $prefix . $asset,
+            'resource_type' => 'thumbnail',
+        ]);
     }
 }
