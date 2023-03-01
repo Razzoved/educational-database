@@ -13,7 +13,7 @@
 <body>
     <?= $this->include('navigation_bar') ?>
 
-    <div class="container">
+    <div class="container" style="min-height: 100vh">
         <?= $this->renderSection('content') ?>
     </div>
 

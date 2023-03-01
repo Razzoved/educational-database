@@ -7,7 +7,7 @@
 <?= $this->section('content') ?>
 <div class="page">
 
-    <div class="page-content-only">
+    <div class="page-content">
 
         <form method="post" action="<?= base_url('admin/users/1') ?>">
             <div class="row g-0" style="margin-bottom: 1rem">

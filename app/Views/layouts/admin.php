@@ -16,7 +16,7 @@
 <body>
     <?= $this->include('admin/navigation_bar') ?>
 
-    <div class="vh100">
+    <div class="container" style="min-height: 100vh">
         <?= $this->renderSection('content') ?>
     </div>
 
