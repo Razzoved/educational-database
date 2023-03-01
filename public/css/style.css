@@ -15,11 +15,31 @@
   --clr-dark-transparent: #0000004b;
   --clr-light: #f3f3f3;
   --clr-light-transparent: #ffffff60;
+  --clr-text: #222222;
+  --clr-text-small: #333333;
 }
 
 body {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   background-color: #fff;
+}
+
+footer {
+  position: static;
+  bottom: 0px;
+  color: var(--clr-light);
+  background-color: var(--clr-dark);
+  text-align: center;
+}
+footer p {
+  padding: 0.25rem 0.25rem;
+}
+footer a {
+  color: var(--clr-hyperlink);
+}
+footer section > a {
+  padding: 1rem 1rem;
+  text-decoration: none;
 }
 
 input[type=url]:-moz-read-only, input[type=url] :-moz-read-only:focus {

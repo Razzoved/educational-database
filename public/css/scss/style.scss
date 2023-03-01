@@ -21,6 +21,8 @@
     --clr-dark-transparent: #0000004b;
     --clr-light: #f3f3f3;
     --clr-light-transparent: #ffffff60;
+    --clr-text: #222222;
+    --clr-text-small: #333333;
 }
 
 body {
@@ -28,6 +30,23 @@ body {
     background-color: #fff;
 }
 
+footer {
+    position: static;
+    bottom: 0px;
+    color: var(--clr-light);
+    background-color: var(--clr-dark);
+    text-align: center;
+    p {
+        padding: 0.25rem 0.25rem;
+    }
+    a {
+        color: var(--clr-hyperlink);
+    }
+    section > a {
+        padding: 1rem 1rem;
+        text-decoration: none;
+    }
+}
 
 input[type=url]:read-only, input[type=url] :read-only:focus {
     background-color: var(--clr-gray200);
