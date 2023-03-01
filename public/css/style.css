@@ -17,6 +17,8 @@
   --clr-light-transparent: #ffffff60;
   --clr-text: #222222;
   --clr-text-small: #333333;
+  --fs-button-lg: 1.2rem;
+  --fw-button: 600;
 }
 
 body {
@@ -91,10 +93,6 @@ input[type=url]:read-only, input[type=url] :read-only:focus {
   flex-grow: 1;
 }
 
-.pagination {
-  margin-top: 1rem;
-}
-
 .footer {
   position: sticky;
   bottom: -10rem;
@@ -102,12 +100,8 @@ input[type=url]:read-only, input[type=url] :read-only:focus {
   z-index: 1;
 }
 
-.checked {
-  color: orange;
-}
-
-.unchecked {
-  color: gray;
+.active {
+  color: var(--clr-active);
 }
 
 .cluster {

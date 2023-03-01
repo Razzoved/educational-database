@@ -9,6 +9,7 @@
 <!-- Custom CSS -->
 <link rel="stylesheet" href="<?= base_url('/css/style.css') ?>">
 <link rel="stylesheet" href="<?= base_url('/css/navbar.css') ?>">
+<link rel="stylesheet" href="<?= base_url('/css/pagination.css') ?>">
 
 <!-- Tab title -->
 <title><?= (isset($meta_title) ? $meta_title : 'Missing title') ?></title>

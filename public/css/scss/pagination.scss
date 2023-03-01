@@ -1,0 +1,42 @@
+.pagination {
+    width: fit-content;
+    justify-content: center;
+    margin: auto;
+    margin-top: 1rem;
+
+    .pager-item-list {
+        display:flex;
+        list-style: none;
+    }
+
+    .pager-item {
+        --border: var(--clr-light) 1px solid;
+        button {
+            height: 100%;
+            padding: 0.5rem 1.5rem;
+            border: var(--border);
+            border-left: 0px;
+            border-radius: 0px;
+            font-weight: var(--fw-button);
+            color: var(--clr-light);
+            background-color: var(--clr-dark);
+        }
+        &:first-of-type button {
+            border-left: var(--border);
+            border-top-left-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+        }
+        &:last-of-type button {
+            border-top-right-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+        }
+        &.active button {
+            color: var(--clr-active);
+        }
+        button:hover {
+            color: var(--clr-focus);
+            background-color: var(--clr-focus-bg);
+            border-color: var(--clr-dark);
+        }
+    }
+}
