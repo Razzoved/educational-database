@@ -4,7 +4,6 @@
 <head>
     <?= $this->include('header') ?>
 
-    <link rel="stylesheet" href="<?= base_url('/css/navbar.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/css/collapsible.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/css/sidebar.css') ?>">
 

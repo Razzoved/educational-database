@@ -13,8 +13,14 @@
 }
 
 :root {
-    --card-bg: gray;
-    --card-outline: black;
+    --clr-active: #009999;
+    --clr-focus: #009999;
+    --clr-focus-bg: #ffffffcc;
+    --clr-hyperlink: #009999;
+    --clr-dark: #1a1a1a;
+    --clr-dark-transparent: #0000004b;
+    --clr-light: #f3f3f3;
+    --clr-light-transparent: #ffffff60;
 }
 
 body {

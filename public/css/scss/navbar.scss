@@ -4,39 +4,45 @@
     --font-size: 1.25rem;
 
     overflow: hidden;
-    border-bottom: var(--card-outline) solid 0.1rem;
+    background-color: var(--clr-dark);
+    box-shadow: 0rem 0.5rem 1rem var(--clr-dark-transparent);
+    border-bottom: var(--clr-dark) solid 0.15rem;
     margin-bottom: 1rem;
 
     img, a {
+        cursor: pointer;
+        color: var(--clr-light);
         float: left;
         display: block;
         text-align: center;
         justify-content: center;
-        height: var(--height);
     }
-
     img {
         resize: both;
+        height: var(--height);
+        padding: calc(var(--padding) / 2) calc(var(--padding) / 2);
     }
 
     a {
         position: relative;
-        top: 30%;
-        padding: var(--padding) var(--padding);
-        line-height: calc(var(--height) - 2 * var(--padding));
+        top: var(--padding);
+        padding: 0rem var(--padding);
+        line-height: calc(var(--height) - 2rem);
         font-size: var(--font-size);
         font-weight: 600;
         text-decoration: none;
+        border-radius: 1rem;
     }
 
+
     a:hover {
-        background-color: black;
-        color: white;
+        color: var(--clr-focus);
+        background-color: var(--clr-focus-bg);
     }
 
     .active {
-        background-color: yellow;
-        color: blue;
+        color: var(--clr-active);
+        background-color: var(--clr-active-bg);
     }
 
     .login, .icon {
@@ -47,16 +53,17 @@
         display: none;
     }
 
-    @media screen and (max-width: 1000px) {
-        // hide all links, show toggler
+    @media screen and (max-width: 1200px) {
+        // hide all links
         a {
             display: none;
         }
+        // show toggler
         .icon {
             display: block;
         }
-        // show links if toggled on
         &.responsive {
+            // show links if toggled to responsive
             a:not(.icon) {
                 --h: calc(var(--height) * 0.6);
                 clear: both;
@@ -64,13 +71,17 @@
                 display: block;
                 text-align: left;
                 font-size: calc(var(--font-size) - 0.25rem);
-                height: var(--h);
-                line-height: calc(var(--h) - 2 * var(--padding));
+                line-height: calc(var(--h));
             }
+            // margin after last link
+            a:nth-last-child(2) {
+                margin-bottom: 1rem;
+            }
+            // icon is displayed separately separate from links
             .icon {
                 position: absolute;
                 right: var(--padding);
-                top: var(--padding);
+                top: calc(var(--padding) * 2);
             }
         }
     }

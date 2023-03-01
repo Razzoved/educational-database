@@ -10,9 +10,9 @@
 ?>
 <div class="navbar">
     <nav class="container">
-        <img src="<?= base_url('assets/enai-logo_horizontal.png') ?>"
+        <img src="<?= base_url('assets/enai-logo-transparent.png') ?>"
                 alt="ENAI logo"
-                onclick="window.location.href=''">
+                onclick="window.location.href='<?= $refUrl ?>'">
         <a <?= $activePage === '' ? 'class="active"' : '' ?> class="active" href="<?= base_url() ?>">All materials</a>
         <a <?= $activePage === 'top-rated' ? 'class="active"' : '' ?> href="<?= base_url('top-rated') ?>">Top rated</a>
         <a <?= $activePage === 'most-viewed' ? 'class="active"' : '' ?> href="<?= base_url('most-viewed') ?>">Most viewed</a>
