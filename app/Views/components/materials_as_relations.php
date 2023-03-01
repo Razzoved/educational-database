@@ -7,9 +7,9 @@
 ?>
 <!-- group of MATERIALS shown as clickable links -->
 <?= ($materials == []) ? "" : "<hr><h5>$title</h5>" ?>
-<div>
+<div class="auto-grid">
     <?php foreach ($materials as $material) : ?>
-    <div class="relation" href="<?= base_url('materials/' . $material->id) ?>">
+    <div class="relation" onclick="window.location.href='<?= base_url('materials/' . $material->id) ?>'" >
         <img class="relation-thumbnail" src="<?= $material->getThumbnail()->getPath() ?>" alt="relation thumbnail">
         <p class="relation-title"><?= $material->title ?></p>
     </div>

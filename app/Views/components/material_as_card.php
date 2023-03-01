@@ -23,7 +23,7 @@
                 <p class="card-text">
                     <?php
                         $content = strip_tags($material->content);
-                        echo (strlen($content) > 300) ? substr($content, 0, 297) . '...' : `$content`;
+                        echo (strlen($content) > 300) ? substr($content, 0, 297) . '...' : $content;
                     ?>
                 </p>
             </div>

@@ -6,3 +6,13 @@
         <?php endforeach; ?>
     </ul>
 </div>
+<script type="text/javascript">
+    function sidebar_toggle() {
+        var x = document.querySelector(".sidebar");
+        if (x.className === "sidebar") {
+            x.className += " responsive";
+        } else {
+            x.className = "sidebar";
+        }
+    }
+</script>

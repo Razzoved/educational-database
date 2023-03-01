@@ -85,11 +85,11 @@ input[type=url]:read-only, input[type=url] :read-only:focus {
   gap: 1rem;
 }
 .page-content {
-  flex-basis: 40rem;
-  flex-grow: 1000;
+  flex-basis: 10rem;
+  flex-grow: 9999;
 }
 .page-sidebar {
-  flex-basis: 20rem;
+  flex-basis: 18rem;
   flex-grow: 1;
 }
 

@@ -5,7 +5,6 @@
 <form method="post" action="">
 
 <div class="page">
-    <?= view('widgets/offcanvas_checkboxes', ['properties' => $filters]) ?>
 
     <div class="page-sidebar">
         <div class="row g-0"><h1 style="opacity: 0"><?= $title ?></h1></div>
@@ -17,7 +16,9 @@
         <div class="row g-0" style="margin-bottom: 1rem">
             <input class="col form-control" name="search" value="" placeholder="Search"/>
             <button class="col-auto btn btn-success ms-2" style="width: 20%" type="submit">Search</button>
-            <a class="col-auto btn btn-dark d-block d-lg-none ms-2" style="width: 20%" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
+            <button type="button" class="icon" onclick="sidebar_toggle()">
+                <i class="fa fa-bars"></i>
+            </a>
         </div>
 
         <div id="items">

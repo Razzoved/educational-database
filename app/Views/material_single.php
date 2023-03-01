@@ -4,14 +4,9 @@
 <!-- START OF PAGE SPLIT --->
 <div class="page">
 
-<?php
-    $properties = $material->getGroupedProperties();
-    echo view('widgets/offcanvas_buttons', ['properties' => $properties]);
-?>
-
 <!-- All tags -->
 <div class="page-sidebar">
-    <?= view('widgets/sidebar_buttons', ['properties' => $properties]) ?>
+    <?= view('widgets/sidebar_buttons', ['properties' => $material->getGroupedProperties()]) ?>
 </div>
 
 <!-- Post container -->
@@ -39,11 +34,11 @@
 
             <!-- rating, views -->
             <div class="row g-1 align-self-end mt-auto w-100" style="align-items: center; justify-content: center">
-                <i class="col-auto <?= $material->rating >= 0.8 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
-                <i class="col-auto <?= $material->rating >= 1.8 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
-                <i class="col-auto <?= $material->rating >= 2.8 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
-                <i class="col-auto <?= $material->rating >= 3.8 ? 'fa-solid' : 'fa-regular' ?> fa-star"></i>
-                <i class="col-auto <?= $material->rating >= 4.8 ? 'fa-solid' : 'fa-regular' ?> fa-star" style="margin-right: 0.2em"></i>
+                <i class="col-auto fa-solid <?= $material->rating >= 0.8 ? 'checked' : 'unchecked' ?> fa-star"></i>
+                <i class="col-auto fa-solid <?= $material->rating >= 1.8 ? 'checked' : 'unchecked' ?> fa-star"></i>
+                <i class="col-auto fa-solid <?= $material->rating >= 2.8 ? 'checked' : 'unchecked' ?> fa-star"></i>
+                <i class="col-auto fa-solid <?= $material->rating >= 3.8 ? 'checked' : 'unchecked' ?> fa-star"></i>
+                <i class="col-auto fa-solid <?= $material->rating >= 4.8 ? 'checked' : 'unchecked' ?> fa-star" style="margin-right: 0.2em"></i>
                 <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating ?></small>
                 <small class="col"><u><?= $material->rating_count ?> ratings</u></small> <!-- TODO: implement this table and query -->
                 <small class="col-auto text-muted">Viewed: <?= $material->views ?>x</small>
@@ -91,4 +86,16 @@
 </div>
 <!-- END OF PAGE SPLIT -->
 
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script type="text/javascript">
+    function rating_rate(element) {
+
+    }
+
+    function rating_mouseover(element) {
+
+    }
+</script>
 <?= $this->endSection() ?>
