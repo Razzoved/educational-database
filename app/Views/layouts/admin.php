@@ -10,10 +10,6 @@
     <link rel="stylesheet" href="<?= base_url('/css/sidebar.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/css/modal.css') ?>">
 
-    <!-- Bootstrap TABLE -->
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.css">
-
     <script>let lastPost = <?= json_encode($_POST ?? []) ?>;</script>
 </head>
 
