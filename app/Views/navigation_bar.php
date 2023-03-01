@@ -1,23 +1,35 @@
-<div class="border-bottom mb-3">
-    <nav class="container navbar navbar-expand-lg">
-        <div class="container-fluid">
-
-            <?php $refUrl = isset($homeURL) ? $homeURL : base_url() ?>
-
-            <a class="navbar-brand" href="<?= $refUrl ?>"><img src="<?= base_url('assets/enai-logo_horizontal.png') ?>" width="auto" height="80px" alt="ENAI logo"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link active" href="<?= $refUrl ?>">Home</a>
-                    <a class="nav-link active" aria-current="page" href="<?= base_url() ?>">All materials</a>
-                </div>
-                <div class="navbar-nav" style="margin-left: auto">
-                    <a class="nav-link active" aria-current="page" href="<?= base_url('login') ?>">Login</a>
-                </div>
-            </div>
-
-        </div>
+<?php
+    /**
+     * Navigation bar for the public domain.
+     *
+     * @var string $homeURL optional parameter, changes the reference of brand image
+     * @var string $activePage last url segment of the current page
+     */
+    $refUrl = isset($homeURL) ? $homeURL : base_url();
+    $activePage = isset($activePage) ? $activePage : '';
+?>
+<div class="navbar">
+    <nav class="container">
+        <img src="<?= base_url('assets/enai-logo_horizontal.png') ?>"
+                alt="ENAI logo"
+                onclick="window.location.href=''">
+        <a <?= $activePage === '' ? 'class="active"' : '' ?> class="active" href="<?= base_url() ?>">All materials</a>
+        <a <?= $activePage === 'top-rated' ? 'class="active"' : '' ?> href="<?= base_url('top-rated') ?>">Top rated</a>
+        <a <?= $activePage === 'most-viewed' ? 'class="active"' : '' ?> href="<?= base_url('most-viewed') ?>">Most viewed</a>
+        <a class="login" href="<?= base_url('login') ?>">Login</a>
+        <a class="icon" href="javascript:void(0);" onclick="navbar_toggle()">
+            <i class="fa fa-bars"></i>
+        </a>
     </nav>
 </div>
+
+<script type="text/javascript">
+    function navbar_toggle() {
+        var x = document.querySelector(".navbar");
+        if (x.className === "navbar") {
+            x.className += " responsive";
+        } else {
+            x.className = "navbar";
+        }
+    }
+</script>

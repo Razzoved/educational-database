@@ -1,0 +1,77 @@
+.navbar {
+    --height: 6rem;
+    --padding: 1rem;
+    --font-size: 1.25rem;
+
+    overflow: hidden;
+    border-bottom: var(--card-outline) solid 0.1rem;
+    margin-bottom: 1rem;
+
+    img, a {
+        float: left;
+        display: block;
+        text-align: center;
+        justify-content: center;
+        height: var(--height);
+    }
+
+    img {
+        resize: both;
+    }
+
+    a {
+        position: relative;
+        top: 30%;
+        padding: var(--padding) var(--padding);
+        line-height: calc(var(--height) - 2 * var(--padding));
+        font-size: var(--font-size);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    a:hover {
+        background-color: black;
+        color: white;
+    }
+
+    .active {
+        background-color: yellow;
+        color: blue;
+    }
+
+    .login, .icon {
+        float: right;
+    }
+
+    .icon {
+        display: none;
+    }
+
+    @media screen and (max-width: 1000px) {
+        // hide all links, show toggler
+        a {
+            display: none;
+        }
+        .icon {
+            display: block;
+        }
+        // show links if toggled on
+        &.responsive {
+            a:not(.icon) {
+                --h: calc(var(--height) * 0.6);
+                clear: both;
+                float: none;
+                display: block;
+                text-align: left;
+                font-size: calc(var(--font-size) - 0.25rem);
+                height: var(--h);
+                line-height: calc(var(--h) - 2 * var(--padding));
+            }
+            .icon {
+                position: absolute;
+                right: var(--padding);
+                top: var(--padding);
+            }
+        }
+    }
+}
