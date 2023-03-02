@@ -14,3 +14,14 @@ async function toggleOverflow(element)
     if (!parent) console.debug('invalid group', element);
     parent.classList.toggle('overflow-closed');
 }
+
+async function toggleSidebar()
+{
+    document.querySelector(".sidebar").classList.toggle('responsive');
+}
+
+async function resetFilters()
+{
+    document.querySelectorAll('.collapsible input[type=checkbox]').forEach(e => e.checked=false);
+    document.querySelectorAll('input[name=search]').forEach(e => e.value='');
+}

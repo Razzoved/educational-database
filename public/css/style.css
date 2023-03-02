@@ -42,9 +42,9 @@ button, input {
 }
 
 button {
-  border: var(--clr-hyperlink) 1px solid;
+  border: var(--clr-dark) 1px solid;
   color: var(--clr-light);
-  background-color: var(--clr-hyperlink);
+  background-color: var(--clr-dark);
   cursor: pointer;
 }
 button:hover {

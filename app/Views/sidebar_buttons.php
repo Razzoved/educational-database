@@ -1,5 +1,5 @@
 <div class="sidebar">
-    <button type="button" class="icon" onclick="sidebar_toggle()">
+    <button type="button" class="icon" onclick="toggleSidebar()">
         <i class="fa fa-bars"></i>
         Toggle tags
     </button>
@@ -9,8 +9,3 @@
         <?php endforeach; ?>
     </ul>
 </div>
-<script type="text/javascript">
-    function sidebar_toggle() {
-        document.querySelector(".sidebar").classList.toggle('responsive');
-    }
-</script>

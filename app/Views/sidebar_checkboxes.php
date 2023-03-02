@@ -1,9 +1,9 @@
 <div class="sidebar">
-    <button type="button" class="icon" onclick="sidebar_toggle()">
+    <button type="button" class="icon" onclick="toggleSidebar()">
         <i class="fa fa-bars"></i>
         Toggle filters
     </button>
-    <button type="button" class="sidebar-reset-btn" onclick="{ document.querySelectorAll('.collapsible input[type=checkbox]').forEach(e => e.checked=false); document.querySelectorAll('input[name=search]').forEach(e => e.value=''); }">
+    <button type="button" class="sidebar-reset-btn" onclick="resetFilters()">
         Reset filters
     </button>
     <ul>
@@ -12,8 +12,3 @@
         <?php endforeach; ?>
     </ul>
 </div>
-<script type="text/javascript">
-    function sidebar_toggle() {
-        document.querySelector(".sidebar").classList.toggle('responsive');
-    }
-</script>
