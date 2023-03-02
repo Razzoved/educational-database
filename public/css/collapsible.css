@@ -82,6 +82,11 @@
   justify-content: center;
   text-decoration: none;
 }
+.collapsible-list-item input[type=submit]:hover {
+  color: var(--clr-focus);
+  background-color: var(--clr-focus-bg);
+  border-color: var(--clr-focus);
+}
 .collapsible.closed .collapsible-btn .fa-caret-right {
   transform: rotateZ(0deg);
 }

@@ -66,6 +66,97 @@
     }
 }
 
+.material {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+    align-items: center;
+    border: var(--clr-dark) 1px solid;
+    border-radius: 1rem;
+    box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem var(--clr-dark-transparent);
+    background-color: var(--clr-focus);
+    margin-top: 1rem;
+
+    & > * {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    &-thumbnail {
+        flex-grow: 1;
+        display: flex;
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+        img {
+            flex-shrink: 0;
+            min-width: 100%;
+            min-height: 100%;
+            max-width: 10rem;
+        }
+    }
+
+    &-header {
+        flex-basis: 20rem;
+        flex-grow: 9999;
+        text-align: left;
+        padding: 1rem;
+        border-radius: 1rem;
+        background-color: var(--clr-light);
+        button {
+            float: right;
+        }
+    }
+
+    &-details {
+        border-top: var(--clr-dark-transparent) 1px solid;
+        padding-top: 1rem;
+        :first-child {
+            float: left;
+        }
+        :last-child {
+            float: right;
+        }
+    }
+
+    &-content {
+        padding: 2rem;
+        border-radius: 1rem;
+        background: rgb(255,255,255);
+        background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(245,245,245,0.5) 50%, rgba(238,238,238,0.5) 100%);
+        & > * {
+            all: none;
+        }
+        /** https://stackoverflow.com/questions/248011/how-do-i-wrap-text-in-a-pre-tag */
+        pre {
+            white-space: pre-wrap;       /* Since CSS 2.1 */
+            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        }
+    }
+
+    &-attachments {
+        hr {
+            margin-top: 0.50rem;
+            margin-bottom: 0.50rem;
+        }
+        ul, ol {
+            list-style-type: none;
+        }
+        li {
+            padding: 0.5rem;
+            img {
+                width: 2rem;
+                height: 2rem;
+                vertical-align: middle;
+                margin-right: 0.5rem;
+            }
+        }
+    }
+}
+
 .rating {
     display: flex;
     flex-wrap: nowrap;

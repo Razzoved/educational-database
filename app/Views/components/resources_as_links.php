@@ -1,14 +1,20 @@
 <!-- group of MATERIALS shown as clickable links -->
-<?= ($resources == []) ? "" : "<hr><h5>$title</h5>" ?>
-<ul class="list-unstyled ms-2">
+<?= ($resources == []) ? "" : "<hr><h2>$title</h5>" ?>
+<ul>
     <?php foreach ($resources as $resource) : ?>
     <li>
     <?php
-        echo "<span class=\"badge bg-primary me-1\">$resource->type</span>";
-        echo "<a href='";
-        echo $resource->getPath();
-        echo ($resource->type === 'link') ? "'>" : "' download>";
-        echo $resource->path;
+        if (!$resource->isLink()) {
+            echo '<img src="' . $resource->strToFileThumbnail($resource->getPath())->getPath(). '"></img>';
+        }
+        echo "<a target='_blank' href='" . $resource->getPath();
+        echo ($resource->isLink()) ? "'>" : "'download>";
+        $name = $resource->getName($resource->isLink());
+        if (strlen($name) > 60) {
+            echo substr($name, 0, 57) . '...';
+        } else {
+            echo $name;
+        }
         echo "</a>";
     ?>
     </li>

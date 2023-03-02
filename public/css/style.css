@@ -130,8 +130,6 @@ footer section > a {
 }
 .page-card {
   flex-basis: 27rem;
-  border: var(--clr-dark) 1px solid;
-  border-radius: 1rem;
   margin-top: 1rem;
 }
 .page-sidebar {

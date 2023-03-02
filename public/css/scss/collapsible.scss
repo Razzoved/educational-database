@@ -86,6 +86,11 @@
                 background-color: var(--clr-light-transparent);
                 justify-content: center;
                 text-decoration: none;
+                &:hover {
+                    color: var(--clr-focus);
+                    background-color: var(--clr-focus-bg);
+                    border-color: var(--clr-focus);
+                }
             }
         }
     }

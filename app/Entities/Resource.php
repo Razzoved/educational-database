@@ -41,8 +41,13 @@ class Resource extends Entity
         return $this->type == 'thumbnail';
     }
 
-    public function getName() : string
+    public function getName(bool $fileExtension = true) : string
     {
+        if (!$fileExtension) {
+            $p = explode('.', $this->path);
+            array_pop($p);
+            return join('.', $p);
+        }
         return $this->path;
     }
 
