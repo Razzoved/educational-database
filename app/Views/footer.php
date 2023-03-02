@@ -35,7 +35,7 @@
     </div>
 
     <!-- Copyright -->
-    <div class="copyrights" style="background-color: rgba(0, 0, 0, 0.2);">
+    <div style="background-color: rgba(0, 0, 0, 0.2);">
         <p>© 2023 ENAI. All rights reserved</p>
     </div>
 </footer>

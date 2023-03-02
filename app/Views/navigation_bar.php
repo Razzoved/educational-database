@@ -25,11 +25,6 @@
 
 <script type="text/javascript">
     function navbar_toggle() {
-        var x = document.querySelector(".navbar");
-        if (x.className === "navbar") {
-            x.className += " responsive";
-        } else {
-            x.className = "navbar";
-        }
+        document.querySelector(".navbar").classList.toggle('responsive');
     }
 </script>

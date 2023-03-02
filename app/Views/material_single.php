@@ -5,7 +5,7 @@
 <div class="page">
 
 <!-- All tags -->
-<div class="page-sidebar">
+<div class="page-sidebar" style="margin-top: 0rem">
     <?= view('sidebar_buttons', ['properties' => $material->getGroupedProperties()]) ?>
 </div>
 

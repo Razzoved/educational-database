@@ -5,21 +5,17 @@
 <form method="post" action="">
 <div class="page">
 
-    <aside class="page-sidebar">
-        <div class="row g-0"><h1 style="opacity: 0"><?= $title ?></h1></div>
+    <div class="page-sidebar">
+        <div><h1 style="opacity: 0"><?= $title ?></h1></div>
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
-    </aside>
+    </div>
 
     <main class="page-content">
+        <h1><?= $title ?></h1>
+
         <div class="page-controls">
-            <div class="row g-0"><h1><?= $title ?></h1></div>
-            <div class="row g-0" style="margin-bottom: 1rem">
-                <input class="col form-control" name="search" value="" placeholder="Search"/>
-                <button class="col-auto btn btn-success ms-2" style="width: 20%" type="submit">Search</button>
-                <button type="button" class="icon" onclick="sidebar_toggle()">
-                    <i class="fa fa-bars"></i>
-                </a>
-            </div>
+            <input name="search" value="" placeholder="Search"/>
+            <button type="submit">Search</button>
         </div>
 
         <div id="items">

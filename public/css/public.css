@@ -1,7 +1,6 @@
 .card {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 1rem;
   overflow: auto;
   align-items: center;
   border: var(--clr-dark) 1px solid;
@@ -9,6 +8,9 @@
   box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem var(--clr-dark-transparent);
   background-color: var(--clr-focus);
   cursor: pointer;
+}
+.card:not(:first-child) {
+  margin-top: 1rem;
 }
 .card > * {
   max-width: 100%;
