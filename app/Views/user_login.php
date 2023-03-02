@@ -29,7 +29,7 @@
         <?= form_open('login') ?>
             <?php $extra = ['class' => 'form-control'] ?>
 
-            <img class="img-fluid mb-4" src="<?= base_url('assets/enai-logo_horizontal.png') ?>" alt="">
+            <img class="img-fluid mb-4" src="<?= base_url('assets/enai-logo.png') ?>" alt="">
 
             <div class="form-floating">
                 <?= form_input(['id' => 'fEmail', 'name' => 'email', 'placeholder' => 'name@example.com'], set_value('email'), $extra, 'email') ?>

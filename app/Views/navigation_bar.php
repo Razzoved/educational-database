@@ -16,7 +16,7 @@
         <a <?= $activePage === '' ? 'class="active"' : '' ?> class="active" href="<?= base_url() ?>">All materials</a>
         <a <?= $activePage === 'top-rated' ? 'class="active"' : '' ?> href="<?= base_url('top-rated') ?>">Top rated</a>
         <a <?= $activePage === 'most-viewed' ? 'class="active"' : '' ?> href="<?= base_url('most-viewed') ?>">Most viewed</a>
-        <a class="login" href="<?= base_url('login') ?>">Login</a>
+        <a class="login" href="<?= base_url('admin') ?>">Login</a>
         <a class="icon" href="javascript:void(0);" onclick="navbar_toggle()">
             <i class="fa fa-bars"></i>
         </a>
