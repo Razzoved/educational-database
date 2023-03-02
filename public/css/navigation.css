@@ -70,3 +70,45 @@
     top: calc(var(--padding) * 2);
   }
 }
+
+.pagination {
+  width: -moz-fit-content;
+  width: fit-content;
+  justify-content: center;
+  margin: auto;
+  margin-top: 1rem;
+}
+.pagination .pager-item-list {
+  display: flex;
+  list-style: none;
+}
+.pagination .pager-item {
+  --border: var(--clr-light) 1px solid;
+}
+.pagination .pager-item button {
+  height: 100%;
+  padding: 0.5rem 1.5rem;
+  border: var(--border);
+  border-left: 0px;
+  border-radius: 0px;
+  font-weight: var(--fw-button);
+  color: var(--clr-light);
+  background-color: var(--clr-dark);
+}
+.pagination .pager-item:first-of-type button {
+  border-left: var(--border);
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+.pagination .pager-item:last-of-type button {
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+.pagination .pager-item.active button {
+  color: var(--clr-active);
+}
+.pagination .pager-item button:hover {
+  color: var(--clr-focus);
+  background-color: var(--clr-focus-bg);
+  border-color: var(--clr-dark);
+}

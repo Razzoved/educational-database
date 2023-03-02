@@ -20,7 +20,7 @@
     --clr-dark: #1a1a1a;
     --clr-dark-transparent: #0000004b;
     --clr-light: #f3f3f3;
-    --clr-light-transparent: #ffffff60;
+    --clr-light-transparent: #f3f3f398;
     --clr-text: #222222;
     --clr-text-small: #333333;
 
@@ -136,4 +136,22 @@ input[type=url]:read-only, input[type=url] :read-only:focus {
             overflow: hidden;
         }
     }
+}
+
+.row {
+    :after, :before {
+        display: table;
+        content: " ";
+    }
+    :after {
+        clear: both;
+    }
+}
+
+p {
+    color: var(--clr-text);
+}
+
+small {
+    color: var(--clr-text-small);
 }

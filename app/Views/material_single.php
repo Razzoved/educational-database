@@ -33,16 +33,7 @@
             <p class="row p-1 text-muted"><small><?= $material->createdToDate() ?></small></p>
 
             <!-- rating, views -->
-            <div class="row g-1 align-self-end mt-auto w-100" style="align-items: center; justify-content: center">
-                <i class="col-auto fa-solid <?= $material->rating >= 0.8 ? 'checked' : 'unchecked' ?> fa-star"></i>
-                <i class="col-auto fa-solid <?= $material->rating >= 1.8 ? 'checked' : 'unchecked' ?> fa-star"></i>
-                <i class="col-auto fa-solid <?= $material->rating >= 2.8 ? 'checked' : 'unchecked' ?> fa-star"></i>
-                <i class="col-auto fa-solid <?= $material->rating >= 3.8 ? 'checked' : 'unchecked' ?> fa-star"></i>
-                <i class="col-auto fa-solid <?= $material->rating >= 4.8 ? 'checked' : 'unchecked' ?> fa-star" style="margin-right: 0.2em"></i>
-                <small class="col-auto" style="margin-right: 0.5em"><?= $material->rating ?></small>
-                <small class="col"><u><?= $material->rating_count ?> ratings</u></small> <!-- TODO: implement this table and query -->
-                <small class="col-auto text-muted">Viewed: <?= $material->views ?>x</small>
-            </div>
+            <?= view('rating', ['material' => $material]) ?>
 
         </header>
     </div>

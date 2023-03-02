@@ -1,0 +1,69 @@
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  overflow: auto;
+  align-items: center;
+  border: var(--clr-dark) 1px solid;
+  border-radius: 1rem;
+  box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem var(--clr-dark-transparent);
+  background-color: var(--clr-light-transparent);
+  cursor: pointer;
+}
+.card > * {
+  max-width: 100%;
+  max-height: 100%;
+}
+.card-thumbnail {
+  flex-grow: 1;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+.card-thumbnail img {
+  flex-shrink: 0;
+  min-width: 100%;
+  min-height: 100%;
+  max-width: 10rem;
+}
+.card-body {
+  flex-basis: 20rem;
+  flex-grow: 9999;
+  text-align: left;
+  padding: 1rem;
+}
+.card-content {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.card-footer {
+  border-top: var(--clr-dark-transparent) 1px solid;
+  padding-top: 1rem;
+}
+.card-footer :first-child {
+  float: left;
+}
+.card-footer :last-child {
+  float: right;
+}
+.card:hover {
+  border-color: var(--clr-focus);
+  box-shadow: none;
+}
+.card:hover .card-header {
+  color: var(--clr-focus);
+}
+
+.rating {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+}
+.rating i:last-of-type, .rating small {
+  margin-right: 0.5rem;
+}
+.rating small {
+  padding-top: 0.1rem;
+  line-height: 1rem;
+}
