@@ -7,7 +7,7 @@
   border: var(--clr-dark) 1px solid;
   border-radius: 1rem;
   box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem var(--clr-dark-transparent);
-  background-color: var(--clr-light-transparent);
+  background-color: var(--clr-focus);
   cursor: pointer;
 }
 .card > * {
@@ -32,6 +32,7 @@
   flex-grow: 9999;
   text-align: left;
   padding: 1rem;
+  background-color: var(--clr-light);
 }
 .card-content {
   margin-top: 1rem;
