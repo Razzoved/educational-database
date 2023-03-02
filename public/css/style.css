@@ -125,8 +125,14 @@ footer section > a {
   gap: 1rem;
 }
 .page-content {
-  flex-basis: 10rem;
+  flex-basis: 18rem;
   flex-grow: 9999;
+}
+.page-card {
+  flex-basis: 27rem;
+  border: var(--clr-dark) 1px solid;
+  border-radius: 1rem;
+  margin-top: 1rem;
 }
 .page-sidebar {
   flex-basis: 18rem;

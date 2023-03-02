@@ -5,12 +5,12 @@
 <div class="page">
 
 <!-- All tags -->
-<div class="page-sidebar" style="margin-top: 0rem">
+<div class="page-sidebar">
     <?= view('sidebar_buttons', ['properties' => $material->getGroupedProperties()]) ?>
 </div>
 
 <!-- Post container -->
-<div class="page-content">
+<div class="page-content page-card">
 
     <!-- Post top view: img, header -->
     <div class="row g-0">

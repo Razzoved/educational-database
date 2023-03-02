@@ -109,7 +109,7 @@
   margin-bottom: 0.4rem;
   display: none;
 }
-@media screen and (max-width: 664px) {
+@media screen and (max-width: 62rem) {
   .sidebar .collapsible {
     display: none;
   }
