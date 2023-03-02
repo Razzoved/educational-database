@@ -1,4 +1,4 @@
-.clps {
+.collapsible {
   position: relative;
   justify-content: left;
   align-items: left;
@@ -6,27 +6,23 @@
   border-radius: 0.5rem;
   box-shadow: 0px 0px 10px var(--clr-gray300);
 }
-.clps * {
-  color: var(--clr-dark);
-  transition: all 250ms ease-in-out;
-}
-.clps_expand {
+.collapsible-btn {
   padding: 0.5rem 0.5rem;
   display: flex;
   text-decoration: none;
   font-weight: 600;
-  transition: transform 250ms ease-in-out;
   cursor: pointer;
 }
-.clps_expand .fa-caret-right {
+.collapsible-btn .fa-caret-right {
   transform: rotateZ(90deg);
+  transition: transform 250ms ease-in-out;
   margin-right: 0.5rem;
   font-size: 30px;
 }
-.clps_expand:hover * {
-  color: var(--clr-primary-hover);
+.collapsible-btn:hover * {
+  color: var(--clr-focus);
 }
-.clps_list {
+.collapsible-list {
   padding: 0.5rem 0.5rem;
   display: flex;
   flex-direction: column;
@@ -35,24 +31,32 @@
   line-break: strict;
   cursor: pointer;
 }
-.clps_listitem:hover * {
-  color: var(--clr-primary-hover);
-  background-color: var(--clr-gray200);
+.collapsible-list-item:not(:first-child) {
+  margin-top: 0.2rem;
 }
-.clps_listitem input[type=checkbox] {
+.collapsible-list-item:hover * {
+  color: var(--clr-focus);
+  background-color: var(--clr-focus-bg);
+}
+.collapsible-list-item input[type=checkbox] {
   width: 1rem;
+  margin-right: 0.5rem;
   float: left;
   cursor: pointer;
 }
-.clps_listitem input[type=checkbox]:hover {
-  background-color: var(--clr-primary-hover);
+.collapsible-list-item input[type=checkbox]:hover {
+  background-color: var(--clr-focus-bg);
 }
-.clps_listitem input[type=checkbox] + label {
+.collapsible-list-item input[type=checkbox] + label {
   display: block;
+  height: 100%;
+  line-height: 100%;
+  align-items: center;
+  text-align: left;
   text-decoration: none;
   cursor: pointer;
 }
-.clps_listitem input[type=submit] {
+.collapsible-list-item input[type=submit] {
   width: 100%;
   padding: 0.2rem;
   margin-top: 0.2rem;
@@ -62,12 +66,12 @@
   justify-content: center;
   text-decoration: none;
 }
-.clps-closed .clps_expand .fa-caret-right {
+.collapsible-list .overflow-btn {
+  width: 100%;
+}
+.collapsible.closed .collapsible-btn .fa-caret-right {
   transform: rotateZ(0deg);
 }
-.clps_overflow {
-  opacity: 0.9;
-}
-.clps-closed .clps_list, .clps .clps-closed .clps_overflow {
+.collapsible.closed .collapsible-list, .collapsible.overflow-closed .overflow {
   display: none;
 }

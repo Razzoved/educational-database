@@ -13,7 +13,7 @@
                 <input class="col form-control" name="search" value="" placeholder="Search"/>
                 <button class="col-auto btn btn-dark ms-2" style="width: fit-content" type="submit">Search</button>
             </div>
-            <?= view('widgets/sidebar_checkboxes', ['properties' => $filters]) ?>
+            <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
         </form>
     </div>
 
@@ -23,7 +23,7 @@
                 <input class="col form-control" name="search" value="" placeholder="Search"/>
                 <button class="col-auto btn btn-dark ms-2" style="width: 20%" type="submit">Search</button>
                 <a class="col-auto btn btn-dark ms-2" style="width: 20%" data-bs-toggle="offcanvas" href="#offcanvasSidebar" aria-controls="offcanvasSidebar">Filters</a>
-                <?= view('widgets/offcanvas_checkboxes', ['properties' => $filters]) ?>
+                <?= view('offcanvas_checkboxes', ['properties' => $filters]) ?>
             </div>
         </form>
 

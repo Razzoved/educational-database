@@ -6,7 +6,7 @@
 
 <!-- All tags -->
 <div class="page-sidebar">
-    <?= view('widgets/sidebar_buttons', ['properties' => $material->getGroupedProperties()]) ?>
+    <?= view('sidebar_buttons', ['properties' => $material->getGroupedProperties()]) ?>
 </div>
 
 <!-- Post container -->

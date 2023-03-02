@@ -7,7 +7,7 @@
 
     <aside class="page-sidebar">
         <div class="row g-0"><h1 style="opacity: 0"><?= $title ?></h1></div>
-        <?= view('widgets/sidebar_checkboxes', ['properties' => $filters]) ?>
+        <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </aside>
 
     <main class="page-content">

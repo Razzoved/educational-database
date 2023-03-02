@@ -1,4 +1,4 @@
-.clps {
+.collapsible {
     position: relative;
     justify-content: left;
     align-items: left;
@@ -6,32 +6,26 @@
     border-radius: 0.5rem;
     box-shadow: 0px 0px 10px var(--clr-gray300);
 
-    * {
-        color: var(--clr-dark);
-        transition: all 250ms ease-in-out;
-    }
-
-    &_expand {
+    &-btn {
         padding: 0.5rem 0.5rem;
         display: flex;
         text-decoration: none;
         font-weight: 600;
-        transition: transform 250ms ease-in-out;
         cursor: pointer;
 
         .fa-caret-right {
             transform: rotateZ(90deg);
+            transition: transform 250ms ease-in-out;
             margin-right: 0.5rem;
             font-size: 30px;
         }
 
         &:hover * {
-            color: var(--clr-primary-hover);
+            color: var(--clr-focus);
         }
     }
 
-
-    &_list {
+    &-list {
         padding: 0.5rem 0.5rem;
         display: flex;
         flex-direction: column;
@@ -40,27 +34,32 @@
         line-break: strict;
         cursor: pointer;
 
-        &item {
-            &:hover * {
-                color: var(--clr-primary-hover);
-                background-color: var(--clr-gray200);
+        &-item {
+            &:not(:first-child) {
+                margin-top: 0.2rem;
             }
-
+            &:hover * {
+                color: var(--clr-focus);
+                background-color: var(--clr-focus-bg);
+            }
             input[type='checkbox'] {
                 width: 1rem;
+                margin-right: 0.5rem;
                 float: left;
                 cursor: pointer;
                 &:hover {
-                    background-color: var(--clr-primary-hover);
+                    background-color: var(--clr-focus-bg);
                 }
             }
-
             input[type='checkbox'] + label {
                 display: block;
+                height: 100%;
+                line-height: 100%;
+                align-items: center;
+                text-align: left;
                 text-decoration: none;
                 cursor: pointer;
             }
-
             input[type='submit'] {
                 width: 100%;
                 padding: 0.2rem;
@@ -72,18 +71,18 @@
                 text-decoration: none;
             }
         }
-    }
 
-    &-closed &_expand .fa-caret-right {
+        & .overflow-btn {
+            width: 100%;
+        }
+
+    }
+    &.closed &-btn .fa-caret-right {
         transform: rotateZ(0deg);
     }
 
-    &_overflow {
-        opacity: 0.9;
-    }
-
-    &-closed &_list,
-    & &-closed &_overflow{
+    &.closed &-list,
+    &.overflow-closed .overflow {
         display: none;
     }
 }
