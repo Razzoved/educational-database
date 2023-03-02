@@ -87,6 +87,7 @@
   max-width: 10rem;
 }
 .material-header {
+  flex-basis: 10rem;
   flex-grow: 9999;
   text-align: left;
   padding: 1rem;
