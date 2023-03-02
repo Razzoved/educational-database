@@ -7,7 +7,7 @@
         if (!$resource->isLink()) {
             echo '<img src="' . $resource->strToFileThumbnail($resource->getPath())->getPath(). '"></img>';
         }
-        echo "<a target='_blank' href='" . $resource->getPath();
+        echo "<a href='" . $resource->getPath();
         echo ($resource->isLink()) ? "'>" : "'download>";
         $name = $resource->getName($resource->isLink());
         if (strlen($name) > 60) {

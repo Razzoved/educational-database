@@ -97,6 +97,9 @@ footer section > a {
   margin-right: auto;
   margin-left: auto;
 }
+.container div, .container main {
+  max-width: 100%;
+}
 @media (min-width: 768px) {
   .container {
     width: 750px;
@@ -127,18 +130,27 @@ footer section > a {
 .page-content {
   flex-basis: 26rem;
   flex-grow: 9999;
+  flex-shrink: 1;
 }
-.page-card {
-  flex-basis: 27rem;
-  margin-top: 1rem;
+@media screen and (max-width: 620px) {
+  .page-content {
+    flex-basis: 0rem;
+  }
 }
 .page-sidebar {
   flex-basis: 18rem;
   flex-grow: 1;
+  flex-shrink: 1;
+}
+@media screen and (max-width: 320px) {
+  .page-sidebar {
+    flex-basis: 0rem;
+  }
 }
 .page-controls {
   display: flex;
   flex-wrap: nowrap;
+  overflow: auto !important;
   margin-bottom: 1rem;
 }
 .page-controls > * {
@@ -170,31 +182,4 @@ input:read-only {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-}
-
-.auto-grid {
-  --min-col-size: 12rem;
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--min-col-size), 100%), 1fr));
-}
-.auto-grid .relation {
-  cursor: pointer;
-  padding: 1rem;
-  width: var(--min-col-size);
-  border: var(--card-outline) solid;
-  border-radius: 1rem;
-  background-color: var(--card-bg);
-  align-items: center;
-  justify-content: center;
-}
-.auto-grid .relation .relation-thumbnail {
-  width: 10rem;
-  height: 10rem;
-  resize: both;
-}
-.auto-grid .relation .relation-title {
-  font-weight: 400;
-  height: var(--min-col-size)/3;
-  overflow: hidden;
 }

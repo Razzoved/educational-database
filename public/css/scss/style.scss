@@ -102,6 +102,11 @@ footer {
     padding: 1rem;
     margin-right: auto;
     margin-left: auto;
+
+    & div, & main {
+        max-width: 100%;
+    }
+
     @media (min-width: 768px) {
         width: 750px;
     }
@@ -124,18 +129,23 @@ footer {
     &-content {
         flex-basis: 26rem;
         flex-grow: 9999;
-    }
-    &-card {
-        flex-basis: 27rem;
-        margin-top: 1rem;
+        flex-shrink: 1;
+        @media screen and (max-width: 620px) {
+            flex-basis: 0rem;
+        }
     }
     &-sidebar {
         flex-basis: 18rem;
         flex-grow: 1;
+        flex-shrink: 1;
+        @media screen and (max-width: 320px) {
+            flex-basis: 0rem;
+        }
     }
     &-controls {
         display: flex;
         flex-wrap: nowrap;
+        overflow: auto !important;
         margin-bottom: 1rem;
         & > * {
             flex-grow: 1;
@@ -163,37 +173,4 @@ input:read-only {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-}
-
-.auto-grid {
-    --min-col-size: 12rem;
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(min(var(--min-col-size), 100%), 1fr)
-    );
-
-    .relation {
-        cursor: pointer;
-        padding: 1rem;
-        width: var(--min-col-size);
-        border:  var(--card-outline) solid;
-        border-radius: 1rem;
-        background-color: var(--card-bg);
-        align-items: center;
-        justify-content: center;
-
-        .relation-thumbnail {
-            width: 10rem;
-            height: 10rem;
-            resize: both;
-        }
-
-        .relation-title {
-            font-weight: 400;
-            height: var(--min-col-size) / 3;
-            overflow: hidden;
-        }
-    }
 }

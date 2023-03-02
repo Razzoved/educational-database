@@ -1,7 +1,7 @@
 .card {
   display: flex;
   flex-wrap: wrap;
-  overflow: auto;
+  overflow: hidden;
   align-items: center;
   border: var(--clr-dark) 1px solid;
   border-radius: 1rem;
@@ -61,7 +61,7 @@
 .material {
   display: flex;
   flex-wrap: wrap;
-  overflow: auto;
+  overflow: hidden;
   align-items: center;
   border: var(--clr-dark) 1px solid;
   border-radius: 1rem;
@@ -87,11 +87,9 @@
   max-width: 10rem;
 }
 .material-header {
-  flex-basis: 20rem;
   flex-grow: 9999;
   text-align: left;
   padding: 1rem;
-  border-radius: 1rem;
   background-color: var(--clr-light);
 }
 .material-header button {
@@ -115,7 +113,7 @@
   /** https://stackoverflow.com/questions/248011/how-do-i-wrap-text-in-a-pre-tag */
 }
 .material-content > * {
-  all: none;
+  all: revert;
 }
 .material-content pre {
   white-space: pre-wrap; /* Since CSS 2.1 */
@@ -131,6 +129,9 @@
 .material-attachments ul, .material-attachments ol {
   list-style-type: none;
 }
+.material-attachments h2, .material-attachments a {
+  word-break: break-all;
+}
 .material-attachments li {
   padding: 0.5rem;
 }
@@ -143,7 +144,7 @@
 
 .rating {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 0.25rem;
 }
 .rating i:last-of-type, .rating small {
@@ -152,4 +153,29 @@
 .rating small {
   padding-top: 0.1rem;
   line-height: 1rem;
+}
+
+.relations {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  height: 14rem;
+  gap: 1rem;
+}
+.relations .relation {
+  flex: 1;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+.relations .relation .relation-thumbnail {
+  width: 10rem;
+  height: 10rem;
+  resize: both;
+}
+.relations .relation .relation-title {
+  font-weight: 400;
+}
+.relations .relation:hover * {
+  color: var(--clr-focus);
+  background-color: var(--clr-focus-bg);
 }
