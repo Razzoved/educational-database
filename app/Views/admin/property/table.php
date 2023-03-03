@@ -10,21 +10,20 @@
 
     <div class="page-sidebar">
         <h1><?= $title ?></h1>
-        <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
-    </div>
-    
-    <main class="page-content">
-        <h1><?= $title ?></h1>
         <div class="page-controls">
             <input name="search" value="" placeholder="Search"/>
             <button type="submit">Search</button>
         </div>
+        <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
+    </div>
+
+    <main class="page-content">
+        <h1><?= $title ?></h1>
         <div class="page-controls">
             <input id="tag" type="text" class="form-control me-2" placeholder="Tag">
             <input id="value" type="text" class="form-control me-2" placeholder="Value">
             <button type="button" style="width: 50%" class="btn btn-success" onclick="createProperty()">Create</button>
         </div>
-
         <div class="page-controls">
             <button type="button" onclick="toggleSort('id')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'id' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> ID</button>
             <button type="button" onclick="toggleSort('tag')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'tag' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Tag</button>
