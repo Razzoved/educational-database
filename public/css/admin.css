@@ -39,7 +39,7 @@
 }
 .table .item img {
   flex: none !important;
-  background-color: red;
+  background-color: var(--clr-focus);
   text-align: left;
   width: 6rem;
   height: 6rem;
