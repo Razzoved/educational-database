@@ -10,7 +10,7 @@
 <!-- MATERIAL DISPLAYED AS AN EDITABLE ROW -->
 <div id="<?= $property->id ?>" class="item <?= $index % 2 == 1 ? 'public' : 'public-2' ?>">
     <div class="row">
-        <p data-value="id"><?= $property->id ?></p>
+        <p data-value="id"><small>ID:</small><br><?= $property->id ?></p>
         <h2 data-value="value"><?= $property->value ?></h2>
     </div>
     <div class="row">

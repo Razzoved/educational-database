@@ -22,10 +22,6 @@ class Property extends BaseController
     private PropertyModel $properties;
     private MaterialPropertyModel $materialProperties;
 
-    protected array $messages = [
-        'tag' => ['uniqueProperty' => 'Cannot create a duplicate tag!'],
-    ];
-
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
@@ -112,7 +108,7 @@ class Property extends BaseController
             'value'    => "required|string",
         ];
 
-        if (!$this->validate($rules)) {
+        if (!$this->validate($rules, ['tag' => ['uniqueProperty' => 'This tag-value pair is already taken!']])) {
             $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, json_encode($this->validator->getErrors()));
             return;
         }
