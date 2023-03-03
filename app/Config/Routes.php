@@ -45,6 +45,16 @@ $routes->group('/', function($routes) {
     $routes->addRedirect('-(:num)', '$1');
     $routes->add('(:num)', 'Material::index');
 
+    // TOP rated materials
+    $routes->addRedirect('top-rated', 'top-rated/1');
+    $routes->addRedirect('top-rated/-(:num)', 'top-rated/$1');
+    $routes->add('top-rated/(:num)', 'MaterialTopRated::index');
+
+    // MOST viewed materials
+    $routes->addRedirect('most-viewed', 'most-viewed/1');
+    $routes->addRedirect('most-viewed/-(:num)', 'most-viewed/$1');
+    $routes->add('most-viewed/(:num)', 'Material::mostViewed');
+
     // SINGLE material
     $routes->add('materials/(:num)', 'Material::get/$1');
     $routes->post('materials/rate', 'Material::rate');

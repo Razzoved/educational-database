@@ -5,28 +5,20 @@
 <form method="post" action="">
 <div class="page">
 
-    <div class="page-sidebar">
-        <div><h1 style="opacity: 0"><?= $title ?></h1></div>
-        <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
-    </div>
-
     <main class="page-content">
         <h1><?= $title ?></h1>
-
-        <div class="page-controls">
-            <input name="search" value="" placeholder="Search"/>
-            <button type="submit">Search</button>
-        </div>
 
         <div id="items">
         <?php
             foreach($materials as $material) {
                 echo view_cell('\App\Libraries\Material::toCard', ['material' => $material]);
             }
+            if ($materials === []) {
+                echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
+                echo '<h2 style="text-align:center">None were found.</h2>';
+            }
         ?>
         </div>
-
-        <?= $pager->links('default', 'full') ?>
     </main>
 
 </div>

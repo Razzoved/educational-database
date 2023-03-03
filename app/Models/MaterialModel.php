@@ -89,6 +89,13 @@ class MaterialModel extends Model
         return ($material) ? $this->verifyAndLoad($material, $showHidden) : null;
     }
 
+    public function incrementViews(Material $material) : void
+    {
+        $material->views++;
+        model(ViewsModel::class)->increment($material->id);
+        $this->update($material->id, ['material_views' => $material->views]);
+    }
+
     public function handleUpdate(Material $material, array $relatedMaterials = []) : bool
     {
         $material->blame = session('user')->name;

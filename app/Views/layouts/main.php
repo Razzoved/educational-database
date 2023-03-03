@@ -5,7 +5,6 @@
     <?= $this->include('header') ?>
 
     <link rel="stylesheet" href="<?= base_url('/css/collapsible.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/css/sidebar.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/css/public.css') ?>">
 
     <script>let lastPost = <?= json_encode($_POST ?? []) ?>;</script>

@@ -12,6 +12,7 @@ use App\Models\MaterialModel;
 use App\Models\MaterialPropertyModel;
 use App\Models\RatingsModel;
 use App\Models\ResourceModel;
+use App\Models\ViewsModel;
 
 class Material extends BaseController
 {
@@ -19,6 +20,9 @@ class Material extends BaseController
     protected MaterialPropertyModel $materialProperties;
     protected ResourceModel $resources;
     protected RatingsModel $ratings;
+    protected ViewsModel $views;
+
+    protected bool $onlyPublic = true;
 
     /**
      * Constructor.
@@ -31,6 +35,7 @@ class Material extends BaseController
         $this->materialProperties = model(MaterialPropertyModel::class);
         $this->resources = model(ResourceModel::class);
         $this->ratings = model(RatingsModel::class);
+        $this->views = model(ViewsModel::class);
 
         // E.g.: $this->session = \Config\Services::session();
     }
@@ -53,6 +58,23 @@ class Material extends BaseController
     }
 
     /**
+     * Returns a view of a given page. If the page number is greater than
+     * total number of pages, it returns the last page.
+     */
+    public function mostViewed() : string
+    {
+        $data = [
+            'meta_title' => 'Materials - monthly views',
+            'title'      => 'Most viewed materials in 30 days',
+            'filters'    => [],
+            'materials'  => $this->views->getTopMaterials(50),
+            'pager'      => null,
+        ];
+
+        return view('material_views', $data);
+    }
+
+    /**
      * Returns a view of a single material. If the material is not found, it will return
      * the page not found error.
      *
@@ -65,11 +87,10 @@ class Material extends BaseController
 
         if ($id && !$session->has('m-' . $id)) {
             $session->set('m-' . $id, true);
-            $material->views++;
             try {
-                $this->materials->update($material->id, $material);
+                $this->views->increment($material);
             } catch (\Exception $e) {
-                // this is not a fatal error and may be ignored
+                // not critical
             };
         }
 
@@ -140,10 +161,10 @@ class Material extends BaseController
         return $materials;
     }
 
-    protected function loadMaterials() : MaterialModel
+    protected function loadMaterials() : \CodeIgniter\BaseModel
     {
         $sort = $this->request->getPost('sort');
-        $sortDir = $this->request->getPost('sortDir');
+        $sortDir = $this->request->getPost('sortDir') ?? "ASC";
         $search = $this->request->getPost('search') ?? "";
         $filters = $this->request->getPost('filters') ?? [];
 

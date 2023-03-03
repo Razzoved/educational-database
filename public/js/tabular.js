@@ -21,26 +21,11 @@ function toggleSort(attribute)
     sortDir.name = 'sortDir';
     sortDir.value = lastPost['sort'] === attribute && lastPost['sortDir'] === 'ASC' ? 'DESC' : 'ASC';
 
-    let form = getCurrentForm();
+    let form = document.querySelector('form');
     form.action = "";
     form.appendChild(sort);
     form.appendChild(sortDir);
     form.submit();
-}
-
-function getCurrentForm()
-{
-    let target = document.querySelector('.page-sidebar');
-    let content = document.querySelector('.page-content');
-
-    if (!target && !content) {
-        target = document.querySelector('.page-content-only');
-    }
-    if (!target || window.getComputedStyle(target).display == 'none') {
-        if (content.querySelector('form')) target = content;
-    }
-
-    return target.querySelector('form');
 }
 
 /**
