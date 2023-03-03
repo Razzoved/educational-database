@@ -24,7 +24,7 @@ class Login extends BaseController
 
     public function authenticate() : string|RedirectResponse
     {
-        $user = model(UserModel::class)->find($this->request->getVar('email'));
+        $user = model(UserModel::class)->getByEmail($this->request->getVar('email'));
         $email = is_null($user) ? null : $user->email;
         $password = is_null($user) ? null : $user->password;
 

@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
 use App\Entities\User;
 
-class UserModel extends Model
+class UserModel extends AbstractModel
 {
-    protected $table         = 'users';
-    protected $primaryKey    = 'user_email';
+    protected $table         = parent::PREFIX . 'users';
+    protected $primaryKey    = 'user_id';
     protected $allowedFields = [
         'user_name',
         'user_email',
@@ -54,13 +53,19 @@ class UserModel extends Model
     public function getByFilters(?string $sort, ?string $sortDir, string $search) : UserModel
     {
         $builder = $this->getData($sort, $sortDir);
-
         if ($search !== "") {
             $builder->orLike('user_name', $search)
                     ->orLike('user_email', $search);
         }
-
         return $this;
+    }
+
+    public function getByEmail(?string $email) : User
+    {
+        return $this->select('*')
+                    ->where('user_email', $email)
+                    ->get(1)
+                    ->getCustomResultObject(User::class);
     }
 
     protected function hashPassword(array $data) : array
