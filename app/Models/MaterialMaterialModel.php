@@ -19,7 +19,7 @@ class MaterialMaterialModel extends Model
      *
      * @param int $id id of material whose tags we want to get
      */
-    public function getRelated(int $id, bool $onlyVisible = true) : array
+    public function getRelated(int $id, bool $onlyVisible = true, bool $onlyTitle = false) : array
     {
         $ids = $this->builder()
                     ->select($this->allowedFields[0] . ' as l, ' . $this->allowedFields[1] . ' as r')
@@ -36,8 +36,12 @@ class MaterialMaterialModel extends Model
             $identifier = $value['l'] == $id ? $value['r'] : $value['l'];
             $found = model(MaterialModel::class)->find($identifier);
             if ($found && ($onlyVisible === false || ($onlyVisible && $found->status === StatusCast::PUBLIC))) {
-                $found->resources = model(ResourceModel::class)->getThumbnail($found->id);
-                $result[$found->id] = $found;
+                if ($onlyTitle) {
+                    $result[$found->id] = $found->title;
+                } else {
+                    $found->resources = model(ResourceModel::class)->getThumbnail($found->id);
+                    $result[$found->id] = $found;
+                }
             }
         }
 
