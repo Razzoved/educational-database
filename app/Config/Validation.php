@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Validation\User;
+use App\Validation\Property;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Validation\CreditCardRules;
 use CodeIgniter\Validation\FileRules;
@@ -27,6 +28,7 @@ class Validation extends BaseConfig
         FileRules::class,
         CreditCardRules::class,
         User::class,
+        Property::class,
     ];
 
     /**

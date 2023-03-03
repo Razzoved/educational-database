@@ -5,12 +5,11 @@ namespace App\Models;
 use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
 use App\Entities\Property;
-use CodeIgniter\Model;
 use CodeIgniter\Database\BaseConnection;
 
-class MaterialPropertyModel extends Model
+class MaterialPropertyModel extends AbstractModel
 {
-    protected $table = 'material_property';
+    protected $table = parent::PREFIX . 'material_property';
     protected $primaryKey = 'material_id';
     protected $allowedFields = ['material_id', 'property_id'];
 

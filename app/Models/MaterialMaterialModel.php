@@ -4,12 +4,11 @@ namespace App\Models;
 
 use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
-use CodeIgniter\Model;
 use CodeIgniter\Database\BaseConnection;
 
-class MaterialMaterialModel extends Model
+class MaterialMaterialModel extends AbstractModel
 {
-    protected $table = 'material_material';
+    protected $table = parent::PREFIX . 'material_material';
     protected $primaryKey = 'material_id_left';
     protected $allowedFields = ['material_id_left', 'material_id_right'];
 

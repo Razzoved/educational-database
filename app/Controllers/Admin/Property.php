@@ -22,6 +22,10 @@ class Property extends BaseController
     private PropertyModel $properties;
     private MaterialPropertyModel $materialProperties;
 
+    protected array $messages = [
+        'tag' => ['uniqueProperty' => 'Cannot create a duplicate tag!'],
+    ];
+
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
@@ -102,8 +106,9 @@ class Property extends BaseController
 
     public function save() : void
     {
+        $value = $this->request->getPost('value');
         $rules = [
-            'tag'      => "required|string",
+            'tag'      => "required|string|uniqueProperty[{$value}]",
             'value'    => "required|string",
         ];
 

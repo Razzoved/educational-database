@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Entities\Property;
-use CodeIgniter\Model;
 
-class PropertyModel extends Model
+class PropertyModel extends AbstractModel
 {
-    protected $table         = 'properties';
+    protected $table         = parent::PREFIX . 'properties';
     protected $primaryKey    = 'property_id';
     protected $allowedFields = [
         'property_tag',
