@@ -6,10 +6,11 @@ use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
 use App\Entities\Property;
 use CodeIgniter\Database\BaseConnection;
+use CodeIgniter\Model;
 
-class MaterialPropertyModel extends AbstractModel
+class MaterialPropertyModel extends Model
 {
-    protected $table = parent::PREFIX . 'material_property';
+    protected $table = 'material_property';
     protected $primaryKey = 'material_id';
     protected $allowedFields = ['material_id', 'property_id'];
 

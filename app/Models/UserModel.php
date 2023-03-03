@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Entities\User;
+use CodeIgniter\Model;
 
-class UserModel extends AbstractModel
+class UserModel extends Model
 {
-    protected $table         = parent::PREFIX . 'users';
+    protected $table         = 'users';
     protected $primaryKey    = 'user_id';
     protected $allowedFields = [
         'user_name',

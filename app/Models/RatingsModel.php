@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Entities\Rating;
+use CodeIgniter\Model;
 
-class RatingsModel extends AbstractModel
+class RatingsModel extends Model
 {
-    protected $table         = parent::PREFIX . 'ratings';
+    protected $table         = 'ratings';
     protected $allowedFields = [
         'material_id',
         'rating_uid',

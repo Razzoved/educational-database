@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Entities\Material;
 use App\Entities\Resource;
+use CodeIgniter\Model;
 
-class ResourceModel extends AbstractModel
+class ResourceModel extends Model
 {
-    protected $table         = parent::PREFIX . 'resources';
+    protected $table         = 'resources';
     protected $primaryKey    = 'resource_id';
     protected $allowedFields = [
         'material_id',

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
+use CodeIgniter\Model;
 
-class MaterialModel extends AbstractModel
+class MaterialModel extends Model
 {
-    protected $table         = parent::PREFIX . 'materials';
+    protected $table         = 'materials';
     protected $primaryKey    = 'material_id';
     protected $allowedFields = [
         'material_status',
@@ -130,7 +131,7 @@ class MaterialModel extends AbstractModel
 
         $material->properties = model(MaterialPropertyModel::class)->getByMaterial($material->id);
         $material->resources = model(ResourceModel::class)->getResources($material->id);
-        $material->related = model(MaterialMaterialModel::class)->getData($material->id, !$showHidden);
+        $material->related = model(MaterialMaterialModel::class)->getRelated($material->id, !$showHidden);
 
         return $material;
     }

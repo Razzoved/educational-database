@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Material;
+use CodeIgniter\Model;
 
 /**
  * This model handles the operations over the views table. The table
@@ -14,9 +15,9 @@ use App\Entities\Material;
  *
  * @author Jan Martinek
  */
-class ViewsModel extends AbstractModel
+class ViewsModel extends Model
 {
-    protected $table = parent::PREFIX . 'views';
+    protected $table = 'views';
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
