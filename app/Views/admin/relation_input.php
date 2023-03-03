@@ -63,11 +63,11 @@
 
     function createRelation(id, value, idValue) {
         let newDiv = document.getElementById("relation-template").cloneNode(true);
-        let input = newDiv.firstElementChild;
-        let button = newDiv.lastElementChild;
+        let input = newDiv.querySelector('input');
+        let a = newDiv.querySelector('a');
+        let button = newDiv.querySelector('button');
 
-        if (input === undefined || button === undefined) console.warn("invalid relation template: undefined")
-        if (input === button) console.warn("invalid relation template: input=button")
+        if (input === undefined || button === undefined || a === undefined) console.warn("invalid relation template: undefined")
         if (value === undefined) console.warn("invalid value");
         if (idValue === undefined) console.warn("invalid idValue");
 
@@ -77,6 +77,9 @@
         input.setAttribute('name', input.name.replace(/[0-9]/, idValue));
 
         button.onclick = () => removeById(id);
+
+        a.href = `<?= base_url('materials') ?>/${idValue}`
+        a.innerHTML = value;
 
         newDiv.id = id;
         newDiv.hidden = false;

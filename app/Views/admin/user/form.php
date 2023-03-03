@@ -27,6 +27,9 @@
                 <?= form_input(['id' => 'fEmail', 'name' => 'email', 'placeholder' => 'name@example.com'], $email ?? '', $extra, 'email') ?>
                 <?= form_label('Email address', 'fEmail') ?>
             </div>
+
+            <small id="pass-notice" hidden='true'>Password will not change if left empty:</small>
+
             <div class="form-floating">
                 <?= form_password(['id' => 'fPassword', 'name' => 'password', 'placeholder' => 'Password'], '', $extra) ?>
                 <?= form_label('Password', 'fPassword') ?>
@@ -61,7 +64,7 @@
             }
         });
 
-        function userClose()
+        async function userClose()
         {
             userModal.style.display = 'none';
         }
@@ -84,6 +87,7 @@
                         userEmail.value = user.email;
                         userEmail.readOnly = true;
                         userModal.style.display = "block";
+                        document.getElementById('pass-notice').hidden = false;
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log(jqXHR, textStatus, errorThrown);
@@ -106,6 +110,7 @@
             userEmail.readOnly = undefined;
             userPassword.value = '';
             userConfirmPassword.value = '';
+            document.getElementById('pass-notice').hidden = true;
         }
 
         function userSubmit()

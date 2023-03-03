@@ -48,7 +48,6 @@
         {
             let warn = deleteModal.querySelector('#warnMsg');
             warn.innerHTML = warn.innerHTML.replace(/\[.*\]/, `[${id}]`);
-
             deleteModal.setAttribute('data-value', id);
             deleteModal.style.display = "block";
         }

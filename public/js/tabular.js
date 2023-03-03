@@ -5,6 +5,7 @@ if (typeof lastPost === 'undefined') {
 
 function deleteId(id)
 {
+    console.log(id);
     let element = document.getElementById(`${id}`);
     if (element) { element.remove(); }
 }

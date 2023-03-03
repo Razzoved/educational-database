@@ -39,7 +39,7 @@
 
 <?= $this->section('modals') ?>
 <?= view('admin/delete', ['action' => base_url('admin/users/delete'), 'idName' => 'email']) ?>
-<?= view('admin/user/form', ['title' => $title, 'submit' => 'Save']) ?>
+<?= view('admin/user/form', ['title' => 'User form', 'submit' => 'Save']) ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -63,6 +63,7 @@
             return;
         }
         template = template.firstElementChild.cloneNode(true);
+        template.id = data.email;
         template.querySelector('[data-value=name]').innerHTML = data.name;
         template.querySelector('[data-value=email]').innerHTML = data.email;
         let edit = template.querySelector('button[onclick^=userOpen]');
