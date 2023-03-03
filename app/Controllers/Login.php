@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\UserModel;
 use CodeIgniter\Config\Services;
-use CodeIgniter\HTTP\RedirectResponse;
 
 class Login extends BaseController
 {
@@ -22,7 +21,7 @@ class Login extends BaseController
         );
     }
 
-    public function authenticate() : string|RedirectResponse
+    public function authenticate() : mixed
     {
         $user = model(UserModel::class)->getByEmail($this->request->getVar('email'));
         $email = is_null($user) ? null : $user->email;

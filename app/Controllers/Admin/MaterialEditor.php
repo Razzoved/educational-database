@@ -58,7 +58,7 @@ class MaterialEditor extends BaseController
         return $this->index();
     }
 
-    public function save() : string|RedirectResponse
+    public function save() : mixed
     {
         $rules = [
             'title'     => "required|string",
@@ -285,7 +285,7 @@ class MaterialEditor extends BaseController
     {
         foreach ($material->resources as $r) {
             $r->parentId = $material->id;
-            if (isset($r->tmp_path) && str_starts_with($r->tmp_path, 'writable')) {
+            if (isset($r->tmp_path) && 'writable' === substr($r->tmp_path, 0, 8)) {
                 $file = new \CodeIgniter\Files\File(ROOTPATH . '/' . $r->tmp_path, true);
                 $dirPath = ROOTPATH . "/public/uploads/$material->id";
                 if (!is_dir($dirPath)) mkdir($dirPath, 0777, true);
@@ -303,8 +303,8 @@ class MaterialEditor extends BaseController
     private function deleteRemovedFiles(?array $unused) : void
     {
         foreach ($unused ?? [] as $path) {
-            if (str_starts_with($path, '/assets')) continue;
-            $file = new \CodeIgniter\Files\File(ROOTPATH . '/' . (str_starts_with($path, 'uploads') ? 'public/' . $path : $path));
+            if ('/assets' === substr($path, 0, 7)) continue;
+            $file = new \CodeIgniter\Files\File(ROOTPATH . '/' . ('uploads' === substr($path, 0, 7) ? 'public/' . $path : $path));
             if ($file->getRealPath()) unlink($file->getRealPath());
         }
     }

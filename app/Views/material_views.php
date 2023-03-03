@@ -11,7 +11,7 @@
         <div id="items">
         <?php
             foreach($materials as $material) {
-                echo view_cell('\App\Libraries\Material::toCard', ['material' => $material]);
+                echo view('components/material_as_card', ['material' => $material]);
             }
             if ($materials === []) {
                 echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';

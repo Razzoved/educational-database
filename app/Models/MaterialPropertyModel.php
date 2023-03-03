@@ -103,7 +103,7 @@ class MaterialPropertyModel extends Model
      *
      * @return ?Property property of given id or null
      */
-    public function getPropertyWithUsage(int $id) : Property|null
+    public function getPropertyWithUsage(int $id) : ?Property
     {
         return $this->builder()
                     ->select('properties.*')

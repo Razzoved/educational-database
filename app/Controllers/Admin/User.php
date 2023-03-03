@@ -207,7 +207,7 @@ class User extends BaseController
     {
         $uri = new \CodeIgniter\HTTP\URI($url);
         return $this->loadUsers()
-                    ->paginate($perPage, segment: $uri->getTotalSegments());
+                    ->paginate($perPage, 'default', null, $uri->getTotalSegments());
     }
 
     private function loadUsers(): UserModel

@@ -64,7 +64,7 @@ class MaterialModel extends Model
     {
         $builder = $this->getData($sort, $sortDir, $onlyPublic)->builder()
             ->select("$this->table.*")
-            ->like('material_title', $search, insensitiveSearch: true);
+            ->like('material_title', $search, 'both', null, true);
 
         if ($filters !== []) {
             $filter = model(MaterialPropertyModel::class)->getCompiledFilter($filters);
@@ -74,13 +74,13 @@ class MaterialModel extends Model
         return $this;
     }
 
-    public function getById(int $id, bool $showHidden = false) : Material|null
+    public function getById(int $id, bool $showHidden = false) : ?Material
     {
         $material = $this->find($id);
         return ($material) ? $this->verifyAndLoad($material, $showHidden) : null;
     }
 
-    public function getByTitle(string $title, bool $showHidden = false) : Material|null
+    public function getByTitle(string $title, bool $showHidden = false) : ?Material
     {
         $material = $this->builder()
                          ->where('material_title', $title)

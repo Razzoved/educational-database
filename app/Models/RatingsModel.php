@@ -54,7 +54,7 @@ class RatingsModel extends Model
         ));
     }
 
-    public function getRating(int $materialId, string $userId) : Rating|null
+    public function getRating(int $materialId, string $userId) : ?Rating
     {
         return $this->builder()
                      ->where('material_id', $materialId)

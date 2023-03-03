@@ -101,7 +101,7 @@ class ViewsModel extends Model
         $this->db->query('ALTER TABLE ' . $this->table . ' AUTO_INCREMENT = 1');
 
         $lastKey = array_key_last($this->allowedFields);
-        $materials = model(MaterialModel::class)->getData(onlyPublic: false)
+        $materials = model(MaterialModel::class)->getData(null, null, false)
                                                 ->get()
                                                 ->getCustomResultObject(\App\Entities\Material::class);
 

@@ -153,7 +153,7 @@ class Material extends BaseController
         $uri = new \CodeIgniter\HTTP\URI($url);
 
         $materials = $this->loadMaterials()
-                          ->paginate($perPage, segment: $uri->getTotalSegments());
+                          ->paginate($perPage, 'default', null, $uri->getTotalSegments());
 
         foreach ($materials as $m) {
             $m->resources = $this->resources->getThumbnail($m->id);

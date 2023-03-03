@@ -72,7 +72,7 @@ class Property extends BaseController
         return view(Config::VIEW . 'property/form', $data);
     }
 
-    public function update() : string|RedirectResponse
+    public function update() : mixed
     {
         $rules = [
             'id'       => "required|integer",
@@ -157,7 +157,7 @@ class Property extends BaseController
         $uri = new \CodeIgniter\HTTP\URI($url);
 
         $properties = $this->loadProperties()
-                           ->paginate($perPage, segment: $uri->getTotalSegments());
+                           ->paginate($perPage, 'default', null, $uri->getTotalSegments());
 
         foreach ($properties as $p) {
             $p->usage = $this->materialProperties->getPropertyUsage($p->id);
