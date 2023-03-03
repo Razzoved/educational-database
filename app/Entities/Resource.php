@@ -66,7 +66,7 @@ class Resource extends Entity
 
     public static function isMissing(?string $path) : bool
     {
-        return $path === null || $path === 'assets/missing.png';
+        return $path === null || $path === 'assets/missing.png' || $path === base_url('assets/missing.png');
     }
 
     public static function strToThumbnail(?string $path) : Resource

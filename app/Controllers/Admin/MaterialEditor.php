@@ -131,7 +131,7 @@ class MaterialEditor extends BaseController
             return;
         }
 
-        echo json_encode($material);
+        echo json_encode($material->id);
     }
 
     /**
