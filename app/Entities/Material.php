@@ -26,7 +26,7 @@ class Material extends Entity
 
     protected $casts = [
         'material_id'           => 'int',
-        'material_author'       => 'string',
+        'material_author'       => 'int',
         'material_blame'        => 'string',
         'material_status'       => 'statusCast',
         'material_title'        => 'string',

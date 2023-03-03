@@ -7,12 +7,14 @@ use CodeIgniter\Entity\Entity;
 class User extends Entity
 {
     protected $attributes = [
-        'user_name'    => null,
-        'user_email'   => null,
+        'user_id'       => null,
+        'user_name'     => null,
+        'user_email'    => null,
         'user_password' => null,
     ];
 
     protected $casts = [
+        'user_id'       => 'int',
         'user_name'     => 'string',
         'user_email'    => 'string',
         'user_password' => 'string',

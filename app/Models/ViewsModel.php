@@ -25,6 +25,7 @@ class ViewsModel extends Model
         'material_views'
     ];
 
+    protected $useAutoIncrement = true;
     protected $useTimestamps = true;
     protected $dateFormat = 'date';
     protected $createdField = 'created_at';
@@ -100,7 +101,9 @@ class ViewsModel extends Model
         $this->db->query('ALTER TABLE ' . $this->table . ' AUTO_INCREMENT = 1');
 
         $lastKey = array_key_last($this->allowedFields);
-        $materials = model(MaterialModel::class)->getData(onlyPublic: false)->get()->getCustomResultObject(\App\Entities\Material::class);
+        $materials = model(MaterialModel::class)->getData(onlyPublic: false)
+                                                ->get()
+                                                ->getCustomResultObject(\App\Entities\Material::class);
 
         $this->allowedFields[] = 'created_at';
         foreach ($materials as $material) {

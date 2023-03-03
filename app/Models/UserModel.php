@@ -15,7 +15,7 @@ class UserModel extends Model
         'user_password',
     ];
 
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $useSoftDeletes   = false;
     protected $useTimestamps    = true;
 
@@ -61,12 +61,13 @@ class UserModel extends Model
         return $this;
     }
 
-    public function getByEmail(?string $email) : User
+    public function getByEmail(?string $email) : ?User
     {
-        return $this->select('*')
+        return $this->builder()
+                    ->select('*')
                     ->where('user_email', $email)
                     ->get(1)
-                    ->getCustomResultObject(User::class);
+                    ->getCustomRowObject(1, User::class);
     }
 
     protected function hashPassword(array $data) : array
