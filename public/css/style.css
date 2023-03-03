@@ -34,20 +34,26 @@ small {
   color: var(--clr-text-small);
 }
 
-button, input {
+a.button {
+  height: 100%;
+}
+
+button, input, a.button {
   padding: 0.2rem;
   border-radius: 0.4rem;
   font-size: var(--fs-button);
   font-weight: var(--fw-button);
 }
 
-button {
+button, a.button {
   border: var(--clr-dark) 1px solid;
   color: var(--clr-light);
   background-color: var(--clr-dark);
+  text-decoration: none;
+  text-align: center;
   cursor: pointer;
 }
-button:hover {
+button:hover, a.button:hover {
   color: var(--clr-focus);
   background-color: var(--clr-focus-bg);
   border-color: var(--clr-focus);
@@ -130,7 +136,6 @@ footer section > a {
 .page-content {
   flex-basis: 26rem;
   flex-grow: 9999;
-  flex-shrink: 1;
 }
 @media screen and (max-width: 620px) {
   .page-content {
@@ -140,12 +145,14 @@ footer section > a {
 .page-sidebar {
   flex-basis: 18rem;
   flex-grow: 1;
-  flex-shrink: 1;
 }
 @media screen and (max-width: 320px) {
   .page-sidebar {
     flex-basis: 0rem;
   }
+}
+.page-sidebar h1 {
+  opacity: 0;
 }
 .page-controls {
   display: flex;
@@ -155,6 +162,7 @@ footer section > a {
 }
 .page-controls > * {
   flex-grow: 1;
+  flex-shrink: 1;
 }
 .page-controls > :not(:first-child) {
   margin-left: 0.4rem;
@@ -169,13 +177,13 @@ input[type=checkbox]:checked {
 }
 
 input:-moz-read-only {
-  color: var(--clr-light);
-  background-color: var(--clr-dark-transparent);
+  color: var(--clr-text);
+  background-color: var(--clr-active);
 }
 
 input:read-only {
-  color: var(--clr-light);
-  background-color: var(--clr-dark-transparent);
+  color: var(--clr-text);
+  background-color: var(--clr-active);
 }
 
 .cluster {

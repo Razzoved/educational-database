@@ -5,45 +5,47 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<form method="post" action="<?= base_url('admin/tags/1') ?>">
 <div class="page">
 
     <div class="page-sidebar">
-        <form method="post" action="<?= base_url('admin/tags/1') ?>">
-            <div class="row g-0" style="margin-bottom: 1rem">
-                <input class="col form-control" name="search" value="" placeholder="Search"/>
-                <button class="col-auto btn btn-dark ms-2" style="width: fit-content" type="submit">Search</button>
-            </div>
-            <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
-        </form>
+        <h1><?= $title ?></h1>
+        <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
-
-    <div class="page-content">
-        <div style="width: 100%; display: inline-flex; margin-bottom: 1rem;">
+    
+    <main class="page-content">
+        <h1><?= $title ?></h1>
+        <div class="page-controls">
+            <input name="search" value="" placeholder="Search"/>
+            <button type="submit">Search</button>
+        </div>
+        <div class="page-controls">
             <input id="tag" type="text" class="form-control me-2" placeholder="Tag">
             <input id="value" type="text" class="form-control me-2" placeholder="Value">
             <button type="button" style="width: 50%" class="btn btn-success" onclick="createProperty()">Create</button>
         </div>
 
-        <div class="bg-dark text-bg-dark rounded" style="display: flex; text-align: center; white-space: nowrap; margin-bottom: 0.8rem; justify-content: space-evenly">
+        <div class="page-controls">
             <button type="button" onclick="toggleSort('id')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'id' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> ID</button>
             <button type="button" onclick="toggleSort('tag')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'tag' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Tag</button>
             <button type="button" onclick="toggleSort('value')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'value' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Value</button>
             <!-- TODO: <button type="button" onclick="toggleSort('usage')" class="d-none d-md-inline ms-1 me-1 btn btn-dark"><i class="fa-solid fa-caret-right"></i> Usage</button> -->
         </div>
 
-        <div id="items">
+        <div class="table" id="items">
         <?php
             echo view_cell('\App\Libraries\Property::getRowTemplate');
             $index = 0;
             foreach($properties as $property) {
                 echo view_cell('\App\Libraries\Property::toRow', ['property' => $property, 'index' => $index++]);
             }
-        ?>
+            ?>
         </div>
 
         <?= $pager->links('default', 'full') ?>
-    </div>
+    </main>
 </div>
+</form>
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>

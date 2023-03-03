@@ -6,7 +6,7 @@
 <div class="page">
 
     <div class="page-sidebar">
-        <div><h1 style="opacity: 0"><?= $title ?></h1></div>
+        <h1><?= $title ?></h1>
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
 

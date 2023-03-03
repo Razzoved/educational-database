@@ -41,17 +41,23 @@ small {
     color: var(--clr-text-small);
 }
 
-button, input {
+a.button {
+    height: 100%;
+}
+
+button, input, a.button {
     padding: 0.2rem;
     border-radius: 0.4rem;
     font-size: var(--fs-button);
     font-weight: var(--fw-button);
 }
 
-button {
+button, a.button {
     border: var(--clr-dark) 1px solid;
     color: var(--clr-light);
     background-color: var(--clr-dark);
+    text-decoration: none;
+    text-align: center;
     cursor: pointer;
 
     &:hover {
@@ -129,7 +135,6 @@ footer {
     &-content {
         flex-basis: 26rem;
         flex-grow: 9999;
-        flex-shrink: 1;
         @media screen and (max-width: 620px) {
             flex-basis: 0rem;
         }
@@ -137,9 +142,11 @@ footer {
     &-sidebar {
         flex-basis: 18rem;
         flex-grow: 1;
-        flex-shrink: 1;
         @media screen and (max-width: 320px) {
             flex-basis: 0rem;
+        }
+        h1 {
+            opacity: 0;
         }
     }
     &-controls {
@@ -149,6 +156,7 @@ footer {
         margin-bottom: 1rem;
         & > * {
             flex-grow: 1;
+            flex-shrink: 1;
         }
         & > :not(:first-child) {
             margin-left: 0.4rem;
@@ -165,8 +173,8 @@ input[type='checkbox']:checked {
 }
 
 input:read-only {
-    color: var(--clr-light);
-    background-color: var(--clr-dark-transparent);
+    color: var(--clr-text);
+    background-color: var(--clr-active);
 }
 
 .cluster {

@@ -18,8 +18,8 @@
     </div>
 
     <?= $this->include('footer') ?>
-
     <?= $this->include('scripts') ?>
+
     <?= $this->renderSection('scripts') ?>
     <script type="text/javascript" src="<?= base_url('js/tabular.js') ?>"></script>
 </body>

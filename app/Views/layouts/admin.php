@@ -7,6 +7,7 @@
     <?= $this->renderSection('header') ?>
 
     <link rel="stylesheet" href="<?= base_url('/css/collapsible.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('/css/admin.css') ?>">
     <link rel="stylesheet" href="<?= base_url('/css/modal.css') ?>">
 
     <script>let lastPost = <?= json_encode($_POST ?? []) ?>;</script>

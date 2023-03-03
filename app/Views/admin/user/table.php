@@ -7,24 +7,22 @@
 <?= $this->section('content') ?>
 <div class="page">
 
-    <div class="page-content">
-
+    <main class="page-content">
+        <h1><?= $title ?></h1>
         <form method="post" action="<?= base_url('admin/users/1') ?>">
-            <div class="row g-0" style="margin-bottom: 1rem">
+            <div class="page-controls">
                 <input class="col form-control" name="search" value="" placeholder="Search"/>
                 <button class="col-auto btn btn-dark ms-2" style="width: 10vw; min-width: fit-content" type="submit">Search</button>
             </div>
         </form>
 
-        <div style="display: flex; margin-bottom: 1rem; justify-content: space-between">
-            <div class="row g-0 bg-dark text-bg-dark rounded" style="width: 100%">
-                <button type="button" onclick="toggleSort('name')" class="col-4 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'name' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Name</button>
-                <button type="button" onclick="toggleSort('email')" class="col-6 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'email' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Email</button>
-            </div>
+        <div class="page-controls">
+            <button type="button" onclick="toggleSort('name')"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'name' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Name</button>
+            <button type="button" onclick="toggleSort('email')"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'email' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Email</button>
             <button type="button" onclick="userOpen()" class="ms-1 me-1 btn btn-primary">&#65291</a>
         </div>
 
-        <div id="items">
+        <div class="table" id="items">
         <?php
             echo view_cell('\App\Libraries\User::getRowTemplate');
             $index = 0;
@@ -35,7 +33,7 @@
         </div>
 
         <?= $pager->links('default', 'full') ?>
-    </div>
+    </main>
 </div>
 <?= $this->endSection() ?>
 
