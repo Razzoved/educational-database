@@ -6,9 +6,9 @@
 
     <?= $this->renderSection('header') ?>
 
-    <link rel="stylesheet" href="<?= base_url('/css/collapsible.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/css/admin.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('/css/modal.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('public/css/collapsible.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('public/css/admin.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('public/css/modal.css') ?>">
 
     <script>let lastPost = <?= json_encode($_POST ?? []) ?>;</script>
 </head>
@@ -26,7 +26,7 @@
     <?= $this->include('scripts') ?>
 
     <?= $this->renderSection('scripts') ?>
-    <script type="text/javascript" src="<?= base_url('js/tabular.js') ?>"></script>
+    <script type="text/javascript" src="<?= base_url('public/js/tabular.js') ?>"></script>
 </body>
 
 </html>

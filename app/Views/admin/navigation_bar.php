@@ -10,7 +10,7 @@
 ?>
 <div class="navbar">
     <nav class="container">
-        <img src="<?= base_url('assets/enai-logo-transparent.png') ?>"
+        <img src="<?= base_url('public/assets/enai-logo-transparent.png') ?>"
                 alt="ENAI logo"
                 onclick="window.location.href='<?= $refUrl ?>'">
         <a <?= $activePage === 'dashboard' ? 'class="active"' : '' ?> href="<?= base_url('admin/dashboard') ?>")?>

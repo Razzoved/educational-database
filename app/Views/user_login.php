@@ -13,7 +13,7 @@
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
           crossorigin="anonymous">
 
-    <link rel="stylesheet" href="<?= base_url('css/signin.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('public/css/signin.css') ?>">
     <title>Sign in</title>
 
 <?= $this->endSection() ?>
@@ -29,7 +29,7 @@
         <?= form_open('login') ?>
             <?php $extra = ['class' => 'form-control'] ?>
 
-            <img class="img-fluid mb-4" src="<?= base_url('assets/enai-logo.png') ?>" alt="">
+            <img class="img-fluid mb-4" src="<?= base_url('public/assets/enai-logo.png') ?>" alt="">
 
             <div class="form-floating">
                 <?= form_input(['id' => 'fEmail', 'name' => 'email', 'placeholder' => 'name@example.com'], set_value('email'), $extra, 'email') ?>

@@ -14,6 +14,7 @@ class MaterialTopRated extends Material
             'filters'    => $this->materialProperties->getUsedProperties(false),
             'materials'  => $this->getMaterials(current_url()),
             'pager'      => $this->materials->pager,
+            'activePage' => 'top-rated',
         ];
         return view('material_multiple', $data);
     }

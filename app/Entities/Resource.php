@@ -57,7 +57,7 @@ class Resource extends Entity
 
         if (!$this->isLink()) {
             $path = $src ? (base_url() . '/') : '';
-            $path .= isset($this->parentId) ? ('uploads/' . $this->parentId . '/') : '';
+            $path .= isset($this->parentId) ? ('public/uploads/' . $this->parentId . '/') : '';
             $path .= $this->getName();
         }
 
@@ -66,12 +66,12 @@ class Resource extends Entity
 
     public static function isMissing(?string $path) : bool
     {
-        return $path === null || $path === 'assets/missing.png' || $path === base_url('assets/missing.png');
+        return $path === null || $path === 'assets/missing.png' || $path === base_url('public/assets/missing.png');
     }
 
     public static function strToThumbnail(?string $path) : Resource
     {
-        $asset = 'assets/missing.png';
+        $asset = 'public/assets/missing.png';
 
         if ($path && file_exists($path)) {
             $asset = $path;
@@ -85,7 +85,7 @@ class Resource extends Entity
 
     public static function strToFileThumbnail(?string $path) : Resource
     {
-        $prefix = 'assets/';
+        $prefix = 'public/assets/';
         $asset = 'missing.png';
 
         if ($path) {

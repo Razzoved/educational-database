@@ -72,7 +72,7 @@ class Property extends BaseController
         return view(Config::VIEW . 'property/form', $data);
     }
 
-    public function update() : mixed
+    public function update()
     {
         $rules = [
             'id'       => "required|integer",

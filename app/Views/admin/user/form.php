@@ -55,6 +55,7 @@
         let userEmail = userModal.querySelector("#fEmail");
         let userPassword = userModal.querySelector("#fPassword");
         let userConfirmPassword = userModal.querySelector("#fConfirmPassword");
+        let passwordNote = document.getElementById('pass-notice');
         let isEdit = false;
 
         // When the user clicks anywhere outside of the modal, close it
@@ -87,7 +88,7 @@
                         userEmail.value = user.email;
                         userEmail.readOnly = true;
                         userModal.style.display = "block";
-                        document.getElementById('pass-notice').hidden = false;
+                        passwordNote.hidden = false;
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log(jqXHR, textStatus, errorThrown);
@@ -110,7 +111,7 @@
             userEmail.readOnly = undefined;
             userPassword.value = '';
             userConfirmPassword.value = '';
-            document.getElementById('pass-notice').hidden = true;
+            passwordNote.hidden = true;
         }
 
         function userSubmit()
@@ -120,8 +121,8 @@
             $.ajax({
                 type: 'POST',
                 url: form.attr('action') + (isEdit ? '/edit' : '/new'),
-                data: form.serialize(),
                 dataType: 'json',
+                data: form.serialize(),
                 success: function(user) {
                     user = parseUser(user);
                     if (isEdit) {

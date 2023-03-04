@@ -4,7 +4,7 @@
      *
      * @param \App\Entities\Material $material required
      */
-    $url = base_url('materials/' . $material->id);
+    $url = base_url('single/' . $material->id);
     $content = strip_tags($material->content);
 ?>
 

@@ -58,7 +58,7 @@ class MaterialEditor extends BaseController
         return $this->index();
     }
 
-    public function save() : mixed
+    public function save()
     {
         $rules = [
             'title'     => "required|string",
@@ -303,7 +303,7 @@ class MaterialEditor extends BaseController
     private function deleteRemovedFiles(?array $unused) : void
     {
         foreach ($unused ?? [] as $path) {
-            if ('/assets' === substr($path, 0, 7)) continue;
+            if ('public/assets' === substr($path, 0, 13)) continue;
             $file = new \CodeIgniter\Files\File(ROOTPATH . '/' . ('uploads' === substr($path, 0, 7) ? 'public/' . $path : $path));
             if ($file->getRealPath()) unlink($file->getRealPath());
         }

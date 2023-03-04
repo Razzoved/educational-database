@@ -21,7 +21,7 @@ class Login extends BaseController
         );
     }
 
-    public function authenticate() : mixed
+    public function authenticate()
     {
         $user = model(UserModel::class)->getByEmail($this->request->getVar('email'));
         $email = is_null($user) ? null : $user->email;

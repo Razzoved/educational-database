@@ -3,7 +3,7 @@
 <?= $this->section('header') ?>
 
     <!-- custom styles -->
-    <link href="<?= base_url('css/property_selector.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= base_url('public/css/property_selector.css') ?>" rel="stylesheet" type="text/css">
 
     <!-- TinyMCE -->
     <script src="https://cdn.tiny.cloud/1/69ihqfomziifwjc1jznu6ynf4vn7l4zgj6f4a4zxc1blk1p2/tinymce/6/tinymce.min.js"
@@ -23,8 +23,8 @@
     </script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src="<?= base_url('js/dynamics.js') ?>"></script>
-    <script type="text/javascript" src="<?= base_url('js/property_selector.js') ?>"></script>
+    <script type="text/javascript" src="<?= base_url('public/js/dynamics.js') ?>"></script>
+    <script type="text/javascript" src="<?= base_url('public/js/property_selector.js') ?>"></script>
 
 <?= $this->endSection() ?>
 

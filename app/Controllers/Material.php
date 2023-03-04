@@ -52,6 +52,7 @@ class Material extends BaseController
             'filters'    => $this->materialProperties->getUsedProperties(),
             'materials'  => $this->getMaterials(current_url()),
             'pager'      => $this->materials->pager,
+            'activePage' => '',
         ];
 
         return view('material_multiple', $data);
@@ -69,6 +70,7 @@ class Material extends BaseController
             'filters'    => [],
             'materials'  => $this->views->getTopMaterials(50),
             'pager'      => null,
+            'activePage' => 'most-viewed',
         ];
 
         return view('material_views', $data);

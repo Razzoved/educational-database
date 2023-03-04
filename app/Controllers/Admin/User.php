@@ -52,7 +52,7 @@ class User extends BaseController
      */
     public function getUser() : void
     {
-        $user = $this->users->find($this->request->getGet('email'));
+        $user = $this->users->getByEmail($this->request->getGet('email'));
         if ($user === null) {
             throw PageNotFoundException::forPageNotFound();
         }
@@ -198,7 +198,7 @@ class User extends BaseController
             $this->users->insert($user);
         }
 
-        $user = $this->users->find($user->email);
+        $user = $this->users->getByEmail($user->email);
         $user->password = '';
         return $user;
     }

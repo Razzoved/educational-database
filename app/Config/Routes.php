@@ -56,15 +56,15 @@ $routes->group('/', function($routes) {
     $routes->add('most-viewed/(:num)', 'Material::mostViewed');
 
     // SINGLE material
-    $routes->add('materials/(:num)', 'Material::get/$1');
-    $routes->post('materials/rate', 'Material::rate');
+    $routes->add('single/(:num)', 'Material::get/$1');
+    $routes->post('single/rate', 'Material::rate');
 
     // AUTHENTICATION
     $routes->get('login', 'Login::index');
     $routes->post('login', 'Login::authenticate');
 
-    // RESOURCE VIEWER (writeable folder only)
-    $routes->get('writable/(:any)', 'Resource::index/$1');
+    // RESOURCE VIEWER
+    $routes->get('writable/(:any)', 'Resource::writable/$1');
 });
 
 /* Viewable by authorised users */

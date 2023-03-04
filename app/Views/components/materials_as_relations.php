@@ -9,7 +9,7 @@
 <?= ($materials == []) ? "" : "<hr><h2>$title</h5>" ?>
 <div class="relations">
     <?php foreach ($materials as $material) : ?>
-    <div class="relation" onclick="window.location.href='<?= base_url('materials/' . $material->id) ?>'" >
+    <div class="relation" onclick="window.location.href='<?= base_url('single/' . $material->id) ?>'" >
         <img class="relation-thumbnail" src="<?= $material->getThumbnail()->getPath() ?>" alt="relation thumbnail">
         <p class="relation-title"><?= $material->title ?></p>
     </div>

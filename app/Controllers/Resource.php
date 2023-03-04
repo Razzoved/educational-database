@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\Response;
 
 class Resource extends BaseController
 {
-    public function index(string ...$path)
+    public function writable(string ...$path)
     {
         if (!session()->get('isLoggedIn') || $path === []) {
             $this->response
