@@ -95,7 +95,7 @@ class Resource extends BaseController
         $removed = array();
 
         foreach ($this->request->getFiles() as $file) {
-            if ($file->isVaid() && !$file->hasMoved()) {
+            if ($file->isValid() && !$file->hasMoved()) {
                 if (unlink($file->getPath())) $removed[] = $file->getName();
             }
         }

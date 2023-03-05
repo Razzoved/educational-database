@@ -39,6 +39,7 @@ class Login extends BaseController
             );
         }
 
+        $user->password = null;
         $session_data = [
             'user' => $user,
             'isLoggedIn' => true,

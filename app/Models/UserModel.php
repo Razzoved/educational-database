@@ -63,11 +63,20 @@ class UserModel extends Model
 
     public function getByEmail(?string $email) : ?User
     {
+        if ($email === null) {
+            return null;
+        }
         return $this->builder()
                     ->select('*')
                     ->where('user_email', $email)
                     ->get(1)
                     ->getCustomRowObject(1, User::class);
+    }
+
+    public function deleteEmail(string $email) : void
+    {
+        $this->builder()
+             ->delete(['user_email' => $email]);
     }
 
     protected function hashPassword(array $data) : array

@@ -122,7 +122,7 @@ class User extends BaseController
 
         $email = $this->request->getPost('email') ?? "";
         try {
-            $this->users->delete($email);
+            $this->users->deleteEmail($email);
         } catch (Exception $e) {
             $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED, $e->getMessage())
                            ->setJSON($email)
