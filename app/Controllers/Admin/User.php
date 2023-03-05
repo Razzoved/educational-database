@@ -40,6 +40,7 @@ class User extends BaseController
             'title'      => 'User editor',
             'users'      => $this->getUsers(current_url(), Config::PAGE_SIZE),
             'pager'      => $this->users->pager,
+            'activePage' => 'users',
         ];
 
         return view(Config::VIEW . 'user/table', $data);

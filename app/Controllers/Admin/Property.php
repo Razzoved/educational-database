@@ -49,6 +49,7 @@ class Property extends BaseController
             'properties'  => $this->getProperties(current_url(), Config::PAGE_SIZE),
             'filters' => $filters,
             'pager'      => $this->properties->pager,
+            'activePage' => 'tags',
         ];
 
         return view(Config::VIEW . 'property/table', $data);

@@ -21,6 +21,7 @@ class Dashboard extends BaseController
     {
         $data = [
             'meta_title' => 'Administration - dashboard',
+            'activePage' => 'dashboard',
         ];
 
         return view(Config::VIEW . 'dashboard', $data);

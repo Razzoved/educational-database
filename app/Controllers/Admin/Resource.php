@@ -26,8 +26,9 @@ class Resource extends BaseController
     public function index() : string
     {
         $data = [
-            'meta_title' => 'Administration - resources',
-            'resources'  => $this->resources->findAll(),
+            'meta_title' => 'Administration - unused resources',
+            'title' => 'Resources',
+            'activePage' => 'files',
         ];
 
         return view(Config::VIEW . 'resource/table', $data);

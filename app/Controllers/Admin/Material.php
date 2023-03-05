@@ -17,6 +17,7 @@ class Material extends ControllersMaterial
             'filters'    => $this->materialProperties->getUsedProperties(false),
             'materials'  => $this->getMaterials(current_url(), Config::PAGE_SIZE),
             'pager'      => $this->materials->pager,
+            'activePage' => 'materials',
         ];
 
         return view(Config::VIEW . 'material/table', $data);
