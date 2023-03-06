@@ -1,9 +1,17 @@
-Header Set Access-Control-Allow-Origin *
+DirectoryIndex public/index.php
+Options -Indexes
 
 <IfModule mod_rewrite.c>
-    Options +FollowSymlinks
     RewriteEngine On
 
+    # Deny root directory file access
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_URI} materials/[^/]+$
+    RewriteCond %{REQUEST_URI} !admin/materials/[^/]+$
+    RewriteRule ^(.*)$ - [F,L]
+
+    # Send request to CodeIgniter root controller
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule (.*) public/index.php/$1 [L,NC,QSA]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/$1 [NC,L,QSA]
 </IfModule>
