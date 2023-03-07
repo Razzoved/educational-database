@@ -14,11 +14,11 @@ use App\Entities\Cast\StatusCast;
     <div class="row">
         <img src="<?= $material->getThumbnail()->getPath() ?>" alt="missing_img">
         <h2><?= $material->title?></h2>
+        <p><small>ID:</small><br><strong><?= $material->id ?></strong></p>
     </div>
     <div class="row">
         <p><small>Created at:</small><br><?= $material->createdToDate() ?></p>
         <p><small>Last update:</small><br><?= $material->updatedToDate() ?></p>
-        <p><small>ID:</small><br><strong><?= $material->id ?></strong></p>
     </div>
     <div class="row">
         <p><small>Views:</small><br><?= $material->views ?></p>
