@@ -78,7 +78,6 @@ $routes->group('admin', function($routes) {
         $routes->addRedirect('', 'admin/materials/1');
         $routes->addRedirect('-(:num)', 'admin/materials/$1');
         $routes->add('(:num)', 'Admin\Material::index');
-        $routes->add('preview/(:num)', 'Admin\Material::get/$1');
         $routes->get('edit', 'Admin\MaterialEditor::index');
         $routes->post('edit', 'Admin\MaterialEditor::save');
         $routes->add('edit/(:num)', 'Admin\MaterialEditor::loadMaterial/$1');

@@ -28,7 +28,7 @@ use App\Entities\Cast\StatusCast;
     <div class="controls">
         <button class="delete" type="button" onclick="deleteOpen(<?= $material->id ?>)">&#10005</button>
         <a class="button edit" href="<?= base_url('admin/materials/edit/' . $material->id) ?>">Edit</a>
-        <a class="button preview" target="_blank" href="<?= base_url('admin/materials/preview/' . $material->id) ?>">View</a>
+        <a class="button preview" target="_blank" rel="noopener" href="<?= base_url('single/' . $material->id) ?>">View</a>
     </div>
     <?php endif; ?>
 </div>
