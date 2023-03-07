@@ -8,6 +8,7 @@ use CodeIgniter\Model;
 class RatingsModel extends Model
 {
     protected $table         = 'ratings';
+    protected $primaryKey    = 'id';
     protected $allowedFields = [
         'material_id',
         'rating_uid',
@@ -15,18 +16,34 @@ class RatingsModel extends Model
     ];
     protected $returnType = Rating::class;
 
-    public function setRating(int $materialId, string $userId, ?int $value) : bool
+    /**
+     * Sets the rating for given material and user to a given value.
+     * Value will be deleted if:
+     * - old value is the same as the new value
+     * - old value exists and new value is null
+     *
+     * @param int       $materialId id of material to be rated
+     * @param string    $userId     id of user that owns the rating
+     * @param ?int      $value      new rating value
+     *
+     * @return ?int New rating value on success, old rating value on failure
+     */
+    public function setRating(int $materialId, string $userId, ?int $value) : ?int
     {
         $old = $this->getRating($materialId, $userId);
-        if ($old) {
-            $this->db->table($this->table)
-                     ->update(['rating_value' => $value], ['material_id' => $materialId, 'rating_uid' => $old->rating_uid], 1);
-        } else {
-            $this->db->table($this->table)
-                     ->insert(['material_id' => $materialId, 'rating_uid' => $userId, 'rating_value' => $value]);
+        try {
+            if ($old && ($value === null || $value === $old->rating_value)) {
+                $this->delete($old->id);
+                return null;
+            } else if ($old) {
+                $this->update($old->id, ['rating_value' => $value]);
+            } else {
+                $this->insert(['material_id' => $materialId, 'rating_uid' => $userId, 'rating_value' => $value]);
+            }
+            return $value;
+        } catch (\Exception $e) {
+            return $old->rating_value;
         }
-
-        return $old === null || $old->rating_value !== $value;
     }
 
     public function getRatingAvg(int $materialId) : float

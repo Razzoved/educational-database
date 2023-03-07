@@ -1,3 +1,15 @@
+<?php
+    /**
+     * Template for a single material page.
+     *
+     * Expects:
+     * @param App\Entities\Material $material   material which material to render
+     * @param ?App\Entities\Rating  $rating     rating from the current user
+     */
+
+    $rating = $rating->rating_value ?? 0;
+?>
+
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
@@ -57,6 +69,15 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script type="text/javascript">
+    // Reference to the rating group.
+    let ratings = document.querySelector('.rating');
+
+    /**
+     * This function handles user interaction with the rating system.
+     *
+     * @param {string}  materialId  id of material, expected to be convertible to integer
+     * @param {int}     rating      value the user wants to rate the post with
+     */
     function rating_rate(materialId, rating) {
         $.ajax({
             url: '<?= base_url('single/rate') ?>',
@@ -67,18 +88,9 @@
                 value: rating,
             },
             success: function(result) {
-                var index = 1;
-                var ratingsGroup = document.querySelector('.rating');
-                Arrays.from(ratingsGroup.children).forEach(c => {
-                    if (index <= result.rating) {
-                        c.classList.add('active');
-                        index += 1;
-                    } else {
-                        c.classList.remove('active');
-                    }
-                });
-                ratingsGroup.querySelector('average').innerHTML = result.average;
-                ratingsGroup.querySelector('count').innerHTML = result.count;
+                rating_reload_class(result.average, 'active');
+                rating_reload_class(result.user, 'own');
+                ratings.querySelector('.count').innerHTML = result.count + 'x';
             },
             error: function(status) {
                 alert('Unexpected error: could not rate the material');
@@ -86,28 +98,36 @@
         });
     }
 
-    function rating_mouseover(element) {
-        do {
-            element.classList.add('hover');
-            element = element.previousElementSibling;
-        } while (element);
-    }
-
-    function rating_mouseover_reset() {
-        Array.from(document.querySelector('.rating').children).forEach(c => {
-            c.classList.remove('hover');
+    /**
+     * Goes through ratings group. If element is of 'i' tag:
+     * - if its index <= value, add className
+     * - if its index > value, remove className
+     *
+     * @param {number} value        used for comparison
+     * @param {string} className    added/removed
+     */
+    function rating_reload_class(value, className) {
+        index = 1;
+        Array.from(ratings.children).forEach(c => {
+            c.nodeName.toLowerCase() === 'i' && index++ <= value
+                ? c.classList.add(className)
+                : c.classList.remove(className);
         });
     }
 
-    // Add css events to rating icons
+    /**
+     * Sets the functionality from this file onto the rating group.
+     * Each of its child elements gets coloring and interaction.
+    */
     window.addEventListener('DOMContentLoaded', (event) => {
-        Array.from(document.querySelector('.rating').children).forEach(c => {
-            var index = 1;
+        var index = 1;
+        Array.from(ratings.children).forEach(c => {
             if (c.nodeName.toLowerCase() === 'i') {
-                c.setAttribute('onmouseover', 'rating_mouseover(this)');
-                c.setAttribute('onmouseout', 'rating_mouseover_reset()');
+                c.setAttribute('onmouseover', `rating_reload_class('${index}', 'hover')`);
+                c.setAttribute('onmouseout', `rating_reload_class(0, 'hover')`);
                 c.setAttribute('onclick', `rating_rate('<?= $material->id ?>', ${index})`);
-                index = index + 1;
+                rating_reload_class(<?= $rating ?>, 'own');
+                index++;
             }
         });
     });

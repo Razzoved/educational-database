@@ -24,9 +24,6 @@ class Material extends BaseController
 
     protected bool $onlyPublic = true;
 
-    /**
-     * Constructor.
-     */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) : void
     {
         parent::initController($request, $response, $logger);
@@ -36,8 +33,6 @@ class Material extends BaseController
         $this->resources = model(ResourceModel::class);
         $this->ratings = model(RatingsModel::class);
         $this->views = model(ViewsModel::class);
-
-        // E.g.: $this->session = \Config\Services::session();
     }
 
     /**
@@ -77,8 +72,8 @@ class Material extends BaseController
     }
 
     /**
-     * Returns a view of a single material. If the material is not found, it will return
-     * the page not found error.
+     * Returns a view of a single material. If the material is not found,
+     * it will return the page not found error.
      *
      * @param int $page number of the page (0 <= $page < number of pages)
      */
@@ -87,27 +82,24 @@ class Material extends BaseController
         $material = $this->getMaterial($id);
         $session = session();
 
-        if ($id && !$session->has('m-' . $id)) {
+        // increment views if not viewed yet and user is not logged in
+        if ($id && !$session->has('m-' . $id) && !$session->get('isLoggedIn')) {
             $session->set('m-' . $id, true);
-            try {
-                $this->views->increment($material);
-            } catch (\Exception $e) {
-                // not critical
-            };
+            $this->views->increment($material);
         }
 
         $data = [
             'meta_title' => $material->title,
             'title' => $material->title,
             'material' => $material,
+            'rating' => $this->ratings->getRating($material->id, session()->get('id') ?? ''),
         ];
 
         return view('material_single', $data);
     }
 
     /**
-     * AJAX request handler for rating updates. Echoes back the new rating values
-     * (two integers - averaged rating, rating count)
+     * AJAX request handler for rating updates. Echoes back the new rating values.
      *
      * @uses $_POST['id'] id of material to rate
      * @uses $_POST['value'] value of rating to set for the user
@@ -118,27 +110,25 @@ class Material extends BaseController
         $value = (int) $this->request->getPost('value');
         $material = null;
 
-        if (!$id) {
-            return;
+        if (!$id) return;
+        if (session()->get('id') === null) {
+            session()->set('id', session_id());
         }
 
-        if (session_id() === "") {
-            session(); // create a new session
+        $newValue = $this->ratings->setRating($id, session()->get('id'), $value);
+        $material = ($newValue === null || $newValue === $value) ? $this->materials->find($id) : null;
+
+        if ($material) {
+            $material->rating = $this->ratings->getRatingAvg($id);
+            $material->rating_count = $this->ratings->getRatingCount($id);
+            $this->materials->update($id, $material);
         }
 
-        if ($this->ratings->setRating($id, session_id(), $value)) {
-            $material = $this->materials->find($id);
-        }
-
-        if (!$material) {
-            return;
-        }
-
-        $material->rating = $this->ratings->getRatingAvg($id);
-        $material->rating_count = $this->ratings->getRatingCount($id);
-        $this->materials->update($id, $material);
-
-        echo json_encode(['average' => $material->rating, 'count' => $material->rating_count]);
+        echo json_encode([
+            'average' => $material->rating ?? null,
+            'count' => $material->rating_count ?? null,
+            'user' => $newValue
+        ]);
     }
 
     protected function getMaterial(int $id) : EntitiesMaterial
