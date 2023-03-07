@@ -133,7 +133,7 @@ class Material extends BaseController
 
     protected function getMaterial(int $id) : EntitiesMaterial
     {
-        $material = $this->materials->getById($id);
+        $material = $this->materials->getById($id, session()->get('id') ?? false);
         if (!$material) throw PageNotFoundException::forPageNotFound();
         return $material;
     }
@@ -153,13 +153,14 @@ class Material extends BaseController
 
     protected function loadMaterials() : \CodeIgniter\BaseModel
     {
+        $show = session()->get('isLoggedIn') ?? false;
         $sort = $this->request->getPost('sort');
         $sortDir = $this->request->getPost('sortDir') ?? "ASC";
         $search = $this->request->getPost('search') ?? "";
         $filters = $this->request->getPost('filters') ?? [];
 
         return ($search !== "" || $filters !== [])
-            ? $this->materials->getByFilters($sort, $sortDir, $search, $filters)
-            : $this->materials->getData($sort, $sortDir);
+            ? $this->materials->getByFilters($sort, $sortDir, $search, $filters, !$show)
+            : $this->materials->getData($sort, $sortDir, !$show);
     }
 }
