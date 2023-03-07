@@ -73,7 +73,7 @@ class Resource extends Entity
     {
         $asset = 'public/assets/missing.png';
 
-        if ($path && file_exists($path)) {
+        if ($path && file_exists(ROOTPATH . $path)) {
             $asset = $path;
         }
 

@@ -53,7 +53,10 @@ class MaterialEditor extends BaseController
 
     public function loadMaterial(int $id) : string
     {
-        $material = $this->materials->getById($id, true) ?? throw PageNotFoundException::forPageNotFound();
+        $material = $this->materials->getById($id, session()->get('isLoggedIn') ?? false);
+        if (!$material) {
+            throw PageNotFoundException::forPageNotFound();
+        }
         $this->materialToPost($material);
         return $this->index();
     }
