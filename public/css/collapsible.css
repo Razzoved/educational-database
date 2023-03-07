@@ -46,7 +46,7 @@
   cursor: pointer;
 }
 .collapsible-list-item {
-  padding: 0.2rem;
+  padding: 0.3rem;
 }
 .collapsible-list-item:hover * {
   color: var(--clr-focus);
@@ -54,7 +54,6 @@
 }
 .collapsible-list-item input[type=checkbox] {
   transform: scale(1.5);
-  width: 1rem;
   margin-right: 0.5rem;
   float: left;
   cursor: pointer;
@@ -63,7 +62,7 @@
   background-color: var(--clr-focus-bg);
 }
 .collapsible-list-item input[type=checkbox] + label {
-  display: block;
+  display: flex;
   height: 100%;
   line-height: 100%;
   align-items: center;

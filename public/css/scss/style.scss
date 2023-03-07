@@ -4,6 +4,8 @@
 // @media screen and (min-width: 992px) and (max-width: 1199px) {} // md
 // @media screen and (min-width: 1200px) {} // lg
 
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
 *,
 *::before,
 *::after {
@@ -29,7 +31,7 @@
 }
 
 body {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: 'Open Sans', Helvetica, Arial;
     background-color: #fff;
 }
 

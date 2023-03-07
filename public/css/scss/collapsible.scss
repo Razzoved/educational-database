@@ -52,14 +52,13 @@
         cursor: pointer;
 
         &-item {
-            padding: 0.2rem;
+            padding: 0.3rem;
             &:hover * {
                 color: var(--clr-focus);
                 background-color: var(--clr-focus-bg);
             }
             input[type='checkbox'] {
                 transform: scale(1.5);
-                width: 1rem;
                 margin-right: 0.5rem;
                 float: left;
                 cursor: pointer;
@@ -68,7 +67,7 @@
                 }
             }
             input[type='checkbox'] + label {
-                display: block;
+                display: flex;
                 height: 100%;
                 line-height: 100%;
                 align-items: center;
