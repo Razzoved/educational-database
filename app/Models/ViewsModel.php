@@ -76,15 +76,18 @@ class ViewsModel extends Model
         $last = end($all);
         $views = 0;
 
-        if ($last === false || $last['created_at'] !== date('Y-m-d', time())) {
-            $this->insert(['material_id' => $material->id, 'material_views' => ++$views]);
-        } else {
-            $views += $last['material_views'];
-            $this->update($last['id'], ['material_views' => ++$views]);
+        try {
+            if ($last === false || $last['created_at'] !== date('Y-m-d', time())) {
+                $this->insert(['material_id' => $material->id, 'material_views' => ++$views]);
+            } else {
+                $views += $last['material_views'];
+                $this->update($last['id'], ['material_views' => ++$views]);
+            }
+            $material->views++;
+            model(MaterialModel::class)->update($material->id, $material);
+        } catch (\Exception $e) {
+            // ignored
         }
-
-        $material->views++;
-        model(MaterialModel::class)->update($material->id, $material);
     }
 
     /**

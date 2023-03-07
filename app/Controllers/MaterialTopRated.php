@@ -21,7 +21,7 @@ class MaterialTopRated extends Material
 
     protected function loadMaterials() : MaterialModel
     {
-        $show = session('isLoggedIn') ?? false;
+        $show = session()->get('isLoggedIn') ?? false;
         $sort = 'rating';
         $sortDir = 'DESC';
         $search = $this->request->getPost('search') ?? "";

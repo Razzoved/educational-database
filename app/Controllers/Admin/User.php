@@ -29,7 +29,8 @@ class User extends BaseController
 
     public function logout() : RedirectResponse
     {
-        session()->destroy();
+        session()->remove('user');
+        session()->remove('isLoggedIn');
         return redirect()->to(base_url());
     }
 
