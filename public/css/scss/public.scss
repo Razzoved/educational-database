@@ -163,6 +163,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
+    i {
+        font-size: 1.4rem;
+        transition: 500ms ease-out;
+    }
+    i.hover {
+        color: orange;
+        transition: none;
+    }
     i:last-of-type, small {
         margin-right: 0.5rem;
     }

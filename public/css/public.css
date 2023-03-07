@@ -148,6 +148,14 @@
   flex-wrap: wrap;
   gap: 0.25rem;
 }
+.rating i {
+  font-size: 1.4rem;
+  transition: 500ms ease-out;
+}
+.rating i.hover {
+  color: orange;
+  transition: none;
+}
 .rating i:last-of-type, .rating small {
   margin-right: 0.5rem;
 }

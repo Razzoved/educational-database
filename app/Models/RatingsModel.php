@@ -60,6 +60,6 @@ class RatingsModel extends Model
                      ->where('material_id', $materialId)
                      ->where('rating_uid', $userId)
                      ->get(1)
-                     ->getCustomResultObject(Rating::class);
+                     ->getCustomRowObject(1, Rating::class);
     }
 }

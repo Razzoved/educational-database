@@ -114,12 +114,11 @@ class Material extends BaseController
      */
     public function rate() : void
     {
-        $id = $this->request->getPost('id');
-        $value = $this->request->getPost('value');
+        $id = (int) $this->request->getPost('id');
+        $value = (int) $this->request->getPost('value');
         $material = null;
 
         if (!$id) {
-            echo "";
             return;
         }
 
@@ -132,7 +131,6 @@ class Material extends BaseController
         }
 
         if (!$material) {
-            echo "";
             return;
         }
 
@@ -140,7 +138,7 @@ class Material extends BaseController
         $material->rating_count = $this->ratings->getRatingCount($id);
         $this->materials->update($id, $material);
 
-        echo json_encode(['avg' => $material->rating, 'cnt' => $material->rating_count]);
+        echo json_encode(['average' => $material->rating, 'count' => $material->rating_count]);
     }
 
     protected function getMaterial(int $id) : EntitiesMaterial

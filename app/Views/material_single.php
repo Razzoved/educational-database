@@ -1,4 +1,5 @@
 <?= $this->extend('layouts/main') ?>
+
 <?= $this->section('content') ?>
 
 <!-- START OF PAGE SPLIT --->
@@ -53,13 +54,62 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script type="text/javascript">
-    function rating_rate(element) {
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
+<script type="text/javascript">
+    function rating_rate(materialId, rating) {
+        $.ajax({
+            url: '<?= base_url('single/rate') ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: materialId,
+                value: rating,
+            },
+            success: function(result) {
+                var index = 1;
+                var ratingsGroup = document.querySelector('.rating');
+                Arrays.from(ratingsGroup.children).forEach(c => {
+                    if (index <= result.rating) {
+                        c.classList.add('active');
+                        index += 1;
+                    } else {
+                        c.classList.remove('active');
+                    }
+                });
+                ratingsGroup.querySelector('average').innerHTML = result.average;
+                ratingsGroup.querySelector('count').innerHTML = result.count;
+            },
+            error: function(status) {
+                alert('Unexpected error: could not rate the material');
+            },
+        });
     }
 
     function rating_mouseover(element) {
-
+        do {
+            element.classList.add('hover');
+            element = element.previousElementSibling;
+        } while (element);
     }
+
+    function rating_mouseover_reset() {
+        Array.from(document.querySelector('.rating').children).forEach(c => {
+            c.classList.remove('hover');
+        });
+    }
+
+    // Add css events to rating icons
+    window.addEventListener('DOMContentLoaded', (event) => {
+        Array.from(document.querySelector('.rating').children).forEach(c => {
+            var index = 1;
+            if (c.nodeName.toLowerCase() === 'i') {
+                c.setAttribute('onmouseover', 'rating_mouseover(this)');
+                c.setAttribute('onmouseout', 'rating_mouseover_reset()');
+                c.setAttribute('onclick', `rating_rate('<?= $material->id ?>', ${index})`);
+                index = index + 1;
+            }
+        });
+    });
 </script>
 <?= $this->endSection() ?>
