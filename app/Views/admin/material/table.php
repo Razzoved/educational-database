@@ -24,7 +24,7 @@
             <button type="button" onclick="toggleSort('created_at')"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'created_at' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Created At</button>
             <button type="button" onclick="toggleSort('updated_at')"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'updated_at' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Last Update</button>
             <button type="button" onclick="toggleSort('views')"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'views' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Views</button>
-            <button type="button" onclick="window.location.href='<?= base_url('admin/materials/edit') ?>'">&#65291</button>
+            <button class="create" type="button" onclick="window.location.href='<?= base_url('admin/materials/edit') ?>'">&#65291</button>
         </div>
 
         <div class="table" id="items">

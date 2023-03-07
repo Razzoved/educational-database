@@ -22,7 +22,7 @@
         <div class="page-controls">
             <input id="tag" type="text" class="form-control me-2" placeholder="Tag">
             <input id="value" type="text" class="form-control me-2" placeholder="Value">
-            <button type="button" style="width: 50%" class="btn btn-success" onclick="createProperty()">Create</button>
+            <button class="create" type="button" style="width: 50%" onclick="createProperty()">Create</button>
         </div>
         <div class="page-controls">
             <button type="button" onclick="toggleSort('id')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'id' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> ID</button>
@@ -73,7 +73,7 @@
                 appendData(result);
             },
             error: function(status) {
-                alert('TODO: modal\nUnable to create tag -> ' + status.statusText);
+                alert('Unable to create tag -> ' + status.statusText);
             },
         });
     }

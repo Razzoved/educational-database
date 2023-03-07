@@ -62,6 +62,12 @@ button, a.button {
     text-align: center;
     cursor: pointer;
 
+    &.create {
+        color: var(--clr-focus-bg);
+        background-color: var(--clr-focus);
+        border: var(--clr-focus-bg) 1px solid;
+    }
+
     &:hover {
         color: var(--clr-focus);
         background-color: var(--clr-focus-bg);

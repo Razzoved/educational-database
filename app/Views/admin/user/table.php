@@ -11,15 +11,19 @@
         <h1><?= $title ?></h1>
         <form method="post" action="<?= base_url('admin/users/1') ?>">
             <div class="page-controls">
-                <input class="col form-control" name="search" value="" placeholder="Search"/>
-                <button class="col-auto btn btn-dark ms-2" style="width: 10vw; min-width: fit-content" type="submit">Search</button>
+                <input name="search" value="" placeholder="Search"/>
+                <button style="width: 10vw; min-width: fit-content" type="submit">Search</button>
             </div>
         </form>
 
         <div class="page-controls">
-            <button type="button" onclick="toggleSort('name')"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'name' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Name</button>
-            <button type="button" onclick="toggleSort('email')"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'email' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Email</button>
-            <button type="button" onclick="userOpen()" class="ms-1 me-1 btn btn-primary">&#65291</a>
+            <button type="button" onclick="toggleSort('name')">
+                <i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'name' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Name
+            </button>
+            <button type="button" onclick="toggleSort('email')">
+                <i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'email' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Email
+            </button>
+            <button class="create" type="button" onclick="userOpen()">&#65291</a>
         </div>
 
         <div class="table" id="items">
