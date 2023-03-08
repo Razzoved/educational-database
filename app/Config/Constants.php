@@ -96,6 +96,8 @@ define('EVENT_PRIORITY_HIGH', 10);
 /**
  * Custom constants
  */
+define('ROOTURL', 'https://www.academicintegrity.eu');
+
 define('PUPLOAD', 'public/uploads/');
 define('WUPLOAD', 'writable/uploads/');
 
