@@ -21,6 +21,7 @@ class User extends Entity
     ];
 
     protected $datamap = [
+        'id'       => 'user_id',
         'name'     => 'user_name',
         'email'    => 'user_email',
         'password' => 'user_password',

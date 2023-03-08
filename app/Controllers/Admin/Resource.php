@@ -10,13 +10,12 @@ use Psr\Log\LoggerInterface;
 use App\Models\ResourceModel;
 use CodeIgniter\HTTP\Response;
 
+use function PHPUnit\Framework\isNan;
+
 class Resource extends BaseController
 {
     private ResourceModel $resources;
 
-    /**
-     * Constructor.
-     */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
@@ -25,9 +24,24 @@ class Resource extends BaseController
 
     public function index() : string
     {
+        helper('filesystem');
+
+        $unused = array();
+        $this->getUnusedArray(directory_map(WRITEPATH . 'uploads/'), $unused);
+
+        $targets = array();
+        $materials = model(MaterialModel::class)->getData(null, null, false)
+                                                ->get()
+                                                ->getCustomResultObject(\App\Entities\Material::class);
+        foreach ($materials as $key => $material) {
+            $targets[$material->id] = $material->title;
+        }
+
         $data = [
-            'meta_title' => 'Administration - unused resources',
-            'title' => 'Resources',
+            'meta_title' => 'Administration - unused files',
+            'title' => 'Assign files to materials',
+            'resources' => $unused,
+            'targets' => $targets,
             'activePage' => 'files',
         ];
 
@@ -43,88 +57,129 @@ class Resource extends BaseController
                 $name = $file->getName();
                 $views[$name] = view(Config::VIEW . 'file_template', [
                     'id' => $this->request->getPostGet('id'),
-                    'path' => 'writable/uploads/' . $file->store(),
+                    'path' => 'writable/uploads/' . $file->store(null, $name),
                     'value' => $name,
                 ]);
             }
         }
 
         if ($views === array()) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'Upload error',
-                'message' => "No files were saved"
-            ]);
+            $this->echoError('No files were uploaded');
             return;
         }
 
         echo json_encode($views);
     }
 
-    public function move() : void
+    public function assign(int $materialId, bool $replaceThumbnail = false) : void
     {
         helper('file');
-        $moved = array();
 
-        $target = $this->request->getPost('target');
-        $files = $this->request->getPost('files');
+        $name = $this->request->getPost('name');
+        if (!$name || $name === "") {
+            $name = $this->request->getPost('tmp_name');
+        }
 
-        if ($target === null) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'File manipulation error',
-                'message' => "Moving requires a target"
-            ]);
+        $path = $this->request->getPost('tmp_path');
+        if ($path === null) {
+            $this->echoError('No file present for assigning');
             return;
         }
 
-        if ($files === null) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "No files given to be moved");
-            echo view('errors/error_modal', [
-                'title' => 'File manipulation error',
-                'message' => "No files given to be moved"
-            ]);
-            return;
-        }
-
-        foreach ($files as $file) {
-            $splFile = new \CodeIgniter\Files\File($file['path']);
-            if ($splFile->getRealPath()) {
-                $moved[] = $splFile->move($target, $file['name']);
+        $file = new \CodeIgniter\Files\File(ROOTPATH . $path);
+        if ($file->getRealPath()) {
+            if ($replaceThumbnail) {
+                $resource = ($this->resources->getThumbnail($materialId));
+                if ($resource !== array()) {
+                    $_POST['id'] = $resource[0]->id;
+                    $this->delete(false);
+                }
             }
-        }
-
-        if ($moved === array()) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'File manipulation error',
-                'message' => "None of the files were successfully moved"
+            $moved = $file->move(PUPPATH . $materialId, $name);
+            $this->resources->insert([
+                'material_id' => $materialId,
+                'resource_path' => $moved->getFilename(),
+                'resource_type' => $replaceThumbnail ? 'thumbnail' : 'file',
             ]);
+        } else {
+            $this->echoError('File does not exist');
             return;
         }
 
-        echo json_encode($moved);
+        echo json_encode($path);
     }
 
-    public function delete() : void
+    public function delete(bool $doEcho = true) : void
     {
-        $removed = array();
+        $resourceId = $this->request->getPost('id');
+        $resourcePath = $this->request->getPost('path');
 
-        foreach ($this->request->getFiles() as $file) {
-            if ($file->isValid() && !$file->hasMoved()) {
-                if (unlink($file->getPath())) $removed[] = $file->getName();
-            }
-        }
-
-        if ($removed === array()) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'File deletion error',
-                'message' => "No files were deleted"
-            ]);
+        if (!$resourceId && $resourcePath) {
+            $this->deleteUnsaved($resourcePath, true);
             return;
         }
 
-        echo json_encode($removed);
+        $resource = $this->resources->find($resourceId);
+        if (!$resource) {
+            $this->echoError('Resource id is not present in database');
+            return;
+        }
+
+        $this->resources->delete($resourceId);
+        $this->deleteUnsaved($resource->getPath(false), false);
+
+        if ($doEcho) {
+            echo json_encode($resourceId);
+        }
+    }
+
+    public function deleteUnsaved(string $path, bool $doEcho = true) : void
+    {
+        if (!$path || !unlink(ROOTPATH . $path)) {
+            $this->echoError('Could not delete file');
+            return;
+        }
+
+        if ($doEcho) {
+            echo json_encode($path);
+        }
+    }
+
+    private function getUnusedArray(array $source, array &$result, string $path = 'writable/uploads') : void
+    {
+        foreach ($source as $key => $value) {
+            $key = (string) $key;
+
+            $newPath = $path;
+            if (substr($key, -1) === '\\') {
+                $newPath .= '/' . rtrim((string) $key, '\\');
+            }
+
+            if (is_array($value)) {
+                if ($key < date('Ymd', time())) {
+                    $this->getUnusedArray($value, $result, $newPath);
+                }
+            } else if (substr($value, 0, 5) !== 'index') {
+                $result[] = new \App\Entities\Resource([
+                    'resource_path' => $newPath . '/' . $value,
+                    'resource_type' => 'file'
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Utility function for easier sending of errors.
+     */
+    private function echoError(
+        string $message = "Internal server error!",
+        int $errorCode = Response::HTTP_INTERNAL_SERVER_ERROR,
+        string $title = "Resource manipulation"
+    ) : void {
+        $this->response->setStatusCode($errorCode);
+        echo view('errors/error_modal', [
+            'title'     => $title,
+            'message'   => $message
+        ]);
     }
 }

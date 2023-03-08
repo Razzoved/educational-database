@@ -6,9 +6,13 @@ function showError(status) {
         let modal = document.createElement('div');
         modal.innerHTML = status.responseText;
         modal = modal.firstElementChild;
-        modal.style.display = "block";
-        modal.setAttribute("onclick", 'hideErrorEvent(event, this)')
-        document.body.appendChild(modal);
+        if (modal) {
+            modal.style.display = "block";
+            modal.setAttribute("onclick", 'hideErrorEvent(event, this)')
+            document.body.appendChild(modal);
+        } else {
+            console.error('Could not show error modal', status);
+        }
     }
 }
 

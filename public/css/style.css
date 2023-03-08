@@ -136,7 +136,7 @@ footer section > a {
 .page {
   display: flex;
   flex-wrap: wrap;
-  align-items: start;
+  align-items: flex-start;
   gap: 1rem;
 }
 .page-content {

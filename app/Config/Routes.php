@@ -97,6 +97,9 @@ $routes->group('admin', function($routes) {
     $routes->group('files', function($routes) {
         $routes->add('', 'Admin\Resource::index');
         $routes->post('upload', 'Admin\Resource::upload');
+        $routes->post('assign/(:num)', 'Admin\Resource::assign/$1');
+        $routes->post('assign/(:num)/(:bool)', 'Admin\Resource::assign/$1/$2');
+        $routes->post('delete', 'Admin\Resource::delete');
     });
 
     $routes->group('users', function($routes) {

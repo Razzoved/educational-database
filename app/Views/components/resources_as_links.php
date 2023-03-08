@@ -5,7 +5,7 @@
     <li>
     <?php
         if (!$resource->isLink()) {
-            echo '<img src="' . $resource->strToFileThumbnail($resource->getPath())->getPath(). '"></img>';
+            echo '<img src="' . $resource->getFileThumbnail()->getPath() . '"></img>';
         }
         echo "<a href='" . $resource->getPath();
         echo ($resource->isLink()) ? "'>" : "'download>";
