@@ -71,8 +71,8 @@ class User extends BaseController
     public function update() : void
     {
         $rules = [
-            'name'            => 'required|min_length[2]|max_length[50]',
-            'email'           => 'required|min_length[4]|max_length[320]|valid_email|is_not_unique[users.user_email]',
+            'name'  => 'required|min_length[2]|max_length[50]',
+            'email' => 'required|min_length[4]|max_length[320]|valid_email|is_not_unique[users.user_email]',
         ];
 
         if ($this->request->getPost('password') !== "") {
@@ -115,19 +115,23 @@ class User extends BaseController
         if (!$this->checkAjax()) return;
 
         if (!$this->validate(['email' => "required|is_not_unique[users.user_email]"])) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, 'Delete validation failed')
-                           ->setJSON($this->validator->listErrors())
-                           ->send();
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'User deletion error',
+                'message' => $this->validator->listErrors()
+            ]);
             return;
         }
 
-        $email = $this->request->getPost('email') ?? "";
+        $email = $this->request->getPost('email') ?? "MISSING";
         try {
             $this->users->deleteEmail($email);
         } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED, $e->getMessage())
-                           ->setJSON($email)
-                           ->send();
+            $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED);
+            echo view('errors/error_modal', [
+                'title' => 'User deletion error',
+                'message' => $email . ': ' . $e->getMessage()
+            ]);
             return;
         }
         echo json_encode($email);
@@ -142,11 +146,7 @@ class User extends BaseController
      */
     private function ajaxSave(array $rules, bool $isUpdate = false) : void
     {
-        if (!$this->request->isAJAX()) {
-            $this->response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED, 'Must be an AJAX request')
-                           ->send();
-            return;
-        }
+        if (!$this->checkAjax()) return;
 
         if (!$this->validate($rules)) {
             $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, 'User validation failed')

@@ -77,9 +77,7 @@
                     console.log('SUCCESS:', name);
                 }
             },
-            error: function(status) {
-                alert('Unable to upload -> ' + status.statusText);
-            },
+            error: (jqHXR) => showError(jqHXR)
         });
     }
 

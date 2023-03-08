@@ -90,10 +90,7 @@
                         userModal.style.display = "block";
                         passwordNote.hidden = false;
                     },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log(jqXHR, textStatus, errorThrown);
-                        alert(textStatus);
-                    }
+                    error: (jqHXR) => showError(jqHXR)
                 });
             } else {
                 userModal.style.display = "block";

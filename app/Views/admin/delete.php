@@ -62,9 +62,7 @@
                 success: function(data) {
                     deleteId(data);
                 },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert("Cannot delete: " + errorThrown);
-                }
+                error: (jqXHR) => showError(jqXHR)
             })
             deleteModal.style.display = "none";
         }

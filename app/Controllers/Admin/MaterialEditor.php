@@ -104,17 +104,25 @@ class MaterialEditor extends BaseController
     public function delete() : void
     {
         if (!$this->request->isAJAX()) {
-            $this->response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED, "Request is not an AJAX request")->send();
+            $this->response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED, "Request is not an AJAX request");
             return;
         }
         $id = $this->request->getPost('id') ?? -1;
         if ($id < 0) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "Id is required")->send();
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'Validation error',
+                'message' => "Id is required"
+            ]);
             return;
         }
         $material = $this->materials->getById((int) $id, true);
         if ($material === null) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "Material not found")->send();
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'Database error',
+                'message' => "Material not found"
+            ]);
             return;
         }
 
@@ -130,7 +138,11 @@ class MaterialEditor extends BaseController
             $dirPath = ROOTPATH . '/public/uploads/' . $material->id;
             if (is_dir($dirPath)) rmdir($dirPath);
         } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_CONFLICT, $e->getMessage())->send();
+            $this->response->setStatusCode(Response::HTTP_CONFLICT);
+            echo view('errors/error_modal', [
+                'title' => 'Material saving erro',
+                'message' => $e->getMessage()
+            ]);
             return;
         }
 

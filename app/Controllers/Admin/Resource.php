@@ -50,7 +50,11 @@ class Resource extends BaseController
         }
 
         if ($views === array()) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "No files saved");
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'Upload error',
+                'message' => "No files were saved"
+            ]);
             return;
         }
 
@@ -66,12 +70,20 @@ class Resource extends BaseController
         $files = $this->request->getPost('files');
 
         if ($target === null) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "Moving requires a target");
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'File manipulation error',
+                'message' => "Moving requires a target"
+            ]);
             return;
         }
 
         if ($files === null) {
             $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "No files given to be moved");
+            echo view('errors/error_modal', [
+                'title' => 'File manipulation error',
+                'message' => "No files given to be moved"
+            ]);
             return;
         }
 
@@ -83,7 +95,11 @@ class Resource extends BaseController
         }
 
         if ($moved === array()) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "No files moved");
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'File manipulation error',
+                'message' => "None of the files were successfully moved"
+            ]);
             return;
         }
 
@@ -101,7 +117,11 @@ class Resource extends BaseController
         }
 
         if ($removed === array()) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, "No files deleted");
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'File deletion error',
+                'message' => "No files were deleted"
+            ]);
             return;
         }
 

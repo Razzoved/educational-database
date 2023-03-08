@@ -110,7 +110,11 @@ class Property extends BaseController
         ];
 
         if (!$this->validate($rules, ['tag' => ['uniqueProperty' => 'This tag-value pair is already taken!']])) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, json_encode($this->validator->getErrors()));
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'Validation error',
+                'message' => $this->validator->listErrors()
+            ]);
             return;
         }
 
@@ -123,7 +127,11 @@ class Property extends BaseController
             $id = $this->properties->insert($property, true);
             echo json_encode($this->materialProperties->getPropertyWithUsage($id));
         } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, $e->getMessage());
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'Validation error',
+                'message' => $e->getMessage()
+            ]);
         }
     }
 
@@ -135,22 +143,27 @@ class Property extends BaseController
         }
 
         if (!$this->validate(['id' => "required|integer"])) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, 'invalid id');
+            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
+            echo view('errors/error_modal', [
+                'title' => 'Validation error',
+                'message' => 'Given id is not valid!'
+            ]);
             return;
         }
 
-        // find property
         $id = $this->request->getPostGet('id');
         $property = $this->materialProperties->getPropertyWithUsage((int) $id);
 
-        // build and send response
         if (!is_null($property) && $property->usage == 0) {
             $this->properties->delete($id);
-            $this->response->setStatusCode(Response::HTTP_OK);
+            echo json_encode($property->id);
         } else {
-            $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED, 'Already in use by ' . $property->usage . ' materials!');
+            $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED);
+            echo view('errors/error_modal', [
+                'title' => 'Database error',
+                'message' => 'Already in use by ' . $property->usage . ' materials!'
+            ]);
         }
-        $this->response->setJSON($property->id)->send();
     }
 
     private function getProperties(string $url, int $perPage = 10) : array

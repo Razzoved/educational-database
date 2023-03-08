@@ -72,9 +72,7 @@
                 if (result.id === undefined) result = JSON.parse(result);
                 appendData(result);
             },
-            error: function(status) {
-                alert('Unable to create tag -> ' + status.statusText);
-            },
+            error: (jqHXR) => showError(jqHXR)
         });
     }
 

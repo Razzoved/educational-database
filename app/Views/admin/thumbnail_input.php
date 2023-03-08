@@ -39,7 +39,7 @@
         fileSelector.value = '';
 
         if (file === undefined || !file['name'].match(<?= $IMG_REGEX ?>)) {
-            alert("Thumbnail must be an image!\n\nGot \t " + file['name']);
+            showError("Thumbnail must be an image!\n\n" + file['name']);
             return;
         }
 
@@ -59,9 +59,7 @@
                     console.log('success:', name);
                 }
             },
-            error: function(status) {
-                alert('TODO: modal\nUnable to upload thumbnail -> ' + status.statusText);
-            },
+            error: (jqHXR) => showError(jqHXR)
         });
     }
 

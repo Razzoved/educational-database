@@ -16,14 +16,14 @@
 <body>
     <?= $this->include('admin/navigation_bar') ?>
 
-    <div class="container vh100">
+    <div class="container" style="min-height: 100vh">
         <?= $this->renderSection('content') ?>
     </div>
 
     <?= $this->include('footer') ?>
-    <?= $this->include('scripts') ?>
     <?= $this->renderSection('scripts') ?>
 
+    <script type="text/javascript" src="<?= base_url('public/js/error.js') ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 

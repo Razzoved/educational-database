@@ -23,9 +23,10 @@
     <?= $this->renderSection('modals') ?>
 
     <?= $this->include('footer') ?>
-    
+
     <?= $this->renderSection('scripts') ?>
     <script type="text/javascript" src="<?= base_url('public/js/tabular.js') ?>"></script>
+    <script type="text/javascript" src="<?= base_url('public/js/error.js') ?>"></script>
 </body>
 
 </html>
