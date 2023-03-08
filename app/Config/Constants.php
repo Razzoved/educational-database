@@ -92,3 +92,12 @@ define('EVENT_PRIORITY_NORMAL', 100);
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
  */
 define('EVENT_PRIORITY_HIGH', 10);
+
+/**
+ * Custom constants
+ */
+define('PUPLOAD', 'public/uploads/');
+define('WUPLOAD', 'writable/uploads/');
+
+define('PUPPATH', ROOTPATH . PUPLOAD);
+define('WUPPATH', ROOTPATH . WUPLOAD);
