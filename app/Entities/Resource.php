@@ -69,7 +69,7 @@ class Resource extends Entity
         return Resource::strToFileThumbnail($this->getPath(false));
     }
 
-    public static function isMissing(?string $path) : bool
+    public static function ignore(?string $path) : bool
     {
         return $path === null || $path === 'assets/missing.png' || $path === base_url('public/assets/missing.png');
     }

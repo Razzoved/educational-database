@@ -80,7 +80,7 @@ $routes->group('admin', function($routes) {
         $routes->add('(:num)', 'Admin\Material::index');
         $routes->get('edit', 'Admin\MaterialEditor::index');
         $routes->post('edit', 'Admin\MaterialEditor::save');
-        $routes->add('edit/(:num)', 'Admin\MaterialEditor::loadMaterial/$1');
+        $routes->add('edit/(:num)', 'Admin\MaterialEditor::get/$1');
         $routes->add('delete', 'Admin\MaterialEditor::delete');
     });
 

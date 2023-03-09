@@ -7,30 +7,48 @@ use App\Entities\Material as EntitiesMaterial;
 use App\Entities\Property as EntitiesProperty;
 use App\Entities\Resource as EntitiesResource;
 use App\Models\MaterialMaterialModel;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
-
 use App\Models\MaterialModel;
 use App\Models\PropertyModel;
 use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 
+/**
+ * Controls the logic for handling requests on manipulation of materials.
+ * This includes: creation, modification, deletion of materials.
+ *
+ * @author Jan Martinek
+ */
 class MaterialEditor extends BaseController
 {
-    const META_TITLE = "Administration - material editor";
-    const INPUT_DIV = "<div class='row g-0 edit-mb'>";
+    private const META_TITLE = "Administration - material editor";
 
-    private array $messages = [];
+    private array $rules = [
+        'title' => [
+            'rules' => "required|string",
+            'errors' => [],
+        ],
+        'author' => [
+            'rules' => "required|string",
+            'errors' => [],
+        ],
+        'status' => [
+            'rules' => "required|validStatus",
+            'errors' => [],
+        ],
+        'content' => [
+            'rules' => "string",
+            'errors' => [],
+        ],
+    ];
+
     private MaterialModel $materials;
     private PropertyModel $properties;
 
-    /**
-     * Constructor.
-     */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
@@ -42,57 +60,59 @@ class MaterialEditor extends BaseController
     public function index() : string
     {
         $data = [
-            'meta_title'           => MaterialEditor::META_TITLE,
+            'meta_title'           => self::META_TITLE,
             'validation'           => Services::validation(),
             'available_properties' => $this->getAllPropertiesAsStrings(),
             'available_relations'  => $this->getAllMaterialsAsStrings(),
         ];
-
         return view(Config::VIEW . 'material/form', $data);
     }
 
-    public function loadMaterial(int $id) : string
+    public function get(int $id) : string
     {
-        $material = $this->materials->getById($id, (bool) session('isLoggedIn'));
+        $material = $this->materials->getById($id, true);
         if (!$material) {
             throw PageNotFoundException::forPageNotFound();
         }
-        $this->materialToPost($material);
-        return $this->index();
+        return $this->setupPost($material)->index();
     }
 
+    /**1
+     * Tries to convert post data to a single material and save it onto the
+     * server. This operation includes both database and file organization.
+     *
+     * Requires following _POST format:
+     *      compulsory material attributes
+     *      optional properties - properties (tag => [vals] array)
+     *      optional resources - thumbnail, files, links (key => val array)
+     *      unused_files (
+     */
     public function save()
     {
-        $rules = [
-            'title'     => "required|string",
-            'author'    => "required|string",
-            'status'    => "required",
-            'content'   => "string",
-        ];
-
-        if (!$this->validate($rules, $this->messages)) {
+        if (!$this->validate($rules)) {
             return $this->getEditorErrorView();
         }
 
         $material = new EntitiesMaterial($this->request->getPost());
-        $material->resources = $this->loadResources(
-            $this->request->getPost('thumbnail'),
-            $this->request->getPost('files'),
-            $this->request->getPost('links'),
+
+        $this->resourceFromArray($material->resources, $this->request->getPost('thumbnail'), 'thumbnail');
+        $this->resourceFromArray($material->resources, $this->request->getPost('files'), 'file');
+        $this->resourceFromArray($material->resources, $this->request->getPost('links'), 'link');
+
+        $material->properties = $this->loadProperties(
+            $this->request->getPost('properties')
         );
-        $material->properties = $this->loadProperties($this->request->getPost('properties'));
 
         try {
             $this->materials->handleUpdate($material, $this->request->getPost('relations') ?? []);
-            $this->deleteRemovedFiles($this->request->getPost('unused-files'));
-            $this->moveTemporaryFiles($material);
+            $this->moveTemporaryFiles($material)
+                 ->deleteRemovedFiles();
         } catch (Exception $e) {
-            $this->validator->setError('Exception while saving:', $e->getMessage());
-            $this->materialToPost($material);
-            return $this->getEditorErrorView();
+            $this->validator->setError('saving:', $e->getMessage());
+            return $this->setupPost($material)->getEditorErrorView();
         }
 
-        return redirect()->to('admin/materials');
+        return redirect('admin/materials');
     }
 
     /**
@@ -150,10 +170,12 @@ class MaterialEditor extends BaseController
     }
 
     /**
-     * Loads a single material into the post for display to the user.
-     * @param EntitiesMaterial $material material to load
+     * Loads a single material into the post for easier handling in views.
+     *
+     * @param   EntitiesMaterial $material material to load
+     * @return  self to enable method chaining
      */
-    private function materialToPost(EntitiesMaterial $material) : void
+    private function setupPost(EntitiesMaterial $material) : MaterialEditor
     {
         $links = array();
         foreach ($material->getLinks() as $r) {
@@ -177,79 +199,49 @@ class MaterialEditor extends BaseController
             'files' => $files,
             'relations' => model(MaterialMaterialModel::class)->getRelated($material->id, false, true),
         ];
-    }
 
-    /**
-     * Looks through the properties from post and filters them:
-     * - ignores files with paths to MISSING
-     * - saves temporary paths to tmp_path
-     * - saves normalized (without first 2 segments) original paths to path
-     *
-     * @param ?string $thumbnail - path to thumbnail
-     * @param ?array $files
-     * @param ?array $links
-     *
-     * @return array Filtered resources
-     */
-    private function loadResources(?string $thumbnail, ?array $files, ?array $links) : array
-    {
-        $resources = array();
-
-        $this->loadFromArray($resources, is_null($thumbnail) ? [] : [$thumbnail], 'thumbnail');
-        $this->loadFromArray($resources, $files ?? [], 'file');
-        $this->loadFromArray($resources, $links ?? [], 'link');
-
-        return $resources;
+        return $this;
     }
 
     /**
      * Non-clean helper function that adds resources to target.
+     * Ignores all paths that lead to resources marked as ignore.
+     * {@see App\Entities\Resource::ignore(?string)}
      *
      * @param array $target saves resources here
-     * @param array $items takes resources from it
-     * @param array $type type of resources to be added
+     * @param array $items  takes data from here
+     * @param array $type   type to be added
      */
-    private function loadFromArray(array &$target, array $items, string $type) : void
+    private function resourcesFromArray(array &$target, ?array $items, string $type) : void
     {
-        foreach ($items as $tmpPath => $path) {
-            if (EntitiesResource::isMissing($path)) continue;
+        foreach ($items ?? [] as $tmpPath => $path) {
+            if (EntitiesResource::ignore($path)) continue;
             $target[] = new EntitiesResource([
                 'type'     => $type,
-                'path'     => $type === 'link' ? $path : $this->normalize($path),
-                'tmp_path' => is_numeric($tmpPath)
-                    ? $path
-                    : $tmpPath,
+                'path'     => $type === 'link' ? $path : $this->lastSegment($path),
+                'tmp_path' => is_numeric($tmpPath) ? $path : $tmpPath,
             ]);
         }
     }
 
-    /**
-     * Returns the last segment of the path.
-     *
-     * @param string $path path to be normalized
-     * @return string last segment of path
-     */
-    private function normalize(string $path) : string
+    private function lastSegment(string $path) : string
     {
-        while (str_contains($path, '/')) {
-            $path = explode('/', $path, 2)[1];
-        }
-        while (str_contains($path, '\\')) {
-            $path = explode('\\', $path, 2)[1];
+        while (str_contains($path, DIRECTORY_SEPARATOR)) {
+            $path = explode(DIRECTORY_SEPARATOR, $path, 2)[1];
         }
         return $path;
     }
 
     /**
-     * Gets the properties all values loaded for a given array of
-     * ['tag' => 'values'] records.
+     * Gets the properties from ['tag' => 'values'] records.
+     * Filters out all properties that do not exist in DB.
      *
      * @param ?array $properties properties to find ids for
-     * @return array properties with ids
+     * @return array of App\Entities\Property objects
      */
-    private function loadProperties(?array $properties) : array
+    private function propertiesFromArray(?array $properties) : array
     {
-        $result = array();
+        $result = [];
         foreach ($properties ?? [] as $tag => $values) {
             foreach ($values as $value) {
                 $p = $this->properties->getByBoth($tag, $value);
@@ -295,8 +287,9 @@ class MaterialEditor extends BaseController
      * original name if possible.
      *
      * @param EntitiesMaterial $material material whose resources to move
+     * @return self to enable method chaining
     */
-    private function moveTemporaryFiles(EntitiesMaterial $material) : void
+    private function moveTemporaryFiles(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($material->resources as $r) {
             $r->parentId = $material->id;
@@ -307,6 +300,7 @@ class MaterialEditor extends BaseController
                 $file->move($dirPath, $r->path, true);
             }
         }
+        return $this;
     }
 
     /**
@@ -314,14 +308,17 @@ class MaterialEditor extends BaseController
      * ignores all resources that are located in /assets.
      *
      * @param ?array $unused resources to be deleted
+     * @return self to enable method chaining
      */
-    private function deleteRemovedFiles(?array $unused) : void
+    private function deleteRemovedFiles() : MaterialEditor
     {
-        foreach ($unused ?? [] as $path) {
+        $unused = $this->request->getPost('unused_files') ?? [];
+        foreach ($unused as $path) {
             if ('public/assets' === substr($path, 0, 13)) continue;
             $file = new \CodeIgniter\Files\File(ROOTPATH . '/' . ('uploads' === substr($path, 0, 7) ? 'public/' . $path : $path));
             if ($file->getRealPath()) unlink($file->getRealPath());
         }
+        return $this;
     }
 
     /**

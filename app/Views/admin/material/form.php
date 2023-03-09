@@ -127,7 +127,7 @@
         let unused = document.getElementById('unused-files');
 
         let newInput = document.createElement('input');
-        newInput.setAttribute('name', 'unused-files[]');
+        newInput.setAttribute('name', 'unused_files[]');
         newInput.setAttribute('type', 'hidden');
         newInput.setAttribute('value', filepath);
 
