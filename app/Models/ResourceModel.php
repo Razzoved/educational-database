@@ -45,6 +45,15 @@ class ResourceModel extends Model
                     ->getCustomResultObject(Resource::class);
     }
 
+    public function getByPath(int $materialId, int $path) : Resource
+    {
+        return $this->builder()
+                    ->where('material_id', $materialId)
+                    ->where('resource_path', $path)
+                    ->get()
+                    ->getCustomRowObject(1, Resource::class);
+    }
+
     public function handleUpdate(Material $material, $db = null) : void
     {
         if (!isset($db)) $db = $this->db;
