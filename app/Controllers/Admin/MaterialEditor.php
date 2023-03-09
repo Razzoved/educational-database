@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Entities\Material as EntitiesMaterial;
 use App\Entities\Property as EntitiesProperty;
 use App\Entities\Resource as EntitiesResource;
+use App\Libraries\Resources;
 use App\Models\MaterialMaterialModel;
 use App\Models\MaterialModel;
 use App\Models\PropertyModel;
@@ -48,6 +49,7 @@ class MaterialEditor extends BaseController
 
     private MaterialModel $materials;
     private PropertyModel $properties;
+    private Resources $resourceLibrary;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
@@ -55,6 +57,7 @@ class MaterialEditor extends BaseController
 
         $this->materials = model(MaterialModel::class);
         $this->properties = model(PropertyModel::class);
+        $this->$resourceLibrary = new Resources();
     }
 
     public function index() : string
@@ -106,7 +109,7 @@ class MaterialEditor extends BaseController
         try {
             $this->materials->handleUpdate($material, $this->request->getPost('relations') ?? []);
             $this->moveTemporaryFiles($material)
-                 ->deleteRemovedFiles();
+                 ->deleteRemovedFiles($material);
         } catch (Exception $e) {
             $this->validator->setError('saving:', $e->getMessage());
             return $this->setupPost($material)->getEditorErrorView();
@@ -282,7 +285,7 @@ class MaterialEditor extends BaseController
     }
 
     /**
-     * Moves all temporary files from writable directory to public one
+     * Moves all temporary files from temporary directory to public one
      * belonging to the given material, and renames them back to their
      * original name if possible.
      *
@@ -292,13 +295,7 @@ class MaterialEditor extends BaseController
     private function moveTemporaryFiles(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($material->resources as $r) {
-            $r->parentId = $material->id;
-            if (isset($r->tmp_path) && 'writable' === substr($r->tmp_path, 0, 8)) {
-                $file = new \CodeIgniter\Files\File(ROOTPATH . '/' . $r->tmp_path, true);
-                $dirPath = ROOTPATH . "/public/uploads/$material->id";
-                if (!is_dir($dirPath)) mkdir($dirPath, 0777, true);
-                $file->move($dirPath, $r->path, true);
-            }
+            $this->resourceLibrary->assign($material->id, $r);
         }
         return $this;
     }
@@ -307,16 +304,19 @@ class MaterialEditor extends BaseController
      * Deletes the newly unused resources from filesystem. This method
      * ignores all resources that are located in /assets.
      *
-     * @param ?array $unused resources to be deleted
+     * @param EntitiesMaterial $material material whose resources to remove
      * @return self to enable method chaining
      */
-    private function deleteRemovedFiles() : MaterialEditor
+    private function deleteRemovedFiles(EntitiesMaterial $material) : MaterialEditor
     {
-        $unused = $this->request->getPost('unused_files') ?? [];
-        foreach ($unused as $path) {
-            if ('public/assets' === substr($path, 0, 13)) continue;
-            $file = new \CodeIgniter\Files\File(ROOTPATH . '/' . ('uploads' === substr($path, 0, 7) ? 'public/' . $path : $path));
-            if ($file->getRealPath()) unlink($file->getRealPath());
+        foreach ($this->request->getPost('unused_files') ?? [] as $path) {
+            $resource = new EntitesResource(['path' => $path, 'tmp_path' => $path]);
+            if ($resource->isTemporary()) {
+                $this->resourceLibrary->delete($resource);
+            } else {
+                $resource = $this->resources->getByPath($material->id, $path);
+                $this->resourceLibrary->unassign($resource);
+            }
         }
         return $this;
     }
