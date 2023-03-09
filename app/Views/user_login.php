@@ -22,7 +22,7 @@
 
     <main class="form-signin">
 
-        <?= $this->include('errors/validation') ?>
+        <?= $this->include('errors/validation_single') ?>
 
         <?php helper('form') ?>
 
@@ -41,7 +41,7 @@
             </div>
 
             <?= form_submit(['class' => 'btn btn-lg btn-dark mt-2 w-100'], 'Sign in') ?>
-        </form>
+        <?= form_close() ?>
 
     </main>
 
