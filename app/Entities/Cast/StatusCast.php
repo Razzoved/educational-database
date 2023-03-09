@@ -21,17 +21,29 @@ class StatusCast extends BaseCast
 
     public static function set($value, array $params = [])
     {
-        if (is_numeric($value)) {
-            $value = StatusCast::VALID_VALUES[$value];
+        if (self::isValid($value)) {
+            return $value;
+        } else if (self::isValidIndex($value)) {
+            return self::VALID_VALUES[$value];
         }
-        if (!in_array($value, StatusCast::VALID_VALUES)) {
-            throw new \Exception('Trying to set invalid status: ' . $value);
-        }
-        return $value;
+        return self::VALID_VALUES[0];
     }
 
-    public static function getIndex($value)
+    public static function getIndex($value) : int
     {
         return array_search($value, StatusCast::VALID_VALUES) ?? 0;
+    }
+
+    public static function isValid($value) : bool
+    {
+        return in_array($value, StatusCast::VALID_VALUES);
+    }
+
+    public static function isValidIndex($index) : bool
+    {
+        if (!is_numeric($index)) {
+            return false;
+        }
+        return $index >= 0 && $index < sizeof(self::VALID_VALUES);
     }
 }
