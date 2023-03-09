@@ -27,7 +27,7 @@ class Resources
         $model = model(ResourceModel::class);
 
         // cannot reassign
-        if ($resource->parentId !== null) {
+        if ($resource->isAssigned()) {
             return false;
         }
 
@@ -39,7 +39,7 @@ class Resources
             case 'file':
                 break;
             default:
-                return false;
+                return $this->saveToDatabase($resource);
         }
 
         // create directory if it does not exist
@@ -47,23 +47,15 @@ class Resources
             return false;
         }
 
-        // move the file
-        $path = ROOTPATH . $resource->tmp_path;
-        $file = new File($path);
-        if (!$file->getRealPath()) {
+        if (!$this->moveFile($resource, SAVE_PATH . $resource->parentId)) {
             return false;
         }
-        $resource->path = $file->move(SAVE_PATH . $materialId, $resource->path)->getBasename();
-        $resource->parentId = $material->id;
 
-        // save into db
-        try {
-            $model->save($resource);
-        } catch (Exception $e) {
-            $this->revertSave($resource);
+        $resource->parentId = $material->id;
+        if (!$this->saveToDatabase($resource, true)) {
             return false;
         }
-        $this->deleteSource($path);
+
         return true;
     }
 
@@ -89,14 +81,10 @@ class Resources
             return false;
         }
 
-        // move the file
-        $path = ROOTPATH . $resource->getPath(false);
-        $file = new File($path);
-        if (!$file->getRealPath()) {
-            return true; // intentionall
+        if (!$this->moveFile($resource, UNUSED_PATH)) {
+            return !file_exists(ROOTPATH . $resource->getPath(false));
         }
-        $file->move(UNUSED_PATH, $resource->path);
-        $this->deleteSource($path);
+
         return true;
     }
 
@@ -114,15 +102,24 @@ class Resources
         } catch (Exception $e) {
             return false;
         }
+
+        if ($resource->isAsset()) {
+            return true;
+        }
+
         // remove file
         $path = ROOTPATH . $resource->getPath(false);
         if (file_exists($path) && !unlink($path)) {
             return false;
         };
         $this->deleteSource($path);
+
         return true;
     }
 
+    /**
+     * Returns all unused files in array of Resource class objects.
+     */
     public function getUnused(array $source, array &$result, string $path = 'writable/uploads') : void
     {
         foreach ($source as $key => $value) {
@@ -139,11 +136,33 @@ class Resources
             }
         } else if (substr($value, 0, 5) !== 'index') {
             $result[] = new \App\Entities\Resource([
-                    'resource_path' => $newPath . '/' . $value,
+                'resource_path' => $newPath . '/' . $value,
                 'resource_type' => 'file'
             ]);
         }
         }
+    }
+
+    /**
+     * Helper function, tries to save resource into db. Can be set
+     * to move file to its original location by doRevert parameter,
+     * in case of failure.
+     *
+     * @param Resource $resource    resource to save
+     * @param bool $doRevert        set to revert physical location
+     */
+    private function saveToDatabase(Resource $resource, bool $doRevert = false) : bool
+    {
+        try {
+            $model->save($resource);
+        } catch (Exception $e) {
+            $file = new File(ROOTPATH . $resource->getPath(false));
+            if ($file->getRealPath()) {
+                $file->move(ROOTPATH . $resource->tmp_path);
+            }
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -152,7 +171,7 @@ class Resources
      *
      * @param string $path direct child of directory we want to remove
      */
-    private function deleteSource($path) : void
+    private function deleteSource(string $path) : void
     {
         helper('filesystem');
         // get parent
@@ -167,14 +186,27 @@ class Resources
     }
 
     /**
-     * Helper function to revert move from tmp_path to a material.
-     * @param Resource $resource this will be moved if it exists
+     * Tries to move the file to its final location (given by path).
+     *
+     * @param Resource $resource to be moved
+     * @param string $dirPath directory where to move
      */
-    private function revertSave(Resource $resource) : void
+    private function moveFile(Resource $resource, string $dirPath) : bool
     {
-        $file = new File(ROOTPATH . $resource->getPath(false));
-        if ($file->getRealPath()) {
-            $file->move(ROOTPATH . $resource->tmp_path);
+        $path = ROOTPATH . $resource->tmp_path;
+
+        $file = new File($path);
+        if (!$file->getRealPath()) {
+            return false;
         }
+
+        if ($resource->isAsset() && !copy($path, $dirPath . DIRECTORY_SEPARATOR . $resource->path)) {
+            return false;
+        } else {
+            $resource->path = $file->move($dirPath, $resource->path)->getBasename();
+        }
+
+        $this->deleteSource($path);
+        return true;
     }
 }
