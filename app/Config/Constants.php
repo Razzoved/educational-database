@@ -94,7 +94,9 @@ define('EVENT_PRIORITY_NORMAL', 100);
 define('EVENT_PRIORITY_HIGH', 10);
 
 /**
- * Custom constants
+ * Custom constants used inside the application.
+ *
+ * @author Jan Martinek
  */
 define('ROOTURL', 'https://www.academicintegrity.eu');
 
