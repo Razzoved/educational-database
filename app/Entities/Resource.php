@@ -41,9 +41,9 @@ class Resource extends Entity
         return $this->type == 'thumbnail';
     }
 
-    public function getName(bool $fileExtension = true) : string
+    public function getName(bool $showExtension = true) : string
     {
-        if (!$fileExtension) {
+        if (!$showExtension) {
             $p = explode('.', $this->path);
             array_pop($p);
             return join('.', $p);
@@ -51,13 +51,13 @@ class Resource extends Entity
         return $this->path;
     }
 
-    public function getPath(bool $src = true) : string
+    public function getPath(bool $asLink = true) : string
     {
         $path = $this->path;
 
         if (!$this->isLink()) {
-            $path = $src ? (base_url() . '/') : '';
-            $path .= isset($this->parentId) ? ('public/uploads/' . $this->parentId . '/') : '';
+            $path = $asLink ? (base_url() . DIRECTORY_SEPARATOR) : '';
+            $path .= isset($this->parentId) ? ('public/uploads/' . $this->parentId . DIRECTORY_SEPARATOR) : '';
             $path .= $this->getName();
         }
 
