@@ -6,13 +6,13 @@ use App\Entities\Material as EntitiesMaterial;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use Psr\Log\LoggerInterface;
 
 use App\Models\MaterialModel;
 use App\Models\MaterialPropertyModel;
 use App\Models\RatingsModel;
 use App\Models\ResourceModel;
 use App\Models\ViewsModel;
+use Psr\Log\LoggerInterface;
 
 class Material extends BaseController
 {
@@ -21,8 +21,6 @@ class Material extends BaseController
     protected ResourceModel $resources;
     protected RatingsModel $ratings;
     protected ViewsModel $views;
-
-    protected bool $onlyPublic = true;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) : void
     {
@@ -54,16 +52,16 @@ class Material extends BaseController
     }
 
     /**
-     * Returns a view of a given page. If the page number is greater than
+     * Returns a view of a given page vith most viewed materials. If the page number is greater than
      * total number of pages, it returns the last page.
      */
     public function mostViewed() : string
     {
         $data = [
             'meta_title' => 'Materials - monthly views',
-            'title'      => 'Most viewed materials in 30 days',
+            'title'      => 'Most viewed materials in past 30 days',
             'filters'    => [],
-            'materials'  => $this->views->getTopMaterials(50),
+            'materials'  => $this->views->getTopMaterials(30),
             'pager'      => null,
             'activePage' => 'most-viewed',
         ];
@@ -92,7 +90,7 @@ class Material extends BaseController
             'meta_title' => $material->title,
             'title' => $material->title,
             'material' => $material,
-            'rating' => $this->ratings->getRating($material->id, session()->get('id') ?? ''),
+            'rating' => $this->ratings->getRating($material->id, session('id') ?? ''),
         ];
 
         return view('material_single', $data);
@@ -111,11 +109,11 @@ class Material extends BaseController
         $material = null;
 
         if (!$id) return;
-        if (session()->get('id') === null) {
+        if (session('id') === null) {
             session()->set('id', session_id());
         }
 
-        $newValue = $this->ratings->setRating($id, session()->get('id'), $value);
+        $newValue = $this->ratings->setRating($id, session('id'), $value);
         $material = ($newValue === null || $newValue === $value) ? $this->materials->find($id) : null;
 
         if ($material) {
@@ -133,7 +131,7 @@ class Material extends BaseController
 
     protected function getMaterial(int $id) : EntitiesMaterial
     {
-        $material = $this->materials->getById($id, (bool) session()->get('id') ?? false);
+        $material = $this->materials->getById($id, (bool) session('id'));
         if (!$material) throw PageNotFoundException::forPageNotFound();
         return $material;
     }
@@ -153,7 +151,7 @@ class Material extends BaseController
 
     protected function loadMaterials() : \CodeIgniter\BaseModel
     {
-        $show = (bool) session()->get('isLoggedIn') ?? false;
+        $show = (bool) session('isLoggedIn');
         $sort = $this->request->getPost('sort');
         $sortDir = $this->request->getPost('sortDir') ?? "ASC";
         $search = $this->request->getPost('search') ?? "";

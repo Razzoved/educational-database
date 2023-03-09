@@ -2,16 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use CodeIgniter\HTTP\Response;
+use CodeIgniter\Files\File;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class Resource extends BaseController
 {
     public function writable(string ...$path)
     {
-        if (!session()->get('isLoggedIn') || $path === []) {
+        if (!session('isLoggedIn') || $path === []) {
             $this->response
-                ->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED)
+                ->setStatusCode(ResponseInterface::HTTP_METHOD_NOT_ALLOWED)
                 ->send();
             return;
         };
@@ -21,7 +21,7 @@ class Resource extends BaseController
             $fullpath .= '/' . $p;
         }
 
-        $resource = new \CodeIgniter\Files\File($fullpath, true);
+        $resource = new File($fullpath, true);
 
         header('Content-Type: ' . $resource->getMimeType());
         echo file_get_contents($fullpath);

@@ -10,7 +10,7 @@ class MaterialTopRated extends Material
     {
         $data = [
             'meta_title' => 'Materials - top rated',
-            'title'      => 'Materials - top rated [all time]',
+            'title'      => 'Materials - top rated',
             'filters'    => $this->materialProperties->getUsedProperties(session('isLoggedIn') ?? false),
             'materials'  => $this->getMaterials(current_url()),
             'pager'      => $this->materials->pager,
@@ -21,7 +21,7 @@ class MaterialTopRated extends Material
 
     protected function loadMaterials() : MaterialModel
     {
-        $show = (bool) session()->get('isLoggedIn') ?? false;
+        $show = (bool) session('isLoggedIn');
         $sort = 'rating';
         $sortDir = 'DESC';
         $search = $this->request->getPost('search') ?? "";
