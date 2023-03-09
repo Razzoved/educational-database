@@ -41,6 +41,21 @@ class Resource extends Entity
         return $this->type == 'thumbnail';
     }
 
+    public function isAssigned() : bool
+    {
+        return $this->parentId !== null;
+    }
+
+    public function isAsset() : bool
+    {
+        return substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX;
+    }
+
+    public function isTemporary() : bool
+    {
+        return substr($this->tmp_path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX;
+    }
+
     public function getName(bool $showExtension = true) : string
     {
         if (!$showExtension) {
@@ -57,7 +72,7 @@ class Resource extends Entity
 
         if (!$this->isLink()) {
             $path = $asLink ? (base_url() . DIRECTORY_SEPARATOR) : '';
-            $path .= isset($this->parentId) ? ('public/uploads/' . $this->parentId . DIRECTORY_SEPARATOR) : '';
+            $path .= isset($this->parentId) ? (SAVE_PREFIX . $this->parentId . DIRECTORY_SEPARATOR) : '';
             $path .= $this->getName();
         }
 
@@ -67,11 +82,6 @@ class Resource extends Entity
     public function getFileThumbnail() : Resource
     {
         return Resource::strToFileThumbnail($this->getPath(false));
-    }
-
-    public static function ignore(?string $path) : bool
-    {
-        return $path === null || $path === 'assets/missing.png' || $path === base_url('public/assets/missing.png');
     }
 
     public static function strToThumbnail(?string $path) : Resource
