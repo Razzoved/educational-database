@@ -103,6 +103,7 @@ define('ROOTURL', 'https://www.academicintegrity.eu');
 define('PERM', 'uploads/');
 define('TEMP', 'temp/');
 
+define('ASSET_PREFIX', 'public/assets/');
 define('SAVE_PREFIX', 'public/' . PERM);
 define('TEMP_PREFIX', 'public/' . TEMP);
 
