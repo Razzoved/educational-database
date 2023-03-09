@@ -103,10 +103,10 @@ define('ROOTURL', 'https://www.academicintegrity.eu');
 define('PERM', 'uploads/');
 define('TEMP', 'temp/');
 
-define('SAVE_PREFIX', FCPATH . PERM);
-define('TEMP_PREFIX', FCPATH . TEMP);
+define('SAVE_PREFIX', 'public/' . PERM);
+define('TEMP_PREFIX', 'public/' . TEMP);
 
-define('SAVE_PATH', ROOTPATH . PUPLOAD);
-define('TEMP_PATH', ROOTPATH . TUPLOAD);
+define('SAVE_PATH', ROOTPATH . SAVE_PREFIX);
+define('TEMP_PATH', ROOTPATH . TEMP_PREFIX);
 
 define('UNUSED_PATH', TEMP_PATH . 'unused/');
