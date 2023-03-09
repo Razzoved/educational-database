@@ -100,8 +100,13 @@ define('EVENT_PRIORITY_HIGH', 10);
  */
 define('ROOTURL', 'https://www.academicintegrity.eu');
 
-define('PUPLOAD', 'public/uploads/');
-define('WUPLOAD', 'writable/uploads/');
+define('PERM', 'uploads/');
+define('TEMP', 'temp/');
 
-define('PUPPATH', ROOTPATH . PUPLOAD);
-define('WUPPATH', ROOTPATH . WUPLOAD);
+define('PUPLOAD', 'public/' . PERM);
+define('TUPLOAD', 'public/' . TEMP);
+
+define('SAVE_PATH', ROOTPATH . PUPLOAD);
+define('TEMP_PATH', ROOTPATH . TUPLOAD);
+
+define('UNUSED_PATH', TEMP_PATH . 'unused/');
