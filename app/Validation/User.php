@@ -4,14 +4,15 @@ namespace App\Validation;
 
 class User
 {
-    public function validUserEmail(?string $email, ?string $savedEmail) : bool
+    public function validUserEmail(string $email) : bool
     {
-        return !is_null($savedEmail) && $savedEmail === $email;
+        return model(UserModel::class)->getByEmail($email) !== null;
     }
 
 
-    public function validUserPassword(?string $password, ?string $savedPassword) : bool
+    public function validUserPassword(string $password, string $email) : bool
     {
-        return !is_null($savedPassword) && password_verify($password, $savedPassword);
+        $user = model(UserModel::class)->getByEmail($email);
+        return $user !== null && password_verify($password, $user->password);
     }
 }
