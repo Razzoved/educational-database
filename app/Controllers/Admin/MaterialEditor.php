@@ -114,8 +114,8 @@ class MaterialEditor extends BaseController
                     $material,
                     $this->request->getPost('relations') ?? []
             );
-            $this->moveTemporaryFiles($material)
-                 ->deleteRemovedFiles($material);
+            $this->deleteRemovedFiles($material)
+                 ->moveTemporaryFiles($material);
         } catch (Exception $e) {
             $this->validator->setError('saving:', $e->getMessage());
             return $this->setupPost($material)->getEditorErrorView();
