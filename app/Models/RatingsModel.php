@@ -76,7 +76,7 @@ class RatingsModel extends Model
         return $this->builder()
                      ->where('material_id', $materialId)
                      ->where('rating_uid', $userId)
-                     ->get(1)
-                     ->getCustomRowObject(1, Rating::class);
+                     ->get()
+                     ->getCustomRowObject(0, Rating::class);
     }
 }

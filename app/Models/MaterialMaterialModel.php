@@ -90,7 +90,6 @@ class MaterialMaterialModel extends Model
                ->delete();
         }
 
-        echo json_encode($newRelations);
         foreach ($toCreate as $k => $v) {
             echo $k;
             $db->table($this->table)->insert([

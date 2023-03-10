@@ -149,6 +149,13 @@ class MaterialEditor extends BaseController
             return;
         }
 
+        $post = array($material->getThumbnail()->getPath(false));
+        foreach ($material->getFiles() as $file) {
+            $post[] = $file->getPath(false);
+        }
+        $this->request->setGlobal('post', ['unused_files' => $post]);
+        $this->deleteRemovedFiles($material);
+
         try {
             $this->materials->delete($material->id);
         } catch (Exception $e) {
@@ -156,11 +163,6 @@ class MaterialEditor extends BaseController
             return;
         }
 
-        $_POST['unused_files'] = array($material->getThumbnail()->getPath(false));
-        foreach ($material->getFiles() as $file) {
-            $_POST['unused_files'][] = $file->getPath(false);
-        }
-        $this->deleteRemovedFiles($material);
 
         echo json_encode($material->id);
     }
@@ -239,8 +241,11 @@ class MaterialEditor extends BaseController
 
     private function lastSegment(string $path) : string
     {
-        while (str_contains($path, DIRECTORY_SEPARATOR)) {
-            $path = explode(DIRECTORY_SEPARATOR, $path, 2)[1];
+        while (str_contains($path, '/')) {
+            $path = explode('/', $path, 2)[1];
+        }
+        while (str_contains($path, '\\')) {
+            $path = explode('\\', $path, 2)[1];
         }
         return $path;
     }
@@ -327,7 +332,10 @@ class MaterialEditor extends BaseController
             if ($resource->isTemporary()) {
                 $this->resourceLibrary->delete($resource);
             } else {
-                $resource = model(ResourceModel::class)->getByPath($material->id, $path);
+                $resource = model(ResourceModel::class)->getByPath(
+                    $material->id,
+                    $this->lastSegment($resource->path)
+                );
                 $this->resourceLibrary->unassign($resource);
             }
         }

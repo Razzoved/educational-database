@@ -69,8 +69,8 @@ class UserModel extends Model
         return $this->builder()
                     ->select('*')
                     ->where('user_email', $email)
-                    ->get(1)
-                    ->getCustomRowObject(1, User::class);
+                    ->get()
+                    ->getCustomRowObject(0, User::class);
     }
 
     public function deleteEmail(string $email) : void

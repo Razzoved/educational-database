@@ -51,6 +51,6 @@ class ResourceModel extends Model
                     ->where('material_id', $materialId)
                     ->where('resource_path', $path)
                     ->get()
-                    ->getCustomRowObject(1, Resource::class);
+                    ->getCustomRowObject(0, Resource::class);
     }
 }

@@ -111,8 +111,8 @@ class MaterialPropertyModel extends Model
                     ->join('properties', "$this->table.property_id = properties.property_id", 'right')
                     ->groupBy('properties.property_id')
                     ->where('properties.property_id', $id)
-                    ->get(1)
-                    ->getCustomRowObject(1, Property::class);
+                    ->get()
+                    ->getCustomRowObject(0, Property::class);
     }
 
     /**

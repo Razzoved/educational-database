@@ -81,8 +81,8 @@ class PropertyModel extends Model
         return $this->builder()
              ->where('property_tag', $tag)
              ->where('property_value', $value)
-             ->get(1)
-             ->getCustomRowObject(1, Property::class);
+             ->get()
+             ->getCustomRowObject(0, Property::class);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Libraries;
 
 use App\Entities\Resource;
 use CodeIgniter\Files\File;
+use CodeIgniter\HTTP\Response;
 
 /**
  * Library for working with files without the need to take care of database
@@ -106,15 +107,15 @@ class Resources
             return false;
         }
 
+        if (!$this->moveFile($resource, UNUSED_PATH)) {
+            return !file_exists(ROOTPATH . $resource->getPath(false));
+        }
+
         // remove from db
         try {
             if ($resource->id > 0) model(ResourceModel::class)->delete($resource->id);
         } catch (Exception $e) {
             return false;
-        }
-
-        if (!$this->moveFile($resource, UNUSED_PATH)) {
-            return !file_exists(ROOTPATH . $resource->getPath(false));
         }
 
         return true;
@@ -181,7 +182,7 @@ class Resources
      * @param string $message   Error message that will be shown
      * @param int $errorCode    HTTP error to be returned
      */
-    public static function echoError(
+    public function echoError(
         string $message = "Internal server error!",
         int $errorCode = Response::HTTP_INTERNAL_SERVER_ERROR
     ) : void
@@ -225,7 +226,7 @@ class Resources
     {
         helper('filesystem');
         // get parent
-        $path = explode('/', $path);
+        $path = explode('/', str_replace('\\', '/', $path));
         array_pop($path);
         $path = implode('/', $path);
 
@@ -252,6 +253,10 @@ class Resources
      */
     private function moveFile(Resource &$resource, string $dirPath) : bool
     {
+        if ($resource->tmp_path === null) {
+            $resource->tmp_path = $resource->getPath(false);
+        }
+
         $path = ROOTPATH . $resource->tmp_path;
 
         $file = new File($path);
