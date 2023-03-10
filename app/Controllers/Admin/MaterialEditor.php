@@ -98,9 +98,11 @@ class MaterialEditor extends BaseController
 
         $material = new EntitiesMaterial($this->request->getPost());
 
-        $this->resourceFromArray($material->resources, $this->request->getPost('thumbnail'), 'thumbnail');
-        $this->resourceFromArray($material->resources, $this->request->getPost('files'), 'file');
-        $this->resourceFromArray($material->resources, $this->request->getPost('links'), 'link');
+        $material->resources = $this->loadResources(
+            $this->request->getPost('thumbnail'),
+            $this->request->getPost('files'),
+            $this->request->getPost('links')
+        );
 
         $material->properties = $this->loadProperties(
             $this->request->getPost('properties')
@@ -207,18 +209,35 @@ class MaterialEditor extends BaseController
     }
 
     /**
-     * Non-clean helper function that adds resources to target.
-     * Ignores all paths that lead to resources marked as ignore.
-     * {@see App\Entities\Resource::ignore(?string)}
+     * Returns all resources as an array of objects.
      *
-     * @param array $target saves resources here
-     * @param array $items  takes data from here
-     * @param array $type   type to be added
+     * @param ?string $thumbnail    path to thumbnail
+     * @param ?array $files         array of tmpPath => name
+     * @param ?array $links         array of idx     => path
+     *
+     * @return array array of resources
      */
-    private function resourcesFromArray(array &$target, ?array $items, string $type) : void
+    private function loadResources(?string $thumbnail, ?array $files, ?array $links) : array
+    {
+        $resources = array();
+
+        $this->toResources($resources, is_null($thumbnail) ? [] : [$thumbnail], 'thumbnail');
+        $this->toResources($resources, $files ?? [], 'file');
+        $this->toResources($resources, $links ?? [], 'link');
+
+        return $resources;
+    }
+
+    /**
+     * Non-clean helper function that adds resources to target.
+     *
+     * @param array $target  saves resources here
+     * @param array $items   takes data from here, can be: string|array
+     * @param array $type    type to be added
+     */
+    private function toResources(array &$target, array $items, string $type) : void
     {
         foreach ($items ?? [] as $tmpPath => $path) {
-            if (EntitiesResource::ignore($path)) continue;
             $target[] = new EntitiesResource([
                 'type'     => $type,
                 'path'     => $type === 'link' ? $path : $this->lastSegment($path),
@@ -242,7 +261,7 @@ class MaterialEditor extends BaseController
      * @param ?array $properties properties to find ids for
      * @return array of App\Entities\Property objects
      */
-    private function propertiesFromArray(?array $properties) : array
+    private function loadProperties(?array $properties) : array
     {
         $result = [];
         foreach ($properties ?? [] as $tag => $values) {
@@ -310,7 +329,7 @@ class MaterialEditor extends BaseController
     private function deleteRemovedFiles(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($this->request->getPost('unused_files') ?? [] as $path) {
-            $resource = new EntitesResource(['path' => $path, 'tmp_path' => $path]);
+            $resource = new EntitiesResource(['path' => $path, 'tmp_path' => $path]);
             if ($resource->isTemporary()) {
                 $this->resourceLibrary->delete($resource);
             } else {
