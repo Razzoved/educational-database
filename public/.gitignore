@@ -11,3 +11,7 @@ temp/
 !assets/
 !js/
 !css/
+!.htaccess
+!favicon.ico
+!index.php
+!robots.txt
