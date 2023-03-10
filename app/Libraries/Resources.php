@@ -14,6 +14,38 @@ use CodeIgniter\Files\File;
 class Resources
 {
     /**
+     * Stores the file while updating its data so it can be used
+     * elsewhere later.
+     *
+     * @param File $file splfile we want to store
+     */
+    public function store(File $file) : Resource
+    {
+        helper('file');
+
+        $date = date('Ymd', time());
+        $dirPath = TEMP_PATH . $date;
+
+        if (!is_dir($dirPath) && !mkdir($dirPath, 0777, true)) {
+            return null;
+        }
+
+        if ($file->isValid() && !$file->hasMoved()) {
+            $name = $file->getName();
+            $resource = new Resource([
+                'tmp_path'  => 'writable/uploads/' . $file->store(null, $name),
+                'path'      => $name
+            ]);
+            if ($this->moveFile($resource, $dirPath)) {
+                $resource->tmp_path = TEMP_PREFIX . $date . '/' . $resource->path;
+                return $resource;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Assign a given resource to some material. If another material with
      * the same name already exists in targeted material, adds a number
      * behind assigned one.
@@ -175,23 +207,32 @@ class Resources
     {
         helper('filesystem');
         // get parent
-        $path = explode(DIRECTORY_SEPARATOR, $path);
+        $path = explode('/', $path);
         array_pop($path);
-        $path = implode(DIRECTORY_SEPARATOR, $path);
+        $path = implode('/', $path);
 
         // remove folder
-        if (is_dir($path) && count(directory_map($path, 0, true)) === 0) {
-            rmdir($path);
+        if (is_dir($path)) {
+            $dirMap = directory_map($path, 0, true);
+            if (count($dirMap) === 1 && $dirMap === [0 => 'index.html']) {
+                unlink($path . '/index.html');
+            }
+            $dirMap = directory_map($path, 0, true);
+            if (count($dirMap) === 0) {
+                rmdir($path);
+            }
         }
     }
 
     /**
      * Tries to move the file to its final location (given by path).
      *
+     * WARN: unclean function, changes resource tmp_path and path.
+     *
      * @param Resource $resource to be moved
      * @param string $dirPath directory where to move
      */
-    private function moveFile(Resource $resource, string $dirPath) : bool
+    private function moveFile(Resource &$resource, string $dirPath) : bool
     {
         $path = ROOTPATH . $resource->tmp_path;
 
