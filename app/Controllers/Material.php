@@ -131,7 +131,7 @@ class Material extends BaseController
 
     protected function getMaterial(int $id) : EntitiesMaterial
     {
-        $material = $this->materials->getById($id, (bool) session('id'));
+        $material = $this->materials->getById($id);
         if (!$material) throw PageNotFoundException::forPageNotFound();
         return $material;
     }
