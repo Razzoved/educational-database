@@ -74,14 +74,14 @@ class ViewsModel extends Model
             ->get()
             ->getResultArray();
         $last = end($all);
-        $views = 0;
+        $views = 1;
 
         try {
             if ($last === false || $last['created_at'] !== date('Y-m-d', time())) {
-                $this->insert(['material_id' => $material->id, 'material_views' => ++$views]);
+                $this->insert(['material_id' => $material->id, 'material_views' => $views]);
             } else {
                 $views += $last['material_views'];
-                $this->update($last['id'], ['material_views' => ++$views]);
+                $this->update($last['id'], ['material_views' => $views]);
             }
             $material->views++;
             model(MaterialModel::class)->update($material->id, $material);
