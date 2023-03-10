@@ -105,7 +105,7 @@ class MaterialModel extends Model
         return ($material) ? $this->verifyAndLoad($material) : null;
     }
 
-    public function handleUpdate(Material $material, array $relatedMaterials = []) : bool
+    public function handleUpdate(Material $material, array $relatedMaterials = []) : int
     {
         $material->blame = session('user')->id;
         $m = $this->find($material->id);
@@ -126,11 +126,10 @@ class MaterialModel extends Model
 
         model(MaterialMaterialModel::class)->handleUpdate($material, $relatedMaterials, $this->db);
         model(MaterialPropertyModel::class)->handleUpdate($material, $this->db);
-        model(ResourceModel::class)->handleUpdate($material, $this->db);
 
         $this->db->transComplete();
 
-        return $this->db->transStatus();
+        return $material->id;
     }
 
     private function verifyAndLoad(Material $material) {
