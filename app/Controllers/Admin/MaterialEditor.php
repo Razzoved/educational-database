@@ -10,6 +10,7 @@ use App\Libraries\Resources;
 use App\Models\MaterialMaterialModel;
 use App\Models\MaterialModel;
 use App\Models\PropertyModel;
+use App\Models\ResourceModel;
 use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RequestInterface;
@@ -333,7 +334,7 @@ class MaterialEditor extends BaseController
             if ($resource->isTemporary()) {
                 $this->resourceLibrary->delete($resource);
             } else {
-                $resource = $this->resources->getByPath($material->id, $path);
+                $resource = model(ResourceModel::class)->getByPath($material->id, $path);
                 $this->resourceLibrary->unassign($resource);
             }
         }
