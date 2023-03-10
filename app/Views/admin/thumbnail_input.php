@@ -46,18 +46,15 @@
         formData.append("file", file)
 
         $.ajax({
-            url: '<?= base_url('admin/files/upload') ?>',
+            url: '<?= base_url("admin/files/uploadThumbnail") ?>',
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             type: 'POST',
             data: formData,
             contentType: false,
             processData: false,
-            success: function(files) {
-                files = JSON.parse(files);
-                for (var name in files) {
-                    newThumbnail(files[name]);
-                    console.log('success:', name);
-                }
+            success: function(file) {
+                newThumbnail(JSON.parse(file));
+                console.log('success:', file);
             },
             error: (jqHXR) => showError(jqHXR)
         });
@@ -65,8 +62,8 @@
 
     function newThumbnail(filepath)
     {
-        if (filepath === undefined || filepath === "") {
-            console.error(filename, 'File path is empty');
+        if (filepath === undefined) {
+            console.error('File does not exist');
             return;
         }
 
@@ -78,6 +75,6 @@
         }
 
         image.src = '<?= base_url() ?>' + '/' + filepath;
-        path.value = filepath;
+        path.value = '<?= base_url() ?>' + '/' + filepath;
     }
 </script>

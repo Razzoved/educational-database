@@ -50,6 +50,16 @@ class Resource extends BaseController
         return view(Config::VIEW . 'resource/table', $data);
     }
 
+    public function uploadThumbnail() : void
+    {
+        $resource = $this->resourceLibrary->store($this->request->getFile('file'));
+        if ($resource === null) {
+            $this->echoError('Thumbnail could not be stored');
+            return;
+        }
+        echo json_encode($resource->tmp_path);
+    }
+
     public function upload() : void
     {
         $views = array();
