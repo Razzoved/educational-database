@@ -74,7 +74,7 @@ class MaterialEditor extends BaseController
 
     public function get(int $id) : string
     {
-        $material = $this->materials->getById($id, true);
+        $material = $this->materials->getById($id);
         if (!$material) {
             throw PageNotFoundException::forPageNotFound();
         }
@@ -110,7 +110,10 @@ class MaterialEditor extends BaseController
         );
 
         try {
-            $this->materials->handleUpdate($material, $this->request->getPost('relations') ?? []);
+            $material->id = $this->materials->handleUpdate(
+                    $material,
+                    $this->request->getPost('relations') ?? []
+            );
             $this->moveTemporaryFiles($material)
                  ->deleteRemovedFiles($material);
         } catch (Exception $e) {
@@ -133,44 +136,31 @@ class MaterialEditor extends BaseController
             $this->response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED, "Request is not an AJAX request");
             return;
         }
-        $id = $this->request->getPost('id') ?? -1;
-        if ($id < 0) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'Validation error',
-                'message' => "Id is required"
-            ]);
+
+        $id = $this->request->getPost('id');
+        if ($id <= 0) {
+            $this->resourceLibrary->echoError('Invalid material id');
             return;
         }
-        $material = $this->materials->getById((int) $id, true);
+
+        $material = $this->materials->getById((int) $id);
         if ($material === null) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'Database error',
-                'message' => "Material not found"
-            ]);
+            $this->resourceLibrary->echoError('Material does not exist');
             return;
         }
 
         try {
             $this->materials->delete($material->id);
-            $this->deleteRemovedFiles(array(
-                $material->getThumbnail()->getPath(false)
-            ));
-            $this->deleteRemovedFiles(array_map(
-                function($r) { return $r->getPath(false); },
-                $material->getFiles()
-            ));
-            $dirPath = ROOTPATH . '/public/uploads/' . $material->id;
-            if (is_dir($dirPath)) rmdir($dirPath);
         } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_CONFLICT);
-            echo view('errors/error_modal', [
-                'title' => 'Material saving erro',
-                'message' => $e->getMessage()
-            ]);
+            $this->resourceLibrary->echoError('Could not delete material: ' . $e->getMessage());
             return;
         }
+
+        $_POST['unused_files'] = array($material->getThumbnail()->getPath(false));
+        foreach ($material->getFiles() as $file) {
+            $_POST['unused_files'][] = $file->getPath(false);
+        }
+        $this->deleteRemovedFiles($material);
 
         echo json_encode($material->id);
     }
@@ -331,6 +321,9 @@ class MaterialEditor extends BaseController
     {
         foreach ($this->request->getPost('unused_files') ?? [] as $path) {
             $resource = new EntitiesResource(['path' => $path, 'tmp_path' => $path]);
+            if ($resource->isAsset()) {
+                continue;
+            }
             if ($resource->isTemporary()) {
                 $this->resourceLibrary->delete($resource);
             } else {
