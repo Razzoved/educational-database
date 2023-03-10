@@ -31,7 +31,7 @@ class StatusCast extends BaseCast
 
     public static function getIndex($value) : int
     {
-        return array_search($value, StatusCast::VALID_VALUES) ?? 0;
+        return (int) array_search($value, StatusCast::VALID_VALUES) ?? 0;
     }
 
     public static function isValid($value) : bool
