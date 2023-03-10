@@ -62,9 +62,6 @@ $routes->group('/', function($routes) {
     // AUTHENTICATION
     $routes->get('login', 'Login::index');
     $routes->post('login', 'Login::authenticate');
-
-    // RESOURCE VIEWER
-    $routes->get('writable/(:any)', 'Resource::writable/$1');
 });
 
 /* Viewable by authorised users */
