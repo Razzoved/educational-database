@@ -106,7 +106,7 @@ class Material extends Entity
     public function getThumbnail() : Resource
     {
         foreach ($this->resources as $r) {
-            if ($r->type == 'thumbnail') {
+            if ($r->type === 'thumbnail') {
                 return $r;
             };
         }

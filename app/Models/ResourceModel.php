@@ -36,13 +36,13 @@ class ResourceModel extends Model
                     ->getCustomResultObject(Resource::class);
     }
 
-    public function getThumbnail(int $materialId) : array
+    public function getThumbnail(int $materialId) : ?Resource
     {
         return $this->builder()
                     ->where('material_id', $materialId)
                     ->where('resource_type', 'thumbnail')
-                    ->get(1)
-                    ->getCustomResultObject(Resource::class);
+                    ->get()
+                    ->getCustomRowObject(0, Resource::class);
     }
 
     public function getByPath(int $materialId, string $path) : ?Resource
