@@ -108,7 +108,7 @@ class Resources
 
         // remove from db
         try {
-            model(ResourceModel::class)->delete($resource->id);
+            if ($resource->id > 0) model(ResourceModel::class)->delete($resource->id);
         } catch (Exception $e) {
             return false;
         }
@@ -130,7 +130,7 @@ class Resources
     {
         // remove from db
         try {
-            model(ResourceModel::class)->delete($resource->id);
+            if ($resource->id > 0) model(ResourceModel::class)->delete($resource->id);
         } catch (Exception $e) {
             return false;
         }
