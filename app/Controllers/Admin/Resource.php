@@ -41,7 +41,7 @@ class Resource extends BaseController
 
         $data = [
             'meta_title' => 'Administration - unused files',
-            'title' => 'Assign files to materials',
+            'title' => 'Unused files',
             'resources' => $unused,
             'targets' => $targets,
             'activePage' => 'files',

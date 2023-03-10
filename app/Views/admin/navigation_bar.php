@@ -13,7 +13,7 @@
                 alt="ENAI logo"
                 onclick="window.location.href='<?= $refUrl ?>'">
         <a <?= $activePage === 'dashboard' ? 'class="active"' : '' ?> href="<?= base_url('') ?>")?>
-            <i class="fa-solid fa-gauge"></i> Public
+            <!-- <i class="fa-solid fa-gauge"></i> --> Public
         </a>
         <a <?= $activePage === 'materials' ? 'class="active"' : '' ?> href="<?= base_url('admin/materials') ?>")?>
             <i class="fa-solid fa-box-archive"></i> Materials
@@ -22,7 +22,7 @@
             <i class="fa-solid fa-tags"></i> Tags
         </a>
         <a <?= $activePage === 'files' ? 'class="active"' : '' ?> href="<?= base_url('admin/files') ?>")?>
-            <i class="fa-solid fa-file"></i> Unused files
+            <i class="fa-solid fa-file"></i> Files
         </a>
         <a <?= $activePage === 'users' ? 'class="active"' : '' ?> href="<?= base_url('admin/users') ?>")?>
             <i class="fa-solid fa-user"></i> Users

@@ -66,7 +66,7 @@ $routes->group('/', function($routes) {
 
 /* Viewable by authorised users */
 $routes->group('admin', function($routes) {
-    $routes->addRedirect('', 'admin/dashboard');
+    $routes->addRedirect('', 'admin/materials');
     $routes->add('dashboard', 'Admin\Dashboard::index');
     $routes->add('logout', 'Admin\User::logout');
     $routes->add('profile', 'Admin\User::profile');
