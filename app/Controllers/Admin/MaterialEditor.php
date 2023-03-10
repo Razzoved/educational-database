@@ -92,7 +92,7 @@ class MaterialEditor extends BaseController
      */
     public function save()
     {
-        if (!$this->validate($rules)) {
+        if (!$this->validate($this->rules)) {
             return $this->getEditorErrorView();
         }
 
