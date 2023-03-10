@@ -86,7 +86,7 @@ class Resource extends Entity
 
     public static function strToThumbnail(?string $path) : Resource
     {
-        $asset = 'public/assets/missing.png';
+        $asset = ASSET_PREFIX . 'missing.png';
 
         if ($path && file_exists(ROOTPATH . $path)) {
             $asset = $path;
@@ -100,7 +100,7 @@ class Resource extends Entity
 
     public static function strToFileThumbnail(?string $path) : Resource
     {
-        $prefix = 'public/assets/';
+        $prefix = ASSET_PREFIX;
         $asset = 'missing.png';
 
         if ($path) {
