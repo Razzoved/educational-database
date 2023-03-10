@@ -62,7 +62,7 @@
         console.log("SENDING", file);
 
         $.ajax({
-            url: '<?= base_url('admin/files/upload') ?>',
+            url: '<?= base_url("admin/files/upload") ?>',
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             type: 'POST',
             data: formData,
@@ -96,10 +96,13 @@
         let path = element.getAttribute('data-value');
         $.ajax({
             type: 'POST',
-            url: '<?= base_url('admin/files/delete') ?>',
+            url: '<?= base_url("admin/files/delete") ?>',
             dataType: 'json',
             data: {path: path},
             success: function(unused) {
+                if (typeof addToUnused === 'function' && path !== undefined && path !== '') {
+                    addToUnused(path);
+                }
                 element.remove();
             },
             error: (jqXHR) => showError(jqXHR)

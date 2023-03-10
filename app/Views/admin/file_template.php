@@ -23,7 +23,6 @@
                 value="<?= $value ?? '' ?>"
                 <?php if (!isset($readonly) || $readonly === true) echo 'readonly' ?>
                 required>
-        <!-- TODO: implement removeFile -->
         <button type="button" <?php if (isset($id)) echo "onclick=\"removeFile('file-$id')\"" ?> class="btn" style="font-weight: bold; float: right">&#10005</button>
     </div>
 </div>
