@@ -14,6 +14,10 @@
             foreach($resources as $index => $resource) {
                 echo view('components/resource_as_unused', ['resource' => $resource, 'index' => $index, 'showButtons' => true]);
             }
+            if ($resources === []) {
+                echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
+                echo '<h2 style="text-align:center">None were found.</h2>';
+            }
         ?>
         </div>
     </main>
