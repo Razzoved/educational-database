@@ -8,6 +8,6 @@ class Material
 {
     public function validStatus(?string $status) : bool
     {
-        return StatusCast::isValid($status) || StatusCast::isValidIndex(status);
+        return StatusCast::isValid($status) || StatusCast::isValidIndex($status);
     }
 }
