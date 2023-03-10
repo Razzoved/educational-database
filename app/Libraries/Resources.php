@@ -4,7 +4,9 @@ namespace App\Libraries;
 
 use App\Entities\Resource;
 use CodeIgniter\Files\File;
+use CodeIgniter\HTTP\Files\UploadedFile;
 use CodeIgniter\HTTP\Response;
+use Exception;
 
 /**
  * Library for working with files without the need to take care of database
@@ -30,9 +32,9 @@ class Resources
      *
      * @param File $file splfile we want to store
      */
-    public function store(File $file) : Resource
+    public function store(UploadedFile $file) : Resource
     {
-        helper('file');
+        helper('form');
 
         $date = date('Ymd', time());
         $dirPath = TEMP_PATH . $date;
@@ -44,7 +46,7 @@ class Resources
         if ($file->isValid() && !$file->hasMoved()) {
             $name = $file->getName();
             $resource = new Resource([
-                'tmp_path'  => 'writable/uploads/' . $file->store(null, $name),
+                'tmp_path'  => 'writable/uploads/' . $file->store(),
                 'path'      => $name
             ]);
             if ($this->moveFile($resource, $dirPath)) {
@@ -77,7 +79,7 @@ class Resources
         switch ($resource->type) {
             case 'thumbnail':
                 $old = model(ResourceModel::class)->getThumbnail($materialId);
-                if ($old) $this->unassign($materialId);
+                if ($old) $this->unassign($old);
             case 'file':
                 // create directory if it does not exist
                 if (!is_dir(SAVE_PATH . $materialId) && !mkdir(SAVE_PATH . $materialId)) {

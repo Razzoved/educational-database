@@ -9,18 +9,14 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 use App\Models\ResourceModel;
-use CodeIgniter\HTTP\Response;
-
-use function PHPUnit\Framework\isNan;
 
 class Resource extends BaseController
 {
-    private ResourceModel $resources;
+    private Resources $resourceLibrary;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
-        $this->resources = model(ResourceModel::class);
         $this->resourceLibrary = new Resources($this->response);
     }
 
@@ -100,7 +96,7 @@ class Resource extends BaseController
         echo json_encode($path);
     }
 
-    public function delete(bool $doEcho = true) : void
+    public function delete() : void
     {
         $success = $this->resourceLibrary->delete(new \App\Entities\Resource([
             'id' => $this->request->getPost('id'),
