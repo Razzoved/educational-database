@@ -150,25 +150,34 @@ class Resources
         return true;
     }
 
+    public function getUnused() : array
+    {
+        helper('filesystem');
+        $result = array();
+        $this->doUnusedRecursive(
+            $result,
+            directory_map(TEMP_PATH, 0, true),
+            TEMP_PREFIX
+        );
+        return $result;
+    }
+
     /**
      * Returns all unused files in array of Resource class objects.
      */
-    public function getUnused(array $source, array &$result, string $path = 'writable/uploads') : void
+    private function doUnusedRecursive(array &$target, array $source, string $path) : void
     {
         foreach ($source as $key => $value) {
             $key = (string) $key;
-
-            $newPath = $path;
-            if (substr($key, -1) === '\\') {
-                $newPath .= '/' . rtrim((string) $key, '\\');
-            }
+            $newPath = rtrim($path, '/');
 
             if (is_array($value)) {
-                if ($key < date('Ymd', time())) {
-                    $this->getUnusedArray($value, $result, $newPath);
+                $newPath .= '/' . rtrim((string) $key, '\\'); // dir ends with '\'
+                if ($key < date('Ymd\\', time()) || $key === 'unused\\') {
+                    $this->doUnusedRecursive($target, $value, $newPath);
                 }
             } else if (substr($value, 0, 5) !== 'index') {
-                $result[] = new \App\Entities\Resource([
+                $target[] = new \App\Entities\Resource([
                     'resource_path' => $newPath . '/' . $value,
                     'resource_type' => 'file'
                 ]);

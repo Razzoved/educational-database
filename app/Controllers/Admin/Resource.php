@@ -28,9 +28,6 @@ class Resource extends BaseController
     {
         helper('filesystem');
 
-        $unused = array();
-        $this->getUnusedArray(directory_map(WRITEPATH . 'uploads/'), $unused);
-
         $targets = array();
         $materials = model(MaterialModel::class)->getData(null, null, false)
                                                 ->get()
@@ -41,9 +38,9 @@ class Resource extends BaseController
 
         $data = [
             'meta_title' => 'Administration - unused files',
-            'title' => 'Unused files',
-            'resources' => $unused,
-            'targets' => $targets,
+            'title'      => 'Unused files',
+            'resources'  => $this->resourceLibrary->getUnused(),
+            'targets'    => $targets,
             'activePage' => 'files',
         ];
 
@@ -54,7 +51,7 @@ class Resource extends BaseController
     {
         $resource = $this->resourceLibrary->store($this->request->getFile('file'));
         if ($resource === null) {
-            $this->echoError('Thumbnail could not be stored');
+            $this->resourceLibrary->echoError('Thumbnail could not be stored');
             return;
         }
         echo json_encode($resource->tmp_path);
@@ -75,7 +72,7 @@ class Resource extends BaseController
         }
 
         if ($views === array()) {
-            $this->echoError('No files were uploaded');
+            $this->resourceLibrary->echoError('No files were uploaded');
             return;
         }
 
@@ -93,7 +90,7 @@ class Resource extends BaseController
 
         $path = $this->request->getPost('tmp_path');
         if ($path === null) {
-            $this->echoError('No file present for assigning');
+            $this->resourceLibrary->echoError('No file present for assigning');
             return;
         }
 
@@ -113,7 +110,7 @@ class Resource extends BaseController
                 'resource_type' => $replaceThumbnail ? 'thumbnail' : 'file',
             ]);
         } else {
-            $this->echoError('File does not exist');
+            $this->resourceLibrary->echoError('File does not exist');
             return;
         }
 
@@ -132,7 +129,7 @@ class Resource extends BaseController
 
         $resource = $this->resources->find($resourceId);
         if (!$resource) {
-            $this->echoError('Resource id is not present in database');
+            $this->resourceLibrary->echoError('Resource id is not present in database');
             return;
         }
 
@@ -147,50 +144,12 @@ class Resource extends BaseController
     public function deleteUnsaved(string $path, bool $doEcho = true) : void
     {
         if (!$path || !unlink(ROOTPATH . $path)) {
-            $this->echoError('Could not delete file');
+            $this->resourceLibrary->echoError('Could not delete file');
             return;
         }
 
         if ($doEcho) {
             echo json_encode($path);
         }
-    }
-
-    private function getUnusedArray(array $source, array &$result, string $path = 'writable/uploads') : void
-    {
-        foreach ($source as $key => $value) {
-            $key = (string) $key;
-
-            $newPath = $path;
-            if (substr($key, -1) === '\\') {
-                $newPath .= '/' . rtrim((string) $key, '\\');
-            }
-
-            if (is_array($value)) {
-                if ($key < date('Ymd', time())) {
-                    $this->getUnusedArray($value, $result, $newPath);
-                }
-            } else if (substr($value, 0, 5) !== 'index') {
-                $result[] = new \App\Entities\Resource([
-                    'resource_path' => $newPath . '/' . $value,
-                    'resource_type' => 'file'
-                ]);
-            }
-        }
-    }
-
-    /**
-     * Utility function for easier sending of errors.
-     */
-    private function echoError(
-        string $message = "Internal server error!",
-        int $errorCode = Response::HTTP_INTERNAL_SERVER_ERROR,
-        string $title = "Resource manipulation"
-    ) : void {
-        $this->response->setStatusCode($errorCode);
-        echo view('errors/error_modal', [
-            'title'     => $title,
-            'message'   => $message
-        ]);
     }
 }
