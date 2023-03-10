@@ -76,12 +76,33 @@
         return newDiv;
     }
 
+    function removeLink(id)
+    {
+        let element = document.getElementById(id);
+        let path = element.querySelector('input').value;
+
+        if (typeof addToUnused === 'function' && path !== undefined && path !== '') {
+            addToUnused(path);
+        }
+        element.remove();
+    }
+
     function verifyLink() {
+        // check for pattern
         let uploader = document.getElementById('link-uploader');
         if (uploader.value !== "" && !uploader.value.match('^' + uploader.pattern)) {
             uploader.classList.add('border-danger');
             return false;
         }
+        // check for duplicates
+        let linkGroup = document.getElementById('link-group').querySelectorAll('input');
+        for (var key in linkGroup) {
+            if (uploader.value === linkGroup[key].value) {
+                uploader.classList.add('border-danger');
+                return false;
+            }
+        }
+        // its ok
         uploader.classList.remove('border-danger');
         return uploader.value !== "";
     }

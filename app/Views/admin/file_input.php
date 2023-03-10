@@ -94,18 +94,10 @@
     {
         let element = document.getElementById(id);
         let path = element.getAttribute('data-value');
-        $.ajax({
-            type: 'POST',
-            url: '<?= base_url("admin/files/delete") ?>',
-            dataType: 'json',
-            data: {path: path},
-            success: function(unused) {
-                if (typeof addToUnused === 'function' && path !== undefined && path !== '') {
-                    addToUnused(path);
-                }
-                element.remove();
-            },
-            error: (jqXHR) => showError(jqXHR)
-        })
+
+        if (typeof addToUnused === 'function' && path !== undefined && path !== '') {
+            addToUnused(path);
+        }
+        element.remove();
     }
 </script>

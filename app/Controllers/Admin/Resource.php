@@ -21,7 +21,7 @@ class Resource extends BaseController
     {
         parent::initController($request, $response, $logger);
         $this->resources = model(ResourceModel::class);
-        $this->resourceLibrary = new Resources();
+        $this->resourceLibrary = new Resources($this->response);
     }
 
     public function index() : string
@@ -81,36 +81,19 @@ class Resource extends BaseController
 
     public function assign(int $materialId, bool $replaceThumbnail = false) : void
     {
-        helper('file');
-
-        $name = $this->request->getPost('name');
-        if (!$name || $name === "") {
-            $name = $this->request->getPost('tmp_name');
-        }
-
         $path = $this->request->getPost('tmp_path');
         if ($path === null) {
             $this->resourceLibrary->echoError('No file present for assigning');
             return;
         }
 
-        $file = new \CodeIgniter\Files\File(ROOTPATH . $path);
-        if ($file->getRealPath()) {
-            if ($replaceThumbnail) {
-                $resource = ($this->resources->getThumbnail($materialId));
-                if ($resource !== array()) {
-                    $_POST['id'] = $resource[0]->id;
-                    $this->delete(false);
-                }
-            }
-            $moved = $file->move(PUPPATH . $materialId, $name);
-            $this->resources->insert([
-                'material_id' => $materialId,
-                'resource_path' => $moved->getFilename(),
-                'resource_type' => $replaceThumbnail ? 'thumbnail' : 'file',
-            ]);
-        } else {
-            $this->resourceLibrary->echoError('File does not exist');
+        $success = $this->resourceLibrary->assign($materialId, new \App\Entities\Resource([
+            'path'     => $path,
+            'type'     => $replaceThumbnail ? 'thumbnail' : 'file',
+        ]));
+
+        if (!$success) {
+            $this->resourceLibrary->echoError('<strong>Unexpected error</strong>: Assignment to material failed, try again later.');
             return;
         }
 
@@ -119,37 +102,16 @@ class Resource extends BaseController
 
     public function delete(bool $doEcho = true) : void
     {
-        $resourceId = $this->request->getPost('id');
-        $resourcePath = $this->request->getPost('path');
+        $success = $this->resourceLibrary->delete(new \App\Entities\Resource([
+            'id' => $this->request->getPost('id'),
+            'path' => $this->request->getPost('path')
+        ]));
 
-        if (!$resourceId && $resourcePath) {
-            $this->deleteUnsaved($resourcePath, true);
+        if (!$success) {
+            $this->resourceLibrary->echoError('<strong>Unexpected error</strong>: Attemp to delete resource failed, try again later.');
             return;
         }
 
-        $resource = $this->resources->find($resourceId);
-        if (!$resource) {
-            $this->resourceLibrary->echoError('Resource id is not present in database');
-            return;
-        }
-
-        $this->resources->delete($resourceId);
-        $this->deleteUnsaved($resource->getPath(false), false);
-
-        if ($doEcho) {
-            echo json_encode($resourceId);
-        }
-    }
-
-    public function deleteUnsaved(string $path, bool $doEcho = true) : void
-    {
-        if (!$path || !unlink(ROOTPATH . $path)) {
-            $this->resourceLibrary->echoError('Could not delete file');
-            return;
-        }
-
-        if ($doEcho) {
-            echo json_encode($path);
-        }
+        echo json_encode($this->request->getPost('id') ?? $this->request->getPost('path'));
     }
 }

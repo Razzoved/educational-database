@@ -22,7 +22,6 @@
 
             <?= form_open(base_url('admin/files/assign'), ['id' => 'resource-form']) ?>
 
-            <?= form_hidden("tmp_name", '') ?>
             <?= form_hidden("tmp_path", '') ?>
 
             <div class="form-floating">
@@ -39,11 +38,6 @@
                 </datalist>
             </div>
 
-            <div class="form-floating">
-                <?= form_label('New name', 'name') ?>
-                <?= form_input(['id' => 'name', 'name' => "name", 'placeholder' => 'New name'], '', $extra) ?>
-            </div>
-
             <?= form_close() ?>
         </div>
 
@@ -58,7 +52,6 @@
     <script type="text/javascript">
         let resourceModal = document.getElementById("resource-window");
         let resourcePath = resourceModal.querySelector(`input[name="tmp_path"]`);
-        let resourceName = resourceModal.querySelector(`input[name="tmp_name"]`);
         let resourceTarget = document.querySelector("#target");
 
         // When the user clicks anywhere outside of the modal, close it
@@ -80,8 +73,6 @@
             if (resource !== undefined) {
                 document.querySelector('#resource-error')?.remove();
                 resourcePath.value = resource.id;
-                resourceName.value = name;
-                resourceModal.querySelector("#name").value = name;
                 resourceTarget.value = '';
                 resourceModal.style.display = "block";
             } else {
@@ -103,7 +94,10 @@
                     document.getElementById(resourcePath.value).remove();
                     resourceClose();
                 },
-                error: (jqXHR) => showError(jqXHR)
+                error: (jqXHR) => {
+                    showError(jqXHR);
+                    resourceClose();
+                }
             })
         }
 

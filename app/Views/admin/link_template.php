@@ -8,5 +8,5 @@
            <?php if (isset($readonly) === false || $readonly === true) echo 'readonly' ?>
            <?php if (isset($hidden) === false || $hidden === true) echo 'disabled' ?>
            required>
-    <button type="button" <?php if (isset($id)) echo "onclick=\"removeById('link-$id')\"" ?> class="btn col-auto" style="font-weight: bold;">&#10005</button>
+    <button type="button" <?php if (isset($id)) echo "onclick=\"removeLink('link-$id')\"" ?> class="btn col-auto" style="font-weight: bold;">&#10005</button>
 </div>

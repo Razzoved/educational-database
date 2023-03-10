@@ -66,6 +66,7 @@ button, a.button {
         color: var(--clr-focus-bg);
         background-color: var(--clr-focus);
         border: var(--clr-focus-bg) 1px solid;
+        max-width: 10rem;
     }
 
     &:hover {

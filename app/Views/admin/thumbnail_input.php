@@ -75,6 +75,6 @@
         }
 
         image.src = '<?= base_url() ?>' + '/' + filepath;
-        path.value = '<?= base_url() ?>' + '/' + filepath;
+        path.value = filepath;
     }
 </script>

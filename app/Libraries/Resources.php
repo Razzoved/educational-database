@@ -14,6 +14,16 @@ use CodeIgniter\HTTP\Response;
  */
 class Resources
 {
+    private $response;
+
+    public function __construct($response)
+    {
+        if ($response === null) {
+            throw new \Exception('missing caller');
+        }
+        $this->response = $response;
+    }
+
     /**
      * Stores the file while updating its data so it can be used
      * elsewhere later.
@@ -57,7 +67,6 @@ class Resources
     public function assign(int $materialId, Resource $resource) : bool
     {
         helper('file');
-        $model = model(ResourceModel::class);
 
         // cannot reassign
         if ($resource->isAssigned()) {
@@ -67,24 +76,22 @@ class Resources
         // move old thumbnail to unused
         switch ($resource->type) {
             case 'thumbnail':
-                $old = $model->getThumbnail($materialId);
+                $old = model(ResourceModel::class)->getThumbnail($materialId);
                 if ($old) $this->unassign($materialId);
             case 'file':
+                // create directory if it does not exist
+                if (!is_dir(SAVE_PATH . $materialId) && !mkdir(SAVE_PATH . $materialId)) {
+                    return false;
+                }
+                if (!$this->moveFile($resource, SAVE_PATH . $materialId)) {
+                    return false;
+                }
                 break;
             default:
-                return $this->saveToDatabase($resource);
+                break;
         }
 
-        // create directory if it does not exist
-        if (!is_dir(SAVE_PATH . $materialId) && !mkdir(SAVE_PATH . $materialId)) {
-            return false;
-        }
-
-        if (!$this->moveFile($resource, SAVE_PATH . $resource->parentId)) {
-            return false;
-        }
-
-        $resource->parentId = $material->id;
+        $resource->parentId = $materialId;
         if (!$this->saveToDatabase($resource, true)) {
             return false;
         }
@@ -102,6 +109,13 @@ class Resources
     {
         helper('file');
 
+        // remove from db
+        try {
+            if ($resource->id > 0) model(ResourceModel::class)->delete($resource->id);
+        } catch (Exception $e) {
+            return false;
+        }
+
         // create directory if it does not exist
         if (!is_dir(UNUSED_PATH) && !mkdir(UNUSED_PATH)) {
             return false;
@@ -111,19 +125,13 @@ class Resources
             return !file_exists(ROOTPATH . $resource->getPath(false));
         }
 
-        // remove from db
-        try {
-            if ($resource->id > 0) model(ResourceModel::class)->delete($resource->id);
-        } catch (Exception $e) {
-            return false;
-        }
-
         return true;
     }
 
     /**
      * Deletes a single file from the server, given by the resource.
      * If resource contains parentId, also removes the DB record.
+     * If you want the to delete from DB, you have to load resourceId.
      *
      * @param Resource $resource
      */
@@ -136,7 +144,7 @@ class Resources
             return false;
         }
 
-        if ($resource->isAsset()) {
+        if ($resource->isAsset() || $resource->isLink()) {
             return true;
         }
 
@@ -153,12 +161,14 @@ class Resources
     public function getUnused() : array
     {
         helper('filesystem');
+
         $result = array();
         $this->doUnusedRecursive(
             $result,
             directory_map(TEMP_PATH, 0, true),
             TEMP_PREFIX
         );
+
         return $result;
     }
 
@@ -213,8 +223,13 @@ class Resources
      */
     private function saveToDatabase(Resource $resource, bool $doRevert = false) : bool
     {
+        helper('file');
+
         try {
-            $model->save($resource);
+            $model = model(ResourceModel::class);
+            if ($model->getByPath($resource->parentId, $resource->path) === null) {
+                $model->save($resource);
+            }
         } catch (Exception $e) {
             $file = new File(ROOTPATH . $resource->getPath(false));
             if ($file->getRealPath()) {
@@ -222,6 +237,7 @@ class Resources
             }
             return false;
         }
+
         return true;
     }
 
@@ -234,6 +250,7 @@ class Resources
     private function deleteSource(string $path) : void
     {
         helper('filesystem');
+
         // get parent
         $path = explode('/', str_replace('\\', '/', $path));
         array_pop($path);
@@ -262,8 +279,11 @@ class Resources
      */
     private function moveFile(Resource &$resource, string $dirPath) : bool
     {
+        helper('file');
+
         if ($resource->tmp_path === null) {
-            $resource->tmp_path = $resource->getPath(false);
+            $resource->tmp_path = $resource->path;
+            $resource->path = basename($resource->path);
         }
 
         $path = ROOTPATH . $resource->tmp_path;

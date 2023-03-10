@@ -33,7 +33,7 @@ class Resource extends Entity
 
     public function isLink() : bool
     {
-        return $this->type == 'link';
+        return $this->type == 'link' || substr(str_replace(base_url(), '', $this->path), 0, 4) === 'http';
     }
 
     public function isThumbnail() : bool
@@ -43,7 +43,7 @@ class Resource extends Entity
 
     public function isAssigned() : bool
     {
-        return $this->parentId !== null;
+        return $this->parentId > 0;
     }
 
     public function isAsset() : bool

@@ -58,7 +58,7 @@ class MaterialEditor extends BaseController
 
         $this->materials = model(MaterialModel::class);
         $this->properties = model(PropertyModel::class);
-        $this->resourceLibrary = new Resources();
+        $this->resourceLibrary = new Resources($this->response);
     }
 
     public function index() : string
@@ -149,20 +149,13 @@ class MaterialEditor extends BaseController
             return;
         }
 
-        $post = array($material->getThumbnail()->getPath(false));
-        foreach ($material->getFiles() as $file) {
-            $post[] = $file->getPath(false);
-        }
-        $this->request->setGlobal('post', ['unused_files' => $post]);
-        $this->deleteRemovedFiles($material);
-
         try {
+            $this->deleteResources($material);
             $this->materials->delete($material->id);
         } catch (Exception $e) {
             $this->resourceLibrary->echoError('Could not delete material: ' . $e->getMessage());
             return;
         }
-
 
         echo json_encode($material->id);
     }
@@ -233,21 +226,10 @@ class MaterialEditor extends BaseController
         foreach ($items ?? [] as $tmpPath => $path) {
             $target[] = new EntitiesResource([
                 'type'     => $type,
-                'path'     => $type === 'link' ? $path : $this->lastSegment($path),
+                'path'     => $type === 'link' ? $path : basename($path),
                 'tmp_path' => is_numeric($tmpPath) ? $path : $tmpPath,
             ]);
         }
-    }
-
-    private function lastSegment(string $path) : string
-    {
-        while (str_contains($path, '/')) {
-            $path = explode('/', $path, 2)[1];
-        }
-        while (str_contains($path, '\\')) {
-            $path = explode('\\', $path, 2)[1];
-        }
-        return $path;
     }
 
     /**
@@ -310,7 +292,13 @@ class MaterialEditor extends BaseController
     private function moveTemporaryFiles(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($material->resources as $r) {
-            $this->resourceLibrary->assign($material->id, $r);
+            $found = model(ResourceModel::class)->getByPath(
+                    $material->id,
+                    basename($r->path)
+            );
+            if ($found === null) {
+                $this->resourceLibrary->assign($material->id, $r);
+            }
         }
         return $this;
     }
@@ -326,18 +314,34 @@ class MaterialEditor extends BaseController
     {
         foreach ($this->request->getPost('unused_files') ?? [] as $path) {
             $resource = new EntitiesResource(['path' => $path, 'tmp_path' => $path]);
+
             if ($resource->isAsset()) {
                 continue;
             }
+
             if ($resource->isTemporary()) {
                 $this->resourceLibrary->delete($resource);
-            } else {
-                $resource = model(ResourceModel::class)->getByPath(
-                    $material->id,
-                    $this->lastSegment($resource->path)
-                );
-                $this->resourceLibrary->unassign($resource);
+                continue;
             }
+
+            $path = $resource->isLink() ? $resource->path : basename($resource->path);
+            $resource = model(ResourceModel::class)->getByPath($material->id, $path);
+            $this->resourceLibrary->delete($resource);
+        }
+        return $this;
+    }
+
+    /**
+     * Deletes the newly unused resources from filesystem. This method
+     * ignores all resources that are located in /assets.
+     *
+     * @param EntitiesMaterial $material material whose resources to remove
+     * @return self to enable method chaining
+     */
+    private function deleteResources(EntitiesMaterial $material) : MaterialEditor
+    {
+        foreach ($material->resources as $resource) {
+            $this->resourceLibrary->delete($resource);
         }
         return $this;
     }
