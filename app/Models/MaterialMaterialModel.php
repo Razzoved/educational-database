@@ -17,31 +17,38 @@ class MaterialMaterialModel extends Model
      * Looks for ALL pairs of materials where at least one member has
      * the given id. Returns an array of such materials.
      *
-     * @param int $id id of material whose tags we want to get
+     * @param int $id           id of material whose tags we want to get
+     * @param bool $onlyTitle   if true returns titles as values, else objects
+     *
+     * @return array of objects or strings
      */
-    public function getRelated(int $id, bool $onlyVisible = true, bool $onlyTitle = false) : array
+    public function getRelated(int $id, bool $onlyTitle = false) : array
     {
         $ids = $this->builder()
                     ->select($this->allowedFields[0] . ' as l, ' . $this->allowedFields[1] . ' as r')
-                    ->orWhere('material_id_left', $id)
-                    ->orWhere('material_id_right', $id)
+                    ->orWhere($this->allowedFields[0], $id)
+                    ->orWhere($this->allowedFields[1], $id)
                     ->get()
                     ->getResultArray();
 
         $result = array();
         foreach ($ids as $key => $value) {
             if ($value['l'] === $value['r']) {
-                continue;
+                continue; // same material
             }
+
             $identifier = $value['l'] == $id ? $value['r'] : $value['l'];
             $found = model(MaterialModel::class)->find($identifier);
-            if ($found && ($onlyVisible === false || ($onlyVisible && $found->status === StatusCast::PUBLIC))) {
-                if ($onlyTitle) {
-                    $result[$found->id] = $found->title;
-                } else {
-                    $found->resources = model(ResourceModel::class)->getThumbnail($found->id);
-                    $result[$found->id] = $found;
-                }
+
+            if ($found === null || (!session('isLoggedIn') && $found->status !== StatusCast::PUBLIC)) {
+                continue;
+            }
+
+            if ($onlyTitle) {
+                $result[$found->id] = $found->title;
+            } else {
+                $found->resources = model(ResourceModel::class)->getThumbnail($found->id);
+                $result[$found->id] = $found;
             }
         }
 
@@ -60,7 +67,7 @@ class MaterialMaterialModel extends Model
     {
         if (!isset($db)) $db = $this->db;
 
-        $relations = $this->getRelated($material->id, false);
+        $relations = $this->getRelated($material->id);
 
         $toDelete = array_filter($relations, function($r) use ($newRelations) {
             return $r && !in_array($r, $newRelations);

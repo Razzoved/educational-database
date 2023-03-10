@@ -33,12 +33,14 @@ class MaterialModel extends Model
     /**
      * Returns all materials WITHOUT any associated properties or resources.
      *
-     * @param bool $onlyPublic whether to get only materials marked as public
-     * @return MaterialModel requires calling either 'paginate' or 'get'
+     * @param ?string $sor      key to sort by
+     * @param ?string $sortDir  ASC or DESC
+     *
+     * @return MaterialModel    requires calling either 'paginate' or 'get'
      */
-    public function getData(?string $sort = null, ?string $sortDir = null, bool $onlyPublic = true) : MaterialModel
+    public function getData(?string $sort = null, ?string $sortDir = null) : MaterialModel
     {
-        $show = $onlyPublic ? array(StatusCast::PUBLIC) : StatusCast::VALID_VALUES;
+        $show = session('isLoggedIn') ? StatusCast::VALID_VALUES : array(StatusCast::PUBLIC);
 
         $sortDir = $sortDir === 'DESC' ? $sortDir : 'ASC';
         $sort = $sort === $this->createdField || $sort === $this->updatedField
@@ -55,14 +57,16 @@ class MaterialModel extends Model
     /**
      * Returns all materials WITHOUT any associated properties or resources.
      *
-     * @param string $search title to search for
-     * @param array $filters filters to search with (has to match all)
+     * @param ?string $sort     key to sort by
+     * @param ?string $sortDir  ASC or DESC
+     * @param string $search    title to search for
+     * @param array $filters    filters to search with (has to match all)
      *
      * @return MaterialModel requires calling either 'paginate' or 'get'
      */
-    public function getByFilters(?string $sort, ?string $sortDir, string $search, array $filters, bool $onlyPublic = true): MaterialModel
+    public function getByFilters(?string $sort, ?string $sortDir, string $search, array $filters): MaterialModel
     {
-        $builder = $this->getData($sort, $sortDir, $onlyPublic)->builder()
+        $builder = $this->getData($sort, $sortDir)->builder()
             ->select("$this->table.*")
             ->like('material_title', $search, 'both', null, true);
 
@@ -74,19 +78,31 @@ class MaterialModel extends Model
         return $this;
     }
 
-    public function getById(int $id, bool $showHidden = false) : ?Material
+    /**
+     * Returns a single material with all of its attributes loaded.
+     *
+     * @param int $id          id to search by
+     * @return Material if found, else null
+     */
+    public function getById(int $id) : ?Material
     {
         $material = $this->find($id);
-        return ($material) ? $this->verifyAndLoad($material, $showHidden) : null;
+        return ($material) ? $this->verifyAndLoad($material) : null;
     }
 
-    public function getByTitle(string $title, bool $showHidden = false) : ?Material
+    /**
+     * Returns a single material with all of its attributes loaded.
+     *
+     * @param string $title    title to search by
+     * @return Material if found, else null
+     */
+    public function getByTitle(string $title) : ?Material
     {
         $material = $this->builder()
                          ->where('material_title', $title)
                          ->get(1)
                          ->getCustomResultObject(Material::class);
-        return ($material) ? $this->verifyAndLoad($material, $showHidden) : null;
+        return ($material) ? $this->verifyAndLoad($material) : null;
     }
 
     public function handleUpdate(Material $material, array $relatedMaterials = []) : bool
@@ -117,14 +133,14 @@ class MaterialModel extends Model
         return $this->db->transStatus();
     }
 
-    private function verifyAndLoad(Material $material, bool $showHidden) {
-        if ($material->status != StatusCast::PUBLIC && !$showHidden) {
+    private function verifyAndLoad(Material $material) {
+        if ($material->status != StatusCast::PUBLIC && !session('isLoggedIn')) {
             return null;
         }
 
         $material->properties = model(MaterialPropertyModel::class)->getByMaterial($material->id);
         $material->resources = model(ResourceModel::class)->getResources($material->id);
-        $material->related = model(MaterialMaterialModel::class)->getRelated($material->id, !$showHidden);
+        $material->related = model(MaterialMaterialModel::class)->getRelated($material->id);
 
         return $material;
     }
