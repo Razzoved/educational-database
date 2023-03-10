@@ -45,46 +45,12 @@ class ResourceModel extends Model
                     ->getCustomResultObject(Resource::class);
     }
 
-    public function getByPath(int $materialId, int $path) : Resource
+    public function getByPath(int $materialId, string $path) : ?Resource
     {
         return $this->builder()
                     ->where('material_id', $materialId)
                     ->where('resource_path', $path)
                     ->get()
                     ->getCustomRowObject(1, Resource::class);
-    }
-
-    public function handleUpdate(Material $material, $db = null) : void
-    {
-        if (!isset($db)) $db = $this->db;
-
-        $oldResources = $this->getResources($material->id);
-
-        $toDelete = array_filter($oldResources, function($r) use ($material) {
-            return !\App\Libraries\Arrays::valueExists($r, $material->resources, function($a, $b) {
-                return $a->path === $b->name && $a->type === $b->type;
-            });
-        });
-
-        $toCreate = array_filter($material->resources, function($r) use ($oldResources) {
-            return !\App\Libraries\Arrays::valueExists($r, $oldResources, function($a, $b) {
-                return $a->name === $b->path && $a->type === $b->type;
-            });
-        });
-
-        foreach ($toDelete as $r) {
-            $db->table($this->table)
-               ->where('resource_id', $r->id)
-               ->where('material_id', $material->id)
-               ->delete();
-        }
-
-        foreach ($toCreate as $r) {
-            $db->table($this->table)->insert([
-                'material_id'   => $material->id,
-                'resource_path' => $r->name,
-                'resource_type' => $r->type,
-            ]);
-        }
     }
 }
