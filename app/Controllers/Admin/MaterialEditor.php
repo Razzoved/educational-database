@@ -57,7 +57,7 @@ class MaterialEditor extends BaseController
 
         $this->materials = model(MaterialModel::class);
         $this->properties = model(PropertyModel::class);
-        $this->$resourceLibrary = new Resources();
+        $this->resourceLibrary = new Resources();
     }
 
     public function index() : string

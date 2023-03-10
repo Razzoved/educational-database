@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Libraries\Resources;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -20,6 +21,7 @@ class Resource extends BaseController
     {
         parent::initController($request, $response, $logger);
         $this->resources = model(ResourceModel::class);
+        $this->resourceLibrary = new Resources();
     }
 
     public function index() : string
@@ -53,12 +55,11 @@ class Resource extends BaseController
         $views = array();
 
         foreach ($this->request->getFiles() as $file) {
-            if ($file->isValid() && !$file->hasMoved()) {
-                $name = $file->getName();
-                $views[$name] = view(Config::VIEW . 'file_template', [
-                    'id' => $this->request->getPostGet('id'),
-                    'path' => 'writable/uploads/' . $file->store(null, $name),
-                    'value' => $name,
+            if (($resource = $this->resourceLibrary->store($file)) !== null) {
+                $views[$resource->path] = view(Config::VIEW . 'file_template', [
+                    'id'    => $this->request->getPostGet('id'),
+                    'path'  => $resource->tmp_path,
+                    'value' => $resource->path,
                 ]);
             }
         }
