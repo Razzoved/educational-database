@@ -162,17 +162,35 @@ class Resources
                 $newPath .= '/' . rtrim((string) $key, '\\');
             }
 
-        if (is_array($value)) {
-            if ($key < date('Ymd', time())) {
-                $this->getUnusedArray($value, $result, $newPath);
+            if (is_array($value)) {
+                if ($key < date('Ymd', time())) {
+                    $this->getUnusedArray($value, $result, $newPath);
+                }
+            } else if (substr($value, 0, 5) !== 'index') {
+                $result[] = new \App\Entities\Resource([
+                    'resource_path' => $newPath . '/' . $value,
+                    'resource_type' => 'file'
+                ]);
             }
-        } else if (substr($value, 0, 5) !== 'index') {
-            $result[] = new \App\Entities\Resource([
-                'resource_path' => $newPath . '/' . $value,
-                'resource_type' => 'file'
-            ]);
         }
-        }
+    }
+
+    /**
+     * Utility function for easier sending of resource manipulation errors.
+     *
+     * @param string $message   Error message that will be shown
+     * @param int $errorCode    HTTP error to be returned
+     */
+    public static function echoError(
+        string $message = "Internal server error!",
+        int $errorCode = Response::HTTP_INTERNAL_SERVER_ERROR
+    ) : void
+    {
+        $this->response->setStatusCode($errorCode);
+        echo view('errors/error_modal', [
+            'title'     => "Resource manipulation",
+            'message'   => $message
+        ]);
     }
 
     /**
