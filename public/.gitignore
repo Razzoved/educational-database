@@ -1,0 +1,13 @@
+*
+
+# self
+!.gitignore
+
+# disallowed
+uploads/
+temp/
+
+# allowed
+!assets/
+!js/
+!css/

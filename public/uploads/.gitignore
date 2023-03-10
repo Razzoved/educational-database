@@ -1,8 +1,0 @@
-# ignore all materials
-*
-
-# self
-!.gitignore
-
-# default resources attached to materials as fallbacks
-!default_*
