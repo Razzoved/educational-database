@@ -151,14 +151,13 @@ class Material extends BaseController
 
     protected function loadMaterials() : \CodeIgniter\BaseModel
     {
-        $show = (bool) session('isLoggedIn');
         $sort = $this->request->getPost('sort');
         $sortDir = $this->request->getPost('sortDir') ?? "ASC";
         $search = $this->request->getPost('search') ?? "";
         $filters = $this->request->getPost('filters') ?? [];
 
         return ($search !== "" || $filters !== [])
-            ? $this->materials->getByFilters($sort, $sortDir, $search, $filters, !$show)
-            : $this->materials->getData($sort, $sortDir, !$show);
+            ? $this->materials->getByFilters($sort, $sortDir, $search, $filters)
+            : $this->materials->getData($sort, $sortDir);
     }
 }

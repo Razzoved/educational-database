@@ -200,7 +200,7 @@ class MaterialEditor extends BaseController
             'thumbnail' => $material->getThumbnail()->getPath(false),
             'links' => $links,
             'files' => $files,
-            'relations' => model(MaterialMaterialModel::class)->getRelated($material->id, false, true),
+            'relations' => model(MaterialMaterialModel::class)->getRelated($material->id, true),
         ];
 
         return $this;
