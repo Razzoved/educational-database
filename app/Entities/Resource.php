@@ -91,7 +91,7 @@ class Resource extends Entity
 
     private function getPrefix()
     {
-        if ($this->isAssigned()) {
+        if (!$this->isAsset() && $this->isAssigned()) {
             return SAVE_PREFIX . $this->parentId . '/';
         }
         return '';
