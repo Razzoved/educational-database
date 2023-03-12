@@ -20,7 +20,7 @@
         alt="No image"
         onclick="document.getElementById('thumbnail-uploader').click()">
     </image>
-    <input id="thumbnail-path" type="hidden" name="thumbnail" value="<?= $THUMBNAIL ?>">
+    <input id="thumbnail-path" type="hidden" name="thumbnail" value="<?= $thumbnail ?>">
 
     <!-- file uploader -->
     <input id="thumbnail-uploader" name="thumbnail-uploader" type="file" onchange="uploadThumbnail()" hidden>
