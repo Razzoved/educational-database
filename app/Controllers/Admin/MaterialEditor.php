@@ -313,20 +313,16 @@ class MaterialEditor extends BaseController
     private function deleteRemovedFiles(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($this->request->getPost('unused_files') ?? [] as $path) {
-            $resource = new EntitiesResource(['path' => $path, 'tmp_path' => $path]);
-
-            if ($resource->isAsset()) {
-                continue;
-            }
-
-            if ($resource->isTemporary()) {
-                $this->resourceLibrary->delete($resource);
-                continue;
-            }
-
-            $path = $resource->isLink() ? $resource->path : basename($resource->path);
+            $path = substr($path, 0, 4) === 'http'
+                || substr($path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX
+                || substr($path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX
+                ? $path
+                : basename($path);
             $resource = model(ResourceModel::class)->getByPath($material->id, $path);
-            $this->resourceLibrary->delete($resource);
+            if ($resource === null) {
+                $resource = new EntitiesResource(['path' => $path, 'tmp_path' => $path]);
+            }
+            $this->resourceLibrary->unassign($resource);
         }
         return $this;
     }

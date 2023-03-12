@@ -44,13 +44,14 @@ class Resources
         }
 
         if ($file->isValid() && !$file->hasMoved()) {
-            $name = $file->getName();
+            $name = $file->getClientName();
             $resource = new Resource([
                 'tmp_path'  => 'writable/uploads/' . $file->store(),
-                'path'      => $name
+                'path'      => $name,
+                'type'      => 'file'
             ]);
             if ($this->moveFile($resource, $dirPath)) {
-                $resource->tmp_path = TEMP_PREFIX . $date . '/' . $resource->path;
+                $resource->tmp_path = TEMP_PREFIX . $date . '/' . $resource->tmp_path;
                 return $resource;
             }
         }
@@ -88,22 +89,21 @@ class Resources
                 if (!$this->moveFile($resource, SAVE_PATH . $materialId)) {
                     return false;
                 }
+                $resource->path = $resource->tmp_path;
+                unset($resource->tmp_path);
                 break;
             default:
                 break;
         }
 
         $resource->parentId = $materialId;
-        if (!$this->saveToDatabase($resource, true)) {
-            return false;
-        }
-
-        return true;
+        return $this->saveToDatabase($resource, true);
     }
 
     /**
      * Move the given resource away from its parent. This means deletion
-     * of record from DB and moving of file to unused folder.
+     * of record from DB and handling the removal of the file.
+     * Acts differently for temporary files than assigned ones.
      *
      * @param Resource $resource
      */
@@ -111,11 +111,19 @@ class Resources
     {
         helper('file');
 
+        if ($resource->isTemporary()) {
+            return $this->delete($resource);
+        }
+
         // remove from db
         try {
             if ($resource->id > 0) model(ResourceModel::class)->delete($resource->id);
         } catch (Exception $e) {
             return false;
+        }
+
+        if ($resource->isAsset() || $resource->isLink()) {
+            return true;
         }
 
         // create directory if it does not exist
@@ -345,6 +353,8 @@ class Resources
 
     /**
      * Tries to move the file to its final location (given by path).
+     * Loads the final file name to the tmp_path. Its up to the caller
+     * to provide the prefix from root.
      *
      * WARN: unclean function, changes resource tmp_path and path.
      *
@@ -356,7 +366,7 @@ class Resources
         helper('file');
 
         if ($resource->tmp_path === null) {
-            $resource->tmp_path = $resource->path;
+            $resource->tmp_path = $resource->getRootPath();
             $resource->path = basename($resource->path);
         }
 
@@ -370,7 +380,7 @@ class Resources
         if ($resource->isAsset() && !copy($path, $dirPath . DIRECTORY_SEPARATOR . $resource->path)) {
             return false;
         } else {
-            $resource->path = $file->move($dirPath, $resource->path)->getBasename();
+            $resource->tmp_path = $file->move($dirPath, $resource->path)->getBasename();
         }
 
         $this->deleteSource($path);
