@@ -144,8 +144,7 @@ class Material extends BaseController
                           ->paginate($perPage, 'default', null, $uri->getTotalSegments());
 
         foreach ($materials as $m) {
-            $thumbnail = $this->resources->getThumbnail($m->id);
-            $m->resources = !$thumbnail ? array() : array($thumbnail);
+            $m->resources = $this->resources->getThumbnail($m->id);
         }
         return $materials;
     }
