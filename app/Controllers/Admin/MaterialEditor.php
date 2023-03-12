@@ -170,12 +170,12 @@ class MaterialEditor extends BaseController
     {
         $links = array();
         foreach ($material->getLinks() as $r) {
-            $links[] = $r->getPath();
+            $links[] = $r->getURL();
         }
 
         $files = array();
         foreach ($material->getFiles() as $r) {
-            $files[$r->getPath(false)] = $r->getName();
+            $files[$r->getRootPath()] = $r->getName();
         }
 
         $_POST = [
@@ -185,7 +185,7 @@ class MaterialEditor extends BaseController
             'title' => $material->title,
             'content' => $material->content,
             'properties' => $material->getPropertiesAsStrings(),
-            'thumbnail' => $material->getThumbnail()->getPath(false),
+            'thumbnail' => $material->getThumbnail()->getRootPath(),
             'links' => $links,
             'files' => $files,
             'relations' => model(MaterialMaterialModel::class)->getRelated($material->id, true),

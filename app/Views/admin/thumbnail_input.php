@@ -6,10 +6,9 @@
      * Expects:
      * @param files files that already exist
      */
-    use App\Entities\Resource;
 
     $IMG_REGEX = '/.*\.(?:jpg|jpeg|tiff|gif|png|bmp)$/';
-    $THUMBNAIL = App\Entities\Resource::strToThumbnail($thumbnail)->getPath();
+    $THUMBNAIL = \App\Libraries\Resources::pathToURL($thumbnail);
 ?>
 <div style="align-items: center">
 

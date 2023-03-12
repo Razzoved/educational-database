@@ -79,7 +79,7 @@ class Resources
         switch ($resource->type) {
             case 'thumbnail':
                 $old = model(ResourceModel::class)->getThumbnail($materialId);
-                if ($old) $this->unassign($old);
+                if (count($old) > 0) $this->unassign($old[0]);
             case 'file':
                 // create directory if it does not exist
                 if (!is_dir(SAVE_PATH . $materialId) && !mkdir(SAVE_PATH . $materialId)) {
@@ -124,7 +124,7 @@ class Resources
         }
 
         if (!$this->moveFile($resource, UNUSED_PATH)) {
-            return !file_exists(ROOTPATH . $resource->getPath(false));
+            return !file_exists(ROOTPATH . $resource->getRootPath());
         }
 
         return true;
@@ -151,7 +151,7 @@ class Resources
         }
 
         // remove file
-        $path = ROOTPATH . $resource->getPath(false);
+        $path = ROOTPATH . $resource->getRootPath();
         if (file_exists($path) && !unlink($path)) {
             return false;
         };
@@ -172,6 +172,96 @@ class Resources
         );
 
         return $result;
+    }
+
+    public static function pathToURL(?string $rootPath) : string
+    {
+        $path = ASSET_PREFIX . 'missing.png';
+        if ($rootPath && file_exists(ROOTPATH . $rootPath)) {
+            $path = $rootPath;
+        }
+        return base_url($path);
+    }
+
+    public static function pathToFileURL(?string $rootPath) : string
+    {
+        $prefix = ASSET_PREFIX;
+        $path = 'missing.png';
+
+        if ($rootPath) {
+            $splitPath = explode('.', $rootPath);
+            $fileType = end($splitPath);
+            switch ($fileType) {
+                # images
+                case 'png':
+                case 'jpg':
+                case 'jpeg':
+                case 'bmp':
+                case 'tiff':
+                    $prefix = '';
+                    $path = $rootPath;
+                    break;
+                # other file types
+                case 'avi':
+                    $path = 'file_avi.png';
+                    break;
+                case 'cdr':
+                    $path = 'file_cdr.png';
+                    break;
+                case 'csv':
+                    $path = 'file_csv.png';
+                    break;
+                case 'doc':
+                case 'docx':
+                    $path = 'file_doc.png';
+                    break;
+                case 'mp4':
+                case 'mp3':
+                    $path = 'file_mp3.png';
+                    break;
+                case 'pdf':
+                    $path = 'file_pdf.png';
+                    break;
+                case 'ppt':
+                case 'pptx':
+                    $path = 'file_ppt.png';
+                    break;
+                case 'rar':
+                    $path = 'file_rar.png';
+                    break;
+                case 'txt':
+                    $path = 'file_txt.png';
+                    break;
+                case 'xls':
+                    $path = 'file_xls.png';
+                    break;
+                case 'zip':
+                    $path = 'file_zip.png';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return base_url($prefix . $path);
+    }
+
+    /**
+     * Utility function for easier sending of resource manipulation errors.
+     *
+     * @param string $message   Error message that will be shown
+     * @param int $errorCode    HTTP error to be returned
+     */
+    public function echoError(
+        string $message = "Internal server error!",
+        int $errorCode = Response::HTTP_INTERNAL_SERVER_ERROR
+    ) : void
+    {
+        $this->response->setStatusCode($errorCode);
+        echo view('errors/error_modal', [
+            'title'     => "Resource manipulation",
+            'message'   => $message
+        ]);
     }
 
     /**
@@ -198,24 +288,6 @@ class Resources
     }
 
     /**
-     * Utility function for easier sending of resource manipulation errors.
-     *
-     * @param string $message   Error message that will be shown
-     * @param int $errorCode    HTTP error to be returned
-     */
-    public function echoError(
-        string $message = "Internal server error!",
-        int $errorCode = Response::HTTP_INTERNAL_SERVER_ERROR
-    ) : void
-    {
-        $this->response->setStatusCode($errorCode);
-        echo view('errors/error_modal', [
-            'title'     => "Resource manipulation",
-            'message'   => $message
-        ]);
-    }
-
-    /**
      * Helper function, tries to save resource into db. Can be set
      * to move file to its original location by doRevert parameter,
      * in case of failure.
@@ -233,7 +305,7 @@ class Resources
                 $model->save($resource);
             }
         } catch (Exception $e) {
-            $file = new File(ROOTPATH . $resource->getPath(false));
+            $file = new File(ROOTPATH . $resource->getRootPath());
             if ($file->getRealPath()) {
                 $file->move(ROOTPATH . $resource->tmp_path);
             }

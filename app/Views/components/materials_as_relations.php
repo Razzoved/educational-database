@@ -10,7 +10,7 @@
 <div class="relations">
     <?php foreach ($materials as $material) : ?>
     <div class="relation" onclick="window.location.href='<?= base_url('single/' . $material->id) ?>'" >
-        <img class="relation-thumbnail" src="<?= $material->getThumbnail()->getPath() ?>" alt="relation thumbnail">
+        <img class="relation-thumbnail" src="<?= $material->getThumbnail()->getURL() ?>" alt="relation thumbnail">
         <p class="relation-title"><?= $material->title ?></p>
     </div>
     <?php endforeach; ?>

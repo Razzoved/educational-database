@@ -41,11 +41,6 @@ class Resource extends Entity
         return $this->type == 'thumbnail';
     }
 
-    public function isAssigned() : bool
-    {
-        return $this->parentId > 0;
-    }
-
     public function isAsset() : bool
     {
         return substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX;
@@ -53,8 +48,14 @@ class Resource extends Entity
 
     public function isTemporary() : bool
     {
-        return substr($this->tmp_path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX;
+        return $this->tmp_path !== null && substr($this->tmp_path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX;
     }
+
+    public function isAssigned() : bool
+    {
+        return $this->parentId > 0 && !$this->isTemporary();
+    }
+
 
     public function getName(bool $showExtension = true) : string
     {
@@ -66,101 +67,41 @@ class Resource extends Entity
         return $this->path;
     }
 
-    public function getPath(bool $asLink = true) : string
+    public function getURL() : string
     {
-        $path = $this->path;
-
-        if (!$this->isLink()) {
-            $path = $asLink ? (base_url() . DIRECTORY_SEPARATOR) : '';
-            $path .= isset($this->parentId) ? (SAVE_PREFIX . $this->parentId . DIRECTORY_SEPARATOR) : '';
-            $path .= $this->getName();
+        if ($this->isLink()) {
+            return $this->path;
         }
 
-        return $path;
-    }
-
-    public function getFileThumbnail() : Resource
-    {
-        return Resource::strToFileThumbnail($this->getPath(false));
-    }
-
-    public static function strToThumbnail(?string $path) : Resource
-    {
-        $asset = ASSET_PREFIX . 'missing.png';
-
-        if ($path && file_exists(ROOTPATH . $path)) {
-            $asset = $path;
+        if ($this->isTemporary()) {
+            return base_url($this->tmp_path);
         }
 
+        return base_url($this->getPrefix() . $this->path);
+    }
+
+    public function getRootPath() : string
+    {
+        if ($this->isLink()) {
+            throw new \Exception('Resource is of LINK type. Links are not located in subfolders of root');
+        }
+
+        return $this->getPrefix() . $this->path;
+    }
+
+    private function getPrefix()
+    {
+        if ($this->isAssigned()) {
+            return SAVE_PREFIX . $this->parentId . '/';
+        }
+        return '';
+    }
+
+    public static function getMissing()
+    {
         return new Resource([
-            'resource_path' => $asset,
-            'resource_type' => 'thumbnail',
-        ]);
-    }
-
-    public static function strToFileThumbnail(?string $path) : Resource
-    {
-        $prefix = ASSET_PREFIX;
-        $asset = 'missing.png';
-
-        if ($path) {
-            $splitPath = explode('.', $path);
-            $fileType = end($splitPath);
-            switch ($fileType) {
-                # images
-                case 'png':
-                case 'jpg':
-                case 'jpeg':
-                case 'bmp':
-                case 'tiff':
-                    $prefix = '';
-                    $asset = $path;
-                    break;
-                # other file types
-                case 'avi':
-                    $asset = 'file_avi.png';
-                    break;
-                case 'cdr':
-                    $asset = 'file_cdr.png';
-                    break;
-                case 'csv':
-                    $asset = 'file_csv.png';
-                    break;
-                case 'doc':
-                case 'docx':
-                    $asset = 'file_doc.png';
-                    break;
-                case 'mp4':
-                case 'mp3':
-                    $asset = 'file_mp3.png';
-                    break;
-                case 'pdf':
-                    $asset = 'file_pdf.png';
-                    break;
-                case 'ppt':
-                case 'pptx':
-                    $asset = 'file_ppt.png';
-                    break;
-                case 'rar':
-                    $asset = 'file_rar.png';
-                    break;
-                case 'txt':
-                    $asset = 'file_txt.png';
-                    break;
-                case 'xls':
-                    $asset = 'file_xls.png';
-                    break;
-                case 'zip':
-                    $asset = 'file_zip.png';
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return new Resource([
-            'resource_path' => $prefix . $asset,
-            'resource_type' => 'thumbnail',
+            'path' => ASSET_PREFIX . 'missing.png',
+            'type' => 'thumbnail',
         ]);
     }
 }

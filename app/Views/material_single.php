@@ -28,7 +28,7 @@
         <div class="material">
             <div class="material-thumbnail">
                 <?= isset($material->referTo) ? "<a href='$material->referTo'>" : "" ?>
-                <img src="<?= $material->getThumbnail()->getPath() ?>" alt="Material image">
+                <img src="<?= $material->getThumbnail()->getURL() ?>" alt="Material image">
                 <?= isset($material->referTo) ? "</a>" : "" ?>
             </div>
 

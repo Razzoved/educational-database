@@ -110,7 +110,7 @@ class Material extends Entity
                 return $r;
             };
         }
-        return Resource::strToThumbnail(null);
+        return Resource::getMissing();
     }
 
     public function getLinks() : array

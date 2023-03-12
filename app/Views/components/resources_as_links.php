@@ -5,9 +5,9 @@
     <li>
     <?php
         if (!$resource->isLink()) {
-            echo '<img src="' . $resource->getFileThumbnail()->getPath() . '"></img>';
+            echo '<img src="' . \App\Libraries\Resources::pathToFileURL($resource->getRootPath()) . '"></img>';
         }
-        echo "<a href='" . $resource->getPath();
+        echo "<a href='" . $resource->getURL();
         echo ($resource->isLink()) ? "'>" : "'download>";
         $name = $resource->getName($resource->isLink());
         if (strlen($name) > 60) {

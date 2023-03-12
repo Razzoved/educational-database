@@ -9,15 +9,15 @@
      */
 ?>
 
-<div id="file-<?= $id ?? "template"?>" class="row g-0 border p-2 rounded" style="margin-top: 1rem" data-value="<?= $path ?? 'fallback' ?>">
+<div id="file-<?= $id ?? "template"?>" class="row g-0 border p-2 rounded" style="margin-top: 1rem" data-value="<?= $path ?? '' ?>">
     <div class="col-auto">
         <image class="img-fluid rounded edit-mr"
         style="width: 6rem; height: 6rem; object-fit: scale-down"
-        src="<?= App\Entities\Resource::strToFileThumbnail($path ?? 'fallback')->getPath() ?>"
+        src="<?= App\Libraries\Resources::pathToFileURL($path ?? '') ?>"
         alt="No image">
     </div>
     <div class="col">
-        <input name="files[<?= $path ?? 'fallback' ?>]"
+        <input name="files[<?= $path ?? '' ?>]"
                 type="text"
                 class="form-control"
                 value="<?= $value ?? '' ?>"

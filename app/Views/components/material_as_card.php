@@ -10,7 +10,7 @@
 
 <div class="card" onclick="window.location.href='<?= $url ?>'">
     <div class="card-thumbnail">
-        <img src="<?= $material->getThumbnail()->getPath() ?>" alt="Missing image">
+        <img src="<?= $material->getThumbnail()->getURL() ?>" alt="Missing image">
     </div>
     <div class="card-body">
         <div class="card-header">

@@ -12,7 +12,7 @@ use App\Entities\Cast\StatusCast;
 ?>
 <div id="<?= $material->id ?>" class="item <?= $material->status === StatusCast::PUBLIC ? ($index % 2 == 1 ? 'public' : 'public-2') : '' ?>">
     <div class="row">
-        <img src="<?= $material->getThumbnail()->getPath() ?>" alt="missing_img">
+        <img src="<?= $material->getThumbnail()->getURL() ?>" alt="missing_img">
         <h2><?= $material->title?></h2>
         <p><small>ID:</small><br><strong><?= $material->id ?></strong></p>
     </div>
