@@ -28,10 +28,6 @@ class Property
                 $filters[$key] = $value;
             }
         }
-        echo '<pre>';
-        echo print_r($filters);
-        echo '</pre>';
-
         return $filters;
     }
 }
