@@ -1,5 +1,5 @@
 /* Filters from previous search are kept here */
-if (typeof lastPost === 'undefined') {
+if (typeof lastSearch === 'undefined') {
     console.error('Missing last post data, functions from tabular.js will not work properly');
 }
 
@@ -20,7 +20,7 @@ function toggleSort(attribute)
     let sortDir = document.createElement('input');
     sortDir.type = 'hidden';
     sortDir.name = 'sortDir';
-    sortDir.value = lastPost['sort'] === attribute && lastPost['sortDir'] === 'ASC' ? 'DESC' : 'ASC';
+    sortDir.value = lastSearch['sort'] === attribute && lastSearch['sortDir'] === 'ASC' ? 'DESC' : 'ASC';
 
     let form = document.querySelector('form');
     form.action = "";
@@ -55,7 +55,7 @@ function addToFilters(key, value)
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    for (var p in lastPost) {
-        addToFilters(p, lastPost[p]);
+    for (var p in lastSearch) {
+        addToFilters(p, lastSearch[p]);
     }
 });

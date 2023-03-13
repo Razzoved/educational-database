@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 
-<form method="post" action="">
+<form method="get" action="">
 <div class="page">
 
     <div class="page-sidebar">

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<?= base_url('public/css/admin.css') ?>">
     <link rel="stylesheet" href="<?= base_url('public/css/modal.css') ?>">
 
-    <script>let lastPost = <?= json_encode($_POST ?? []) ?>;</script>
+    <script>let lastSearch = <?= json_encode($_GET ?? []) ?>;</script>
 </head>
 
 <body>

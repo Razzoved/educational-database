@@ -2,7 +2,6 @@
 
 <?= $this->section('content') ?>
 
-<form method="post" action="">
 <div class="page">
 
     <main class="page-content">
@@ -22,14 +21,4 @@
     </main>
 
 </div>
-</form>
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script>
-    // prevent resubmit on page
-    if (window.history.replaceState) {
-        window.history.replaceState( null, null, window.location.href );
-    }
-</script>
 <?= $this->endSection() ?>

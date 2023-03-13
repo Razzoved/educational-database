@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="<?= base_url('public/css/collapsible.css') ?>">
     <link rel="stylesheet" href="<?= base_url('public/css/public.css') ?>">
 
-    <script>let lastPost = <?= json_encode($_POST ?? []) ?>;</script>
+    <script>let lastSearch = <?= json_encode($_GET ?? []) ?>;</script>
 </head>
 
 <body>

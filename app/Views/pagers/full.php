@@ -47,8 +47,8 @@
 </div>
 
 <script type="text/javascript">
-    if (typeof lastPost === 'undefined') {
-        console.error('lastPost is undefined, PAGER will not work properly');
+    if (typeof lastSearch === 'undefined') {
+        console.error('lastSearch is undefined, PAGER will not work properly');
     }
 
     /**
@@ -63,8 +63,8 @@
         form.action = url;
         form.method = 'post';
 
-        for (var key in lastPost) {
-            addToForm(form, key, lastPost[key]);
+        for (var key in lastSearch) {
+            addToForm(form, key, lastSearch[key]);
         }
 
         document.body.appendChild(form);

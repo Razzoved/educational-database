@@ -9,7 +9,7 @@
 
     <main class="page-content">
         <h1><?= $title ?></h1>
-        <form method="post" action="<?= base_url('admin/users/1') ?>">
+        <form method="get" action="<?= base_url('admin/users/1') ?>">
             <div class="page-controls">
                 <input name="search" value="" placeholder="Search"/>
                 <button style="width: 10vw; min-width: fit-content" type="submit">Search</button>

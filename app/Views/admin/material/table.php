@@ -5,7 +5,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<form method="post" action="<?= base_url('admin/materials/1') ?>">
+<form method="get" action="<?= base_url('admin/materials/1') ?>">
 <div class="page">
     <div class="page-sidebar">
         <h1><?= $title ?></h1>

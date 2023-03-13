@@ -23,8 +23,8 @@ class MaterialTopRated extends Material
     {
         $sort = 'rating';
         $sortDir = 'DESC';
-        $search = $this->request->getPost('search') ?? "";
-        $filters = $this->request->getPost('filters') ?? [];
+        $search = $this->request->getPostGet('search') ?? "";
+        $filters = $this->request->getPostGet('filters') ?? [];
 
         return ($search !== "" || $filters !== [])
             ? $this->materials->getByFilters($sort, $sortDir, $search, $filters)
