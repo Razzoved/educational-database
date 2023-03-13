@@ -32,12 +32,3 @@
 </div>
 </form>
 <?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script>
-    // prevent resubmit on page
-    if (window.history.replaceState) {
-        window.history.replaceState( null, null, window.location.href );
-    }
-</script>
-<?= $this->endSection() ?>

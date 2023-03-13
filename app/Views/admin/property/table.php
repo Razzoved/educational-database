@@ -96,10 +96,5 @@
         del.setAttribute("onclick", `deleteOpen("${data.id}")`);
         document.getElementById('items').appendChild(template);
     }
-
-    // prevent resubmit on page
-    if (window.history.replaceState) {
-        window.history.replaceState( null, null, window.location.href );
-    }
 </script>
 <?= $this->endSection() ?>

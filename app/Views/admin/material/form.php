@@ -110,7 +110,7 @@
         <!-- buttons -->
         <div class="row g-0">
             <?= form_submit(['class' => 'col btn btn-lg btn-dark w-50 edit-mr'], 'Save') ?>
-            <button type="button" class="col btn btn-lg btn-danger w-50" onclick="goBack()">Cancel</button>
+            <button type="button" class="col btn btn-lg btn-danger w-50" onclick="window.history.back()">Cancel</button>
         </div>
 
     <?= form_close() ?>
@@ -132,17 +132,6 @@
         newInput.setAttribute('value', filepath.replace('<?= base_url() ?>/', '').replace('<?= base_url() ?>\\', ''));
 
         unused.appendChild(newInput);
-    }
-
-    function goBack()
-    {
-        var prevPage = window.location.href;
-        window.history.go(-1);
-        setTimeout(function(){
-            if (window.location.href == prevPage) {
-                window.location.href = "<?= base_url('admin/materials') ?>";
-            }
-        }, 500);
     }
 </script>
 

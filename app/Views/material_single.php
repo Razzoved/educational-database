@@ -34,7 +34,7 @@
 
             <header class="material-header">
                 <div class="material-title">
-                    <button type='button' onclick="history.go(-1)" class="btn btn-dark">
+                    <button type='button' onclick="window.history.back()" class="btn btn-dark">
                         Go back
                     </button>
                     <h1><?= $material->title ?></h1>

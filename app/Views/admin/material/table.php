@@ -46,12 +46,3 @@
 <?= $this->section('modals') ?>
 <?= view('admin/delete', ['action' => base_url('admin/materials/delete')]) ?>
 <?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script type="text/javascript">
-// prevent resubmit on page
-    if (window.history.replaceState) {
-        window.history.replaceState(null, null, window.location.href);
-    }
-</script>
-<?= $this->endSection() ?>
