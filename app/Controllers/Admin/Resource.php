@@ -8,8 +8,6 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-use App\Models\ResourceModel;
-
 class Resource extends BaseController
 {
     private Resources $resourceLibrary;

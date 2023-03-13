@@ -116,48 +116,6 @@ class MaterialPropertyModel extends Model
     }
 
     /**
-     * Returns all properties along with their usage count as an array
-     * of Property objects.
-     *
-     * @return array all properties with loaded usages
-     */
-    public function getPropertiesWithUsage() : array
-    {
-        return $this->builder()
-                    ->select('properties.*')
-                    ->selectCount('material_id', 'usage')
-                    ->join('properties', "$this->table.property_id = properties.property_id", 'right')
-                    ->groupBy('properties.property_id')
-                    ->orderBy('usage', 'DESC')
-                    ->orderBy('properties.property_tag')
-                    ->orderBy('properties.property_value')
-                    ->get()
-                    ->getCustomResultObject(Property::class);
-    }
-
-    /**
-     * Returns all properties that have a given TAG along with their usage
-     * count as an array of Property objects.
-     *
-     * @param string $tag tag to show
-     * @return array properties with loaded usages
-     */
-    public function getPropertiesOfTagWithUsage(string $tag) : array
-    {
-        return $this->builder()
-                    ->select('properties.*')
-                    ->selectCount('material_id', 'usage')
-                    ->join('properties', "$this->table.property_id = properties.property_id", 'right')
-                    ->where('properties.property_tag', $tag)
-                    ->groupBy('properties.property_id')
-                    ->orderBy('usage', 'DESC')
-                    ->orderBy('properties.property_tag')
-                    ->orderBy('properties.property_value')
-                    ->get()
-                    ->getCustomResultObject(Property::class);
-    }
-
-    /**
      * Compiles an SQL query, which returns all id's of materials, whose
      * proterties meet the filtering criteria. This query is not executed
      * and is returned as string.
