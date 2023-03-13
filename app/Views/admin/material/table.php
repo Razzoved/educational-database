@@ -34,6 +34,10 @@
             foreach($materials as $material) {
                 echo view_cell('\App\Libraries\Material::toRow', ['material' => $material, 'index' => $index++]);
             }
+            if ($materials === []) {
+                echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
+                echo '<h2 style="text-align:center">None were found.</h2>';
+            }
             ?>
         </div>
 

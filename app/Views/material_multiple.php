@@ -23,6 +23,10 @@
             foreach($materials as $material) {
                 echo view('components/material_as_card', ['material' => $material]);
             }
+            if ($materials === []) {
+                echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
+                echo '<h2 style="text-align:center">None were found.</h2>';
+            }
         ?>
         </div>
 
