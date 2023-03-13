@@ -61,6 +61,11 @@ class UserModel extends Model
         return $this;
     }
 
+    public function getId(?string $email) : ?int
+    {
+        return $this->getByEmail($email)->id ?? null;
+    }
+
     public function getByEmail(?string $email) : ?User
     {
         if ($email === null) {

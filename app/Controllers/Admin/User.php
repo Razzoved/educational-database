@@ -10,7 +10,6 @@ use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
-use Config\Services;
 use Exception;
 use Psr\Log\LoggerInterface;
 
@@ -137,14 +136,14 @@ class User extends BaseController
         echo json_encode($email);
     }
 
-        /**
+    /**
      * Convenience method that handles ajax requests to save into database.
      * May result in exception when saving.
      *
      * @param array $rules what to check in post data
      * @param bool $isUpdate wheter to update or insert
      */
-    private function ajaxSave(array $rules, bool $isUpdate = false) : void
+    private function ajaxSave(array $rules, bool $isUpdate) : void
     {
         if (!$this->checkAjax()) return;
 
@@ -189,18 +188,19 @@ class User extends BaseController
 
         // do not overwrite password if not changed
         $password = $this->request->getPost('password');
-        if ($password !== "" && $password !== null) {
+        if ($password && $password !== "") {
             $data['password'] = $password;
         }
 
         $user = new EntitiesUser($data);
         if ($isUpdate) {
-            $this->users->update($user->email, $user);
+            $user->id = $this->users->getId($data['email']);
+            $this->users->update($user->id, $user);
         } else {
-            $this->users->insert($user);
+            $user->id = $this->users->insert($user, true);
         }
 
-        $user = $this->users->getByEmail($user->email);
+        $user = $this->users->find($user->id);
         $user->password = '';
         return $user;
     }
