@@ -181,10 +181,10 @@ class Property extends BaseController
 
     private function loadProperties(): PropertyModel
     {
-        $sort = $this->request->getPostGet('sort');
-        $sortDir = $this->request->getPostGet('sortDir');
-        $search = $this->request->getPostGet('search') ?? "";
-        $filters = $this->request->getPostGet('filters') ?? [];
+        $sort = $this->request->getGetPost('sort');
+        $sortDir = $this->request->getGetPost('sortDir');
+        $search = $this->request->getGetPost('search') ?? "";
+        $filters = \App\Libraries\Property::getFilters($this->request->getGet() ?? []);
 
         return ($search !== "" || $filters !== [])
             ? $this->properties->getByFilters($sort, $sortDir, $search, $filters)

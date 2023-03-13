@@ -9,11 +9,11 @@
 
 <li class="collapsible-list-item<?= $overflow ? ' overflow' : '' ?>">
     <input type="checkbox"
-        name="filters[<?= esc($tag) ?>][<?= esc($value) ?>]"
-        id="filters[<?= esc($tag) ?>][<?= esc($value) ?>]"
+        name="<?= esc($tag) ?>[<?= esc($value) ?>]"
+        id="[<?= esc($tag) ?>[<?= esc($value) ?>]"
         label="checkbox-item">
     </input>
-    <label for="filters[<?= esc($tag) ?>][<?= esc($value) ?>]">
+    <label for="<?= esc($tag) ?>[<?= esc($value) ?>]">
             <?= esc($value) ?>
     </label>
 </li>

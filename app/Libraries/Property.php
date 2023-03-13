@@ -18,4 +18,20 @@ class Property
             ['property' => $property, 'showButtons' => true, 'index' => $index]
         );
     }
+
+    public static function getFilters(array $source, array $ignore = ['search', 'sort', 'sortDir']) : array
+    {
+        $filters = [];
+        foreach ($source as $key => $value) {
+            $key = str_replace('_', ' ', $key);
+            if (!in_array($key, $ignore, true)) {
+                $filters[$key] = $value;
+            }
+        }
+        echo '<pre>';
+        echo print_r($filters);
+        echo '</pre>';
+
+        return $filters;
+    }
 }

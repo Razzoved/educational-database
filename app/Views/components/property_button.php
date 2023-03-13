@@ -10,7 +10,7 @@
 <li class="collapsible-list-item<?= $overflow ? ' overflow' : '' ?>">
     <form method="post" action='<?= base_url('/1') ?>' style="display: block">
         <input type="submit"
-               name="filters[<?= esc($tag) ?>][<?= esc($value) ?>]" value="<?= esc($value) ?>"
+               name="<?= esc($tag) ?>[<?= esc($value) ?>]" value="<?= esc($value) ?>"
                style="white-space:normal; word-wrap: normal"
         >
     </form>

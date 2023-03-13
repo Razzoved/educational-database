@@ -1,6 +1,6 @@
 /* Filters from previous search are kept here */
 if (typeof lastSearch === 'undefined') {
-    console.error('Missing last post data, functions from tabular.js will not work properly');
+    console.error('Missing lastSearch data, functions from tabular.js will not work properly');
 }
 
 function deleteId(id)
@@ -43,7 +43,7 @@ function addToFilters(key, value)
             addToFilters(`${key}[${k}]`, value[k]);
         }
     } else {
-        var elems = document.querySelectorAll(`[name='${key}']`) ?? [];
+        var elems = document.querySelectorAll(`[name='${key.replace('_', ' ')}']`) ?? [];
         elems.forEach(e => {
             switch (e.type) {
                 case 'checkbox': e.checked = value == 'on'; break;

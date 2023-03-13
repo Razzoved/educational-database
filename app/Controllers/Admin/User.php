@@ -227,9 +227,9 @@ class User extends BaseController
 
     private function loadUsers(): UserModel
     {
-        $sort = $this->request->getPostGet('sort');
-        $sortDir = $this->request->getPostGet('sortDir');
-        $search = $this->request->getPostGet('search') ?? "";
+        $sort = $this->request->getGetPost('sort');
+        $sortDir = $this->request->getGetPost('sortDir');
+        $search = $this->request->getGetPost('search') ?? "";
 
         return ($search !== "")
             ? $this->users->getByFilters($sort, $sortDir, $search)
