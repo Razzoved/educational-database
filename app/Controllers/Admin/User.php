@@ -113,7 +113,7 @@ class User extends BaseController
     {
         if (!$this->checkAjax()) return;
 
-        if (!$this->validate(['email' => "required|is_not_unique[users.user_email]"])) {
+        if (!$this->validate(['email' => "required|is_not_unique[users.user_email]"]) || !session('user')) {
             $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
             echo view('errors/error_modal', [
                 'title' => 'User deletion error',
@@ -122,7 +122,19 @@ class User extends BaseController
             return;
         }
 
-        $email = $this->request->getPost('email') ?? "MISSING";
+        $email = $this->request->getPost('email') ?? 'DOES NOT HAPPEN';
+
+        // cannot delete self
+        if (session('user')->email === $email) {
+            $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED);
+            echo view('errors/error_modal', [
+                'title' => 'User deletion error',
+                'message' => 'You cannot delete yourself!<br>Please ask the administrator for confirmation.'
+            ]);
+            return;
+        }
+
+        // try to delete the user
         try {
             $this->users->deleteEmail($email);
         } catch (Exception $e) {
@@ -133,6 +145,7 @@ class User extends BaseController
             ]);
             return;
         }
+
         echo json_encode($email);
     }
 
