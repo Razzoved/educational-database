@@ -3,16 +3,14 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
-
-use App\Models\PropertyModel;
 use App\Models\MaterialPropertyModel;
+use App\Models\PropertyModel;
 use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Exception;
 
 class Property extends BaseController
@@ -105,7 +103,7 @@ class Property extends BaseController
     {
         $value = $this->request->getPost('value');
         $rules = [
-            'tag'      => "required|string|uniqueProperty[{$value}]",
+            'tag'      => "required|string|uniqueProperty[{$value}]|not_in_list[search,sort,sortDir]",
             'value'    => "required|string",
         ];
 
