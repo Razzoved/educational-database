@@ -1,5 +1,5 @@
-<form id="search" autocomplete="false" method="post" action="<?= $action ?? '' ?>">
-    <input name="search" value="" placeholder="Enter search value"/>
+<form id="search" autocomplete="false" method="get" action="<?= $action ?? '' ?>">
+    <input name="search" value="" placeholder="Enter search value" onblur="sendSearch()"/>
     <button type="button" onclick="sendSearch()">Search</button>
     <button type="button" onclick="selectAll()">All</button>
 </form>
@@ -17,21 +17,15 @@
         if (filtersInput !== undefined) {
             filtersInput.forEach(function(filter) {
                 if (filter.checked) {
-                    searchForm.appendChild(filter);
+                    let item = document.createElement('input');
+                    item.setAttribute('type', 'hidden');
+                    item.setAttribute('name', filter.name);
+                    item.setAttribute('value', 'on');
+                    searchForm.appendChild(item);
                 }
             })
         }
 
-        $.ajax({
-            type: "POST",
-            URL: searchForm.action,
-            data: $('#searchForm').serialize(),
-            success: function(result) {
-                document.documentElement.innerHTML = result;
-            },
-            error: function() {
-                window.location.reload();
-            }
-        });
+        searchForm.submit();
     }
 </script>
