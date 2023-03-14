@@ -9,20 +9,13 @@
 
     <main class="page-content">
         <h1><?= $title ?></h1>
-        <form method="get" action="<?= base_url('admin/users/1') ?>">
-            <div class="page-controls">
-                <input name="search" value="" placeholder="Search"/>
-                <button style="width: 10vw; min-width: fit-content" type="submit">Search</button>
-            </div>
-        </form>
 
         <div class="page-controls">
-            <button type="button" onclick="toggleSort('name')">
-                <i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'name' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Name
-            </button>
-            <button type="button" onclick="toggleSort('email')">
-                <i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'email' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Email
-            </button>
+            <?= view('search_bar', ['action' => base_url('admin/users/1')]) ?>
+        </div>
+
+        <div class="page-controls">
+            <?= view('sort_bar', ['sorters' => ['Name', 'Email']]); ?>
             <button class="create" type="button" onclick="userOpen()">&#65291</a>
         </div>
 

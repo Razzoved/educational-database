@@ -1,7 +1,7 @@
 <div class="sorters">
     <?php
         foreach ($sorters as $sorter) {
-            echo '<button type="button" onclick="toggleSort(this)" value="' . esc(strtolower($sorter)) . '">';
+            echo '<button type="button" onclick="toggleSort(this)" value="' . strtolower(str_replace(' ', '_', esc($sorter))) . '">';
             echo '<i class="fa-solid fa-caret-up"></i>';
             echo esc($sorter);
             echo '</button>';
@@ -11,7 +11,7 @@
 
 <script type="text/javascript">
     if (typeof lastSearch === 'undefined') {
-        console.error('Missing lastSearch data, sorters will always default to ASC');
+        console.error('Missing lastSearch data, sorters will not work as intended!');
     }
 
     function toggleSort(element)
@@ -32,4 +32,12 @@
         form.appendChild(sortDir);
         form.submit();
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let sorter = document.querySelector(`.sorters > button[value='${lastSearch['sort']}']`);
+        if (sorter) {
+            sorter.classList.add('active');
+            if (lastSearch['sortDir'] === 'DESC') sorter.classList.add('down');
+        }
+    });
 </script>

@@ -19,7 +19,7 @@
         <h1><?= $title ?></h1>
 
         <div class="page-controls">
-            <?= view('search_bar') ?>
+            <?= view('search_bar', ['action' => base_url('admin/tags/1')]) ?>
         </div>
 
         <div class="page-controls">
