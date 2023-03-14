@@ -1,7 +1,6 @@
 <form id="search" autocomplete="false" method="get" action="<?= $action ?? '' ?>">
     <input name="search" value="" placeholder="Enter search value" onblur="sendSearch()"/>
     <button type="button" onclick="sendSearch()">Search</button>
-    <button type="button" onclick="selectAll()">All</button>
 </form>
 
 <script type="text/javascript">
