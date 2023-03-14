@@ -10,25 +10,6 @@ function deleteId(id)
     if (element) { element.remove(); }
 }
 
-function toggleSort(attribute)
-{
-    let sort = document.createElement('input');
-    sort.type = 'hidden';
-    sort.name = 'sort';
-    sort.value = attribute;
-
-    let sortDir = document.createElement('input');
-    sortDir.type = 'hidden';
-    sortDir.name = 'sortDir';
-    sortDir.value = lastSearch['sort'] === attribute && lastSearch['sortDir'] === 'ASC' ? 'DESC' : 'ASC';
-
-    let form = document.querySelector('form');
-    form.action = "";
-    form.appendChild(sort);
-    form.appendChild(sortDir);
-    form.submit();
-}
-
 /**
  * Recursively goes through last post and fills all filters
  * into the elements.

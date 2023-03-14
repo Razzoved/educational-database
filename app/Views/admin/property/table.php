@@ -5,30 +5,25 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<form method="get" action="<?= base_url('admin/tags/1') ?>">
 <div class="page">
 
     <div class="page-sidebar">
         <h1><?= $title ?></h1>
-        <div class="page-controls">
-            <input name="search" value="" placeholder="Search"/>
-            <button type="submit">Search</button>
-        </div>
+        <input id="tag" type="text" placeholder="Tag">
+        <input id="value" type="text" placeholder="Value">
+        <button class="create" type="button" style="width: 50%" onclick="createProperty()">Create</button>
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
 
     <main class="page-content">
         <h1><?= $title ?></h1>
+
         <div class="page-controls">
-            <input id="tag" type="text" class="form-control me-2" placeholder="Tag">
-            <input id="value" type="text" class="form-control me-2" placeholder="Value">
-            <button class="create" type="button" style="width: 50%" onclick="createProperty()">Create</button>
+            <?= view('search_bar') ?>
         </div>
+
         <div class="page-controls">
-            <button type="button" onclick="toggleSort('id')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'id' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> ID</button>
-            <button type="button" onclick="toggleSort('tag')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'tag' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Tag</button>
-            <button type="button" onclick="toggleSort('value')" class="ms-1 me-1 btn btn-dark"><i class="fa-solid <?= isset($_POST['sort']) && $_POST['sort'] === 'value' ? ($_POST['sortDir'] === 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-caret-right' ?>"></i> Value</button>
-            <!-- TODO: <button type="button" onclick="toggleSort('usage')" class="d-none d-md-inline ms-1 me-1 btn btn-dark"><i class="fa-solid fa-caret-right"></i> Usage</button> -->
+            <?= view('sort_bar', ['sorters' => ['Id', 'Tag', 'Value']]) ?>
         </div>
 
         <div class="table" id="items">
@@ -48,7 +43,6 @@
         <?= $pager->links('default', 'full') ?>
     </main>
 </div>
-</form>
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>
