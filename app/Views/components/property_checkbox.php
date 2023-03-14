@@ -8,10 +8,9 @@
 ?>
 
 <li class="collapsible-list-item<?= $overflow ? ' overflow' : '' ?>">
-    <input type="checkbox"
+    <input class="filter" type="checkbox"
         name="<?= esc($tag) ?>[<?= esc($value) ?>]"
-        id="[<?= esc($tag) ?>[<?= esc($value) ?>]"
-        label="checkbox-item">
+        id="<?= esc($tag) ?>[<?= esc($value) ?>]">
     </input>
     <label for="<?= esc($tag) ?>[<?= esc($value) ?>]">
             <?= esc($value) ?>

@@ -2,7 +2,6 @@
 
 <?= $this->section('content') ?>
 
-<form method="get" action="">
 <div class="page">
 
     <div class="page-sidebar">
@@ -14,8 +13,7 @@
         <h1><?= $title ?></h1>
 
         <div class="page-controls">
-            <input name="search" value="" placeholder="Search"/>
-            <button type="submit">Search</button>
+            <?= view('search_bar') ?>
         </div>
 
         <div id="items">
@@ -34,5 +32,4 @@
     </main>
 
 </div>
-</form>
 <?= $this->endSection() ?>

@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="<?= base_url('public/css/admin.css') ?>">
     <link rel="stylesheet" href="<?= base_url('public/css/modal.css') ?>">
 
-    <script>let lastSearch = <?= json_encode($_GET ?? []) ?>;</script>
+    <script>let lastSearch = <?= json_encode($_POST === [] ? $_GET : $_POST) ?>;</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 
 <body>
