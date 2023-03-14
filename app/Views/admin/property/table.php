@@ -9,9 +9,11 @@
 
     <div class="page-sidebar">
         <h1><?= $title ?></h1>
-        <input id="tag" type="text" placeholder="Tag">
-        <input id="value" type="text" placeholder="Value">
-        <button class="create" type="button" style="width: 50%" onclick="createProperty()">Create</button>
+        <div>
+            <input id="tag" type="text" placeholder="Enter tag category">
+            <input id="value" type="text" placeholder="Enter tag name">
+            <button class="create" type="button" onclick="createProperty()">Create</button>
+        </div>
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
 
@@ -20,9 +22,6 @@
 
         <div class="page-controls">
             <?= view('search_bar', ['action' => base_url('admin/tags/1')]) ?>
-        </div>
-
-        <div class="page-controls">
             <?= view('sort_bar', ['sorters' => ['Id', 'Tag', 'Value']]) ?>
         </div>
 

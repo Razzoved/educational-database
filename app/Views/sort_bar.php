@@ -6,6 +6,11 @@
             echo esc($sorter);
             echo '</button>';
         }
+        if (isset($create)) {
+            echo '<button class="create" type="button" onclick="';
+            echo $create;
+            echo '">&#65291</button>';
+        }
     ?>
 </div>
 

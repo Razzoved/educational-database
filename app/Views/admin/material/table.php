@@ -15,10 +15,9 @@
         <h1><?= $title ?></h1>
         <div class="page-controls">
             <?= view('search_bar', ['action' => base_url('admin/materials/1')]) ?>
-        </div>
-        <div class="page-controls">
-            <?= view('sort_bar', ['sorters' => ['ID', 'Title', 'Created at', 'Updated at', 'Views']]); ?>
-            <button class="create" type="button" onclick="window.location.href='<?= base_url('admin/materials/edit') ?>'">&#65291</button>
+            <?= view('sort_bar', [
+                'sorters' => ['ID', 'Title', 'Created at', 'Updated at', 'Views'],
+                'create' => "window.location.href='" . base_url('admin/materials/edit') . "'"]) ?>
         </div>
 
         <div class="table" id="items">

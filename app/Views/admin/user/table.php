@@ -12,11 +12,7 @@
 
         <div class="page-controls">
             <?= view('search_bar', ['action' => base_url('admin/users/1')]) ?>
-        </div>
-
-        <div class="page-controls">
-            <?= view('sort_bar', ['sorters' => ['Name', 'Email']]); ?>
-            <button class="create" type="button" onclick="userOpen()">&#65291</a>
+            <?= view('sort_bar', ['sorters' => ['Name', 'Email'], 'create' => 'userOpen()']); ?>
         </div>
 
         <div class="table" id="items">
