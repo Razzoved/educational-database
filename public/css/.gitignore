@@ -1,1 +1,8 @@
-*.css
+*
+
+!.gitignore
+
+!scss/
+!scss/*/
+!scss/*.scss
+!scss/*/*.scss

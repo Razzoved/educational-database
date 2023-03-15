@@ -1,0 +1,58 @@
+/*
+This file contains default settings for all text elements.
+
+
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Noto Sans');
+
+* {
+    font-family: 'Noto Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: initial;
+    font-weight: normal;
+    color: #222222;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 2rem;
+    @media screen and (max-width: var(--sm)) {
+        font-size: 1.8rem;
+    }
+}
+
+h2 {
+    font-size: 1.8rem;
+    @media screen and (max-width: var(--sm)) {
+        font-size: 1.6rem;
+    }
+}
+
+h3 {
+    font-size: 1.6rem;
+    @media screen and (max-width: var(--sm)) {
+        font-size: 1.4rem;
+    }
+}
+
+h4 {
+    font-size: 1.4rem;
+    @media screen and (max-width: var(--sm)) {
+        font-size: 1.3rem;
+    }
+}
+
+h5 {
+    font-size: 1.2rem;
+    @media screen and (max-width: var(--sm)) {
+        font-size: 1.1rem;
+    }
+}
+
+h6 {
+    font-size: 1.1rem;
+}
+
+p, pre, a, i {
+    font-size: 1rem;
+}
