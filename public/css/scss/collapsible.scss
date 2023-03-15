@@ -1,11 +1,13 @@
+@import 'defaults/variables';
+
 .collapsible {
     position: relative;
     justify-content: left;
     align-items: start;
-    box-shadow: 0.2rem 0.2rem 0.6rem var(--clr-dark-transparent);
-    border: var(--clr-dark) 1px solid;
+    box-shadow: 0.2rem 0.2rem 0.6rem $clr-dark-transparent;
+    border: $clr-dark 1px solid;
     border-radius: 1rem;
-    background-color: var(--clr-light-transparent);
+    background-color: $clr-light-transparent;
     overflow: hidden;
 
     &:first-child {
@@ -17,8 +19,7 @@
     }
 
     &-btn {
-        color: var(--clr-text);
-        background-color: var(--clr-light);
+        background-color: $clr-light;
         display: flex;
         padding: 0.5rem 0.5rem;
         font-weight: 600;
@@ -38,7 +39,7 @@
         }
 
         &:hover * {
-            color: var(--clr-focus);
+            color: $clr-focus;
         }
     }
 
@@ -52,10 +53,11 @@
         cursor: pointer;
 
         &-item {
+            color: $clr-light;
             padding: 0.3rem;
             &:hover * {
-                color: var(--clr-focus);
-                background-color: var(--clr-focus-bg);
+                color: $clr-focus;
+                background-color: $clr-focus-bg;
             }
             input[type='checkbox'] {
                 transform: scale(1.5);
@@ -63,7 +65,7 @@
                 float: left;
                 cursor: pointer;
                 &:hover {
-                    background-color: var(--clr-focus-bg);
+                    background-color: $clr-focus-bg;
                 }
             }
             input[type='checkbox'] + label {
@@ -80,15 +82,15 @@
                 padding: 0.2rem;
                 margin-top: 0.2rem;
                 border-radius: 0.5rem;
-                border-color: var(--clr-text-small);
-                color: var(--clr-text);
-                background-color: var(--clr-light-transparent);
+                border-color: $clr-text-small;
+                color: $clr-text;
+                background-color: $clr-light-transparent;
                 justify-content: center;
                 text-decoration: none;
                 &:hover {
-                    color: var(--clr-focus);
-                    background-color: var(--clr-focus-bg);
-                    border-color: var(--clr-focus);
+                    color: $clr-focus;
+                    background-color: $clr-focus-bg;
+                    border-color: $clr-focus;
                 }
             }
         }
@@ -98,15 +100,15 @@
     }
 
     & .overflow-btn {
-        color: var(--clr-text);
-        border-color: var(--clr-dark-transparent);
-        background-color: var(--clr-light-transparent);
+        color: $clr-text;
+        border-color: $clr-dark-transparent;
+        background-color: $clr-light-transparent;
     }
 
     & .overflow-btn:hover {
-        color: var(--clr-focus);
-        border-color: var(--clr-focus);
-        background-color: var(--clr-focus-bg);
+        color: $clr-focus;
+        border-color: $clr-focus;
+        background-color: $clr-focus-bg;
     }
 
     &.closed &-list,

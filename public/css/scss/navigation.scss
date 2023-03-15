@@ -1,17 +1,19 @@
+@import 'defaults/variables';
+
 .navbar {
-    --height: 6rem;
-    --padding: 1rem;
-    --font-size: 1.25rem;
+    $height: 6rem;
+    $padding: 1rem;
+    $font-size: 1.25rem;
 
     overflow: hidden;
-    background-color: var(--clr-dark);
-    box-shadow: 0rem 0.5rem 1rem var(--clr-dark-transparent);
-    border-bottom: var(--clr-dark) solid 0.15rem;
+    background-color: $clr-dark;
+    box-shadow: 0rem 0.5rem 1rem $clr-dark-transparent;
+    border-bottom: $clr-dark solid 0.15rem;
     margin-bottom: 1rem;
 
     img, a {
         cursor: pointer;
-        color: var(--clr-light);
+        color: $clr-light;
         float: left;
         display: block;
         text-align: center;
@@ -19,30 +21,29 @@
     }
     img {
         resize: both;
-        height: var(--height);
-        padding: calc(var(--padding) / 2) calc(var(--padding) / 2);
+        height: $height;
+        padding: calc($padding / 2) calc($padding / 2);
     }
 
     a {
         position: relative;
-        top: var(--padding);
-        padding: 0rem var(--padding);
-        line-height: calc(var(--height) - 2rem);
-        font-size: var(--font-size);
+        top: $padding;
+        padding: 0rem $padding;
+        line-height: calc($height - 2rem);
+        font-size: $font-size;
         font-weight: 600;
         text-decoration: none;
         border-radius: 1rem;
     }
 
-
     a:hover {
-        color: var(--clr-focus);
-        background-color: var(--clr-focus-bg);
+        color: $clr-focus;
+        background-color: $clr-focus-bg;
     }
 
     .active {
-        color: var(--clr-active);
-        background-color: var(--clr-active-bg);
+        color: $clr-active;
+        background-color: $clr-active-bg;
     }
 
     .login, .icon {
@@ -65,13 +66,13 @@
         &.responsive {
             // show links if toggled to responsive
             a:not(.icon) {
-                --h: calc(var(--height) * 0.6);
+                $h: calc($height * 0.6);
                 clear: both;
                 float: none;
                 display: block;
                 text-align: left;
-                font-size: calc(var(--font-size) - 0.25rem);
-                line-height: calc(var(--h));
+                font-size: calc($font-size - 0.25rem);
+                line-height: $h;
             }
             // margin after last link
             a:nth-last-child(2) {
@@ -80,8 +81,8 @@
             // icon is displayed separately separate from links
             .icon {
                 position: absolute;
-                right: var(--padding);
-                top: calc(var(--padding) * 2);
+                right: $padding;
+                top: calc($padding * 2);
             }
         }
     }
@@ -100,19 +101,19 @@
     }
 
     .pager-item {
-        --border: var(--clr-light) 1px solid;
+        $border: $clr-light 1px solid;
         button {
             height: 100%;
             padding: 0.5rem 1.5rem;
-            border: var(--border);
+            border: $border;
             border-left: 0px;
             border-radius: 0px;
-            font-weight: var(--fw-button);
-            color: var(--clr-light);
-            background-color: var(--clr-dark);
+            font-weight: $fw-button;
+            color: $clr-light;
+            background-color: $clr-dark;
         }
         &:first-of-type button {
-            border-left: var(--border);
+            border-left: $border;
             border-top-left-radius: 1rem;
             border-bottom-left-radius: 1rem;
         }
@@ -121,12 +122,12 @@
             border-bottom-right-radius: 1rem;
         }
         &.active button {
-            color: var(--clr-active);
+            color: $clr-active;
         }
         button:hover {
-            color: var(--clr-focus);
-            background-color: var(--clr-focus-bg);
-            border-color: var(--clr-dark);
+            color: $clr-focus;
+            background-color: $clr-focus-bg;
+            border-color: $clr-dark;
         }
     }
 }

@@ -1,10 +1,5 @@
-// BOOTSTRAP SIZINGS
-// @media screen and (max-width: 767px) {} // xs
-// @media screen and (min-width: 768px) and (max-width: 991px) {} // sm
-// @media screen and (min-width: 992px) and (max-width: 1199px) {} // md
-// @media screen and (min-width: 1200px) {} // lg
-
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import 'defaults/variables';
+@import 'defaults/fonts';
 
 *,
 *::before,
@@ -14,35 +9,6 @@
     padding: 0;
 }
 
-:root {
-    --clr-active: #009999;
-    --clr-focus: #009999;
-    --clr-focus-bg: #ffffffcc;
-    --clr-hyperlink: #009999;
-    --clr-dark: #1a1a1a;
-    --clr-dark-transparent: #0000004b;
-    --clr-light: #f3f3f3;
-    --clr-light-transparent: #f3f3f398;
-    --clr-text: #222222;
-    --clr-text-small: #333333;
-
-    --fs-button: 1.05rem;
-    --fw-button: 400;
-}
-
-body {
-    font-family: 'Open Sans', Helvetica, Arial;
-    background-color: #fff;
-}
-
-p {
-    color: var(--clr-text);
-}
-
-small {
-    color: var(--clr-text-small);
-}
-
 a.button {
     height: 100%;
 }
@@ -50,75 +16,77 @@ a.button {
 button, input, a.button {
     padding: 0.2rem;
     border-radius: 0.4rem;
-    font-size: var(--fs-button);
-    font-weight: var(--fw-button);
+    font-size: $fs-button;
+    font-weight: $fw-button;
 }
 
 button, a.button {
-    border: var(--clr-dark) 1px solid;
-    color: var(--clr-light);
-    background-color: var(--clr-dark);
+    * {
+        color: $clr-light;
+    }
+    border: $clr-dark 1px solid;
+    background-color: $clr-dark;
     text-decoration: none;
     text-align: center;
     cursor: pointer;
 
     &.create {
-        color: var(--clr-focus-bg);
-        background-color: var(--clr-focus);
-        border: var(--clr-focus-bg) 1px solid;
+        color: $clr-focus-bg;
+        background-color: $clr-focus;
+        border: $clr-focus-bg 1px solid;
         min-width: 10rem;
     }
 
     &:hover {
-        color: var(--clr-focus);
-        background-color: var(--clr-focus-bg);
-        border-color: var(--clr-focus);
+        color: $clr-focus;
+        background-color: $clr-focus-bg;
+        border-color: $clr-focus;
     }
 }
 
 input {
-    border: var(--clr-dark) 1px solid;
-    color: var(--clr-text);
-    background-color: var(--clr-light-transparent);
-    outline-color: var(--clr-active);
-    font-size: var(--fs-button);
-    font-weight: var(--fw-button);
+    border: $clr-dark 1px solid;
+    color: $clr-text;
+    background-color: $clr-light-transparent;
+    outline-color: $clr-active;
+    font-size: $fs-button;
+    font-weight: $fw-button;
     cursor: pointer;
 
     &::placeholder {
-        color: var(--clr-dark-transparent)
+        color: $clr-dark-transparent
     }
     &:hover {
-        color: var(--clr-focus);
-        background-color: var(--clr-focus-bg);
-        border-color: var(--clr-focus);
+        color: $clr-focus;
+        background-color: $clr-focus-bg;
+        border-color: $clr-focus;
     }
 }
 
 .active {
-    color: var(--clr-active);
+    color: $clr-active;
 }
 
 input[type='checkbox']:checked {
-    accent-color: var(--clr-active);
+    accent-color: $clr-active;
 }
 
 input:read-only {
-    color: var(--clr-text);
+    color: $clr-text;
     background-color: #c7c7c7c9;
 }
 
 footer {
     position: static;
     bottom: 0px;
-    background-color: var(--clr-dark);
+    background-color: $clr-dark;
     text-align: center;
     p {
-        color: var(--clr-light-transparent);
+        color: $clr-light-transparent;
         padding: 0.25rem 0.25rem;
     }
     a {
-        color: var(--clr-hyperlink);
+        color: $clr-hyperlink;
     }
     section > a {
         padding: 1rem 1rem;

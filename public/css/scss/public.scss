@@ -1,12 +1,14 @@
+@import 'style';
+
 .card {
     display: flex;
     flex-wrap: wrap;
     overflow: hidden;
     align-items: center;
-    border: var(--clr-dark) 1px solid;
+    border: $clr-dark 1px solid;
     border-radius: 1rem;
-    box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem var(--clr-dark-transparent);
-    background-color: var(--clr-focus);
+    box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem $clr-dark-transparent;
+    background-color: $clr-focus;
     cursor: pointer;
 
     &:not(:first-child) {
@@ -37,7 +39,7 @@
         flex-grow: 9999;
         text-align: left;
         padding: 1rem;
-        background-color: var(--clr-light);
+        background-color: $clr-light;
     }
 
     &-content {
@@ -46,7 +48,7 @@
     }
 
     &-footer {
-        border-top: var(--clr-dark-transparent) 1px solid;
+        border-top: $clr-dark-transparent 1px solid;
         padding-top: 1rem;
 
         :first-child {
@@ -58,11 +60,11 @@
     }
 
     &:hover {
-        border-color: var(--clr-focus);
+        border-color: $clr-focus;
         box-shadow: none;
     }
     &:hover &-header {
-        color: var(--clr-focus);
+        color: $clr-focus;
     }
 }
 
@@ -71,10 +73,10 @@
     flex-wrap: wrap;
     overflow: hidden;
     align-items: center;
-    border: var(--clr-dark) 1px solid;
+    border: $clr-dark 1px solid;
     border-radius: 1rem;
-    box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem var(--clr-dark-transparent);
-    background-color: var(--clr-active);
+    box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem $clr-dark-transparent;
+    background-color: $clr-active;
     margin-top: 1rem;
 
     & > * {
@@ -101,14 +103,14 @@
         flex-grow: 9999;
         text-align: left;
         padding: 1rem;
-        background-color: var(--clr-light);
+        background-color: $clr-light;
         button {
             float: right;
         }
     }
 
     &-details {
-        border-top: var(--clr-dark-transparent) 1px solid;
+        border-top: $clr-dark-transparent 1px solid;
         padding-top: 1rem;
         :first-child {
             float: left;
@@ -122,7 +124,7 @@
         padding: 2rem;
         border-radius: 1rem;
         background: rgb(255,255,255);
-        background: linear-gradient(0deg, rgba(255,255,255,0) 20%, rgba(245,245,245,0.5) 60%, var(--clr-active) 300%);
+        background: linear-gradient(0deg, rgba(255,255,255,0) 20%, rgba(245,245,245,0.5) 60%, $clr-active 300%);
         & > * {
             all: revert;
         }
@@ -175,7 +177,7 @@
         -webkit-text-stroke-width: 1px;
         -webkit-text-stroke-color: black;
         &:not(.active):not(.hover) {
-            color: var(--clr-dark-transparent);
+            color: $clr-dark-transparent;
         }
     }
     i:last-of-type, small {
@@ -209,8 +211,8 @@
         }
 
         &:hover * {
-            color: var(--clr-focus);
-            background-color: var(--clr-focus-bg);
+            color: $clr-focus;
+            background-color: $clr-focus-bg;
         }
     }
 }

@@ -1,12 +1,14 @@
+@import 'style';
+
 .table {
     display: block;
 
     .item {
         margin-bottom: 1rem;
         background-color: lightgreen;
-        border: var(--clr-dark) 1px solid;
+        border: $clr-dark 1px solid;
         border-radius: 1rem;
-        box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem var(--clr-dark-transparent);
+        box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem $clr-dark-transparent;
         padding: 0.5rem;
         .row {
             align-items: center;
@@ -28,19 +30,19 @@
                     background-color: red;
                 }
                 &.edit {
-                    background-color: var(--clr-active);
+                    background-color: $clr-active;
                 }
                 &:not(:last-child) {
                     margin-left: 0.4rem;
                 }
                 &:hover {
-                    background-color: var(--clr-focus-bg);
+                    background-color: $clr-focus-bg;
                 }
             }
         }
         img {
             flex: none !important;
-            background-color: var(--clr-focus);
+            background-color: $clr-focus;
             text-align: left;
             width: 6rem;
             height: 6rem;
@@ -53,13 +55,13 @@
             background-color: white;
         }
         &.public-2 {
-            background-color: var(--clr-light-transparent);
+            background-color: $clr-light-transparent;
         }
         &:hover p, &:hover h2 {
-            color: var(--clr-focus);
+            color: $clr-focus;
         }
         &:hover {
-            background-color: var(--clr-focus-bg);
+            background-color: $clr-focus-bg;
         }
     }
 }

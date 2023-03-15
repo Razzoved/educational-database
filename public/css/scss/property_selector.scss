@@ -1,16 +1,21 @@
+@import 'defaults/variables';
+
 .property {
+    margin: 0rem 0rem 0.5rem 0rem;
 
     &-actions {
         display: flex;
         justify-content: space-evenly;
         flex-direction: row;
+        gap: 0.1rem;
 
         select, button {
-            border: 1px solid var(--clr-gray200);
+            border: 1px solid $clr-gray-transparent;
             border-radius: 0.5rem;
             padding: 0.25rem 0.5rem;
+            margin-bottom: 0.1rem;
             cursor: pointer;
-            color: #000;
+            color: $clr-text;
             background-color: #fff;
             background-image: linear-gradient(to top, #f0f0f0, #fafafa 33%);
         }
@@ -25,7 +30,7 @@
         }
 
         button:hover {
-            color: var(--clr-primary-hover);
+            color: $clr-focus;
             background-image: linear-gradient(to top, #fff, #fff 33%);
         }
 
@@ -36,11 +41,11 @@
 
     &-groups {
         padding: 0.5rem;
-        border: 2px solid var(--clr-gray200);
+        border: 2px solid $clr-gray-transparent;
         border-radius: 0.5rem;
 
         label {
-            color: var(--clr-gray400);
+            color: $clr-text;
         }
 
         .property-group {
@@ -55,7 +60,7 @@
 
             &-item {
                 display: inline-block;
-                border: 1px solid var(--clr-gray400);
+                border: 1px solid $clr-gray;
                 border-radius: 10rem;
                 background-color: #fafafa;
 
@@ -70,8 +75,9 @@
 
                 p, button {
                     display: inline-block;
+                    border: none;
                     font-size: 0.8rem;
-                    color: var(--clr-gray400);
+                    color: $clr-dark;
                     margin-bottom: 0px;
                 }
 
