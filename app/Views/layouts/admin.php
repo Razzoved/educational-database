@@ -6,7 +6,6 @@
 
     <?= $this->renderSection('header') ?>
 
-    <link rel="stylesheet" href="<?= base_url('public/css/collapsible.css') ?>">
     <link rel="stylesheet" href="<?= base_url('public/css/admin.css') ?>">
     <link rel="stylesheet" href="<?= base_url('public/css/modal.css') ?>">
 
