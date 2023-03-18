@@ -5,7 +5,7 @@
 <div class="page">
 
     <div class="page__sidebar">
-        <h1><?= $title ?></h1>
+        <h1>X</h1>
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
 
