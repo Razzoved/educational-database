@@ -1,0 +1,26 @@
+.rating {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    i {
+        font-size: 1.4rem;
+        transition: 500ms ease-out;
+    }
+    i.hover {
+        color: orange;
+        transition: none;
+    }
+    i.own {
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: black;
+        &:not(.active):not(.hover) {
+            color: $clr-dark-transparent;
+        }
+    }
+    i:last-of-type, small {
+        margin-right: 0.5rem;
+    }
+    small {
+        line-height: 1.4rem;
+    }
+}
