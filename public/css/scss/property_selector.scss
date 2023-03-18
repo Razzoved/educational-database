@@ -11,7 +11,7 @@
 
         select, button {
             border: 1px solid $clr-gray-transparent;
-            border-radius: 0.5rem;
+            border-radius: $border-radius;
             padding: 0.25rem 0.5rem;
             margin-bottom: 0.1rem;
             cursor: pointer;
@@ -42,7 +42,7 @@
     &-groups {
         padding: 0.5rem;
         border: 2px solid $clr-gray-transparent;
-        border-radius: 0.5rem;
+        border-radius: $border-radius;
 
         label {
             color: $clr-text;

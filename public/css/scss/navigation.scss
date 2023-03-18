@@ -33,7 +33,7 @@
         font-size: $font-size;
         font-weight: 600;
         text-decoration: none;
-        border-radius: 1rem;
+        border-radius: $border-radius-lg;
     }
 
     a:hover {

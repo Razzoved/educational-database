@@ -2,20 +2,30 @@
 $clr-active: #009999;
 $clr-active-bg: #3bbbbb2d;
 $clr-focus: #009999;
-$clr-focus-bg: #ffffffcc;
+$clr-focus-bg: #d4eeee;
 $clr-hyperlink: #009999;
 $clr-dark: #1a1a1a;
-$clr-dark-transparent: #0000004b;
+$clr-dark-transparent: #00000028;
 $clr-gray: #474747;
 $clr-gray-transparent: #47474717;
 $clr-light: #f3f3f3;
-$clr-light-transparent: #f3f3f398;
+$clr-light-transparent: #f3f3f37e;
 $clr-text: #222222;
-$clr-text-small: #333333;
+$clr-text-small: #444444;
+$clr-text-important: #173ea7;
 
 // button settings
 $fs-button: 1.05rem;
 $fw-button: 400;
+
+// border
+$border-radius: 0.4rem;
+$border-radius-lg: 1rem;
+
+// spaces
+$space-sm: 0.2rem;
+$space-md: 0.5rem;
+$space-lg: 1rem;
 
 // screen sizes
 $xs: 767px;
@@ -24,3 +34,6 @@ $sm: 991px;
 $md-l: $sm + 1px;
 $md: 1199px;
 $lg: 1200px;
+
+// background gradient;
+$bg-gradient: linear-gradient(21deg, rgb(225, 225, 225) 0%, rgb(235, 235, 235) 40%, rgb(255, 255, 255) 100%);

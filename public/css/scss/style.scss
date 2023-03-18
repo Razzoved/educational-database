@@ -9,13 +9,17 @@
     padding: 0;
 }
 
+body {
+    background: $bg-gradient;
+}
+
 a.button {
     height: 100%;
 }
 
 button, input, a.button {
     padding: 0.2rem;
-    border-radius: 0.4rem;
+    border-radius: $border-radius;
     font-size: $fs-button;
     font-weight: $fw-button;
 }
@@ -149,7 +153,7 @@ footer {
             top: -0.5rem;
             padding: 0.5rem;
             border: #0000003f 1px dashed;
-            border-radius: 1rem;
+            border-radius: $border-radius-lg;
         }
     }
     &-controls {
