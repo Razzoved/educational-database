@@ -45,11 +45,15 @@
             color: $clr-light;
             background-color: unset;
         }
+        &.active {
+            color: unset;
+            background-color: unset;
+        }
         &.active * {
             color: $clr-active;
             background-color: $clr-active-bg;
         }
-        &:hover, &:hover * {
+        &:hover * {
             color: $clr-focus;
             background-color: $clr-focus-bg;
         }
