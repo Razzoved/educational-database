@@ -1,0 +1,24 @@
+@import '../defaults/variables';
+
+.search {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-bottom: 1rem;
+
+    & &__bar {
+        flex-grow: 1.4;
+        flex-shrink: 1;
+        &:not(:first-child) {
+            margin-left: 0.4rem;
+        }
+    }
+
+    & &__submit {
+        flex-grow: 0.6;
+        flex-shrink: 1;
+        &:not(:first-child) {
+            margin-left: 0.4rem;
+        }
+    }
+}
