@@ -7,7 +7,7 @@
 <?= $this->section('content') ?>
 <div class="page">
 
-    <main class="page-content">
+    <div class="page-content">
         <h1><?= $title ?></h1>
         <div class="table" id="items">
         <?php
@@ -20,7 +20,7 @@
             }
         ?>
         </div>
-    </main>
+    </div>
 </div>
 <?= $this->endSection() ?>
 

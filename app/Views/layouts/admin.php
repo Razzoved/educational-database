@@ -16,9 +16,9 @@
 <body>
     <?= $this->include('admin/navigation_bar') ?>
 
-    <div class="container" style="min-height: 100vh">
+    <main class="container">
         <?= $this->renderSection('content') ?>
-    </div>
+    </main>
 
     <?= $this->renderSection('modals') ?>
 

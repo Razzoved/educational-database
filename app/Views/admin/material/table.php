@@ -11,7 +11,7 @@
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
 
-    <main class="page-content">
+    <div class="page-content">
         <h1><?= $title ?></h1>
         <div class="page-controls">
             <?= view('search_bar', ['action' => base_url('admin/materials/1')]) ?>
@@ -35,7 +35,7 @@
         </div>
 
         <?= $pager->links('default', 'full') ?>
-    </main>
+    </div>
 </div>
 </form>
 <?= $this->endSection() ?>

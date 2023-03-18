@@ -7,7 +7,7 @@
 <?= $this->section('content') ?>
 <div class="page">
 
-    <main class="page-content">
+    <div class="page-content">
         <h1><?= $title ?></h1>
 
         <div class="page-controls">
@@ -26,7 +26,7 @@
         </div>
 
         <?= $pager->links('default', 'full') ?>
-    </main>
+    </div>
 </div>
 <?= $this->endSection() ?>
 
