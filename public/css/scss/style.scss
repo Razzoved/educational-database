@@ -4,9 +4,11 @@
 
 // components
 @import 'components/container';
+@import 'components/navbar';
 @import 'components/page';
 @import 'components/search';
 @import 'components/sort';
+@import 'components/pagination';
 @import 'components/footer';
 
 *,
@@ -77,18 +79,18 @@ input {
     }
 }
 
-.active {
-    background-color: $clr-active-bg;
-    &, & > * {
-        color: $clr-active;
-    }
-}
-
 input[type='checkbox']:checked {
     accent-color: $clr-active;
 }
 
 input:read-only {
     color: $clr-text;
-    background-color: #c7c7c7c9;
+    background-color: $clr-gray-transparent;
+}
+
+.active {
+    background-color: $clr-active-bg;
+    &, & > * {
+        color: $clr-active;
+    }
 }
