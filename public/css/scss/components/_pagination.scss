@@ -1,0 +1,44 @@
+@import '../defaults/variables';
+
+.pagination {
+    width: fit-content;
+    justify-content: center;
+    margin: auto;
+    margin-top: 1rem;
+
+    .pager-item-list {
+        display:flex;
+        list-style: none;
+    }
+
+    .pager-item {
+        $border: $clr-light 1px solid;
+        button {
+            height: 100%;
+            padding: 0.5rem 1.5rem;
+            border: $border;
+            border-left: 0px;
+            border-radius: 0px;
+            font-weight: $fw-button;
+            color: $clr-light;
+            background-color: $clr-dark;
+        }
+        &:first-of-type button {
+            border-left: $border;
+            border-top-left-radius: 1rem;
+            border-bottom-left-radius: 1rem;
+        }
+        &:last-of-type button {
+            border-top-right-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+        }
+        &.active button {
+            color: $clr-active;
+        }
+        button:hover {
+            color: $clr-focus;
+            background-color: $clr-focus-bg;
+            border-color: $clr-dark;
+        }
+    }
+}
