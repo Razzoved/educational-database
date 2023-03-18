@@ -1,0 +1,39 @@
+@import '../defaults/variables';
+
+.footer {
+    position: static;
+    bottom: 0px;
+    background-color: $clr-dark;
+    text-align: center;
+
+    &__big-area {
+        padding: 1rem 0rem;
+    }
+
+    &__small-area {
+        padding: 0.5rem 0rem;
+        background-color: $clr-dark-transparent;
+    }
+
+    &__text {
+        color: $clr-light;
+    }
+
+    &__link {
+        color: $clr-hyperlink;
+    }
+
+    &__icon {
+        padding: 1rem 1rem;
+        font-size: 1.2rem;
+        border-radius: $border-radius;
+        color: $clr-light;
+        text-decoration: none;
+    }
+
+    &__link:hover,
+    &__icon:hover {
+        color: $clr-focus;
+        background-color: $clr-focus-bg;
+    }
+}
