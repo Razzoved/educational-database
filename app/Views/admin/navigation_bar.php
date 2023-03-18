@@ -15,7 +15,7 @@
 ?>
 <nav class="navbar">
     <div class="navbar__container">
-        <img class="navbar__log"
+        <img class="navbar__logo"
             src="<?= base_url('public/assets/enai-logo-transparent.png') ?>"
             alt="ENAI logo"
             onclick="window.location.href='<?= $refUrl ?>'">
