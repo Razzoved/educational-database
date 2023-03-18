@@ -57,11 +57,5 @@
         &.public-2 {
             background-color: $clr-light-transparent;
         }
-        &:hover p, &:hover h2 {
-            color: $clr-focus;
-        }
-        &:hover {
-            background-color: $clr-focus-bg;
-        }
     }
 }

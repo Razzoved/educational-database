@@ -7,7 +7,7 @@
 <?= $this->section('content') ?>
 <div class="page">
 
-    <div class="page-content">
+    <div class="page__content">
         <h1><?= $title ?></h1>
 
         <div class="page-controls">

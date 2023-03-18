@@ -18,12 +18,12 @@
 <div class="page">
 
     <!-- All tags -->
-    <div class="page-sidebar">
+    <div class="page__sidebar">
         <?= view('sidebar_buttons', ['properties' => $material->getGroupedProperties()]) ?>
     </div>
 
     <!-- Post container -->
-    <div class="page-content">
+    <div class="page__content">
 
         <div class="material">
             <div class="material-thumbnail">

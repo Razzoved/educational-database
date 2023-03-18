@@ -4,15 +4,15 @@
 
 <div class="page">
 
-    <div class="page-sidebar">
+    <div class="page__sidebar">
         <h1><?= $title ?></h1>
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
 
-    <div class="page-content">
+    <div class="page__content">
         <h1><?= $title ?></h1>
 
-        <div class="page-controls">
+        <div class="page__controls">
             <?= view('search_bar') ?>
         </div>
 

@@ -1,13 +1,13 @@
-<div class="sorters">
+<div class="sort">
     <?php
         foreach ($sorters as $sorter) {
-            echo '<button type="button" onclick="toggleSort(this)" value="' . strtolower(str_replace(' ', '_', esc($sorter))) . '">';
-            echo '<i class="fa-solid fa-caret-up"></i>';
+            echo '<button class="sort__button" type="button" onclick="toggleSort(this)" value="' . strtolower(str_replace(' ', '_', esc($sorter))) . '">';
+            echo '<i class="sort__icon fa-solid fa-caret-up"></i>';
             echo esc($sorter);
             echo '</button>';
         }
         if (isset($create)) {
-            echo '<button class="create" type="button" onclick="';
+            echo '<button class="sort__button create" type="button" onclick="';
             echo $create;
             echo '">&#65291</button>';
         }
@@ -39,10 +39,17 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        let sorter = document.querySelector(`.sorters > button[value='${lastSearch['sort']}']`);
-        if (sorter) {
-            sorter.classList.add('active');
-            if (lastSearch['sortDir'] === 'DESC') sorter.classList.add('down');
+        let sortButton = document.querySelector(`.sort > button[value='${lastSearch['sort']}']`);
+        if (!sortButton) {
+            console.error(`No sort button was found for: ${lastSearch['sort']}`);
+            return;
         }
+        sortButton.classList.add('active');
+
+        let sortIcon = sortButton.querySelector(`i`);
+        if (!sortIcon || lastSearch['sortDir'] === 'ASC') {
+            return;
+        }
+        sortIcon.classList.add('down');
     });
 </script>

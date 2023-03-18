@@ -1,0 +1,64 @@
+@import '../defaults/variables';
+
+.page {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1rem;
+
+    & &__content {
+        flex-basis: 26rem;
+        flex-grow: 9999;
+        @media screen and (max-width: 620px) {
+            flex-basis: 0rem;
+        }
+    }
+
+    & &__sidebar {
+        flex-basis: 18rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: baseline;
+        @media screen and (max-width: 320px) {
+            flex-basis: 0rem;
+        }
+        h1 { // used to achieve same aligment as content
+            opacity: 0;
+        }
+    }
+
+    & &__controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: baseline;
+    }
+
+    & &__group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        margin-bottom: 1rem;
+    }
+
+    & &__clickable {
+        flex-grow: 1;
+        flex-shrink: 1;
+        &:not(:first-child) {
+            margin-left: 0.4rem;
+        }
+    }
+
+    & &__icon {
+        position: relative;
+        top: 0.1rem;
+        font-size: 1.3rem;
+        margin-right: 0.5rem;
+    }
+
+    & &__icon.down {
+        position: relative;
+        top: -0.1rem;
+        transform: rotate(180deg);
+    }
+}

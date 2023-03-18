@@ -1,6 +1,6 @@
-<form id="search" autocomplete="false" method="get" action="<?= $action ?? '' ?>">
-    <input name="search" value="" placeholder="Enter search value" onblur="sendSearch()"/>
-    <button type="button" onclick="sendSearch()">Search</button>
+<form class="search" id="search" autocomplete="false" method="get" action="<?= $action ?? '' ?>">
+    <input class="search__bar" name="search" value="" placeholder="Enter search value" onblur="sendSearch()"/>
+    <button class="search__submit" type="button" onclick="sendSearch()">Search</button>
 </form>
 
 <script type="text/javascript">

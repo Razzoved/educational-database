@@ -1,5 +1,13 @@
+// variables and defaults
 @import 'defaults/variables';
 @import 'defaults/fonts';
+
+// components
+@import 'components/container';
+@import 'components/page';
+@import 'components/search';
+@import 'components/sort';
+@import 'components/footer';
 
 *,
 *::before,
@@ -25,23 +33,25 @@ button, input, a.button {
 }
 
 button, a.button {
-    * {
-        color: $clr-light;
-    }
-    border: $clr-dark 1px solid;
+    cursor: pointer;
+    color: $clr-light;
     background-color: $clr-dark;
+    border: $clr-dark 1px solid;
     text-decoration: none;
     text-align: center;
-    cursor: pointer;
 
     &.create {
-        color: $clr-focus-bg;
-        background-color: $clr-focus;
-        border: $clr-focus-bg 1px solid;
+        color: $clr-light;
+        background-color: $clr-active;
+        border: $clr-dark 1px solid;
         min-width: 10rem;
     }
 
-    &:hover {
+    & > i {
+        color: $clr-light;
+    }
+
+    &:hover, &:hover > * {
         color: $clr-focus;
         background-color: $clr-focus-bg;
         border-color: $clr-focus;
@@ -68,7 +78,10 @@ input {
 }
 
 .active {
-    color: $clr-active;
+    background-color: $clr-active-bg;
+    &, & > * {
+        color: $clr-active;
+    }
 }
 
 input[type='checkbox']:checked {
@@ -78,119 +91,4 @@ input[type='checkbox']:checked {
 input:read-only {
     color: $clr-text;
     background-color: #c7c7c7c9;
-}
-
-footer {
-    position: static;
-    bottom: 0px;
-    background-color: $clr-dark;
-    text-align: center;
-    p {
-        color: $clr-light-transparent;
-        padding: 0.25rem 0.25rem;
-    }
-    a {
-        color: $clr-hyperlink;
-    }
-    section > a {
-        padding: 1rem 1rem;
-        text-decoration: none;
-    }
-}
-
-.container {
-    padding: 1rem;
-    margin-right: auto;
-    margin-left: auto;
-
-    & div, & main {
-        max-width: 100%;
-    }
-
-    @media (min-width: 768px) {
-        width: 750px;
-    }
-    @media (min-width: 992px) {
-        width: 970px;
-    }
-    @media (min-width: 1200px) {
-        width: 1170px;
-    }
-    @media (min-width: 1400px) {
-        width: 1320px;
-    }
-}
-
-.page {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 1rem;
-    &-content {
-        flex-basis: 26rem;
-        flex-grow: 9999;
-        @media screen and (max-width: 620px) {
-            flex-basis: 0rem;
-        }
-    }
-    &-sidebar {
-        flex-basis: 18rem;
-        flex-grow: 1;
-        @media screen and (max-width: 320px) {
-            flex-basis: 0rem;
-        }
-        h1 {
-            opacity: 0;
-        }
-        & > div:not(.sidebar) {
-            & > * {
-                width: 100%;
-            }
-            & > *:not(:last-child) {
-                margin-bottom: 0.2rem;
-            }
-            position: relative;
-            top: -0.5rem;
-            padding: 0.5rem;
-            border: #0000003f 1px dashed;
-            border-radius: $border-radius-lg;
-        }
-    }
-    &-controls {
-        display: flex;
-        flex-direction: column;
-        justify-content: baseline;
-        & > div,
-        & > form {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-evenly;
-            margin-bottom: 1rem;
-        }
-        .down i {
-            position: relative;
-            top: -0.1rem;
-            transform: rotate(180deg);
-        }
-        & i {
-            position: relative;
-            top: 0.1rem;
-            font-size: 1.3rem;
-            margin-right: 0.5rem;
-        }
-        & button,
-        & input {
-            flex-grow: 1;
-            flex-shrink: 1;
-            &:not(:first-child) {
-                margin-left: 0.4rem;
-            }
-        }
-    }
-}
-
-.cluster {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
 }
