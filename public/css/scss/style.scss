@@ -43,13 +43,6 @@ button, a.button {
     text-decoration: none;
     text-align: center;
 
-    &.create {
-        color: $clr-light;
-        background-color: $clr-active;
-        border: $clr-dark 1px solid;
-        min-width: 10rem;
-    }
-
     & > i {
         color: $clr-light;
     }
@@ -81,12 +74,22 @@ input {
 }
 
 input[type='checkbox']:checked {
-    accent-color: $clr-active;
+    accent-color: $clr-active-bg;
+    background-color: $clr-active;
 }
 
 input:read-only {
     color: $clr-text;
     background-color: $clr-gray-transparent;
+}
+
+.create {
+    background-color: $clr-active-bg;
+    border: $clr-dark 1px solid;
+    min-width: 10rem;
+    &, & > * {
+        color: $clr-active;
+    }
 }
 
 .active {
