@@ -35,6 +35,10 @@ class User extends BaseController
 
     public function index() : string
     {
+        if (!$this->request->getPost('sort')) {
+            $_POST['sort'] = 'name';
+        }
+
         $data = [
             'meta_title' => 'Administration - Users',
             'title'      => 'User editor',
