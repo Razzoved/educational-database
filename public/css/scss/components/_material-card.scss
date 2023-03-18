@@ -1,0 +1,67 @@
+.card {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    align-items: center;
+    border: $clr-dark 1px solid;
+    border-radius: $border-radius-lg;
+    box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem $clr-dark-transparent;
+    background-color: $clr-focus;
+    cursor: pointer;
+
+    &:not(:first-child) {
+        margin-top: 1rem;
+    }
+
+    & > * {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    &-thumbnail {
+        flex-grow: 1;
+        display: flex;
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+        img {
+            flex-shrink: 0;
+            min-width: 100%;
+            min-height: 100%;
+            max-width: 10rem;
+        }
+    }
+
+    &-body {
+        flex-basis: 20rem;
+        flex-grow: 9999;
+        text-align: left;
+        padding: 1rem;
+        background-color: $clr-light;
+    }
+
+    &-content {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    &-footer {
+        border-top: $clr-dark-transparent 1px solid;
+        padding-top: 1rem;
+
+        :first-child {
+            float: left;
+        }
+        :last-child {
+            float: right;
+        }
+    }
+
+    &:hover {
+        border-color: $clr-focus;
+        box-shadow: none;
+    }
+    &:hover &-header {
+        color: $clr-focus;
+    }
+}
