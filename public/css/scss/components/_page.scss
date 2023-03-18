@@ -48,17 +48,4 @@
             margin-left: 0.4rem;
         }
     }
-
-    & &__icon {
-        position: relative;
-        top: 0.1rem;
-        font-size: 1.3rem;
-        margin-right: 0.5rem;
-    }
-
-    & &__icon.down {
-        position: relative;
-        top: -0.1rem;
-        transform: rotate(180deg);
-    }
 }
