@@ -2,43 +2,47 @@
 
 <div class="pagination">
     <nav aria-label="Page navigation">
-        <ul class="pager-item-list">
+        <ul class="pagination__list">
         <?php if ($pager->hasPrevious()) : ?>
-            <li class="pager-item">
-                <button type="button" onclick="redirectTo('<?= $pager->getFirst() ?>')" aria-label="<?= lang('Pager.first') ?>">
-                    <span aria-hidden="true"><?= lang('Pager.first') ?></span>
+            <li class="pagination__item">
+                <button class="pagination__button" type="button" onclick="redirectTo('<?= $pager->getFirst() ?>')" aria-label="<?= lang('Pager.first') ?>">
+                    <span class="pagination__text" aria-hidden="true"><?= lang('Pager.first') ?></span>
                 </button>
             </li>
         <?php endif ?>
 
         <?php if ($pager->hasPreviousPage()) : ?>
-            <li class="pager-item">
-                <button type="button" onclick="redirectTo('<?= $pager->getPreviousPage() ?>')" aria-label="<?= lang('Pager.previous') ?>">
-                    <span aria-hidden="true">&larr;</span>
+            <li class="pagination__item">
+                <button class="pagination__button" type="button" onclick="redirectTo('<?= $pager->getPreviousPage() ?>')" aria-label="<?= lang('Pager.previous') ?>">
+                    <span class="pagination__text" aria-hidden="true">&larr;</span>
                 </button>
             </li>
         <?php endif ?>
 
+        <?php $pageNum = $pager->getCurrentPageNumber() ?>
         <?php foreach ($pager->links() as $link): ?>
-            <li class="pager-item<?= $link['active'] ? ' active' : '' ?>">
-                <button type="button" onclick="redirectTo('<?= $link['uri'] ?>')">
-                    <?= $link['title'] ?>
+            <?php // hide too many links on small screens
+                $hideable = $link['title'] != $pageNum ? ' pagination__item--hideable' : '';
+            ?>
+            <li class="pagination__item<?= $link['active'] ? ' active' : '' ?><?= $hideable ?>">
+                <button class="pagination__button" type="button" onclick="redirectTo('<?= $link['uri'] ?>')">
+                    <span class="pagination__text"><?= $link['title'] ?></span>
                 </button>
             </li>
         <?php endforeach ?>
 
         <?php if ($pager->hasNextPage()) : ?>
-            <li class="pager-item">
-                <button type="button" onclick="redirectTo('<?= $pager->getNextPage() ?>')" aria-label="<?= lang('Pager.next') ?>">
-                    <span aria-hidden="true">&rarr;</span>
+            <li class="pagination__item">
+                <button class="pagination__button" type="button" onclick="redirectTo('<?= $pager->getNextPage() ?>')" aria-label="<?= lang('Pager.next') ?>">
+                    <span class="pagination__text" aria-hidden="true">&rarr;</span>
                 </button>
             </li>
         <?php endif ?>
 
         <?php if ($pager->hasNext()) : ?>
-            <li class="pager-item">
-                <button type="button" onclick="redirectTo('<?= $pager->getLast() ?>')" aria-label="<?= lang('Pager.last') ?>">
-                    <span aria-hidden="true"><?= lang('Pager.last') ?></span>
+            <li class="pagination__item">
+                <button class="pagination__button" type="button" onclick="redirectTo('<?= $pager->getLast() ?>')" aria-label="<?= lang('Pager.last') ?>">
+                    <span class="pagination__text" aria-hidden="true"><?= lang('Pager.last') ?></span>
                 </button>
             </li>
         <?php endif ?>

@@ -7,22 +7,18 @@
     gap: 1rem;
 
     & &__content {
-        flex-basis: 26rem;
+        overflow: auto;
+        flex-basis: 30rem;
         flex-grow: 9999;
-        @media screen and (max-width: 620px) {
-            flex-basis: 0rem;
-        }
     }
 
     & &__sidebar {
+        overflow: auto;
         flex-basis: 18rem;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
         justify-content: baseline;
-        @media screen and (max-width: 320px) {
-            flex-basis: 0rem;
-        }
         h1 { // used to achieve same aligment as content
             opacity: 0;
         }
@@ -31,7 +27,7 @@
     & &__controls {
         display: flex;
         flex-direction: column;
-        justify-content: baseline;
+        justify-content: flex-start;
     }
 
     & &__group {

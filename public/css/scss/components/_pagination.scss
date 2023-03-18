@@ -6,39 +6,60 @@
     margin: auto;
     margin-top: 1rem;
 
-    .pager-item-list {
+    &__list {
         display:flex;
         list-style: none;
     }
 
-    .pager-item {
-        $border: $clr-light 1px solid;
-        button {
-            height: 100%;
-            padding: 0.5rem 1.5rem;
-            border: $border;
-            border-left: 0px;
-            border-radius: 0px;
-            font-weight: $fw-button;
-            color: $clr-light;
-            background-color: $clr-dark;
+    &__item.active {
+        background-color: unset;
+    }
+
+    &__item.active:not(:hover) &__button {
+        background-color: $clr-active-bg;
+    }
+
+    &__item.active &__text {
+        color: $clr-active;
+        background-color: unset;
+    }
+
+    &__item--hideable {
+        @media screen and (max-width: $sm) {
+            display: none;
         }
-        &:first-of-type button {
-            border-left: $border;
-            border-top-left-radius: 1rem;
-            border-bottom-left-radius: 1rem;
-        }
-        &:last-of-type button {
-            border-top-right-radius: 1rem;
-            border-bottom-right-radius: 1rem;
-        }
-        &.active button {
-            color: $clr-active;
-        }
-        button:hover {
+    }
+
+    &__item:first-of-type &__button {
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+    &__item:last-of-type &__button {
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+    }
+
+    &__button {
+        height: 100%;
+        padding: 0.5rem 1.5rem;
+        border: $clr-light 1px solid;
+        border-radius: unset;
+        font-weight: $fw-button;
+        color: $clr-light;
+        background-color: $clr-dark;
+
+        &:hover {
             color: $clr-focus;
             background-color: $clr-focus-bg;
-            border-color: $clr-dark;
+            border-color: $clr-focus;
         }
+    }
+
+    &__button:hover &__text {
+        color: $clr-focus;
+    }
+
+    &__text {
+        color: $clr-light;
     }
 }
