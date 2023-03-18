@@ -55,7 +55,7 @@
         &-item {
             color: $clr-light;
             padding: 0.3rem;
-            &:hover * {
+            &:hover {
                 color: $clr-focus;
                 background-color: $clr-focus-bg;
             }
