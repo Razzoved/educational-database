@@ -3,32 +3,53 @@
      * Template for displaying material as a row in administration.
      * May be deleted by a javascript function deleteId!
      *
-     * @var showButtons boolean value indicating whether to display actions
-     * @var material object of material entity class
+     * @var \App\Entities\Material $material object of material entity class
      */
 
-use App\Entities\Cast\StatusCast;
+    use App\Entities\Cast\StatusCast;
 
+    $class = 'item' . ($material->status === StatusCast::PUBLIC ? '' : ' private');
+    $view = base_url('single/' . $material->id);
+    $edit = base_url('admin/materials/edit/' . $material->id);
 ?>
-<div id="<?= $material->id ?>" class="item <?= $material->status === StatusCast::PUBLIC ? ($index % 2 == 1 ? 'public' : 'public-2') : '' ?>">
-    <div class="row">
-        <img src="<?= $material->getThumbnail()->getURL() ?>" alt="missing_img">
-        <h2><?= $material->title?></h2>
-        <p><small>ID:</small><br><strong><?= $material->id ?></strong></p>
+<article id="<?= $material->id ?>" class="<?= $class ?>">
+    <div class="item__header">
+        <p class="item__text">
+            <small>ID:</small><br>
+            <strong><?= $material->id ?></strong>
+        </p>
+        <img class="item__logo"
+            src="<?= $material->getThumbnail()->getURL() ?>"
+            alt="missing_img">
+        <div class="item__controls">
+            <a class="item__preview" target="_self" rel="noreferrer" href="<?= $view ?>">
+                View
+            </a>
+            <a class="item__edit" href="<?= $edit ?>">
+                Edit
+            </a>
+            <button class="item__delete" type="button" onclick="deleteOpen(<?= $material->id ?>)">
+                &#10005;
+            </button>
+        </div>
     </div>
-    <div class="row">
-        <p><small>Created at:</small><br><?= $material->createdToDate() ?></p>
-        <p><small>Last update:</small><br><?= $material->updatedToDate() ?></p>
-    </div>
-    <div class="row">
-        <p><small>Views:</small><br><?= $material->views ?></p>
-        <p><small>Rating:</small><br><?= $material->rating ?></p>
-    </div>
-    <?php if (isset($showButtons) && $showButtons == true) : ?>
-    <div class="controls">
-        <button class="delete" type="button" onclick="deleteOpen(<?= $material->id ?>)">&#10005</button>
-        <a class="button edit" href="<?= base_url('admin/materials/edit/' . $material->id) ?>">Edit</a>
-        <a class="button preview" target="_blank" rel="noopener" href="<?= base_url('single/' . $material->id) ?>">View</a>
-    </div>
-    <?php endif; ?>
-</div>
+    <section>
+        <h2 class="item__title"><?= $material->title?></h2>
+        <div class="item__row">
+            <p class="item__text">
+                <small>Created at:</small><br><?= $material->createdToDate() ?>
+            </p>
+            <p class="item__text">
+                <small>Last update:</small><br><?= $material->updatedToDate() ?>
+            </p>
+        </div>
+        <div class="item__row">
+            <p class="item__text">
+                <small>Views:</small><br><?= $material->views ?>
+            </p>
+            <p class="item__text">
+                <small>Rating:</small><br><?= $material->rating ?>
+            </p>
+        </div>
+    </section>
+</article>
