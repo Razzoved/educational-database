@@ -8,7 +8,7 @@
 <div class="page">
 
     <div class="page__content">
-        <h1><?= $title ?></h1>
+        <h1 class="page__title"><?= $title ?></h1>
 
         <div class="page-controls">
             <?= view('search_bar', ['action' => base_url('admin/users/1')]) ?>

@@ -1,3 +1,5 @@
+// TODO
+
 .material {
     display: flex;
     flex-wrap: wrap;
@@ -6,8 +8,7 @@
     border: $clr-dark 1px solid;
     border-radius: $border-radius-lg;
     box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem $clr-dark-transparent;
-    background-color: $clr-active;
-    margin-top: 1rem;
+    background-color: $clr-focus;
 
     & > * {
         max-width: 100%;
@@ -29,7 +30,7 @@
     }
 
     &-header {
-        flex-basis: 10rem;
+        flex-basis: 20rem;
         flex-grow: 9999;
         text-align: left;
         padding: 1rem;
@@ -54,7 +55,7 @@
         padding: 2rem;
         border-radius: $border-radius-lg;
         background: rgb(255,255,255);
-        background: linear-gradient(0deg, rgba(255,255,255,0) 20%, rgba(245,245,245,0.5) 60%, $clr-active 300%);
+        background: linear-gradient(0deg, rgba(255,255,255,0) 20%, rgba(245,245,245,0.5) 60%, $clr-focus 300%);
         & > * {
             all: revert;
         }

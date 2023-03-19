@@ -9,6 +9,7 @@ $clr-dark-transparent: #00000028;
 $clr-gray: #474747;
 $clr-gray-transparent: #47474717;
 $clr-light: #f3f3f3;
+$clr-light-semi-transparent: #f3f3f3ee;
 $clr-light-transparent: #f3f3f37e;
 $clr-text: #222222;
 $clr-text-small: #444444;
@@ -40,4 +41,5 @@ $lg: 1399px;
 $xl: $lg + 1px;
 
 // background gradient;
-$bg-gradient: linear-gradient(45deg, rgb(230, 230, 230) 0%, rgb(240, 240, 240) 40%, rgb(255, 255, 255) 100%);
+$bg-gradient: linear-gradient(65deg, #0e3535 0%, #009292 100%);
+$bg-gradient-cpy: linear-gradient(45deg, rgb(230, 230, 230) 0%, rgb(240, 240, 240) 40%, rgb(255, 255, 255) 100%);

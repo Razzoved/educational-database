@@ -9,20 +9,20 @@
 ?>
 
 <div class="card" onclick="window.location.href='<?= $url ?>'">
-    <div class="card-thumbnail">
+    <div class="card__thumbnail">
         <img src="<?= $material->getThumbnail()->getURL() ?>" alt="Missing image">
     </div>
-    <div class="card-body">
-        <div class="card-header">
+    <div class="card__body">
+        <div class="card__header">
             <h2><?= strlen($material->title) > 50 ? substr($material->title, 0, 50) . '...' : $material->title ?></h5>
         </div>
 
-        <div class="card-content">
+        <div class="card__content">
             <p><small>Upload date: <?= $material->createdToDate() ?></small></p>
             <p><?= (strlen($content) > 120) ? substr($content, 0, 117) . '...' : $content ?></p>
         </div>
 
-        <div class="card-footer">
+        <div class="card__footer">
             <?= view('rating', ['material' => $material]) ?>
             <a href="<?= $url ?>">Details</a>
         </div>

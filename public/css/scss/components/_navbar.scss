@@ -4,11 +4,10 @@
     --height: 6rem;
     --padding: 1rem;
     --font-size: 1.25rem;
-
     background-color: $clr-dark;
     box-shadow: 0rem 0.5rem 1rem $clr-dark-transparent;
     border-bottom: $clr-dark solid 0.15rem;
-    margin-bottom: 1rem;
+    padding: 0.2rem;
 
     & &__container {
         @extend .container;

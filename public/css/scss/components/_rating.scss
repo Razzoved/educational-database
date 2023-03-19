@@ -10,6 +10,9 @@
         color: orange;
         transition: none;
     }
+    i.active {
+        background-color: unset;
+    }
     i.own {
         -webkit-text-stroke-width: 1px;
         -webkit-text-stroke-color: black;

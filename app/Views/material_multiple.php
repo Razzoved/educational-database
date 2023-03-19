@@ -5,12 +5,12 @@
 <div class="page">
 
     <div class="page__sidebar">
-        <h1>X</h1>
+        <h1 class="page__title">X</h1>
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
 
     <div class="page__content">
-        <h1><?= $title ?></h1>
+        <h1 class="page__title"><?= $title ?></h1>
 
         <div class="page__controls">
             <?= view('search_bar') ?>

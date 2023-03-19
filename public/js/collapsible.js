@@ -1,8 +1,11 @@
-async function toggleGroup(element)
+async function toggleCollapsible(element)
 {
     let parent = element.closest('.collapsible');
-    if (!parent) console.debug('invalid group', element);
-    parent.classList.toggle('closed');
+    if (!parent) {
+        console.error('Group is invalid, no collapsible parent found.', element);
+        return;
+    }
+    parent.classList.toggle('collapsible--collapsed');
 }
 
 async function toggleOverflow(element)
@@ -11,13 +14,21 @@ async function toggleOverflow(element)
         ? element.innerHTML.replace('more', 'less')
         : element.innerHTML.replace('less', 'more');
     let parent = element.closest('.collapsible');
-    if (!parent) console.debug('invalid group', element);
-    parent.classList.toggle('overflow-closed');
+    if (!parent) {
+        console.error('Group is invalid, no collapsible parent found.', element);
+        return;
+    }
+    parent.classList.toggle('collapsible--no-overflow');
 }
 
-async function toggleSidebar()
+async function toggleGroup(element)
 {
-    document.querySelector(".sidebar").classList.toggle('responsive');
+    let parent = element.closest('.page__group');
+    if (!parent) {
+        console.error('Group is invalid, no group parent found.', element);
+        return;
+    }
+    parent.classList.toggle('page__group--hide');
 }
 
 async function resetFilters()

@@ -1,49 +1,64 @@
 @import '../defaults/variables';
 
 .collapsible {
+    cursor: default;
     position: relative;
-    justify-content: left;
-    align-items: start;
-    box-shadow: 0.2rem 0.2rem 0.6rem $clr-dark-transparent;
     border: $clr-dark 1px solid;
     border-radius: $border-radius-lg;
     background-color: $clr-light-transparent;
     overflow: hidden;
 
-    &:first-child {
-        margin-top: 1rem;
+    & button {
+        width: 100%;
     }
 
-    &:not(:first-child) {
-        margin-top: 0.5rem;
+    &:hover {
+        border-color: $clr-focus;
+        box-shadow: none;
     }
 
-    &-btn {
-        background-color: $clr-light;
-        display: flex;
+    &__toggle {
+        // replace button defaults
+        background-color: $clr-gray-transparent;
+        border: unset;
+        border-radius: unset;
+        border-bottom: $clr-dark-transparent 1px solid;
+        // new properties
         padding: 0.5rem 0.5rem;
-        font-weight: 600;
-        cursor: pointer;
+        display: flex;
         align-items: center;
-
-        .fa-caret-right {
-            transform: rotateZ(90deg);
-            transition: transform 250ms ease-in-out;
-            margin-right: 0.5rem;
-            font-size: 30px;
-        }
-
-        p {
-            height: 100%;
-            text-decoration: none;
-        }
-
+        gap: 0.4rem;
         &:hover * {
             color: $clr-focus;
         }
     }
 
-    &-list {
+    &__toggle-overflow {
+        color: $clr-hyperlink;
+        background-color: inherit;
+        border: unset;
+        border-radius: unset;
+        border-top: $clr-dark-transparent 1px solid;
+        &:hover {
+            background-color: inherit;
+        }
+    }
+
+    &__indicator {
+        color: $clr-dark;
+        transform: rotateZ(90deg);
+        transition: transform 250ms ease-in-out;
+        margin-right: 0.5rem;
+        font-size: 30px;
+    }
+
+    &__title {
+        color: $clr-dark;
+        font-size: $fs-button;
+        font-weight: 600;
+    }
+
+    &__target {
         padding: 0.5rem 0.5rem;
         display: flex;
         flex-direction: column;
@@ -51,99 +66,62 @@
         list-style: none;
         line-break: strict;
         cursor: pointer;
+    }
 
-        &-item {
-            color: $clr-light;
-            padding: 0.3rem;
+    &__item {
+        color: $clr-light;
+        padding: 0.3rem;
+        &:hover {
+            color: $clr-focus;
+            background-color: $clr-focus-bg;
+        }
+        input[type='checkbox'] {
+            transform: scale(1.5);
+            margin-right: 0.5rem;
+            float: left;
+            cursor: pointer;
+            &:hover {
+                background-color: $clr-focus-bg;
+            }
+        }
+        input[type='checkbox'] + label {
+            display: flex;
+            height: 100%;
+            line-height: 100%;
+            align-items: center;
+            text-align: left;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        input[type='submit'] {
+            width: 100%;
+            padding: 0.2rem;
+            margin-top: 0.2rem;
+            border-radius: 0.5rem;
+            border-color: $clr-text-small;
+            color: $clr-text;
+            background-color: $clr-light-transparent;
+            justify-content: center;
+            text-decoration: none;
             &:hover {
                 color: $clr-focus;
                 background-color: $clr-focus-bg;
-            }
-            input[type='checkbox'] {
-                transform: scale(1.5);
-                margin-right: 0.5rem;
-                float: left;
-                cursor: pointer;
-                &:hover {
-                    background-color: $clr-focus-bg;
-                }
-            }
-            input[type='checkbox'] + label {
-                display: flex;
-                height: 100%;
-                line-height: 100%;
-                align-items: center;
-                text-align: left;
-                text-decoration: none;
-                cursor: pointer;
-            }
-            input[type='submit'] {
-                width: 100%;
-                padding: 0.2rem;
-                margin-top: 0.2rem;
-                border-radius: 0.5rem;
-                border-color: $clr-text-small;
-                color: $clr-text;
-                background-color: $clr-light-transparent;
-                justify-content: center;
-                text-decoration: none;
-                &:hover {
-                    color: $clr-focus;
-                    background-color: $clr-focus-bg;
-                    border-color: $clr-focus;
-                }
+                border-color: $clr-focus;
             }
         }
     }
-    &.closed &-btn .fa-caret-right {
+
+    &--collapsed &__toggle {
+        border: none;
+    }
+
+    &--collapsed &__indicator {
         transform: rotateZ(0deg);
     }
 
-    & .overflow-btn {
-        color: $clr-text;
-        border-color: $clr-dark-transparent;
-        background-color: $clr-light-transparent;
-    }
-
-    & .overflow-btn:hover {
-        color: $clr-focus;
-        border-color: $clr-focus;
-        background-color: $clr-focus-bg;
-    }
-
-    &.closed &-list,
-    &.overflow-closed .overflow {
+    &--collapsed &__target,
+    &--collapsed &__target + &__toggle-overflow,
+    &--no-overflow &__item--overflow {
         display: none;
-    }
-}
-
-.sidebar {
-    ul, ol {
-        list-style: none;
-    }
-
-    button {
-        width: 100%;
-    }
-
-    .icon {
-        margin-bottom: 0.4rem;
-        display: none;
-    }
-
-    @media screen and (max-width: 62rem) {
-        // hide all links
-        .collapsible {
-            display: none;
-        }
-        // show toggler
-        .icon {
-            display: block;
-        }
-        &.responsive {
-            .collapsible {
-                display: block;
-            }
-        }
     }
 }

@@ -8,7 +8,7 @@
 <div class="page">
 
     <div class="page__sidebar">
-        <h1><?= $title ?></h1>
+        <h1 class="page__title"><?= $title ?></h1>
         <div>
             <input id="tag" type="text" placeholder="Enter tag category">
             <input id="value" type="text" placeholder="Enter tag name">
@@ -18,7 +18,7 @@
     </div>
 
     <div class="page__content">
-        <h1><?= $title ?></h1>
+        <h1 class="page__title"><?= $title ?></h1>
 
         <div class="page-controls">
             <?= view('search_bar', ['action' => base_url('admin/tags/1')]) ?>
