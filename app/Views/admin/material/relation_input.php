@@ -16,10 +16,10 @@
     <div class="form__group form__group--horizontal">
         <input id="relation-uploader"
             list="relation-options"
-            class="form-control col edit-mr"
+            class="form__input"
             placeholder="No material selected"
             onblur="verifyRelation()">
-        <button class="btn btn-md btn-secondary col-2" type="button" onclick="newRelation()">Add</button>
+        <button class="form__input" type="button" onclick="newRelation()">Add</button>
     </div>
 
     <datalist id="relation-options">
