@@ -9,16 +9,20 @@
         max-width: 100%;
     }
 
-    @media (min-width: $xs) {
+    @media screen and (max-width: calc($xs - 1px)) {
+        padding: 0.4rem;
+    }
+    @media screen and (min-width: $xs) {
+        padding: 0.8rem;
         width: 750px;
     }
-    @media (min-width: $sm) {
+    @media screen and (min-width: $sm) {
         width: 970px;
     }
-    @media (min-width: $md) {
+    @media screen and (min-width: $md) {
         width: 1170px;
     }
-    @media (min-width: $lg) {
+    @media screen and  (min-width: $lg) {
         width: 1320px;
     }
 }
