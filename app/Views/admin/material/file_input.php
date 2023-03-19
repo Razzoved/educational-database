@@ -9,19 +9,17 @@
 
     $IMG_REGEX = '/.*\.(?:jpg|jpeg|tiff|gif|png|bmp)$/';
 ?>
-<div class="dynamic-input">
+<div class="form__group">
 
     <!-- file uploader -->
-    <div class="row g-0">
-        <input id="file-uploader" type="file" onchange="uploadFile()" hidden>
-        <button class="btn btn-md btn-secondary col-2" type="button" onclick="document.getElementById('file-uploader').click()">Add</button>
-    </div>
+    <button class="form__input" type="button" onclick="document.getElementById('file-uploader').click()">Add</button>
+    <input id="file-uploader" type="file" onchange="uploadFile()" hidden>
 
-    <div id="file-group" class="wrapper">
+    <div class="form__group form__group--horizontal" id="file-group">
     <?php
         $index = 0;
         foreach (array_keys($files) as $file) {
-            echo view('admin/file_template', [
+            echo view('admin/material/file_template', [
                 'id' => $index,
                 'value' => $files[$file],
                 'path' => $file,

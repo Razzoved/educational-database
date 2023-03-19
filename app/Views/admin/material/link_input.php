@@ -9,27 +9,27 @@
      */
 ?>
 
-<div class="dynamic-input">
+<div class="form__group">
 
     <!-- file uploader -->
-    <div class="row g-0">
+    <div class="form__group form__group--horizontal">
         <input id="link-uploader"
             type="url"
-            class="form-control col edit-mr"
-            pattern="https://.*"
+            class="form__input"
+            pattern="(http|https)://.*"
             placeholder="https://example.com"
             onblur="verifyLink()">
-        <button class="btn btn-md btn-secondary col-2" type="button" onclick="newLink()">Add</button>
+        <button class="form__input" type="button" onclick="newLink()">Add</button>
     </div>
 
     <!-- hidden template for js copying -->
-    <?= view('admin/link_template', ['id' => null, 'value' => null, 'hidden' => true, 'readonly' => true]) ?>
+    <?= view('admin/material/link_template', ['id' => null, 'value' => null, 'hidden' => true, 'readonly' => true]) ?>
 
-    <div id="link-group">
+    <div class="form__group" id="link-group">
     <?php
         $index = 0;
         foreach ($links as $link) {
-            echo view('admin/link_template', ['id' => $index, 'value' => $link, 'hidden' => false, 'readonly' => true]);
+            echo view('admin/material/link_template', ['id' => $index, 'value' => $link, 'hidden' => false, 'readonly' => true]);
             $index++;
         }
     ?>

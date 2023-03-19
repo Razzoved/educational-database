@@ -1,10 +1,6 @@
 <?= $this->extend('layouts/form') ?>
 
 <?= $this->section('header') ?>
-
-    <!-- custom styles -->
-    <link href="<?= base_url('public/css/property_selector.css') ?>" rel="stylesheet" type="text/css">
-
     <!-- TinyMCE -->
     <script src="https://cdn.tiny.cloud/1/69ihqfomziifwjc1jznu6ynf4vn7l4zgj6f4a4zxc1blk1p2/tinymce/6/tinymce.min.js"
             referrerpolicy="origin">
@@ -25,7 +21,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="<?= base_url('public/js/dynamics.js') ?>"></script>
     <script type="text/javascript" src="<?= base_url('public/js/property_selector.js') ?>"></script>
-
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -40,83 +35,85 @@
     $label = ['class' => 'form-label'];
 ?>
 
-<main class="form-edit">
+<div class="page">
+    <form class="form" method="post" method="post" action="<?= base_url('admin/materials/edit') ?>" enctype="multipart/form-data">
 
-    <?= $this->include('errors/validation') ?>
+        <!-- title -->
+        <div class="form__group form__group--centered form__group--separated">
+            <h1 class="form__title">Material editor</h1>
+            <?= $this->include('errors/validation') ?>
+        </div>
 
-    <?= form_open_multipart('admin/materials/edit') ?>
+        <!-- thumbnail, basic data -->
+        <fieldset class="form__group form__group--horizontal">
 
-        <div class="row g-0">
-            <!-- thumbnail -->
-            <div class="form-edit-floating col-auto edit-mr">
-                <?= form_label('Thumbnail (click to edit)', 'fThumbnail', $label) ?>
-                <?= view('admin/thumbnail_input', ['label' => $label, 'thumbnail' => $thumbnail]) ?>
+            <div class="form__group">
+                <label for="thumbnail" class="form__label form__label--small">
+                    Thumbnail (click to edit)
+                </label>
+                <?= view('admin/material/thumbnail_input', ['thumbnail' => $thumbnail]) ?>
             </div>
-            <div class="col">
+
+            <div class="form__group form__group--major">
                 <!-- title -->
-                <div class="form-edit-floating">
-                    <?= form_label('Title', 'fTitle', $label) ?>
-                    <?= form_input(['id' => 'fTitle', 'name' => 'title'], set_value('title'), $control) ?>
-                </div>
+                <label for="title" class="form__label">Title</label>
+                <input class="form__input"
+                    type="text"
+                    name="title"
+                    placeholder="Enter title"
+                    value="<?= set_value('title') ?>"
+                    required>
                 <!-- sender + status -->
-                <div class="row g-0">
-                    <div class="col form-edit-floating edit-mr">
-                        <?= form_label('Sender', 'fSender', $label) ?>
-                        <?= form_input(['id' => 'fSender', 'name' => 'author'], set_value('author'), $control) ?>
+                <div class="form__group form__group--horizontal">
+                    <div class="form__group">
+                        <label for="sender" class="form__label">Sender</label>
+                        <input class="form__input"
+                            type="text"
+                            name="author"
+                            placeholder="Name of whoever sent the material"
+                            value="<?= set_value('author') ?>"
+                            required>
                     </div>
-                    <div class="col form-edit-floating">
-                        <?= form_label('Status', 'fStatus', $label) ?>
-                        <?= form_dropdown(['id' => 'fStatus', 'name' => 'status'],
+                    <div class="form__group">
+                        <label for="status" class="form__label">Status</label>
+                        <?= form_dropdown(['id' => 'status', 'name' => 'status'],
                             \App\Entities\Cast\StatusCast::VALID_VALUES,
                             \App\Entities\Cast\StatusCast::getIndex(set_value('status')),
-                            $control) ?>
+                            ['class' => 'form__input']) ?>
                     </div>
                 </div>
             </div>
-        </div>
+        </fieldset>
 
-        <!-- tags -->
-        <div class="form-edit-floating">
-            <?= form_label('Tags', 'properties', $label) ?>
-            <?= view('admin/property/selector', ['used' => $properties, 'available' => $available_properties]) ?>
-        </div>
+        <fieldset class="form__group">
+            <label for="properties" class="form__label">Tags</label>
+            <?= view('admin/material/property_selector', ['used' => $properties, 'available' => $available_properties]) ?>
 
-        <!-- content -->
-        <?= form_textarea(['id' => 'tiny', 'name' => 'content'], set_value('content', '', false)) ?>
+            <label for="tiny" class="form__label">Content</label>
+            <textarea id="tiny" name="content" cols="60" rows="20"><?= set_value('content', '', false) ?></textarea>
 
-        <!-- links -->
-        <div class="form-edit-floating">
-            <?= form_label('Links to relevant sites', 'links', $label) ?>
-            <?= view('admin/link_input', ['label' => $label, 'links' => set_value('links', [], false)]) ?>
-        </div>
+            <label for="links" class="form__label">Links to relevant sites</label>
+            <?= view('admin/material/link_input', ['label' => $label, 'links' => set_value('links', [], false)]) ?>
 
-        <!-- files -->
-        <div class="form-edit-floating">
-            <?= form_label('Downloadable files', 'files', $label) ?>
-            <?= view('admin/file_input', ['label' => $label, 'files' => set_value('files', [], false)]) ?>
-        </div>
+            <label for="files" class="form__label">Attached files</label>
+            <?= view('admin/material/file_input', ['label' => $label, 'files' => set_value('files', [], false)]) ?>
 
-        <!-- related materials -->
-        <div class="form-edit-floating">
-            <?= form_label('Related materials', 'relations', $label) ?>
-            <?= view('admin/relation_input', ['label' => $label, 'available' => $available_relations, 'relations' => set_value('relations', [], false)]) ?>
-        </div>
+            <label for="relations" class="form__label">Related materials</label>
+            <?= view('admin/material/relation_input', ['label' => $label, 'available' => $available_relations, 'relations' => set_value('relations', [], false)]) ?>
+        </fieldset>
 
         <!-- hidden attributes (for editing) -->
         <?= form_hidden('id', set_value('id')) ?>
-        <div id="unused-files">
+        <div id="unused-files" hidden>
         </div>
 
         <!-- buttons -->
-        <div class="row g-0">
-            <?= form_submit(['class' => 'col btn btn-lg btn-dark w-50 edit-mr'], 'Save') ?>
-            <button type="button" class="col btn btn-lg btn-danger w-50" onclick="window.history.back()">Cancel</button>
+        <div class="form__group form__group--horizontal">
+            <button type="submit" class="form__submit">Save</button>
+            <button type="button" class="form__cancel" onclick="window.history.back()">Cancel</button>
         </div>
-
-    <?= form_close() ?>
-
-</main>
-
+    </form>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>

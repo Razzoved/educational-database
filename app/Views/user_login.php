@@ -18,7 +18,7 @@
                 <img class="form__logo" src="<?= base_url('public/assets/enai-logo-transparent.png') ?>" alt="ENAI logo">
                 <?= $this->include('errors/validation_single') ?>
             </div>
-
+            <!-- user inputs -->
             <fieldset class="form__group">
                 <label class="form__label" for="email">Email</label>
                 <input class="form__input"
@@ -36,7 +36,7 @@
                     placeholder="***********"
                     required>
             </fieldset>
-
+            <!-- actions -->
             <button class="form__submit" type="submit">Sign in</button>
         </form>
     </div>

@@ -8,35 +8,44 @@
     $label = ['class' => 'form-label'];
 ?>
 
-<main class="form-edit">
+<div class="page">
+    <?php helper('form') ?> <!-- set_value function -->
 
-    <?= $this->include('errors/validation') ?>
-
-    <?= form_open_multipart('admin/tags/update') ?>
-
-        <!-- tag -->
-        <div class="form-edit-floating">
-            <?= form_label('Tag', 'fTag', $label) ?>
-            <?= form_input(['id' => 'fTag', 'name' => 'tag'], set_value('tag'), $control) ?>
+    <form class="form" method="post" action="<?= base_url('admin/tags/update') ?>">
+        <!-- errors -->
+        <div class="form__group form__group--centered">
+            <h1 class="form__title">Edit tag</h1>
+            <?= $this->include('errors/validation') ?>
         </div>
 
-        <!-- value -->
-        <div class="form-edit-floating">
-            <?= form_label('Value', 'fValue', $label) ?>
-            <?= form_input(['id' => 'fValue', 'name' => 'value'], set_value('value'), $control) ?>
-        </div>
+        <!-- inputs -->
+        <fieldset class="form__group">
+            <label for="tag" class="form__label">Tag</label>
+            <input class="form__input"
+                type="text"
+                name="tag"
+                placeholder="Enter tag"
+                value="<?= set_value('tag') ?>"
+                required>
+            <label for="value" class="form__label">Value</label>
+            <input class="form__input"
+                type="text"
+                name="value"
+                placeholder="Enter value"
+                value="<?= set_value('value') ?>"
+                required>
+        </fieldset>
 
         <!-- hidden attributes (for editing) -->
-        <?= form_hidden('id', set_value('id')) ?>
+        <input type="hidden" id="id" value="<?= set_value('id') ?>">
 
-        <!-- buttons -->
-        <div class="row g-0">
-            <?= form_submit(['class' => 'col btn btn-lg btn-dark w-50 edit-mr'], 'Save') ?>
-            <button type="button" class="col btn btn-lg btn-danger w-50" onclick="window.history.back()">Cancel</button>
+        <!-- actions -->
+        <div class="form__group form__group--horizontal">
+            <button type="submit" class="form__submit">Save</button>
+            <button type="button" class="form__cancel" onclick="window.history.back()">Cancel</button>
         </div>
+    </form>
 
-    <?= form_close() ?>
-
-</main>
+</div>
 
 <?= $this->endSection() ?>

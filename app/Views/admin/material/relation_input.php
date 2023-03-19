@@ -10,10 +10,10 @@
      */
 ?>
 
-<div class="dynamic-input">
+<div class="form__group">
 
     <!-- relation uploader -->
-    <div class="row g-0">
+    <div class="form__group form__group--horizontal">
         <input id="relation-uploader"
             list="relation-options"
             class="form-control col edit-mr"
@@ -29,12 +29,12 @@
     </datalist>
 
     <!-- hidden template for js copying -->
-    <?= view('admin/relation_template', ['id' => null, 'value' => null, 'hidden' => true, 'readonly' => true]) ?>
+    <?= view('admin/material/relation_template', ['id' => null, 'value' => null, 'hidden' => true, 'readonly' => true]) ?>
 
-    <div id="relation-group">
+    <div class="form__group" id="relation-group">
     <?php
         foreach ($relations as $id => $title) {
-            echo view('admin/relation_template', ['id' => $id, 'value' => $title, 'hidden' => false, 'readonly' => true]);
+            echo view('admin/material/relation_template', ['id' => $id, 'value' => $title, 'hidden' => false, 'readonly' => true]);
         }
     ?>
     </div>

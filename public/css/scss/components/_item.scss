@@ -6,6 +6,10 @@
     border-radius: $border-radius-lg;
     padding: 0.5rem;
 
+    &--stretch {
+        flex-grow: 1;
+    }
+
     & &__header {
         display: flex;
         flex-direction: row;

@@ -57,7 +57,7 @@ class Resource extends BaseController
 
         foreach ($this->request->getFiles() as $file) {
             if (($resource = $this->resourceLibrary->store($file)) !== null) {
-                $views[$resource->path] = view(Config::VIEW . 'file_template', [
+                $views[$resource->path] = view(Config::VIEW . 'material/file_template', [
                     'id'    => $this->request->getPostGet('id'),
                     'path'  => $resource->tmp_path,
                     'value' => $resource->path,

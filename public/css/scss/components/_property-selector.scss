@@ -43,6 +43,7 @@
         padding: 0.5rem;
         border: 2px solid $clr-gray-transparent;
         border-radius: $border-radius;
+        background-color: $clr-light;
 
         label {
             color: $clr-text;
@@ -69,6 +70,7 @@
                 }
 
                 button {
+                    background-color: unset;
                     margin-right: 0.5rem;
                     font-weight: bold;
                 }
@@ -81,8 +83,9 @@
                     margin-bottom: 0px;
                 }
 
-                &:hover {
-                    background-color: #efefef;
+                &:hover * {
+                    color: $clr-focus;
+                    border-color: $clr-focus;
                 }
             }
         }
