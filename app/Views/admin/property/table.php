@@ -9,7 +9,7 @@
 
     <div class="page__sidebar">
         <h1 class="page__title"><?= $title ?></h1>
-        <div>
+        <div class="page__group page__group--show">
             <input id="tag" type="text" placeholder="Enter tag category">
             <input id="value" type="text" placeholder="Enter tag name">
             <button class="create" type="button" onclick="createProperty()">Create</button>
