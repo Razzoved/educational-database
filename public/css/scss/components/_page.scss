@@ -4,6 +4,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
+    height: fit-content;
     gap: 1rem;
     margin: 0.25rem;
     padding: 1rem;
@@ -11,6 +12,17 @@
     background-color: $clr-light-semi-transparent;
     box-shadow: 0.2rem 0.1rem 1.5rem 0rem #00a8a89c;
     border-radius: $border-radius-lg + 1rem;
+
+    &--centered {
+        margin: auto;
+    }
+
+    &--dark {
+        background-color: $clr-dark-semi-transparent;
+        * {
+            color: $clr-light;
+        }
+    }
 
     &__title {
         border-bottom: $clr-dark-transparent 2px dashed;

@@ -11,6 +11,7 @@
     $default = $activePage === '' ? ' active' : '';
     $topRated = $activePage === 'top-rated' ? ' active' : '';
     $mostViewed = $activePage === 'most-viewed' ? ' active' : '';
+    $login = $activePage === 'login' ? ' active' : '';
 ?>
 <nav class="navbar">
     <div class="navbar__container">
@@ -34,7 +35,7 @@
                     Most viewed
                 </a>
             </li>
-            <li class="navbar__item navbar__item--to-right">
+            <li class="navbar__item navbar__item--to-right <?= $login ?>">
                 <a class="navbar__button" href="<?= base_url('admin') ?>">
                     <?= session('isLoggedIn') ? 'To administration' : 'Login' ?>
                 </a>

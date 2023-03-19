@@ -6,24 +6,24 @@
     <?= $this->renderSection('header') ?>
 
     <!-- custom css -->
-    <link rel="stylesheet" href="<?= base_url('public/css/admin.css') ?>">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="<?= base_url('public/css/form.css') ?>">
 </head>
 
 <body>
-    <?= $this->include('admin/navigation_bar') ?>
+    <?php if (session('isLoggedIn')) {
+        echo $this->include('admin/navigation_bar');
+    } else {
+        echo view('navigation_bar', ['activePage' => 'login']);
+    }
+    ?>
 
     <main class="container">
         <?= $this->renderSection('content') ?>
     </main>
 
-    <?= $this->renderSection('modals') ?>
-
     <?= $this->include('footer') ?>
-
     <?= $this->renderSection('scripts') ?>
-    <script type="text/javascript" src="<?= base_url('public/js/tabular.js') ?>"></script>
+
     <script type="text/javascript" src="<?= base_url('public/js/error.js') ?>"></script>
 </body>
 

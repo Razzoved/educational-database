@@ -1,0 +1,57 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    align-items: center;
+
+    &__logo {
+        max-width: 100%;
+        object-fit: scale-down;
+    }
+
+    &__group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        border: none;
+        gap: 0.5rem;
+        &--centered {
+            align-items: center;
+        }
+        &--horizontal {
+            flex-direction: row;
+        }
+    }
+
+    &__label {
+        font-size: large;
+        font-weight: bold;
+    }
+
+    &__input {
+        max-width: 100%;
+        line-height: 200%;
+        &:not(:last-child) {
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    &__cancel,
+    &__submit {
+        width: 100%;
+        flex-grow: 1;
+        padding: 0.5rem 0.5rem;
+    }
+
+    &__cancel {
+        color: $clr-light;
+        background-color: red;
+    }
+
+    &__submit {
+        color: $clr-active;
+        background-color: $clr-active-bg;
+    }
+}

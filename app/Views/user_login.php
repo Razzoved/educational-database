@@ -1,48 +1,43 @@
-<?= $this->extend('layouts/empty') ?>
+<?= $this->extend('layouts/form') ?>
 
 <?= $this->section('header') ?>
-
     <!-- metadata -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
-          crossorigin="anonymous">
-
-    <link rel="stylesheet" href="<?= base_url('public/css/signin.css') ?>">
+    <link rel="shortcut icon" type="image/png" href="<?= base_url('public/assets/favicon.ico') ?>"/>
     <title>Sign in</title>
-
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+    <?php helper('form') ?> <!-- set_value function -->
 
-    <main class="form-signin">
-
-        <?= $this->include('errors/validation_single') ?>
-
-        <?php helper('form') ?>
-
-        <?= form_open('login') ?>
-            <?php $extra = ['class' => 'form-control'] ?>
-
-            <img class="img-fluid mb-4" src="<?= base_url('public/assets/enai-logo.png') ?>" alt="">
-
-            <div class="form-floating">
-                <?= form_input(['id' => 'fEmail', 'name' => 'email', 'placeholder' => 'name@example.com'], set_value('email'), $extra, 'email') ?>
-                <?= form_label('Email address', 'fEmail') ?>
-            </div>
-            <div class="form-floating">
-                <?= form_password(['id' => 'fPassword', 'name' => 'password', 'placeholder' => 'Password'], '', $extra) ?>
-                <?= form_label('Password', 'fPassword') ?>
+    <div class="page page--centered page--dark">
+        <form class="form" method="post" action="<?= base_url('login') ?>" autocomplete="on">
+            <!-- logo with errors -->
+            <div class="form__group form__group--centered">
+                <img class="form__logo" src="<?= base_url('public/assets/enai-logo-transparent.png') ?>" alt="ENAI logo">
+                <?= $this->include('errors/validation_single') ?>
             </div>
 
-            <?= form_submit(['class' => 'btn btn-lg btn-dark mt-2 w-100'], 'Sign in') ?>
-        <?= form_close() ?>
+            <fieldset class="form__group">
+                <label class="form__label" for="email">Email</label>
+                <input class="form__input"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="name@example.com"
+                    value="<?= set_value('email') ?>"
+                    required>
+                <label class="form__label" for="password">Password</label>
+                <input class="form__input"
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="***********"
+                    required>
+            </fieldset>
 
-    </main>
-
+            <button class="form__submit" type="submit">Sign in</button>
+        </form>
+    </div>
 <?= $this->endSection() ?>
