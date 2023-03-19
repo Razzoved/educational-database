@@ -43,6 +43,8 @@ class Login extends BaseController
             'isLoggedIn' => true,
         ]);
 
-        return redirect()->to(previous_url());
+        return previous_url() === base_url('login')
+            ? redirect('admin')
+            : redirect()->to(previous_url());
     }
 }
