@@ -26,7 +26,8 @@
 
             <div class="form-floating">
                 <?= form_label('Assign to', 'target') ?>
-                <input id="target" name="target"
+                <input id="target"
+                        name="target"
                         list="target-options"
                         class="form-control col edit-mr"
                         placeholder="No material selected"
@@ -69,7 +70,7 @@
         function resourceOpen(id = undefined)
         {
             let resource = document.getElementById(id);
-            let name = resource.querySelector('.name').innerHTML;
+            let name = resource.querySelector('.item__title').innerHTML;
             if (resource !== undefined) {
                 document.querySelector('#resource-error')?.remove();
                 resourcePath.value = resource.id;
