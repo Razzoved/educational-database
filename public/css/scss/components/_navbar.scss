@@ -90,7 +90,7 @@
             }
             // move toggle to right
             .navbar__item:has(.navbar__toggle) {
-                display: inherit;
+                display: initial;
                 margin-left: auto;
             }
         }
@@ -106,7 +106,7 @@
             // show all links
             .navbar__item {
                 width: 100%;
-                display: inherit;
+                display: flex;
                 & > a,
                 & > i {
                     width: 100%;

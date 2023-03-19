@@ -28,7 +28,7 @@ async function toggleGroup(element)
         console.error('Group is invalid, no group parent found.', element);
         return;
     }
-    parent.classList.toggle('page__group--hide');
+    parent.classList.toggle('page__group--show');
 }
 
 async function resetFilters()

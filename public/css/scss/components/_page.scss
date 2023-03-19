@@ -76,8 +76,11 @@
             margin-top: 1rem;
         }
         // default all group elements in group after toggling
-        &__group--hide > * {
+        &__group > * {
             display: none;
+        }
+        &__group--show > * {
+            display: initial;
         }
         &__toggler {
             display: block;

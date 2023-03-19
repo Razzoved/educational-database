@@ -35,12 +35,12 @@
 
     &__toggle-overflow {
         color: $clr-hyperlink;
-        background-color: inherit;
+        background-color: initial;
         border: unset;
         border-radius: unset;
         border-top: $clr-dark-transparent 1px solid;
         &:hover {
-            background-color: inherit;
+            background-color: $clr-focus-bg;
         }
     }
 
