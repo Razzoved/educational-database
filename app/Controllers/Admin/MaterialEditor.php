@@ -224,6 +224,7 @@ class MaterialEditor extends BaseController
     private function toResources(array &$target, array $items, string $type) : void
     {
         foreach ($items ?? [] as $tmpPath => $path) {
+            if (!$tmpPath && !$path) continue;
             $target[] = new EntitiesResource([
                 'type'     => $type,
                 'path'     => $type === 'link' ? $path : basename($path),
@@ -284,7 +285,7 @@ class MaterialEditor extends BaseController
     /**
      * Moves all temporary files from temporary directory to public one
      * belonging to the given material, and renames them back to their
-     * original name if possible.
+     * original name if possible. Method copies assets.
      *
      * @param EntitiesMaterial $material material whose resources to move
      * @return self to enable method chaining

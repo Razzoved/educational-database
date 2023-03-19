@@ -43,7 +43,8 @@ class Resource extends Entity
 
     public function isAsset() : bool
     {
-        return substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX;
+        return substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX
+            || substr($this->path, 0, strlen('missing')) === "missing";
     }
 
     public function isTemporary() : bool

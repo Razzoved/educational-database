@@ -377,8 +377,8 @@ class Resources
             return false;
         }
 
-        if ($resource->isAsset() && !copy($path, $dirPath . DIRECTORY_SEPARATOR . $resource->path)) {
-            return false;
+        if ($resource->isAsset()) {
+            return copy($path, $dirPath . DIRECTORY_SEPARATOR . $resource->path);
         } else {
             $resource->tmp_path = $file->move($dirPath, $resource->path)->getBasename();
         }
