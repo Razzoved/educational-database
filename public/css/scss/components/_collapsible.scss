@@ -93,21 +93,15 @@
             text-decoration: none;
             cursor: pointer;
         }
-        input[type='submit'] {
-            width: 100%;
-            padding: 0.2rem;
-            margin-top: 0.2rem;
-            border-radius: 0.5rem;
-            border-color: $clr-text-small;
-            color: $clr-text;
-            background-color: $clr-light-transparent;
+        button[type='submit'] {
+            padding: 0.1rem;
+            border: none;
+            text-align: left;
             justify-content: center;
             text-decoration: none;
-            &:hover {
-                color: $clr-focus;
-                background-color: $clr-focus-bg;
-                border-color: $clr-focus;
-            }
+            // override default colors
+            color: $clr-text;
+            background-color: transparent;
         }
     }
 
