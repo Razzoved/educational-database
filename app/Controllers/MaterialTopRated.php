@@ -10,7 +10,8 @@ class MaterialTopRated extends Material
     {
         $data = [
             'meta_title' => 'Materials - top rated',
-            'title'      => 'Materials - top rated',
+            'title'      => 'Top rated materials',
+            'options'    => $this->getOptions(),
             'filters'    => $this->materialProperties->getUsedProperties(session('isLoggedIn') ?? false),
             'materials'  => $this->getMaterials(current_url()),
             'pager'      => $this->materials->pager,

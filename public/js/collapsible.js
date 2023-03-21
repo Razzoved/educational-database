@@ -36,7 +36,9 @@ async function resetFilters()
     document.querySelectorAll('.collapsible input[type=checkbox]').forEach(e => e.checked=false);
     document.querySelectorAll('input[name=search]').forEach(e => e.value='');
 
-    if (typeof sendSearch !== undefined) {
-        sendSearch();
+    if (typeof submitSearch === "function") {
+        submitSearch();
+    } else {
+        console.warn('Filters were reset, but not applied.')
     }
 }

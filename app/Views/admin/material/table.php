@@ -14,7 +14,7 @@
     <div class="page__content">
         <h1 class="page__title"><?= $title ?></h1>
         <div class="page-controls">
-            <?= view('search_bar', ['action' => base_url('admin/materials/1')]) ?>
+            <?= view('search_bar', ['action' => base_url('admin/materials/1'), 'options' => $options]) ?>
             <?= view('sort_bar', [
                 'sorters' => ['ID', 'Title', 'Created at', 'Updated at', 'Views'],
                 'create' => "window.location.href='" . base_url('admin/materials/edit') . "'"]) ?>

@@ -21,7 +21,7 @@
         <h1 class="page__title"><?= $title ?></h1>
 
         <div class="page-controls">
-            <?= view('search_bar', ['action' => base_url('admin/tags/1')]) ?>
+            <?= view('search_bar', ['action' => base_url('admin/tags/1'), 'options' => $options]) ?>
             <?= view('sort_bar', ['sorters' => ['Id', 'Tag', 'Value']]) ?>
         </div>
 

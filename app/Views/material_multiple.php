@@ -13,7 +13,7 @@
         <h1 class="page__title"><?= $title ?></h1>
 
         <div class="page__controls">
-            <?= view('search_bar') ?>
+            <?= view('search_bar', ['options' => $options]) ?>
         </div>
 
         <div id="items">

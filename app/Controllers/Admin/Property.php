@@ -44,8 +44,9 @@ class Property extends BaseController
         $data = [
             'meta_title' => Property::META_TITLE,
             'title'      => 'Tags',
-            'properties'  => $this->getProperties(current_url(), Config::PAGE_SIZE),
-            'filters' => $filters,
+            'properties' => $this->getProperties(current_url(), Config::PAGE_SIZE),
+            'options'    => $this->getOptions($filters['Tags']),
+            'filters'    => $filters,
             'pager'      => $this->properties->pager,
             'activePage' => 'tags',
         ];
@@ -162,6 +163,14 @@ class Property extends BaseController
                 'message' => 'Already in use by ' . $property->usage . ' materials!'
             ]);
         }
+    }
+
+    private function getOptions(array $tags = []) : array
+    {
+        return array_merge(array_column(
+            $this->properties->getData('tag')->get()->getResultArray(),
+            'property_value'
+        ), $tags);
     }
 
     private function getProperties(string $url, int $perPage = 10) : array

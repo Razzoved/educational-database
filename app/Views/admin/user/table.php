@@ -11,7 +11,7 @@
         <h1 class="page__title"><?= $title ?></h1>
 
         <div class="page-controls">
-            <?= view('search_bar', ['action' => base_url('admin/users/1')]) ?>
+            <?= view('search_bar', ['action' => base_url('admin/users/1'), 'options' => $options]) ?>
             <?= view('sort_bar', ['sorters' => ['Name', 'Email'], 'create' => 'userOpen()']); ?>
         </div>
 

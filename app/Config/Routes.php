@@ -53,7 +53,7 @@ $routes->group('/', function($routes) {
     // MOST viewed materials
     $routes->addRedirect('most-viewed', 'most-viewed/1');
     $routes->addRedirect('most-viewed/-(:num)', 'most-viewed/$1');
-    $routes->add('most-viewed/(:num)', 'Material::mostViewed');
+    $routes->add('most-viewed/(:num)', 'MaterialMostViewed::index');
 
     // SINGLE material
     $routes->add('single/(:num)', 'Material::get/$1');

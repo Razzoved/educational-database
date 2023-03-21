@@ -68,7 +68,7 @@ class MaterialModel extends Model
     {
         $builder = $this->getData($sort, $sortDir)->builder()
             ->select("$this->table.*")
-            ->like('material_title', $search, 'both', null, true);
+            ->like('material_title', $search, 'both', true, true);
 
         if ($filters !== []) {
             $filter = model(MaterialPropertyModel::class)->getCompiledFilter($filters);

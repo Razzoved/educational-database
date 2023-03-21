@@ -16,8 +16,23 @@
     padding: 0;
 }
 
+
 body {
     background: $bg-gradient;
+    & *::-webkit-scrollbar {
+        width: 0.8rem;
+        background-color: unset;
+        border: none;
+    }
+    & *::-webkit-scrollbar-track {
+        border: none;
+        background-color: transparent;
+    }
+    & *::-webkit-scrollbar-thumb {
+        border-radius: $border-radius-lg;
+        background-color: $clr-dark;
+        background-clip: border-box;
+    }
 }
 
 a.button {

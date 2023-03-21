@@ -31,13 +31,13 @@
     }
 
     &__content {
-        overflow: auto;
+        overflow: visible;
         flex-basis: 30rem;
         flex-grow: 9999;
     }
 
     &__sidebar {
-        overflow: auto;
+        overflow: hidden;
         flex-basis: 18rem;
         flex-grow: 1;
         display: flex;

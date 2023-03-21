@@ -41,32 +41,15 @@ class Material extends BaseController
     {
         $data = [
             'meta_title' => 'Materials',
-            'title'      => 'Materials',
+            'title'      => 'All materials',
             'filters'    => $this->materialProperties->getUsedProperties(),
+            'options'    => $this->getOptions(),
             'materials'  => $this->getMaterials(current_url()),
             'pager'      => $this->materials->pager,
             'activePage' => '',
         ];
 
         return view('material_multiple', $data);
-    }
-
-    /**
-     * Returns a view of a given page vith most viewed materials. If the page number is greater than
-     * total number of pages, it returns the last page.
-     */
-    public function mostViewed() : string
-    {
-        $data = [
-            'meta_title' => 'Materials - monthly views',
-            'title'      => 'Most viewed materials in past 30 days',
-            'filters'    => [],
-            'materials'  => $this->views->getTopMaterials(30),
-            'pager'      => null,
-            'activePage' => 'most-viewed',
-        ];
-
-        return view('material_views', $data);
     }
 
     /**
@@ -134,6 +117,14 @@ class Material extends BaseController
         $material = $this->materials->getById($id);
         if (!$material) throw PageNotFoundException::forPageNotFound();
         return $material;
+    }
+
+    protected function getOptions() : array
+    {
+        return array_column(
+            $this->materials->getData('title')->get()->getResultArray(),
+            'material_title'
+        );
     }
 
     protected function getMaterials(string $url, int $perPage = 10) : array

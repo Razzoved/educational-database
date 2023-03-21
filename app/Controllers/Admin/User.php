@@ -42,6 +42,7 @@ class User extends BaseController
         $data = [
             'meta_title' => 'Administration - Users',
             'title'      => 'User editor',
+            'options'    => $this->getOptions(),
             'users'      => $this->getUsers(current_url(), Config::PAGE_SIZE),
             'pager'      => $this->users->pager,
             'activePage' => 'users',
@@ -220,6 +221,14 @@ class User extends BaseController
         $user = $this->users->find($user->id);
         $user->password = '';
         return $user;
+    }
+
+    private function getOptions() : array
+    {
+        return array_column(
+            $this->users->getData('name')->get()->getResultArray(),
+            'user_name'
+        );
     }
 
     private function getUsers(string $url, int $perPage = 10) : array

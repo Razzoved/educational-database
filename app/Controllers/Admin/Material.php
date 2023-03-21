@@ -11,6 +11,7 @@ class Material extends ControllersMaterial
         $data = [
             'meta_title' => 'Administration - Materials',
             'title'      => 'Materials',
+            'options'    => $this->getOptions(),
             'filters'    => $this->materialProperties->getUsedProperties(false),
             'materials'  => $this->getMaterials(current_url(), Config::PAGE_SIZE),
             'pager'      => $this->materials->pager,
