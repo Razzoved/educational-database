@@ -11,11 +11,15 @@
         transition: none;
     }
     i.active {
+        -webkit-text-stroke-width: 1px;
         background-color: unset;
+        &, &.own {
+            -webkit-text-stroke-color: $clr-active-bg;
+        }
     }
     i.own {
-        -webkit-text-stroke-width: 1px;
-        -webkit-text-stroke-color: black;
+        -webkit-text-stroke-width: 2px;
+        -webkit-text-stroke-color: $clr-dark-semi-transparent;
         &:not(.active):not(.hover) {
             color: $clr-dark-transparent;
         }
