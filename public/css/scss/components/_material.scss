@@ -1,61 +1,73 @@
 @import '../defaults/variables';
 
+
 .material {
+    // editable variables
+    $separator: $clr-dark-transparent 2px dashed;
+    // style
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     overflow: hidden;
-    align-items: center;
-    border: $clr-dark 1px solid;
-    border-radius: $border-radius-lg;
-    box-shadow: 0.2rem 0.2rem 0.8rem 0.05rem $clr-dark-transparent;
-    background-color: $clr-focus;
-
-    & > * {
-        max-width: 100%;
-        max-height: 100%;
+    gap: 1rem;
+    @media screen and (min-width: $sm) {
+        padding: 0rem 0.5rem 1rem 1rem;
+        border-left: $separator;
     }
 
-    &-thumbnail {
-        flex-grow: 1;
+    * {
+        outline: red 1px dotted;
+    }
+
+    & > *:not(:last-child):not(:empty) {
+        border-bottom: $separator;
+    }
+
+    &__header {
+        position: relative;
         display: flex;
-        overflow: hidden;
-        justify-content: center;
-        align-items: center;
-        img {
-            flex-shrink: 0;
-            min-width: 100%;
-            min-height: 100%;
-            max-width: 10rem;
+        flex-direction: column;
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    &__row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        &:not(:first-child) {
+            align-items: center;
         }
     }
 
-    &-header {
-        flex-basis: 20rem;
-        flex-grow: 9999;
-        text-align: left;
-        padding: 1rem;
-        background-color: $clr-light;
-        button {
-            float: right;
+    &__thumbnail {
+        flex-grow: 1;
+        flex-shrink: 1;
+        object-fit: scale-down;
+        max-width: 14rem;
+        max-height: 14rem;
+        border-radius: $border-radius;
+        border: $clr-dark 1px solid;
+        @media screen and (max-width: $sm) {
+            max-width: 100%;
         }
     }
 
-    &-details {
-        border-top: $clr-dark-transparent 1px solid;
-        padding-top: 1rem;
-        :first-child {
-            float: left;
-        }
-        :last-child {
-            float: right;
-        }
+    &__title {
+        flex-shrink: 1;
+        flex-grow: 1;
+        word-wrap: break-word;
     }
 
-    &-content {
-        padding: 2rem;
-        border-radius: $border-radius-lg;
-        background: rgb(255,255,255);
-        background: linear-gradient(0deg, rgba(255,255,255,0) 20%, rgba(245,245,245,0.5) 60%, $clr-focus 300%);
+    &__go-back {
+        float: right;
+        height: fit-content;
+        margin-left: auto;
+        margin-top: 0.5rem;
+    }
+
+    &__content {
         & > * {
             all: revert;
         }
@@ -69,11 +81,7 @@
         }
     }
 
-    &-attachments {
-        hr {
-            margin-top: 0.50rem;
-            margin-bottom: 0.50rem;
-        }
+    &__attachments {
         ul, ol {
             list-style-type: none;
         }

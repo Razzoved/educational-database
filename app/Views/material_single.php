@@ -14,54 +14,57 @@
 
 <?= $this->section('content') ?>
 
-<!-- START OF PAGE SPLIT --->
 <div class="page">
-
-    <!-- All tags -->
     <div class="page__sidebar">
         <?= view('sidebar_buttons', ['properties' => $material->getGroupedProperties()]) ?>
     </div>
 
-    <!-- Post container -->
     <div class="page__content">
-
-        <div class="material">
-            <div class="material-thumbnail">
-                <?= isset($material->referTo) ? "<a href='$material->referTo'>" : "" ?>
-                <img src="<?= $material->getThumbnail()->getURL() ?>" alt="Material image">
-                <?= isset($material->referTo) ? "</a>" : "" ?>
-            </div>
-
-            <header class="material-header">
-                <div class="material-title">
-                    <button type='button' onclick="window.history.back()" class="btn btn-dark">
-                        Go back
-                    </button>
-                    <h1><?= $material->title ?></h1>
+        <article class="material">
+            <!-- Header -->
+            <header class="material__header">
+                <div class="material__row">
+                    <img class="material__thumbnail"
+                        src="<?= $material->getThumbnail()->getURL() ?>"
+                        alt="Material image"
+                        <?=isset($material->referTo)
+                            ? 'onclick=\'window.location.href="'. esc($material->referTo) . '"\''
+                            : '' ?>>
+                    <h1 class="material__title">
+                        <button class="material__go-back" type='button' onclick="window.history.back()">
+                            Go back
+                        </button>
+                        <?= $material->title ?>
+                    </h1>
                 </div>
-                <div class="material-details">
-                    <small><?= $material->createdToDate() ?></small>
+                <div class="material__row">
+                    <small>Published: <?= $material->createdToDate() ?></small>
                     <?= view('rating', ['material' => $material]) ?>
                 </div>
             </header>
-        </div>
 
-        <!-- Content -->
-        <div class="material-content">
-            <?= $material->content ?>
+            <!-- Content -->
+            <section class="material__content">
+                <?= $material->content ?>
+            </section>
 
-            <div class="material-attachments">
+            <section class="material__attachments">
                 <!-- Links -->
                 <?= view_cell('App\Libraries\Material::listLinks', ['material' => $material]) ?>
+            </section>
+
+            <section class="material__attachments">
                 <!-- Downloadable -->
                 <?= view_cell('App\Libraries\Material::listFiles', ['material' => $material]) ?>
+            </section>
+
+            <section class="material__attachments">
                 <!-- Related -->
                 <?= view_cell('App\Libraries\Material::listRelated', ['material' => $material]) ?>
-            </div>
-        </div>
+            </section>
+        </article>
     </div>
 </div>
-<!-- END OF PAGE SPLIT -->
 
 <?= $this->endSection() ?>
 
@@ -88,7 +91,7 @@
             success: function(result) {
                 rating_reload_class(result.average, 'active');
                 rating_reload_class(result.user, 'own');
-                ratings.querySelector('.count').innerHTML = result.count + 'x';
+                ratings.querySelector('.rating__count-value').innerHTML = result.count + 'x';
             },
             error: function(status) {
                 alert('Unexpected error: could not rate the material');
@@ -106,8 +109,8 @@
      */
     function rating_reload_class(value, className) {
         index = 1;
-        Array.from(ratings.children).forEach(c => {
-            c.nodeName.toLowerCase() === 'i' && index++ <= value
+        Array.from(ratings.querySelectorAll('.rating__stars > i')).forEach(c => {
+            index++ <= value
                 ? c.classList.add(className)
                 : c.classList.remove(className);
         });
@@ -119,14 +122,12 @@
     */
     window.addEventListener('DOMContentLoaded', (event) => {
         var index = 1;
-        Array.from(ratings.children).forEach(c => {
-            if (c.nodeName.toLowerCase() === 'i') {
-                c.setAttribute('onmouseover', `rating_reload_class('${index}', 'hover')`);
-                c.setAttribute('onmouseout', `rating_reload_class(0, 'hover')`);
-                c.setAttribute('onclick', `rating_rate('<?= $material->id ?>', ${index})`);
-                rating_reload_class(<?= $rating ?>, 'own');
-                index++;
-            }
+        Array.from(ratings.querySelectorAll('.rating__stars > i')).forEach(c => {
+            c.setAttribute('onmouseover', `rating_reload_class('${index}', 'hover')`);
+            c.setAttribute('onmouseout', `rating_reload_class(0, 'hover')`);
+            c.setAttribute('onclick', `rating_rate('<?= $material->id ?>', ${index})`);
+            rating_reload_class(<?= $rating ?>, 'own');
+            index++;
         });
     });
 </script>
