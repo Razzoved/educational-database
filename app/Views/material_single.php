@@ -48,19 +48,28 @@
                 <?= $material->content ?>
             </section>
 
+            <!-- Links -->
             <section class="material__attachments">
-                <!-- Links -->
-                <?= view_cell('App\Libraries\Material::listLinks', ['material' => $material]) ?>
+                <?= view('components/resources_as_links', [
+                    'resources' => $material->getLinks(),
+                    'title' => 'Attached links'
+                ]) ?>
             </section>
 
+            <!-- Downloadable -->
             <section class="material__attachments">
-                <!-- Downloadable -->
-                <?= view_cell('App\Libraries\Material::listFiles', ['material' => $material]) ?>
+                <?= view('components/resources_as_links', [
+                    'resources' => $material->getFiles(),
+                    'title' => 'Downloadable files'
+                ]) ?>
             </section>
 
+            <!-- Related -->
             <section class="material__attachments">
-                <!-- Related -->
-                <?= view_cell('App\Libraries\Material::listRelated', ['material' => $material]) ?>
+                <?= view('components/materials_as_relations', [
+                    'materials' => $material->related,
+                    'title' => 'Related materials'
+                ]) ?>
             </section>
         </article>
     </div>

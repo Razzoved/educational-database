@@ -18,34 +18,4 @@ class Material
             ['material' => $material, 'showButtons' => true, 'index' => $index]
         );
     }
-
-    public function listLinks(EntitiesMaterial $material) : string
-    {
-        if (!isset($material)) return 'ERROR';
-
-        return view(
-            'components/resources_as_links',
-            ['resources' => $material->getLinks(), 'title' => 'Attached links']
-        );
-    }
-
-    public function listFiles(EntitiesMaterial $material) : string
-    {
-        if (!isset($material)) return 'ERROR';
-
-        return view(
-            'components/resources_as_links',
-            ['resources' => $material->getFiles(), 'title' => 'Downloadable files']
-        );
-    }
-
-    public function listRelated(EntitiesMaterial $material) : string
-    {
-        if (!isset($material)) return 'ERROR';
-
-        return view(
-            'components/materials_as_relations',
-            ['materials' => $material->related, 'title' => 'Related materials']
-        );
-    }
 }

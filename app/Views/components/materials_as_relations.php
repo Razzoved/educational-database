@@ -6,12 +6,16 @@
      */
 ?>
 <!-- group of MATERIALS shown as clickable links -->
-<?= ($materials == []) ? "" : "<hr><h2>$title</h5>" ?>
-<div class="relations">
+<?php if (isset($materials) && $materials !== []) : ?>
+<h2><?= $title ?></h5>
+<ul class="relations">
     <?php foreach ($materials as $material) : ?>
-    <div class="relation" onclick="window.location.href='<?= base_url('single/' . $material->id) ?>'" >
-        <img class="relation-thumbnail" src="<?= $material->getThumbnail()->getURL() ?>" alt="relation thumbnail">
-        <p class="relation-title"><?= $material->title ?></p>
-    </div>
+    <li class="relations__item" onclick="window.location.href='<?= base_url('single/' . $material->id) ?>'" >
+        <img class="relations__thumbnail"
+            src="<?= $material->getThumbnail()->getURL() ?>"
+            alt="Relation thumbnail">
+        <p class="relations__title"><?= $material->title ?></p>
+    </li>
     <?php endforeach; ?>
-</div>
+</ul>
+<?php endif; ?>
