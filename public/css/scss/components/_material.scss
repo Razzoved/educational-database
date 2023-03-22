@@ -148,9 +148,11 @@
         border: $clr-dark-transparent 2px dashed;
         border-radius: $border-radius;
         box-shadow: inset 0rem 0rem 2rem $clr-dark-transparent;
-        &:hover, &:hover *:not(img) {
-            color: $clr-focus;
+        &:hover {
             background-color: $clr-focus-bg;
+        }
+        &:hover * {
+            color: $clr-focus;
         }
         @media screen and (max-width: 500px) {
             width: 100%;
