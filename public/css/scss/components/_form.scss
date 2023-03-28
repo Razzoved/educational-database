@@ -65,6 +65,16 @@
         }
     }
 
+    .page--dark &__input {
+        color: $clr-light;
+        &:hover {
+            color: $clr-text;
+        }
+        &:focus:hover {
+            color: $clr-focus;
+        }
+    }
+
     &__cancel,
     &__submit {
         flex-grow: 1;
