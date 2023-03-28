@@ -7,7 +7,7 @@
 
 <?= $this->section('content') ?>
 <div class="page dashboard">
-    <article class="page__content">
+    <div class="page__content">
         <section>
             <h2>Statistics</h2>
             <div>
@@ -18,7 +18,7 @@
         </section>
 
         <section>
-            <h2>Most Viewed</h2>
+            <h2>Recent most viewed</h2>
             <ol class="dashboard__most-viewed">
                 <?php foreach ($materials as $m) : ?>
                 <li class="dashboard__material" onclick="window.location.href='<?= base_url('single/' . $m->id) ?>'">
@@ -41,9 +41,9 @@
                 <?php endforeach; ?>
             </ol>
         </section>
-    </article>
+    </div>
 
-    <article class="page__sidebar">
+    <div class="page__sidebar">
         <section>
             <h2>Newest</h2>
             <ul class="dashboard__recent">
@@ -67,7 +67,7 @@
                 <?php endforeach; ?>
             </ul>
         </section>
-    </article>
+    </div>
 </div>
 <?= $this->endSection() ?>
 
