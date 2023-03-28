@@ -22,8 +22,11 @@
         <?php $pageNum = $pager->getCurrentPageNumber() ?>
         <?php foreach ($pager->links() as $link): ?>
             <?php // hide too many links on small screens
-                $hideable = $link['title'] != $pageNum ? ' pagination__item--hideable' : '';
-                if ($linl['title'] == $pageNum - 1 || $pageNum + 1) {
+                $hideable = "";
+                if ($link['title'] != $pageNum) {
+                    $hideable .= ' pagination__item--hideable';
+                }
+                if ($link['title'] == $pageNum - 1 || $link['title'] == $pageNum + 1) {
                     $hideable .= '-xs';
                 }
             ?>

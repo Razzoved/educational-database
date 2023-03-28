@@ -59,6 +59,15 @@
             background-color: $clr-focus-bg;
             border-color: $clr-focus;
         }
+
+        @media screen and (max-width: $xs) {
+            padding: 0.5rem 1rem;
+        }
+
+        @media screen and (max-width: $xs-l) {
+            padding: 0.4rem 0.6rem;
+        }
+
     }
 
     &__button:hover &__text {
