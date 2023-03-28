@@ -14,7 +14,8 @@
 
     <!-- relation uploader -->
     <div class="form__group form__group--horizontal">
-        <input id="relation-uploader"
+        <input type="text"
+            id="relation-uploader"
             list="relation-options"
             class="form__input"
             placeholder="No material selected"

@@ -81,8 +81,10 @@ class ViewsModel extends Model
         $materials = array();
         foreach ($views as $index => $arr) {
             $material = model(MaterialModel::class)->getById((int) $arr['material_id']);
-            $material->views = $arr['material_views'];
-            $materials[] = $material;
+            if ($material) {
+                $material->views = $arr['material_views'];
+                $materials[] = $material;
+            }
         }
 
         return $materials;
