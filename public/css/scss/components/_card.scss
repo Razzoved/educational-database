@@ -21,7 +21,7 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
         line-clamp: 1;
-        @media screen and (max-width: ($xs - 200px)) {
+        @media screen and (max-width: $xs-l) {
             -webkit-line-clamp: 2;
             line-clamp: 2;
         }
@@ -36,7 +36,7 @@
         @media screen and (max-width: $xs) {
             width: 30%;
         }
-        @media screen and (max-width: ($xs - 200px)) {
+        @media screen and (max-width: $xs-l) {
             width: 100%;
         }
     }

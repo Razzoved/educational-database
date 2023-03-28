@@ -30,6 +30,12 @@
         }
     }
 
+    &__item--hideable-xs {
+        @media screen and (max-width: $xs-l) {
+            display: none;
+        }
+    }
+
     &__item:first-of-type &__button {
         border-top-left-radius: 1rem;
         border-bottom-left-radius: 1rem;

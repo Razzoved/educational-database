@@ -22,9 +22,10 @@
         <?php $pageNum = $pager->getCurrentPageNumber() ?>
         <?php foreach ($pager->links() as $link): ?>
             <?php // hide too many links on small screens
-                $hideable = ($link['title'] != $pageNum
-                    && $link['title'] != $pageNum - 1
-                    && $link['title'] != $pageNum + 1) ? ' pagination__item--hideable' : '';
+                $hideable = $link['title'] != $pageNum ? ' pagination__item--hideable' : '';
+                if ($linl['title'] == $pageNum - 1 || $pageNum + 1) {
+                    $hideable .= '-xs';
+                }
             ?>
             <li class="pagination__item<?= $link['active'] ? ' active' : '' ?><?= $hideable ?>">
                 <button class="pagination__button" type="button" onclick="redirectTo('<?= $link['uri'] ?>')">
