@@ -35,7 +35,7 @@
                     Most viewed
                 </a>
             </li>
-            <li class="navbar__item navbar__item--to-right <?= $login ?>">
+            <li class="navbar__item navbar__item--to-right navbar__item--switch<?= session('isLoggedIn') ? '' : ' navbar__item--auth'?><?= $login ?>">
                 <a class="navbar__button" href="<?= base_url('admin') ?>">
                     <?= session('isLoggedIn') ? 'To administration' : 'Login' ?>
                 </a>

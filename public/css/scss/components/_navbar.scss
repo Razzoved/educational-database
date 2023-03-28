@@ -63,6 +63,14 @@
         margin-left: auto;
     }
 
+    & &__item--switch:not(:hover) &__button {
+        color: $clr-active;
+    }
+
+    & &__item--auth:not(:hover) &__button {
+        background-color: $clr-dark-transparent;
+    }
+
     & &__button, & &__toggle {
         border-radius: $border-radius;
         padding: 1rem 1rem;

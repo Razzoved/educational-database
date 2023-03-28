@@ -21,8 +21,8 @@
             onclick="window.location.href='<?= $refUrl ?>'">
         <ul class="navbar__list">
             <li class="navbar__item">
-                <a class="navbar__button<?= $dash ?>" href="<?= base_url('') ?>")?>
-                    <!-- <i class="fa-solid fa-gauge"></i> --> Public
+                <a class="navbar__button<?= $dash ?>" href="<?= base_url('admin/dashboard') ?>")?>
+                    <i class="fa-solid fa-gauge"></i> Dashboard
                 </a>
             </li>
             <li class="navbar__item">
@@ -45,7 +45,10 @@
                     <i class="fa-solid fa-user"></i> Users
                 </a>
             </li>
-            <li class="navbar__item navbar__item--to-right">
+            <li class="navbar__item navbar__item--to-right navbar__item--switch">
+                <a class="navbar__button" href="<?= base_url() ?>">To public</a>
+            </li>
+            <li class="navbar__item navbar__item--switch navbar__item--auth">
                 <a class="navbar__button" href="<?= base_url('/admin/logout') ?>">
                     <i class="fa-sharp fa-solid fa-right-from-bracket"></i> Logout
                 </a>
