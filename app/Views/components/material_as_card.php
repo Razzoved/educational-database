@@ -9,12 +9,12 @@
 ?>
 
 <div class="card" onclick="window.location.href='<?= $url ?>'">
-    <div class="card__thumbnail">
-        <img src="<?= $material->getThumbnail()->getURL() ?>" alt="Missing image">
-    </div>
+    <img class="card__thumbnail"
+        src="<?= $material->getThumbnail()->getURL() ?>"
+        alt="Missing image">
     <div class="card__body">
         <div class="card__header">
-            <h2><?= strlen($material->title) > 50 ? substr($material->title, 0, 50) . '...' : $material->title ?></h5>
+            <h2><?= $material->title ?></h5>
         </div>
 
         <div class="card__content">
