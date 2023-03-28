@@ -24,14 +24,15 @@ class Dashboard extends BaseController
     public function index() : string
     {
         $data = [
-            'meta_title'    => 'Administration - dashboard',
-            'activePage'    => 'dashboard',
-            'viewsTotal'    => array_sum(array_column($this->views->findAll(), 'material_views')),
-            'viewsHistory'  => $this->views->getDailyTotals(),
-            'materials'     => $this->views->getTopMaterials(8),
-            'contributors'  => $this->materials->getContributors(),
-            'recentNew'     => $this->materials->getData('created_at', 'DESC')->get(5)->getCustomResultObject(EntitiesMaterial::class),
-            'recentUpdated' => $this->materials->getData('updated_at', 'DESC')->get(5)->getCustomResultObject(EntitiesMaterial::class),
+            'meta_title'     => 'Administration - dashboard',
+            'activePage'     => 'dashboard',
+            'viewsTotal'     => array_sum(array_column($this->views->findAll(), 'material_views')),
+            'viewsHistory'   => $this->views->getDailyTotals(),
+            'materials'      => $this->views->getTopMaterials(5, 30),
+            'materialsTotal' => $this->materials->getData('views', 'DESC')->get(5)->getCustomResultObject(EntitiesMaterial::class),
+            'contributors'   => $this->materials->getContributors(),
+            'recentNew'      => $this->materials->getData('created_at', 'DESC')->get(5)->getCustomResultObject(EntitiesMaterial::class),
+            'recentUpdated'  => $this->materials->getData('updated_at', 'DESC')->get(5)->getCustomResultObject(EntitiesMaterial::class),
         ];
         return view(Config::VIEW . 'dashboard', $data);
     }

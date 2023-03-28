@@ -18,9 +18,22 @@
         </section>
 
         <section>
-            <h2>Recent most viewed</h2>
+            <h2>Most viewed recently</h2>
             <ol class="dashboard__most-viewed">
                 <?php foreach ($materials as $m) : ?>
+                <li class="dashboard__material" onclick="window.location.href='<?= base_url('single/' . $m->id) ?>'">
+                    <img src="<?= $m->getThumbnail()->getURL() ?>" alt="material thumbnail" />
+                    <p class="dashboard__subtitle"><?= $m->title ?><p>
+                    <p><?= $m->views ?> view<?= $m->views !== 1 ? 's' : ''?></p>
+                </li>
+                <?php endforeach; ?>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Most viewed all-time</h2>
+            <ol class="dashboard__most-viewed">
+                <?php foreach ($materialsTotal as $m) : ?>
                 <li class="dashboard__material" onclick="window.location.href='<?= base_url('single/' . $m->id) ?>'">
                     <img src="<?= $m->getThumbnail()->getURL() ?>" alt="material thumbnail" />
                     <p class="dashboard__subtitle"><?= $m->title ?><p>
