@@ -32,6 +32,34 @@ class ViewsModel extends Model
     protected $updatedField = '';
 
     /**
+     * Gets an array of total views from past 'x' days.
+     * The array is filled with zeroes on empty days.
+     */
+    public function getDailyTotals(int $days = 30) : array
+    {
+        $views = $this->builder()
+                    ->select('created_at')
+                    ->selectSum('material_views')
+                    ->groupBy('created_at')
+                    ->orderBy('created_at', 'asc')
+                    ->where('created_at >', date('Y-m-d', time() - $days * 86400))
+                    ->get($days)
+                    ->getResultArray();
+
+        $result = [];
+        $count = $days - 1;
+        foreach ($views as $index => $arr) {
+            $lastDate = date('Y-m-d', time() - $count-- * 86400);
+            while ($arr['created_at'] !== $lastDate) {
+                $result[] = 0;
+                $lastDate = date('Y-m-d', time() - $count-- * 86400);
+            }
+            $result[] = $arr['material_views'];
+        }
+        return $result;
+    }
+
+    /**
      * Grabs the 'n' most viewed materials and returns them as a numbered
      * array. This array is already ordered by views. The view counts are
      * also loaded into the material in place of the total views.
@@ -46,7 +74,7 @@ class ViewsModel extends Model
                     ->selectSum('material_views')
                     ->groupBy('material_id')
                     ->orderBy('material_views', 'desc')
-                    ->where('created_at >=', date('Y-m-d', time() - $days * 86400))
+                    ->where('created_at >', date('Y-m-d', time() - $days * 86400))
                     ->get($n)
                     ->getResultArray();
 

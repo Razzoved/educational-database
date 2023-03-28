@@ -105,6 +105,20 @@ class MaterialModel extends Model
         return ($material) ? $this->verifyAndLoad($material) : null;
     }
 
+    /**
+     * Returns all 'authors', along with the total of posts under their name.
+     */
+    public function getContributors() : array
+    {
+        return $this->builder()
+                    ->select('material_author as contributor')
+                    ->selectCount('*', 'total_posts')
+                    ->groupBy('material_author')
+                    ->orderBy('total_posts', 'desc')
+                    ->get()
+                    ->getResultArray();
+    }
+
     public function handleUpdate(Material $material, array $relatedMaterials = []) : int
     {
         $material->blame = session('user')->id;
