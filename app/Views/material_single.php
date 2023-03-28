@@ -44,33 +44,41 @@
             </header>
 
             <!-- Content -->
+            <?php if ($material->content != "") : ?>
             <section class="material__content">
                 <?= $material->content ?>
             </section>
+            <?php endif; ?>
 
             <!-- Links -->
+            <?php if ($material->getLinks() !== []) : ?>
             <section class="material__attachments">
                 <?= view('components/resources_as_links', [
                     'resources' => $material->getLinks(),
                     'title' => 'Attached links'
                 ]) ?>
             </section>
+            <?php endif; ?>
 
             <!-- Downloadable -->
+            <?php if ($material->getFiles() !== []) : ?>
             <section class="material__attachments">
                 <?= view('components/resources_as_links', [
                     'resources' => $material->getFiles(),
                     'title' => 'Downloadable files'
                 ]) ?>
             </section>
+            <?php endif; ?>
 
             <!-- Related -->
+            <?php if ($material->related !== []) : ?>
             <section class="material__attachments">
                 <?= view('components/materials_as_relations', [
                     'materials' => $material->related,
                     'title' => 'Related materials'
                 ]) ?>
             </section>
+            <?php endif; ?>
         </article>
     </div>
 </div>

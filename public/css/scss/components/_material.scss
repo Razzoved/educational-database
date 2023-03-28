@@ -3,7 +3,7 @@
 
 .material {
     // editable variables
-    $separator: $clr-dark-transparent 2px dashed;
+    $separator: $clr-gray-transparent 2px dashed;
     // style
     display: flex;
     flex-direction: column;
@@ -135,27 +135,24 @@
     display: flex;
     flex-wrap: wrap;
     overflow-y: auto;
-    height: 14rem;
+    max-height: 32rem;
     gap: 1rem;
     justify-content: space-around;
 
     &__item {
         cursor: pointer;
-        flex-grow: 1;
+        flex: 1 1 12rem;
         margin: 0.5rem;
         padding: 0.5rem;
         text-align: center;
-        border: $clr-dark-transparent 2px dashed;
+        border: $clr-gray-transparent 2px dashed;
         border-radius: $border-radius;
-        box-shadow: inset 0rem 0rem 2rem $clr-dark-transparent;
+        box-shadow: inset 0rem 0rem 2rem $clr-gray-transparent;
         &:hover {
             background-color: $clr-focus-bg;
         }
         &:hover * {
             color: $clr-focus;
-        }
-        @media screen and (max-width: 500px) {
-            width: 100%;
         }
     }
 
@@ -164,7 +161,7 @@
         width: 10rem;
         height: 10rem;
         resize: both;
-        @media screen and (max-width: 500px) {
+        @media screen and (max-width: $xs) {
             object-fit: cover;
             width: 100%;
         }
