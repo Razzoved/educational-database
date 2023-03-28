@@ -6,10 +6,15 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<div class="page">
-    <article class="dashboard">
+<div class="page dashboard">
+    <article class="page__content">
         <section>
-            <h2>Views in past 30 days</h2>
+            <h2>Statistics</h2>
+            <div>
+                <p>Total views: <strong><?= $viewsTotal ?? 'unknown' ?></strong></p>
+                <p>Views in last 30 days: <strong><?= $viewsMonth ?? 'unknown' ?></strong></p>
+                <p>Unique visitors in last 30 days: <strong><?= $visitors ?? 'unknown' ?></strong></p>
+            </div>
             <canvas class="dashboard__views" id="views-chart"></canvas>
         </section>
 
@@ -27,30 +32,6 @@
         </section>
 
         <section>
-            <h2>Newest</h2>
-            <ul class="dashboard__recent">
-                <?php foreach ($recentNew as $r) : ?>
-                <li class="dashboard__material">
-                    <p class="dashboard__subtitle"><?= $r->title ?><p>
-                    <strong><?= $r->created_at ?></strong>
-                </li>
-                <?php endforeach; ?>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Recently updated</h2>
-            <ul class="dashboard__recent">
-                <?php foreach ($recentUpdated as $r) : ?>
-                <li class="dashboard__material">
-                    <p class="dashboard__subtitle"><?= $r->title ?><p>
-                    <strong><?= $r->updated_at ?></strong>
-                </li>
-                <?php endforeach; ?>
-            </ul>
-        </section>
-
-        <section>
             <h2>Contributors</h2>
             <ol class="dashboard__contributors">
                 <?php foreach ($contributors as $c) : ?>
@@ -60,6 +41,32 @@
                 </li>
                 <?php endforeach; ?>
             </ol>
+        </section>
+    </article>
+
+    <article class="page__sidebar">
+        <section>
+            <h2>Newest</h2>
+            <ul class="dashboard__recent">
+                <?php foreach ($recentNew as $r) : ?>
+                <li class="dashboard__material" onclick="location.href='<?= base_url('admin/materials/1?search=' . urlencode($r->title)) ?>'">
+                    <p class="dashboard__subtitle"><?= $r->title ?><p>
+                    <p><?= $r->created_at ?></p>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Updated</h2>
+            <ul class="dashboard__recent">
+                <?php foreach ($recentUpdated as $r) : ?>
+                <li class="dashboard__material" onclick="location.href='<?= base_url('admin/materials/1?search=' . urlencode($r->title)) ?>'">
+                    <p class="dashboard__subtitle"><?= $r->title ?><p>
+                    <p><?= $r->updated_at ?></p>
+                </li>
+                <?php endforeach; ?>
+            </ul>
         </section>
     </article>
 </div>
@@ -75,7 +82,7 @@
     for (let i = 29; i >= 0; i--) {
         let date = new Date();
         date.setDate(date.getDate() - i);
-        xValues.push(date.getDate() + '.' + date.getMonth() + '.');
+        xValues.push(date.getDate() + '.' + (date.getMonth() + 1) + '.');
     }
 
     console.log(xValues);
@@ -87,7 +94,7 @@
             labels: xValues,
             datasets: [{
                 data: yValues,
-                borderColor: "red",
+                borderColor: "black",
                 fill: false
             }]
         },
