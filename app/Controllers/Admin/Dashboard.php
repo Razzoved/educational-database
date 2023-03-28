@@ -26,7 +26,8 @@ class Dashboard extends BaseController
         $data = [
             'meta_title'    => 'Administration - dashboard',
             'activePage'    => 'dashboard',
-            'viewHistory'   => $this->views->getDailyTotals(),
+            'viewsTotal'    => array_sum(array_column($this->views->findAll(), 'material_views')),
+            'viewsHistory'  => $this->views->getDailyTotals(),
             'materials'     => $this->views->getTopMaterials(6),
             'contributors'  => $this->materials->getContributors(),
             'recentNew'     => $this->materials->getData('created_at')->get(5)->getCustomResultObject(EntitiesMaterial::class),

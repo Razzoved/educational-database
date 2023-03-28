@@ -12,8 +12,7 @@
             <h2>Statistics</h2>
             <div>
                 <p>Total views: <strong><?= $viewsTotal ?? 'unknown' ?></strong></p>
-                <p>Views in last 30 days: <strong><?= $viewsMonth ?? 'unknown' ?></strong></p>
-                <p>Unique visitors in last 30 days: <strong><?= $visitors ?? 'unknown' ?></strong></p>
+                <p>Recent views: <strong><?= array_sum($viewsHistory) ?? 'unknown' ?></strong></p>
             </div>
             <canvas class="dashboard__views" id="views-chart"></canvas>
         </section>
@@ -25,7 +24,7 @@
                 <li class="dashboard__material" onclick="window.location.href='<?= base_url('single/' . $m->id) ?>'">
                     <img src="<?= $m->getThumbnail()->getURL() ?>" alt="material thumbnail" />
                     <p class="dashboard__subtitle"><?= $m->title ?><p>
-                    <strong><?= $m->views ?> view<?= $m->views !== 1 ? 's' : ''?></strong>
+                    <p><?= $m->views ?> view<?= $m->views !== 1 ? 's' : ''?></p>
                 </li>
                 <?php endforeach; ?>
             </ol>
@@ -74,7 +73,7 @@
 
 <?= $this->section('scripts') ?>
 <script type="text/javascript">
-    const yValues = <?= json_encode($viewHistory) ?>;
+    const yValues = <?= json_encode($viewsHistory) ?>;
     while (yValues.length < 30) {
         yValues.push(0);
     }
