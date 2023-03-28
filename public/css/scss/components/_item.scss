@@ -96,10 +96,9 @@
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        line-clamp: var(--num-of-lines);
-        -webkit-line-clamp: var(--num-of-lines);
         -webkit-box-orient: vertical;
-
+        -webkit-line-clamp: var(--num-of-lines);
+        line-clamp: var(--num-of-lines);
         @media screen and (max-width: $sm) {
             font-size: 1.2rem;
         }
