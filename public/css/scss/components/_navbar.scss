@@ -8,6 +8,7 @@
     box-shadow: 0rem 0.5rem 1rem $clr-dark-transparent;
     border-bottom: $clr-dark solid 0.15rem;
     padding: 0.2rem;
+    overflow: hidden;
 
     & &__container {
         @extend .container;
