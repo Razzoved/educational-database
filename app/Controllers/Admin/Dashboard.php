@@ -28,10 +28,10 @@ class Dashboard extends BaseController
             'activePage'    => 'dashboard',
             'viewsTotal'    => array_sum(array_column($this->views->findAll(), 'material_views')),
             'viewsHistory'  => $this->views->getDailyTotals(),
-            'materials'     => $this->views->getTopMaterials(6),
+            'materials'     => $this->views->getTopMaterials(8),
             'contributors'  => $this->materials->getContributors(),
-            'recentNew'     => $this->materials->getData('created_at')->get(5)->getCustomResultObject(EntitiesMaterial::class),
-            'recentUpdated' => $this->materials->getData('updated_at')->get(5)->getCustomResultObject(EntitiesMaterial::class),
+            'recentNew'     => $this->materials->getData('created_at', 'DESC')->get(5)->getCustomResultObject(EntitiesMaterial::class),
+            'recentUpdated' => $this->materials->getData('updated_at', 'DESC')->get(5)->getCustomResultObject(EntitiesMaterial::class),
         ];
         return view(Config::VIEW . 'dashboard', $data);
     }

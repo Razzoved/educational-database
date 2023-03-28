@@ -22,7 +22,7 @@ class PropertyModel extends Model
 
     public function getData(?string $sort = null, ?string $sortDir = null) : PropertyModel
     {
-        $sortDir = $sortDir === 'DESC' ? $sortDir : 'ASC';
+        $sortDir = $sortDir && strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC';
         $sort = in_array('property_' . $sort, $this->allowedFields) || ('property_' . $sort === $this->primaryKey) ? ('property_' . $sort) : null;
 
         $builder = $this->builder()->distinct();

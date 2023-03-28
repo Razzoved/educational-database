@@ -29,7 +29,7 @@ class UserModel extends Model
 
     public function getData(?string $sort = null, ?string $sortDir = null) : UserModel
     {
-        $sortDir = $sortDir === 'DESC' ? $sortDir : 'ASC';
+        $sortDir = $sortDir && strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC';
         $sort = $sort === $this->createdField || $sort === $this->updatedField
             ? $sort
             : (in_array('user_' . $sort, $this->allowedFields) || ('user_' . $sort === $this->primaryKey) ? ('user_' .  $sort) : null);

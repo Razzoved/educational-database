@@ -42,7 +42,7 @@ class MaterialModel extends Model
     {
         $show = session('isLoggedIn') ? StatusCast::VALID_VALUES : array(StatusCast::PUBLIC);
 
-        $sortDir = $sortDir === 'DESC' ? $sortDir : 'ASC';
+        $sortDir = $sortDir && strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC';
         $sort = $sort === $this->createdField || $sort === $this->updatedField
             ? $sort
             : (in_array('material_' . $sort, $this->allowedFields) || ('material_' . $sort === $this->primaryKey) ? ('material_' .  $sort) : null);
