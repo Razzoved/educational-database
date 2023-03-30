@@ -71,7 +71,7 @@
     {
         let form = document.createElement('form');
         form.action = url;
-        form.method = 'post';
+        form.method = 'get';
 
         for (var key in lastSearch) {
             addToForm(form, key, lastSearch[key]);
