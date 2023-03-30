@@ -44,7 +44,7 @@ class Material extends BaseController
             'title'      => 'All materials',
             'filters'    => $this->materialProperties->getUsedProperties(),
             'options'    => $this->getOptions(),
-            'materials'  => $this->getMaterials(current_url()),
+            'materials'  => $this->getMaterials(),
             'pager'      => $this->materials->pager,
             'activePage' => '',
         ];
@@ -60,10 +60,11 @@ class Material extends BaseController
      */
     public function get(int $id) : string
     {
-        $material = $this->getMaterial($id);
-        $session = session();
+        $material = $this->materials->get($id);
+        if (!$material) throw PageNotFoundException::forPageNotFound();
 
         // increment views if not viewed yet and user is not logged in
+        $session = session();
         if ($id && !$session->has('m-' . $id) && !$session->get('isLoggedIn')) {
             $session->set('m-' . $id, true);
             $this->views->increment($material);
@@ -112,44 +113,29 @@ class Material extends BaseController
         ]);
     }
 
-    protected function getMaterial(int $id) : EntitiesMaterial
-    {
-        $material = $this->materials->getById($id);
-        if (!$material) throw PageNotFoundException::forPageNotFound();
-        return $material;
-    }
-
     protected function getOptions() : array
     {
         return array_column(
-            $this->materials->getData('title')->get()->getResultArray(),
+            $this->materials->getArray(['sort' => 'title']),
             'material_title'
         );
+        // return array_column(
+        //     $this->materials->getData('title')->get()->getResultArray(),
+        //     'material_title'
+        // );
     }
 
-    protected function getMaterials(string $url, int $perPage = 10) : array
+    protected function getMaterials() : array
     {
-        $uri = new \CodeIgniter\HTTP\URI($url);
-
-        $materials = $this->loadMaterials()
-                          ->paginate($perPage, 'default', null, $uri->getTotalSegments());
-
-        foreach ($materials as $m) {
-            $m->resources = $this->resources->getThumbnail($m->id);
-        }
-        return $materials;
-    }
-
-    protected function loadMaterials() : \CodeIgniter\BaseModel
-    {
-        $sort = $this->request->getGetPost('sort');
-        $sortDir = $this->request->getGetPost('sortDir') ?? "ASC";
-        $search = $this->request->getGetPost('search') ?? "";
-
-        $filters = \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []);
-
-        return ($search !== "" || $filters !== [])
-            ? $this->materials->getByFilters($sort, $sortDir, $search, $filters)
-            : $this->materials->getData($sort, $sortDir);
+        $uri = new \CodeIgniter\HTTP\URI(current_url());
+        return $this->materials->getPage(
+            $uri->getTotalSegments(),
+            [
+                'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
+                'search'    => $this->request->getGetPost('search'),
+                'sort'      => $this->request->getGetPost('sort'),
+                'sortDir'   => $this->request->getGetPost('sortDir'),
+            ]
+        );
     }
 }

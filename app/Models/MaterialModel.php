@@ -28,81 +28,119 @@ class MaterialModel extends Model
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 
+    protected $validationRules = [
+        'title'   => 'required|string',
+        'author'  => 'required|string',
+        'status'  => 'required|validStatus',
+        'content' => 'string',
+    ];
+    protected $validationMessages = [
+        'title'  => [
+            'required' => 'Title must be present.',
+            'string'   => 'Title must be a valid string.'
+        ],
+        'author'  => [
+            'required' => 'Author must be present.',
+            'string'   => 'Author must be a valid string.'
+        ],
+        'status' => [
+            'required'    => 'Status must be present.',
+            'validStatus' => 'Invalid status.'
+        ],
+        'content' => [
+            'string' => 'Content must be a valid string.'
+        ]
+    ];
+
+    protected $afterFind = [
+        'loadResources',
+        'loadRelations',
+        'loadProperties'
+    ];
+
     protected $returnType = Material::class;
 
-    /**
-     * Returns all materials WITHOUT any associated properties or resources.
-     *
-     * @param ?string $sor      key to sort by
-     * @param ?string $sortDir  ASC or DESC
-     *
-     * @return MaterialModel    requires calling either 'paginate' or 'get'
-     */
-    public function getData(?string $sort = null, ?string $sortDir = null) : MaterialModel
+    /** ----------------------------------------------------------------------
+     *                           PUBLIC METHODS
+     *  ------------------------------------------------------------------- */
+
+    public function get(int $id, array $data = []) : ?Material
     {
-        $show = session('isLoggedIn') ? StatusCast::VALID_VALUES : array(StatusCast::PUBLIC);
+        return $this->setupQuery($data)->find($id);
+    }
 
-        $sortDir = $sortDir && strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC';
-        $sort = $sort === $this->createdField || $sort === $this->updatedField
-            ? $sort
-            : (in_array('material_' . $sort, $this->allowedFields) || ('material_' . $sort === $this->primaryKey) ? ('material_' .  $sort) : null);
+    public function getArray(array $data = []) : array
+    {
+        return $this->setupQuery($data)->findAll();
+    }
 
-        $this->builder()
-             ->whereIn('material_status', $show)
-             ->orderBy($sort ?? $this->primaryKey, $sortDir);
+    public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
+    {
+        return $this->setupQuery($data)->paginate($perPage, 'default', null, $page);
+    }
+
+    /** ----------------------------------------------------------------------
+     *                        UNIFIED QUERY SETUP
+     *  ------------------------------------------------------------------- */
+
+    protected function setupQuery(array $data = []) : MaterialModel
+    {
+        return $this
+            ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
+            ->setupFilters($data['filters'] ?? [])
+            ->setupSearch($data['search'] ?? "")
+            ->setupShow(session()->has('isLoggedIn') && session('isLoggedIn') === true)
+            ->allowCallbacks(!isset($data['callbacks']) || $data['callbacks'] === true);
 
         return $this;
     }
 
-    /**
-     * Returns all materials WITHOUT any associated properties or resources.
-     *
-     * @param ?string $sort     key to sort by
-     * @param ?string $sortDir  ASC or DESC
-     * @param string $search    title to search for
-     * @param array $filters    filters to search with (has to match all)
-     *
-     * @return MaterialModel requires calling either 'paginate' or 'get'
-     */
-    public function getByFilters(?string $sort, ?string $sortDir, string $search, array $filters): MaterialModel
+    protected function setupSort(string $sort, string $sortDir)
     {
-        $builder = $this->getData($sort, $sortDir)->builder()
-            ->select("$this->table.*")
-            ->like('material_title', $search, 'both', true, true);
-
-        if ($filters !== []) {
-            $filter = model(MaterialPropertyModel::class)->getCompiledFilter($filters);
-            $builder->join("($filter) f", "$this->table.material_id = f.material_id");
+        if (
+            $sort !== $this->createdField &&
+            $sort !== $this->updatedField &&
+            $sort !== $this->primaryKey
+        ) {
+            $sort = 'material_' . $sort;
+            $sort = in_array($sort, $this->allowedFields) || $sort === $this->primaryKey ? $sort : "";
         }
 
+        if ($sort === "") {
+            $sort = $this->primaryKey;
+        }
+
+        return $this->orderBy(
+            $sort,
+            strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC'
+        );
+    }
+
+    protected function setupFilters(array $filters)
+    {
+        if ($filters !== []) {
+            $filter = model(MaterialPropertyModel::class)->getCompiledFilter($filters);
+            $this->join("($filter) f", "$this->table.material_id = f.material_id");
+        }
         return $this;
     }
 
-    /**
-     * Returns a single material with all of its attributes loaded.
-     *
-     * @param int $id          id to search by
-     * @return Material if found, else null
-     */
-    public function getById(int $id) : ?Material
+    protected function setupSearch(string $search)
     {
-        $material = $this->find($id);
-        return ($material) ? $this->verifyAndLoad($material) : null;
+        if ($search === "") {
+            return $this;
+        }
+        return $this->like('material_title', $search, 'both', true, true);
     }
 
-    /**
-     * Returns a single material with all of its attributes loaded.
-     *
-     * @param string $title    title to search by
-     * @return Material if found, else null
-     */
-    public function getByTitle(string $title) : ?Material
+    protected function setupShow(bool $admin)
     {
-        $material = $this->builder()
-                         ->where('material_title', $title)
-                         ->get(1)
-                         ->getCustomResultObject(Material::class);
-        return ($material) ? $this->verifyAndLoad($material) : null;
+        if ($admin) {
+            $this->whereIn('material_status', StatusCast::VALID_VALUES);
+        } else {
+            $this->where('material_status', StatusCast::PUBLIC);
+        }
+        return $this;
     }
 
     /**
@@ -146,15 +184,58 @@ class MaterialModel extends Model
         return $material->id;
     }
 
-    private function verifyAndLoad(Material $material) {
-        if ($material->status != StatusCast::PUBLIC && !session('isLoggedIn')) {
-            return null;
+    /** ----------------------------------------------------------------------
+     *                              CALLBACKS
+     *  ------------------------------------------------------------------- */
+
+    protected function loadResources(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
         }
 
-        $material->properties = model(MaterialPropertyModel::class)->getByMaterial($material->id);
-        $material->resources = model(ResourceModel::class)->getResources($material->id);
-        $material->related = model(MaterialMaterialModel::class)->getRelated($material->id);
+        // single material
+        $material = $data['data'];
+        if (is_a($material, Material::class)) {
+            $material->resources = model(ResourceModel::class)->getResources($material->id);
+            return $data;
+        }
 
-        return $material;
+        // multiple materials, limit only to thumbnail
+        $materials = $data['data'];
+        foreach ($materials as $material) {
+            $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
+        }
+        return $data;
+    }
+
+    protected function loadRelations(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
+        }
+
+        // single material
+        $material = $data['data'];
+        if (is_a($material, Material::class)) {
+            $material->related = model(MaterialMaterialModel::class)->getRelated($material->id);
+        }
+
+        return $data;
+    }
+
+    protected function loadProperties(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
+        }
+
+        // single material
+        $material = $data['data'];
+        if (is_a($material, Material::class)) {
+            $material->properties = model(MaterialPropertyModel::class)->getByMaterial($material->id);
+        }
+
+        return $data;
     }
 }
