@@ -2,57 +2,70 @@
 
 namespace App\Models;
 
-use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
-use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Model;
 
 class MaterialMaterialModel extends Model
 {
     protected $table = 'material_material';
-    protected $primaryKey = 'material_id_left';
-    protected $allowedFields = ['material_id_left', 'material_id_right'];
+    protected $primaryKey = 'material_id_left'; // will not work
+    protected $allowedFields = [
+        'material_id_left',
+        'material_id_right'
+    ];
+
+    protected $afterFind = [
+        'loadData',
+        'loadThumbnail',
+    ];
+
+    protected $returnType = Material::class;
 
     /**
      * Looks for ALL pairs of materials where at least one member has
      * the given id. Returns an array of such materials.
      *
-     * @param int $id           id of material whose tags we want to get
-     * @param bool $onlyTitle   if true returns titles as values, else objects
+     * @param int $id id of material whose tags we want to get
      *
      * @return array of objects or strings
      */
-    public function getRelated(int $id, bool $onlyTitle = false) : array
+    public function getRelated(int $id) : array
     {
-        $ids = $this->builder()
-                    ->select($this->allowedFields[0] . ' as l, ' . $this->allowedFields[1] . ' as r')
-                    ->orWhere($this->allowedFields[0], $id)
-                    ->orWhere($this->allowedFields[1], $id)
-                    ->get()
-                    ->getResultArray();
-
-        $result = array();
-        foreach ($ids as $key => $value) {
-            if ($value['l'] === $value['r']) {
-                continue; // same material
+        $left = $this->select($this->allowedFields[0] . ' as material_id')
+                    ->where($this->allowedFields[1], $id)
+                    ->where($this->allowedFields[0] . ' !=', $id)
+                    ->findAll();
+        $right = $this->select($this->allowedFields[1] . ' as material_id')
+                    ->where($this->allowedFields[0], $id)
+                    ->where($this->allowedFields[1] . ' !=', $id)
+                    ->findAll();
+        return array_merge($left, $right);
             }
 
-            $identifier = $value['l'] == $id ? $value['r'] : $value['l'];
-            $found = model(MaterialModel::class)->find($identifier);
+    /** ----------------------------------------------------------------------
+     *                              CALLBACKS
+     *  ------------------------------------------------------------------- */
 
-            if ($found === null || (!session('isLoggedIn') && $found->status !== StatusCast::PUBLIC)) {
-                continue;
-            }
-
-            if ($onlyTitle) {
-                $result[$found->id] = $found->title;
-            } else {
-                $found->resources = model(ResourceModel::class)->getThumbnail($found->id);
-                $result[$found->id] = $found;
-            }
+    protected function loadData(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
         }
+        foreach ($data['data'] as $k => $material) {
+            $data['data'][$k] = model(MaterialModel::class)->get($material->id, ['callbacks' => false]);
+        }
+        return $data;
+            }
 
-        return $result;
+    protected function loadThumbnail(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
+            }
+        foreach ($data['data'] as $material) {
+            $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
+        }
+        return $data;
     }
 
     /**
@@ -60,42 +73,43 @@ class MaterialMaterialModel extends Model
      * between two materials.
      *
      * @param Material $material material to insert/delete with
-     * @param array $newRelations id => title pairs for update
-     * @param BaseConnection $db database connection
      */
-    public function handleUpdate(Material $material, array $newRelations, BaseConnection $db = null) : void
+    public function saveMaterial(Material $material) : bool
     {
-        if (!isset($db)) $db = $this->db;
+        $relations = [];
+        foreach ($this->getRelated($material->id) as $r) {
+            $relations[] = $r->id;
+        }
 
-        $relations = $this->getRelated($material->id);
-
-        $toDelete = array_filter($relations, function($r) use ($newRelations) {
-            return $r && !in_array($r, $newRelations);
+        $toDelete = array_filter($relations, function($r) use ($material) {
+            return $r && !in_array($r, $material->related);
         });
 
-        $toCreate = array_filter($newRelations, function($r) use ($relations) {
+        $toCreate = array_filter($material->related, function($r) use ($relations) {
             return $r && !in_array($r, $relations);
         });
 
-        foreach ($toDelete as $k => $v) {
-            $db->table($this->table)
-               ->orGroupStart()
+        $this->db->transStart();
+        foreach ($toDelete as $id) {
+            $this->orGroupStart()
                     ->where($this->allowedFields[0], $material->id)
-                    ->where($this->allowedFields[1], $k)
-               ->groupEnd()
-               ->orGroupStart()
-                    ->where($this->allowedFields[0], $k)
+                    ->where($this->allowedFields[1], $id)
+                ->groupEnd()
+                ->orGroupStart()
+                    ->where($this->allowedFields[0], $id)
                     ->where($this->allowedFields[1], $material->id)
-               ->groupEnd()
-               ->delete();
+                ->groupEnd()
+                ->delete();
         }
 
-        foreach ($toCreate as $k => $v) {
-            echo $k;
-            $db->table($this->table)->insert([
+        foreach ($toCreate as $id) {
+            $this->insert([
                 $this->allowedFields[0] => $material->id,
-                $this->allowedFields[1] => $k,
+                $this->allowedFields[1] => $id,
             ]);
         }
+        $this->db->transComplete();
+
+        return $this->db->transStatus();
     }
 }

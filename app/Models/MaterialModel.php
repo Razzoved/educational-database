@@ -91,7 +91,7 @@ class MaterialModel extends Model
                     ->getResultArray();
     }
 
-    public function saveMaterial(Material $material, array $relatedMaterials = []) : int
+    public function saveMaterial(Material $material) : int
     {
         $material->blame = session('user')->id;
         $m = $this->get($material->id);
@@ -110,8 +110,8 @@ class MaterialModel extends Model
             $material->id = $this->insert($material, true);
         }
 
-        model(MaterialMaterialModel::class)->batchSave($material, $relatedMaterials, $this->db);
-        model(MaterialPropertyModel::class)->batchSave($material, $this->db);
+        model(MaterialMaterialModel::class)->saveMaterial($material);
+        model(MaterialPropertyModel::class)->saveMaterial($material);
 
         $this->db->transComplete();
 

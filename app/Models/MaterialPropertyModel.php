@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
 use App\Entities\Property;
-use CodeIgniter\Database\BaseConnection;
 use CodeIgniter\Model;
 
 class MaterialPropertyModel extends Model
@@ -155,12 +154,9 @@ class MaterialPropertyModel extends Model
      * to the material.
      *
      * @param material $material material to insert/delete with
-     * @param BaseConnection $db database connection
      */
-    public function batchSave(Material $material, BaseConnection $db = null) : void
+    public function saveMaterial(Material $material) : bool
     {
-        if (!isset($db)) $db = $this->db;
-
         $oldProperties = $this->getByMaterial($material->id);
 
         $toDelete = array_filter($oldProperties, function($p) use ($material) {
@@ -171,18 +167,22 @@ class MaterialPropertyModel extends Model
             return $p && !in_array($p, $oldProperties);
         });
 
+        $this->db->transStart();
         foreach ($toDelete as $p) {
-            $db->table($this->table)
+            $this
                ->where('material_id', $material->id)
                ->where('property_id', $p->id)
                ->delete();
         }
 
         foreach ($toCreate as $p) {
-            $db->table($this->table)->insert([
+            $this->insert([
                 'material_id' => $material->id,
                 'property_id' => $p->id,
             ]);
         }
+        $this->db->transComplete();
+
+        return $this->db->transStatus();
     }
 }
