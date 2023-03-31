@@ -78,7 +78,7 @@
                         <label for="status" class="form__label">Status</label>
                         <?= form_dropdown(['id' => 'status', 'name' => 'status'],
                             \App\Entities\Cast\StatusCast::VALID_VALUES,
-                            \App\Entities\Cast\StatusCast::getIndex(set_value('status')),
+                            set_value('status'),
                             ['class' => 'form__input']) ?>
                     </div>
                 </div>
@@ -104,13 +104,15 @@
 
         <!-- hidden attributes (for editing) -->
         <?= form_hidden('id', set_value('id')) ?>
+        <?= form_hidden('history', set_value('history', 0, false) + 1) ?>
+
         <div id="unused-files" hidden>
         </div>
 
         <!-- buttons -->
         <div class="form__group form__group--horizontal">
             <button type="submit" class="form__submit">Save</button>
-            <button type="button" class="form__cancel" onclick="window.history.back()">Cancel</button>
+            <button type="button" class="form__cancel" onclick="goBack()">Cancel</button>
         </div>
     </form>
 </div>
@@ -129,6 +131,16 @@
         newInput.setAttribute('value', filepath.replace('<?= base_url() ?>/', '').replace('<?= base_url() ?>\\', ''));
 
         unused.appendChild(newInput);
+    }
+
+    function goBack()
+    {
+        let historySize = document.querySelector('input[name="history"]');
+        if (historySize && historySize.value && historySize.value > 0) {
+            window.history.go(-historySize.value);
+        } else {
+            window.history.back();
+        }
     }
 </script>
 

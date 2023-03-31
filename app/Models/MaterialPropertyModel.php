@@ -157,7 +157,7 @@ class MaterialPropertyModel extends Model
      * @param material $material material to insert/delete with
      * @param BaseConnection $db database connection
      */
-    public function handleUpdate(Material $material, BaseConnection $db = null) : void
+    public function batchSave(Material $material, BaseConnection $db = null) : void
     {
         if (!isset($db)) $db = $this->db;
 

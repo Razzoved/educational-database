@@ -91,7 +91,7 @@ class MaterialModel extends Model
                     ->getResultArray();
     }
 
-    public function createOrUpdate(Material $material, array $relatedMaterials = []) : int
+    public function saveMaterial(Material $material, array $relatedMaterials = []) : int
     {
         $material->blame = session('user')->id;
         $m = $this->get($material->id);

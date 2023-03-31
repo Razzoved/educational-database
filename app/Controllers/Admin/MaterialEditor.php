@@ -41,11 +41,11 @@ class MaterialEditor extends BaseController
         $this->resourceLibrary = new Resources($this->response);
     }
 
-    public function index() : string
+    public function index(array $errors = []) : string
     {
         $data = [
             'meta_title'           => self::META_TITLE,
-            'errors'               => $data['errors'] ?? [],
+            'errors'               => $errors,
             'available_properties' => $this->getAllPropertiesAsStrings(),
             'available_relations'  => $this->getAllMaterialsAsStrings(),
         ];
@@ -75,6 +75,7 @@ class MaterialEditor extends BaseController
         $material = new EntitiesMaterial($this->request->getPost());
 
         $material->resources = $this->loadResources(
+            $material->id,
             $this->request->getPost('thumbnail'),
             $this->request->getPost('files'),
             $this->request->getPost('links')
@@ -90,12 +91,14 @@ class MaterialEditor extends BaseController
         );
 
         try {
-            $material->id = $this->materials->createOrUpdate($material);
+            $material->id = $this->materials->saveMaterial($material);
             $this->deleteRemovedFiles($material)
                  ->moveTemporaryFiles($material);
         } catch (Exception $e) {
-            $data['errors'] = $this->materials->errors();
-            return $this->setupPost($material)->index();
+            $errors = $this->materials->errors() !== []
+                ? $this->materials->errors()
+                : [$e->getMessage()];
+            return $this->setupPost($material)->index($errors);
         }
 
         return redirect('admin/materials');
@@ -168,7 +171,7 @@ class MaterialEditor extends BaseController
         $_POST = [
             'id'         => $material->id,
             'author'     => $material->author,
-            'status'     => $material->status,
+            'status'     => \App\Entities\Cast\StatusCast::getIndex($material->status),
             'title'      => $material->title,
             'content'    => $material->content,
             'thumbnail'  => $material->getThumbnail()->getRootPath(),
@@ -181,13 +184,19 @@ class MaterialEditor extends BaseController
         return $this;
     }
 
-    private function loadResources(?string $thumbnail, ?array $files, ?array $links) : array
+    private function loadResources(?int $materialId, ?string $thumbnail, ?array $files, ?array $links) : array
     {
         $resources = array();
 
         $this->toResources($resources, is_null($thumbnail) ? [] : [$thumbnail], 'thumbnail');
         $this->toResources($resources, $files ?? [], 'file');
         $this->toResources($resources, $links ?? [], 'link');
+
+        if ($materialId) {
+            foreach ($resources as $resource) {
+                $resource->parentId = $materialId;
+            }
+        }
 
         return $resources;
     }
