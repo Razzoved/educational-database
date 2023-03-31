@@ -24,13 +24,13 @@ class Login extends BaseController
 
     public function index() : string
     {
-        return view('user_login', ['validation' => Services::validation()]);
+        return view('user_login');
     }
 
     public function authenticate()
     {
         if (!$this->validate($this->settings)) {
-            return view('user_login', ['validation' => $this->validator]);
+            return view('user_login', ['errors' => $this->validator->getErrors()]);
         }
 
         $user = model(UserModel::class)->getByEmail(
