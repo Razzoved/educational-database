@@ -23,9 +23,8 @@ class Resource extends BaseController
         helper('filesystem');
 
         $targets = array();
-        $materials = model(MaterialModel::class)->getData(null, null, false)
-                                                ->get()
-                                                ->getCustomResultObject(\App\Entities\Material::class);
+        $materials = model(MaterialModel::class)->getArray(['callbacks' => false]);
+
         foreach ($materials as $key => $material) {
             $targets[$material->id] = $material->title;
         }
