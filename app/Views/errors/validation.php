@@ -1,5 +1,7 @@
-<?php if (isset($validation) && !empty($validation->getErrors())) : ?>
-    <div class="alert alert-warning rounded text-start">
-        <?= $validation->listErrors() ?>
-    </div>
+<?php if (isset($errors) && !empty($errors)) : ?>
+    <ul class="alert alert-warning rounded text-start">
+    <?php foreach ($errors as $error) : ?>
+        <li><?= $err ?></li>
+    <?php endforeach; ?>
+    </ul>
 <?php endif; ?>

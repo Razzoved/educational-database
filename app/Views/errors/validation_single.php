@@ -1,8 +1,5 @@
-<?php if (isset($validation) && !empty($validation->getErrors())) : ?>
-    <?php
-        $error = array_key_first($validation->getErrors());
-    ?>
+<?php if (isset($errors) && !empty($errors)) : ?>
     <div class="alert alert-warning rounded text-start">
-        <?= $validation->showError($error) ?>
+        <p><?= $errors[array_key_first($errors)] ?></p>
     </div>
 <?php endif; ?>
