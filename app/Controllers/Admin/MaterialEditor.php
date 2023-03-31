@@ -11,7 +11,6 @@ use App\Models\MaterialMaterialModel;
 use App\Models\MaterialModel;
 use App\Models\PropertyModel;
 use App\Models\ResourceModel;
-use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
@@ -28,25 +27,6 @@ use Psr\Log\LoggerInterface;
 class MaterialEditor extends BaseController
 {
     private const META_TITLE = "Administration - material editor";
-
-    private array $rules = [
-        'title' => [
-            'rules' => "required|string",
-            'errors' => [],
-        ],
-        'author' => [
-            'rules' => "required|string",
-            'errors' => [],
-        ],
-        'status' => [
-            'rules' => "required|validStatus",
-            'errors' => [],
-        ],
-        'content' => [
-            'rules' => "string",
-            'errors' => [],
-        ],
-    ];
 
     private MaterialModel $materials;
     private PropertyModel $properties;
@@ -65,7 +45,7 @@ class MaterialEditor extends BaseController
     {
         $data = [
             'meta_title'           => self::META_TITLE,
-            'validation'           => Services::validation(),
+            'errors'               => $data['errors'] ?? [],
             'available_properties' => $this->getAllPropertiesAsStrings(),
             'available_relations'  => $this->getAllMaterialsAsStrings(),
         ];
@@ -74,10 +54,9 @@ class MaterialEditor extends BaseController
 
     public function get(int $id) : string
     {
-        $material = $this->materials->getById($id);
-        if (!$material) {
+        $material = $this->materials->get($id);
+        if (!$material)
             throw PageNotFoundException::forPageNotFound();
-        }
         return $this->setupPost($material)->index();
     }
 
@@ -93,10 +72,6 @@ class MaterialEditor extends BaseController
      */
     public function save()
     {
-        if (!$this->validate($this->rules)) {
-            return $this->getEditorErrorView();
-        }
-
         $material = new EntitiesMaterial($this->request->getPost());
 
         $material->resources = $this->loadResources(
@@ -109,16 +84,18 @@ class MaterialEditor extends BaseController
             $this->request->getPost('properties')
         );
 
+        $material->related = $this->loadRelated(
+            $material->id ?? $material->title,
+            $this->request->getPost('relations')
+        );
+
         try {
-            $material->id = $this->materials->handleUpdate(
-                    $material,
-                    $this->request->getPost('relations') ?? []
-            );
+            $material->id = $this->materials->createOrUpdate($material);
             $this->deleteRemovedFiles($material)
                  ->moveTemporaryFiles($material);
         } catch (Exception $e) {
-            $this->validator->setError('saving:', $e->getMessage());
-            return $this->setupPost($material)->getEditorErrorView();
+            $data['errors'] = $this->materials->errors();
+            return $this->setupPost($material)->index();
         }
 
         return redirect('admin/materials');
@@ -168,6 +145,11 @@ class MaterialEditor extends BaseController
      */
     private function setupPost(EntitiesMaterial $material) : MaterialEditor
     {
+        $properties = array();
+        foreach ($material->properties as $p) {
+            $properties[$p->tag][] = $p->value;
+        }
+
         $links = array();
         foreach ($material->getLinks() as $r) {
             $links[] = $r->getURL();
@@ -178,31 +160,27 @@ class MaterialEditor extends BaseController
             $files[$r->getRootPath()] = $r->getName();
         }
 
+        $relations = array();
+        foreach (model(MaterialMaterialModel::class)->getRelated($material->id) as $r) {
+            $relations[$r->id] = $r->title;
+        }
+
         $_POST = [
-            'id' => $material->id,
-            'author' => $material->author,
-            'status' => $material->status,
-            'title' => $material->title,
-            'content' => $material->content,
-            'properties' => $material->getPropertiesAsStrings(),
-            'thumbnail' => $material->getThumbnail()->getRootPath(),
-            'links' => $links,
-            'files' => $files,
-            'relations' => model(MaterialMaterialModel::class)->getRelated($material->id, true),
+            'id'         => $material->id,
+            'author'     => $material->author,
+            'status'     => $material->status,
+            'title'      => $material->title,
+            'content'    => $material->content,
+            'thumbnail'  => $material->getThumbnail()->getRootPath(),
+            'properties' => $properties,
+            'links'      => $links,
+            'files'      => $files,
+            'relations'  => $relations,
         ];
 
         return $this;
     }
 
-    /**
-     * Returns all resources as an array of objects.
-     *
-     * @param ?string $thumbnail    path to thumbnail
-     * @param ?array $files         array of tmpPath => name
-     * @param ?array $links         array of idx     => path
-     *
-     * @return array array of resources
-     */
     private function loadResources(?string $thumbnail, ?array $files, ?array $links) : array
     {
         $resources = array();
@@ -214,13 +192,6 @@ class MaterialEditor extends BaseController
         return $resources;
     }
 
-    /**
-     * Non-clean helper function that adds resources to target.
-     *
-     * @param array $target  saves resources here
-     * @param array $items   takes data from here, can be: string|array
-     * @param array $type    type to be added
-     */
     private function toResources(array &$target, array $items, string $type) : void
     {
         foreach ($items ?? [] as $tmpPath => $path) {
@@ -233,13 +204,6 @@ class MaterialEditor extends BaseController
         }
     }
 
-    /**
-     * Gets the properties from ['tag' => 'values'] records.
-     * Filters out all properties that do not exist in DB.
-     *
-     * @param ?array $properties properties to find ids for
-     * @return array of App\Entities\Property objects
-     */
     private function loadProperties(?array $properties) : array
     {
         $result = [];
@@ -248,6 +212,17 @@ class MaterialEditor extends BaseController
                 $p = $this->properties->getByBoth($tag, $value);
                 if ($p) $result[] = $p;
             }
+        }
+        return $result;
+    }
+
+    private function loadRelated(mixed $identifier, ?array $relations) : array
+    {
+        $result = [];
+        foreach ($relations ?? [] as $id => $value) {
+            if ((is_int($identifier) && $id !== $identifier) ||
+                (!is_int($identifier) && $value !== $identifier))
+                $result[] = $id;
         }
         return $result;
     }
@@ -276,7 +251,7 @@ class MaterialEditor extends BaseController
     private function getAllMaterialsAsStrings() : array
     {
         $materials = [];
-        foreach ($this->materials->getData()->get()->getResult(EntitiesMaterial::class) as $material) {
+        foreach ($this->materials->getArray(['callbacks' => false]) as $material) {
             $materials[$material->id] = $material->title;
         }
         return $materials;
@@ -341,22 +316,5 @@ class MaterialEditor extends BaseController
             $this->resourceLibrary->delete($resource);
         }
         return $this;
-    }
-
-    /**
-     * Template for form display in case of error. Its possible to use
-     * $this->validator->setError() manually before calling this method.
-     */
-    private function getEditorErrorView() : string
-    {
-        return view(
-            Config::VIEW . 'material/form',
-            [
-                'meta_title'           => MaterialEditor::META_TITLE,
-                'validation'           => $this->validator,
-                'available_properties' => $this->getAllPropertiesAsStrings(),
-                'available_relations'  => $this->getAllMaterialsAsStrings(),
-            ]
-        );
     }
 }
