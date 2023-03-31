@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Entities\Material;
 use CodeIgniter\Model;
+use Exception;
 
 /**
  * This model handles the operations over the views table. The table
@@ -30,6 +31,8 @@ class ViewsModel extends Model
     protected $dateFormat = 'date';
     protected $createdField = 'created_at';
     protected $updatedField = '';
+
+    protected $returnType = Material::class;
 
     /**
      * Gets an array of total views from past 'x' days.
@@ -67,22 +70,20 @@ class ViewsModel extends Model
      * @param int $n maximum number of materials to return
      * @param int $days number of days to look back
      */
-    public function getTopMaterials(int $n, int $days = 30) : array
+    public function getTopMaterials(int $n = 0, int $days = 30) : array
     {
-        $views = $this->builder()
-                    ->select('material_id')
-                    ->selectSum('material_views')
-                    ->groupBy('material_id')
-                    ->orderBy('material_views', 'desc')
-                    ->where('created_at >', date('Y-m-d', time() - $days * 86400))
-                    ->get($n)
-                    ->getResultArray();
+        $views = $this->select('material_id')
+            ->selectSum('material_views')
+            ->groupBy('material_id')
+            ->orderBy('material_views', 'desc')
+            ->where('created_at >', date('Y-m-d', time() - $days * 86400))
+            ->findAll($n);
 
         $materials = array();
-        foreach ($views as $index => $arr) {
-            $material = model(MaterialModel::class)->getById((int) $arr['material_id']);
+        foreach ($views as $v) {
+            $material = model(MaterialModel::class)->get($v->id);
             if ($material) {
-                $material->views = $arr['material_views'];
+                $material->views = $v->views;
                 $materials[] = $material;
             }
         }
@@ -98,25 +99,19 @@ class ViewsModel extends Model
      */
     public function increment(Material &$material) : void
     {
-        $all = $this->builder()
-            ->select('*')
-            ->where('material_id', $material->id)
-            ->get()
-            ->getResultArray();
-        $last = end($all);
-        $views = 1;
-
+        $last = $this->where('material_id', $material->id)
+                     ->orderBy('created_at', 'DESC')
+                     ->first();
         try {
-            if ($last === false || $last['created_at'] !== date('Y-m-d', time())) {
-                $this->insert(['material_id' => $material->id, 'material_views' => $views]);
+            if (!$last || $last->created_at !== date('Y-m-d', time())) {
+                $this->insert(['material_id' => $material->id, 'material_views' => 1]);
             } else {
-                $views += $last['material_views'];
-                $this->update($last['id'], ['material_views' => $views]);
+                $this->update($last->id, ['material_views' => $last->views + 1]);
             }
             $material->views++;
             model(MaterialModel::class)->update($material->id, $material);
-        } catch (\Exception $e) {
-            // ignored
+        } catch (Exception $e) {
+            // intentionally ignored
         }
     }
 
