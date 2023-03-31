@@ -70,9 +70,9 @@ class MaterialModel extends Model
         return $this->setupQuery($data)->find($id);
     }
 
-    public function getArray(array $data = []) : array
+    public function getArray(array $data = [], int $limit = 0) : array
     {
-        return $this->setupQuery($data)->findAll();
+        return $this->setupQuery($data)->findAll($limit);
     }
 
     public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
