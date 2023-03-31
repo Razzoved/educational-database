@@ -13,7 +13,7 @@ class MaterialTopRated extends Material
             'title'      => 'Top rated materials',
             'filters'    => $this->materialProperties->getUsedProperties(session('isLoggedIn') ?? false),
             'options'    => $this->getOptions(),
-            'materials'  => $this->getMaterials(current_url()),
+            'materials'  => $this->getMaterials(),
             'pager'      => $this->materials->pager,
             'activePage' => 'top-rated',
         ];

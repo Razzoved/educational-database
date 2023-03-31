@@ -13,7 +13,7 @@ class Material extends ControllersMaterial
             'title'      => 'Materials',
             'options'    => $this->getOptions(),
             'filters'    => $this->materialProperties->getUsedProperties(false),
-            'materials'  => $this->getMaterials(current_url(), Config::PAGE_SIZE),
+            'materials'  => $this->getMaterials(Config::PAGE_SIZE),
             'pager'      => $this->materials->pager,
             'activePage' => 'materials',
         ];

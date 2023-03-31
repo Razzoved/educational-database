@@ -61,7 +61,8 @@ class Material extends BaseController
     public function get(int $id) : string
     {
         $material = $this->materials->get($id);
-        if (!$material) throw PageNotFoundException::forPageNotFound();
+        if (!$material)
+            throw PageNotFoundException::forPageNotFound();
 
         // increment views if not viewed yet and user is not logged in
         $session = session();
@@ -71,10 +72,10 @@ class Material extends BaseController
         }
 
         $data = [
-            'meta_title' => $material->title,
-            'title' => $material->title,
-            'material' => $material,
-            'rating' => $this->ratings->getRating($material->id, session('id') ?? ''),
+            'meta_title'    => $material->title,
+            'title'         => $material->title,
+            'material'      => $material,
+            'rating'        => $this->ratings->getRating($material->id, session('id') ?? ''),
         ];
 
         return view('material_single', $data);
@@ -116,16 +117,12 @@ class Material extends BaseController
     protected function getOptions() : array
     {
         return array_column(
-            $this->materials->getArray(['sort' => 'title']),
+            $this->materials->getArray(['sort' => 'title', 'callbacks' => false]),
             'material_title'
         );
-        // return array_column(
-        //     $this->materials->getData('title')->get()->getResultArray(),
-        //     'material_title'
-        // );
     }
 
-    protected function getMaterials() : array
+    protected function getMaterials(int $perPage = 20) : array
     {
         $uri = new \CodeIgniter\HTTP\URI(current_url());
         return $this->materials->getPage(
@@ -135,7 +132,8 @@ class Material extends BaseController
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => $this->request->getGetPost('sort'),
                 'sortDir'   => $this->request->getGetPost('sortDir'),
-            ]
+            ],
+            $perPage
         );
     }
 }
