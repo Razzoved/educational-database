@@ -94,15 +94,6 @@ class Material extends Entity
         return $time_ago . ' ago (' . $this->updated_at->format('M j, Y') . ')';
     }
 
-    public function getPropertiesAsStrings() : array
-    {
-        $result = array();
-        foreach ($this->properties as $p) {
-            $result[$p->tag][] = $p->value;
-        }
-        return $result;
-    }
-
     public function getThumbnail() : Resource
     {
         foreach ($this->resources as $r) {
