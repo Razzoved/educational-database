@@ -21,6 +21,10 @@ class MaterialMaterialModel extends Model
 
     protected $returnType = Material::class;
 
+    /** ----------------------------------------------------------------------
+     *                           PUBLIC METHODS
+     *  ------------------------------------------------------------------- */
+
     /**
      * Looks for ALL pairs of materials where at least one member has
      * the given id. Returns an array of such materials.
@@ -40,32 +44,6 @@ class MaterialMaterialModel extends Model
                     ->where($this->allowedFields[1] . ' !=', $id)
                     ->findAll();
         return array_merge($left, $right);
-            }
-
-    /** ----------------------------------------------------------------------
-     *                              CALLBACKS
-     *  ------------------------------------------------------------------- */
-
-    protected function loadData(array $data)
-    {
-        if (!isset($data['data'])) {
-            return $data;
-        }
-        foreach ($data['data'] as $k => $material) {
-            $data['data'][$k] = model(MaterialModel::class)->get($material->id, ['callbacks' => false]);
-        }
-        return $data;
-            }
-
-    protected function loadThumbnail(array $data)
-    {
-        if (!isset($data['data'])) {
-            return $data;
-            }
-        foreach ($data['data'] as $material) {
-            $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
-        }
-        return $data;
     }
 
     /**
@@ -111,5 +89,31 @@ class MaterialMaterialModel extends Model
         $this->db->transComplete();
 
         return $this->db->transStatus();
+    }
+
+    /** ----------------------------------------------------------------------
+     *                              CALLBACKS
+     *  ------------------------------------------------------------------- */
+
+    protected function loadData(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
+        }
+        foreach ($data['data'] as $k => $material) {
+            $data['data'][$k] = model(MaterialModel::class)->get($material->id, ['callbacks' => false]);
+        }
+        return $data;
+            }
+
+    protected function loadThumbnail(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
+            }
+        foreach ($data['data'] as $material) {
+            $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
+        }
+        return $data;
     }
 }

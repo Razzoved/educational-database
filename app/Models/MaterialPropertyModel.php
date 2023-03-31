@@ -13,6 +13,10 @@ class MaterialPropertyModel extends Model
     protected $primaryKey = 'material_id';
     protected $allowedFields = ['material_id', 'property_id'];
 
+    /** ----------------------------------------------------------------------
+     *                           PUBLIC METHODS
+     *  ------------------------------------------------------------------- */
+
     /**
      * Looks for ALL properties belonging to a given material. Returns
      * an array of Property class objects ordered by tag & value.
