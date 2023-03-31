@@ -29,25 +29,26 @@ class MaterialModel extends Model
     protected $updatedField  = 'updated_at';
 
     protected $validationRules = [
-        'title'   => 'required|string',
-        'author'  => 'required|string',
-        'status'  => 'required|validStatus',
-        'content' => 'string',
+        'material_title'   => 'required|string',
+        'material_author'  => 'required|string',
+        'material_status'  => 'required|validStatus',
+        'material_content' => 'string',
+        'material_blame'   => 'required',
     ];
     protected $validationMessages = [
-        'title'  => [
+        'material_title'  => [
             'required' => 'Title must be present.',
             'string'   => 'Title must be a valid string.'
         ],
-        'author'  => [
+        'material_author'  => [
             'required' => 'Author must be present.',
             'string'   => 'Author must be a valid string.'
         ],
-        'status' => [
+        'material_status' => [
             'required'    => 'Status must be present.',
             'validStatus' => 'Invalid status.'
         ],
-        'content' => [
+        'material_content' => [
             'string' => 'Content must be a valid string.'
         ]
     ];
@@ -77,6 +78,44 @@ class MaterialModel extends Model
     public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
     {
         return $this->setupQuery($data)->paginate($perPage, 'default', null, $page);
+    }
+
+    public function getContributors() : array
+    {
+        return $this->builder()
+                    ->select('material_author as contributor')
+                    ->selectCount('*', 'total_posts')
+                    ->groupBy('material_author')
+                    ->orderBy('total_posts', 'desc')
+                    ->get()
+                    ->getResultArray();
+    }
+
+    public function createOrUpdate(Material $material, array $relatedMaterials = []) : int
+    {
+        $material->blame = session('user')->id;
+        $m = $this->get($material->id);
+
+        $this->db->transStart();
+
+        if ($m !== null) {
+            $material->views = $m->views;
+            $material->rating = $m->rating;
+            $material->rating_count = $m->rating_count;
+            $this->update($material->id, $material);
+        } else {
+            $material->views = 0;
+            $material->rating = 0;
+            $material->rating_count = 0;
+            $material->id = $this->insert($material, true);
+        }
+
+        model(MaterialMaterialModel::class)->batchSave($material, $relatedMaterials, $this->db);
+        model(MaterialPropertyModel::class)->batchSave($material, $this->db);
+
+        $this->db->transComplete();
+
+        return $material->id;
     }
 
     /** ----------------------------------------------------------------------
@@ -143,47 +182,6 @@ class MaterialModel extends Model
         return $this;
     }
 
-    /**
-     * Returns all 'authors', along with the total of posts under their name.
-     */
-    public function getContributors() : array
-    {
-        return $this->builder()
-                    ->select('material_author as contributor')
-                    ->selectCount('*', 'total_posts')
-                    ->groupBy('material_author')
-                    ->orderBy('total_posts', 'desc')
-                    ->get()
-                    ->getResultArray();
-    }
-
-    public function handleUpdate(Material $material, array $relatedMaterials = []) : int
-    {
-        $material->blame = session('user')->id;
-        $m = $this->find($material->id);
-
-        $this->db->transStart();
-
-        if ($m !== null) {
-            $material->views = $m->views;
-            $material->rating = $m->rating;
-            $material->rating_count = $m->rating_count;
-            $this->update($material->id, $material);
-        } else {
-            $material->views = 0;
-            $material->rating = 0;
-            $material->rating_count = 0;
-            $material->id = $this->insert($material, true);
-        }
-
-        model(MaterialMaterialModel::class)->handleUpdate($material, $relatedMaterials, $this->db);
-        model(MaterialPropertyModel::class)->handleUpdate($material, $this->db);
-
-        $this->db->transComplete();
-
-        return $material->id;
-    }
-
     /** ----------------------------------------------------------------------
      *                              CALLBACKS
      *  ------------------------------------------------------------------- */
@@ -193,17 +191,13 @@ class MaterialModel extends Model
         if (!isset($data['data'])) {
             return $data;
         }
-
-        // single material
-        $material = $data['data'];
-        if (is_a($material, Material::class)) {
-            $material->resources = model(ResourceModel::class)->getResources($material->id);
+        // do not launch this on searching for multiple
+        if (is_a($data['data'], Material::class)) {
+            $data['data']->resources = model(ResourceModel::class)->getResources($data['data']->id);
             return $data;
         }
-
-        // multiple materials, limit only to thumbnail
-        $materials = $data['data'];
-        foreach ($materials as $material) {
+        // only load thumbnail for multiple
+        foreach ($data['data'] as $material) {
             $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
         }
         return $data;
@@ -214,13 +208,10 @@ class MaterialModel extends Model
         if (!isset($data['data'])) {
             return $data;
         }
-
-        // single material
-        $material = $data['data'];
-        if (is_a($material, Material::class)) {
-            $material->related = model(MaterialMaterialModel::class)->getRelated($material->id);
+        // do not launch this on searching for multiple
+        if (is_a($data['data'], Material::class)) {
+            $data['data']->related = model(MaterialMaterialModel::class)->getRelated($data['data']->id);
         }
-
         return $data;
     }
 
@@ -229,13 +220,10 @@ class MaterialModel extends Model
         if (!isset($data['data'])) {
             return $data;
         }
-
-        // single material
-        $material = $data['data'];
-        if (is_a($material, Material::class)) {
-            $material->properties = model(MaterialPropertyModel::class)->getByMaterial($material->id);
+        // do not launch this on searching for multiple
+        if (is_a($data['data'], Material::class)) {
+            $data['data']->properties = model(MaterialPropertyModel::class)->getByMaterial($data['data']->id);
         }
-
         return $data;
     }
 }
