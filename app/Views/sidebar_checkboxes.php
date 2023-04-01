@@ -7,6 +7,8 @@
         Reset filters
     </button>
     <?php foreach ($properties as $tag => $values) : ?>
-        <?= view('components/collapsible_list', ['tag' => $tag, 'values' => $values, 'type' => 'checkbox']) ?>
+        <?php if (!empty($values)) : ?>
+            <?= view('components/collapsible_list', ['tag' => $tag, 'values' => $values, 'type' => 'checkbox']) ?>
+        <?php endif; ?>
     <?php endforeach; ?>
 </div>

@@ -4,6 +4,8 @@
         Toggle tags
     </button>
     <?php foreach ($properties as $tag => $values) : ?>
-        <?= view('components/collapsible_list', ['tag' => $tag, 'values' => $values, 'type' => 'button']) ?>
+        <?php if (!empty($values)) : ?>
+            <?= view('components/collapsible_list', ['tag' => $tag, 'values' => $values, 'type' => 'button']) ?>
+        <?php endif; ?>
     <?php endforeach; ?>
 </div>
