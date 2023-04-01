@@ -11,6 +11,7 @@ class Rating extends Entity
         'material_id'  => null,
         'rating_uid'   => null,
         'rating_value' => null,
+        'count'        => null, // not a part of db
     ];
 
     protected $casts = [
@@ -18,5 +19,6 @@ class Rating extends Entity
         'material_id'  => 'int',
         'rating_uid'   => 'string',
         'rating_value' => 'int',
+        'count'        => 'int',
     ];
 }

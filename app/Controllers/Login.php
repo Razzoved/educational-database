@@ -33,9 +33,7 @@ class Login extends BaseController
             return view('user_login', ['errors' => $this->validator->getErrors()]);
         }
 
-        $user = model(UserModel::class)->getByEmail(
-            $this->request->getPost('email')
-        );
+        $user = model(UserModel::class)->getEmail($this->request->getPost('email') ?? "");
 
         $user->password = null;
         session()->set([

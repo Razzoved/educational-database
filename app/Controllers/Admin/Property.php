@@ -29,22 +29,15 @@ class Property extends BaseController
 
     public function index() : string
     {
-        $filters = [];
-
-        $tags = $this->properties->getTags();
-        if ($tags !== []) {
-            $filters['Tags'] = $tags;
-        }
-
-        $values = $this->properties->getDuplicateValues();
-        if ($values !== []) {
-            $filters['Values'] = $values;
-        }
+        $filters = [
+            'Tags'   => array_map(function ($p) { return $p->tag; }, $this->properties->getUnique('tag')),
+            'Values' => array_map(function ($p) { return $p->value; }, $this->properties->getDuplicates('value')),
+        ];
 
         $data = [
             'meta_title' => Property::META_TITLE,
             'title'      => 'Tags',
-            'properties' => $this->getProperties(current_url(), Config::PAGE_SIZE),
+            'properties' => $this->getProperties(Config::PAGE_SIZE),
             'options'    => $this->getOptions($filters['Tags']),
             'filters'    => $filters,
             'pager'      => $this->properties->pager,
@@ -57,8 +50,8 @@ class Property extends BaseController
     public function edit(int $id) : string
     {
         $property = $this->properties->find($id);
-
-        if ($property === null) throw PageNotFoundException::forPageNotFound();
+        if ($property === null)
+            throw PageNotFoundException::forPageNotFound();
 
         $_POST['id'] = $property->id;
         $_POST['tag'] = $property->tag;
@@ -124,7 +117,7 @@ class Property extends BaseController
 
         try {
             $id = $this->properties->insert($property, true);
-            echo json_encode($this->materialProperties->getPropertyWithUsage($id));
+            echo json_encode($this->properties->get($id, ['callbacks' => true]));
         } catch (Exception $e) {
             $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
             echo view('errors/error_modal', [
@@ -150,8 +143,8 @@ class Property extends BaseController
             return;
         }
 
-        $id = $this->request->getPostGet('id');
-        $property = $this->materialProperties->getPropertyWithUsage((int) $id);
+        $id = (int) $this->request->getPostGet('id');
+        $property = $this->properties->get($id, ['callbacks' => true]);
 
         if (!is_null($property) && $property->usage == 0) {
             $this->properties->delete($id);
@@ -165,37 +158,28 @@ class Property extends BaseController
         }
     }
 
-    private function getOptions(array $tags = []) : array
+    protected function getOptions(array $result = []) : array
     {
-        return array_merge(array_column(
-            $this->properties->getData('tag')->get()->getResultArray(),
-            'property_value'
-        ), $tags);
-    }
-
-    private function getProperties(string $url, int $perPage = 10) : array
-    {
-        $uri = new \CodeIgniter\HTTP\URI($url);
-
-        $properties = $this->loadProperties()
-                           ->paginate($perPage, 'default', null, $uri->getTotalSegments());
-
-        foreach ($properties as $p) {
-            $p->usage = $this->materialProperties->getPropertyUsage($p->id);
+        foreach ($this->properties->getUnique('value') as $property) {
+            $result[] = $property->value;
         }
-        return $properties;
+        return $result;
     }
 
-    private function loadProperties(): PropertyModel
+    protected function getProperties(int $perPage = 20) : array
     {
-        $sort = $this->request->getGetPost('sort');
-        $sortDir = $this->request->getGetPost('sortDir');
-        $search = $this->request->getGetPost('search') ?? "";
-        $filters = \App\Libraries\Property::getFilters($this->request->getGet() ?? []);
-
-        return ($search !== "" || $filters !== [])
-            ? $this->properties->getByFilters($sort, $sortDir, $search, $filters)
-            : $this->properties->getData($sort, $sortDir);
+        $uri = new \CodeIgniter\HTTP\URI(current_url());
+        return $this->properties->getPage(
+            $uri->getTotalSegments(),
+            [
+                'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
+                'search'    => $this->request->getGetPost('search'),
+                'sort'      => $this->request->getGetPost('sort'),
+                'sortDir'   => $this->request->getGetPost('sortDir'),
+                'callbacks' => true,
+            ],
+            $perPage
+        );
     }
 
     private function getEditorErrorView(\CodeIgniter\Validation\Validation $validator) : string

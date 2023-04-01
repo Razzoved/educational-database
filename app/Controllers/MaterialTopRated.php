@@ -11,7 +11,7 @@ class MaterialTopRated extends Material
         $data = [
             'meta_title' => 'Materials - top rated',
             'title'      => 'Top rated materials',
-            'filters'    => $this->materialProperties->getUsedProperties(session('isLoggedIn') ?? false),
+            'filters'    => $this->materialProperties->getUsed(),
             'options'    => $this->getOptions(),
             'materials'  => $this->getMaterials(),
             'pager'      => $this->materials->pager,
@@ -20,15 +20,18 @@ class MaterialTopRated extends Material
         return view('material_multiple', $data);
     }
 
-    protected function loadMaterials() : MaterialModel
+    protected function getMaterials(int $perPage = 20) : array
     {
-        $sort = 'rating';
-        $sortDir = 'DESC';
-        $search = $this->request->getGetPost('search') ?? "";
-        $filters = \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []);
-
-        return ($search !== "" || $filters !== [])
-            ? $this->materials->getByFilters($sort, $sortDir, $search, $filters)
-            : $this->materials->getData($sort, $sortDir);
+        $uri = new \CodeIgniter\HTTP\URI(current_url());
+        return $this->materials->getPage(
+            $uri->getTotalSegments(),
+            [
+                'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
+                'search'    => $this->request->getGetPost('search'),
+                'sort'      => 'rating',
+                'sortDir'   => 'DESC',
+            ],
+            $perPage
+        );
     }
 }

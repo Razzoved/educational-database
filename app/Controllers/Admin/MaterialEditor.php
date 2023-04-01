@@ -245,7 +245,7 @@ class MaterialEditor extends BaseController
     private function getAllPropertiesAsStrings() : array
     {
         $properties = [];
-        foreach ($this->properties->getData()->get()->getResult(EntitiesProperty::class) as $property) {
+        foreach ($this->properties->getArray(['callbacks' => false]) as $property) {
             $properties[$property->tag][] = $property->value;
         }
         return $properties;

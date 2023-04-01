@@ -42,7 +42,7 @@ class Material extends BaseController
         $data = [
             'meta_title' => 'Materials',
             'title'      => 'All materials',
-            'filters'    => $this->materialProperties->getUsedProperties(),
+            'filters'    => $this->materialProperties->getUsed(),
             'options'    => $this->getOptions(),
             'materials'  => $this->getMaterials(),
             'pager'      => $this->materials->pager,

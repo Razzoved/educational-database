@@ -12,7 +12,7 @@ class Material extends ControllersMaterial
             'meta_title' => 'Administration - Materials',
             'title'      => 'Materials',
             'options'    => $this->getOptions(),
-            'filters'    => $this->materialProperties->getUsedProperties(false),
+            'filters'    => $this->materialProperties->getUsed(),
             'materials'  => $this->getMaterials(Config::PAGE_SIZE),
             'pager'      => $this->materials->pager,
             'activePage' => 'materials',

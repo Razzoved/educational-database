@@ -43,7 +43,7 @@ class User extends BaseController
             'meta_title' => 'Administration - Users',
             'title'      => 'User editor',
             'options'    => $this->getOptions(),
-            'users'      => $this->getUsers(current_url(), Config::PAGE_SIZE),
+            'users'      => $this->getUsers(Config::PAGE_SIZE),
             'pager'      => $this->users->pager,
             'activePage' => 'users',
         ];
@@ -58,12 +58,12 @@ class User extends BaseController
      */
     public function getUser() : void
     {
-        $user = $this->users->getByEmail($this->request->getGet('email'));
-        if ($user === null) {
+        $user = $this->users->getEmail($this->request->getGet('email') ?? "");
+        if ($user === null)
             throw PageNotFoundException::forPageNotFound();
-        }
+
         $user->password = '';
-        echo json_encode($user);
+        echo json_encode($user->toRawArray());
     }
 
     /**
@@ -212,41 +212,42 @@ class User extends BaseController
 
         $user = new EntitiesUser($data);
         if ($isUpdate) {
-            $user->id = $this->users->getId($data['email']);
+            $user->id = $this->users->getEmail($data['email'] ?? "")->id ?? null;
             $this->users->update($user->id, $user);
         } else {
             $user->id = $this->users->insert($user, true);
         }
 
-        $user = $this->users->find($user->id);
+        $user = $this->users->get($user->id);
         $user->password = '';
+
         return $user;
     }
 
     private function getOptions() : array
     {
-        return array_column(
-            $this->users->getData('name')->get()->getResultArray(),
-            'user_name'
+        $result = [];
+
+        foreach ($this->users->getArray(['sort' => 'name']) as $user) {
+            $result[] = $user->name;
+            $result[] = $user->email;
+        }
+
+        return $result;
+    }
+
+    protected function getUsers(int $perPage = 20) : array
+    {
+        $uri = new \CodeIgniter\HTTP\URI(current_url());
+        return $this->users->getPage(
+            $uri->getTotalSegments(),
+            [
+                'search'    => $this->request->getGetPost('search'),
+                'sort'      => $this->request->getGetPost('sort'),
+                'sortDir'   => $this->request->getGetPost('sortDir'),
+            ],
+            $perPage
         );
-    }
-
-    private function getUsers(string $url, int $perPage = 10) : array
-    {
-        $uri = new \CodeIgniter\HTTP\URI($url);
-        return $this->loadUsers()
-                    ->paginate($perPage, 'default', null, $uri->getTotalSegments());
-    }
-
-    private function loadUsers(): UserModel
-    {
-        $sort = $this->request->getGetPost('sort');
-        $sortDir = $this->request->getGetPost('sortDir');
-        $search = $this->request->getGetPost('search') ?? "";
-
-        return ($search !== "")
-            ? $this->users->getByFilters($sort, $sortDir, $search)
-            : $this->users->getData($sort, $sortDir);
     }
 
     private function checkAjax() : bool
