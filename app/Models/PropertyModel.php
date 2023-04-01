@@ -5,6 +5,12 @@ namespace App\Models;
 use App\Entities\Property;
 use CodeIgniter\Model;
 
+/**
+ * Model that handles all operations on properties.
+ * Those operations include connections to materials.
+ *
+ * @author Jan Martinek
+ */
 class PropertyModel extends Model
 {
     protected $table         = 'properties';
@@ -18,101 +24,156 @@ class PropertyModel extends Model
     protected $useSoftDeletes   = false;
     protected $useTimestamps    = false;
 
+    protected $allowCallbacks = false;
+    protected $afterFind = ['getUsage'];
+
     protected $returnType = Property::class;
 
-    public function getData(?string $sort = null, ?string $sortDir = null) : PropertyModel
+    /** ----------------------------------------------------------------------
+     *                           PUBLIC METHODS
+     *  ------------------------------------------------------------------- */
+
+    public function get(int $id, array $data = []) : ?Property
     {
-        $sortDir = $sortDir && strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC';
-        $sort = in_array('property_' . $sort, $this->allowedFields) || ('property_' . $sort === $this->primaryKey) ? ('property_' . $sort) : null;
-
-        $builder = $this->builder()->distinct();
-
-        if (!is_null($sort)) {
-            $builder->orderBy($sort, $sortDir);
-        }
-
-        if ($sort !== 'property_tag') {
-            $builder->orderBy('property_tag');
-        }
-
-        if ($sort !== 'property_value') {
-            $builder->orderBy('property_value');
-        }
-
-        return $this;
+        return $this->setupQuery($data)->find($id);
     }
 
-    public function getByFilters(?string $sort, ?string $sortDir, string $search, array $filters) : PropertyModel
+    public function getArray(array $data = [], int $limit = 0) : array
     {
-        $builder = $this->getData($sort, $sortDir);
-
-        if ($search !== "") {
-            $builder->orLike('property_tag', $search)
-                    ->orLike('property_value', $search);
-        }
-
-        if (isset($filters['Tags'])) {
-            $builder->whereIn('property_tag', array_keys($filters['Tags']));
-        }
-
-        if (isset($filters['Values'])) {
-            $builder->groupStart();
-            foreach ($filters['Values'] as $value => $state) {
-                $builder->orLike('property_value', $value, 'after');
-            }
-            $builder->groupEnd();
-        }
-
-        return $this;
+        return $this->setupQuery($data)->findAll($limit);
     }
 
-    public function getByType(string $type) : PropertyModel
+    public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
     {
-        $this->builder()
-             ->where('property_tag', $type)
-             ->orderBy('property_tag')
-             ->orderBy('property_value')
-             ->distinct();
-        return $this;
+        return $this->setupQuery($data)->paginate($perPage, 'default', null, $page);
     }
 
     public function getByBoth(string $tag, string $value) : ?Property
     {
-        return $this->builder()
-             ->where('property_tag', $tag)
-             ->where('property_value', $value)
-             ->get()
-             ->getCustomRowObject(0, Property::class);
+        return $this->where('property_tag', $tag)
+                    ->where('property_value', $value)
+                    ->first();
     }
 
-    /**
-     * Returns all tags (non-duplicate).
-     *
-     * @return array all tag names
-     */
-    public function getTags() : array
+    public function getUnique(string $column = "value") : array
     {
-        return array_column($this->builder()
-                                 ->select('property_tag')
-                                 ->distinct()
-                                 ->orderBy('property_tag')
-                                 ->get()
-                                 ->getResultArray(), 'property_tag');
+        $column = 'property_' . $column;
+        if (!in_array($column, $this->allowedFields)) {
+            return [];
+        }
+        return $this->select($column)
+                    ->orderBy($column)
+                    ->distinct()
+                    ->findAll();
     }
 
-    /**
-     * Returns all property values that are used more than once.
-     *
-     * @return array all values used more than once
-     */
-    public function getDuplicateValues() : array
+    public function getDuplicates(string $column = "value") : array
     {
-        return array_column($this->builder()
-                                 ->select("property_value", false)
-                                 ->orderBy('property_value')
-                                 ->groupBy('property_value')
-                                 ->having('COUNT(*) >', 1)
-                                 ->get()
-                                 ->getResultArray(), 'property_value');
+        $column = 'property_' . $column;
+        if (!in_array($column, $this->allowedFields)) {
+            return [];
+        }
+        return $this->select($column)
+                    ->orderBy($column)
+                    ->groupBy($column)
+                    ->having('COUNT(*) >', 1)
+                    ->findAll();
     }
+
+    /** ----------------------------------------------------------------------
+     *                        UNIFIED QUERY SETUP
+     *  ------------------------------------------------------------------- */
+
+    protected function setupQuery(array $data = []) : PropertyModel
+    {
+        if (isset($data['callbacks']) && $data['callbacks'] === true) {
+            $this->allowCallbacks(true);
+        }
+        return $this
+            ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
+            ->setupFilters($data['filters'] ?? [])
+            ->setupSearch($data['search'] ?? "");
+    }
+
+    protected function setupSort(string $sort, string $sortDir)
+    {
+        if (
+            $sort !== $this->createdField &&
+            $sort !== $this->updatedField &&
+            $sort !== $this->primaryKey
+        ) {
+            $sort = 'property_' . $sort;
+            $sort = in_array($sort, $this->allowedFields) || $sort === $this->primaryKey ? $sort : "";
+        }
+
+        if ($sort !== "") {
+            $sort = $this->primaryKey;
+        }
+
+        $this->orderBy($sort, strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC');
+
+        if ($sort !== 'property_tag') {
+            $this->orderBy('property_tag');
+        }
+
+        if ($sort !== 'property_value') {
+            $this->orderBy('property_value');
+        }
+
+        return $this;
+    }
+
+    protected function setupFilters(array $filters)
+    {
+        if ($filters !== []) {
+            if (isset($filters['Tags'])) {
+                $this->whereIn('property_tag', array_keys($filters['Tags']));
+            }
+
+            if (isset($filters['Values'])) {
+                $this->groupStart();
+                foreach ($filters['Values'] as $value => $state) {
+                    $this->orLike('property_value', $value, 'after');
+                }
+                $this->groupEnd();
+            }
+            if (isset($filters['tag'])) {
+                $this->where('property_tag', $filters['tag']);
+            }
+            if (isset($filters['value'])) {
+                $this->where('property_value', $filters['value']);
+            }
+        }
+        return $this;
+    }
+
+    protected function setupSearch(string $search)
+    {
+        if ($search === "") {
+            return $this;
+        }
+        return $this->orLike('property_tag', $search, 'both', true, true)
+                    ->orLike('property_value', $search, 'both', true, true);
+    }
+
+    /** ----------------------------------------------------------------------
+     *                              CALLBACKS
+     *  ------------------------------------------------------------------- */
+
+     protected function getUsage(array $data)
+     {
+         if (!isset($data['data'])) {
+             return $data;
+         }
+
+         foreach ($data['data'] as $k => $v) {
+             $data['data'][$k]->usage = count(
+                model(MaterialPropertyModel::class)
+                    ->where($this->primaryKey, $data['data'][$k]->id)
+                    ->findAll()
+            );
+         }
+
+         return $data;
+     }
 }

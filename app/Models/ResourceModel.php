@@ -28,29 +28,23 @@ class ResourceModel extends Model
 
     public function getResources(int $materialId) : array
     {
-        return $this->builder()
-                    ->where('material_id', $materialId)
+        return $this->where('material_id', $materialId)
                     ->orderBy('resource_type')
                     ->orderBy('resource_path')
-                    ->get()
-                    ->getCustomResultObject(Resource::class);
+                    ->findAll();
     }
 
     public function getThumbnail(int $materialId) : array
     {
-        return $this->builder()
-                    ->where('material_id', $materialId)
+        return $this->where('material_id', $materialId)
                     ->where('resource_type', 'thumbnail')
-                    ->get(1)
-                    ->getCustomResultObject(Resource::class);
+                    ->findAll();
     }
 
     public function getByPath(int $materialId, string $path) : ?Resource
     {
-        return $this->builder()
-                    ->where('material_id', $materialId)
+        return $this->where('material_id', $materialId)
                     ->where('resource_path', $path)
-                    ->get()
-                    ->getCustomRowObject(0, Resource::class);
+                    ->first();
     }
 }

@@ -40,24 +40,22 @@ class ViewsModel extends Model
      */
     public function getDailyTotals(int $days = 30) : array
     {
-        $views = $this->builder()
-                    ->select('created_at')
-                    ->selectSum('material_views')
-                    ->groupBy('created_at')
-                    ->orderBy('created_at', 'asc')
-                    ->where('created_at >', date('Y-m-d', time() - $days * 86400))
-                    ->get($days)
-                    ->getResultArray();
+        $views = $this->select('created_at')
+            ->selectSum('material_views')
+            ->groupBy('created_at')
+            ->orderBy('created_at', 'desc')
+            ->where('created_at >', $this->date($days))
+            ->findAll($days);
 
         $result = [];
-        $count = $days - 1;
-        foreach ($views as $index => $arr) {
-            $lastDate = date('Y-m-d', time() - $count-- * 86400);
-            while ($arr['created_at'] !== $lastDate) {
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $day = $day ?? array_pop($views);
+            if ($day && $day->created_at->toDateString() == $this->date($i)) {
+                $result[] = $day->views;
+                $day = null;
+            } else {
                 $result[] = 0;
-                $lastDate = date('Y-m-d', time() - $count-- * 86400);
             }
-            $result[] = $arr['material_views'];
         }
         return $result;
     }
@@ -76,7 +74,7 @@ class ViewsModel extends Model
             ->selectSum('material_views')
             ->groupBy('material_id')
             ->orderBy('material_views', 'desc')
-            ->where('created_at >', date('Y-m-d', time() - $days * 86400))
+            ->where('created_at >', $this->date($days))
             ->findAll($n);
 
         $materials = array();
@@ -87,7 +85,6 @@ class ViewsModel extends Model
                 $materials[] = $material;
             }
         }
-
         return $materials;
     }
 
@@ -103,7 +100,7 @@ class ViewsModel extends Model
                      ->orderBy('created_at', 'DESC')
                      ->first();
         try {
-            if (!$last || $last->created_at !== date('Y-m-d', time())) {
+            if (!$last || $last->created_at !== $this->date()) {
                 $this->insert(['material_id' => $material->id, 'material_views' => 1]);
             } else {
                 $this->update($last->id, ['material_views' => $last->views + 1]);
@@ -120,18 +117,15 @@ class ViewsModel extends Model
      * to the views table, and sets their date to created_at from the
      * material.
      *
-     * @warning throws away any previous data (including dates).
-     * @depracated this is here to warn the developer
+     * @info throws away any previous data (including dates).
+     * @deprecated this is here to warn the developer
      */
     public function reimportMaterials()
     {
         $this->emptyTable($this->table);
         $this->db->query('ALTER TABLE ' . $this->table . ' AUTO_INCREMENT = 1');
 
-        $lastKey = array_key_last($this->allowedFields);
-        $materials = model(MaterialModel::class)->getData()
-                                                ->get()
-                                                ->getCustomResultObject(\App\Entities\Material::class);
+        $materials = model(MaterialModel::class)->getArray();
 
         $this->allowedFields[] = 'created_at';
         foreach ($materials as $material) {
@@ -141,6 +135,11 @@ class ViewsModel extends Model
                 'created_at' => $material->created_at->toDateString()
             ]);
         }
-        $this->allowedFields[$lastKey + 1] = null;
+        array_pop($this->allowedFields);
+    }
+
+    private function date(int $offset = 0)
+    {
+        return date('Y-m-d', time() - $offset * 86400);
     }
 }

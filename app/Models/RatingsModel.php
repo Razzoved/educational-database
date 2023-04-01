@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Entities\Rating;
 use CodeIgniter\Model;
+use Exception;
 
 class RatingsModel extends Model
 {
@@ -14,6 +15,7 @@ class RatingsModel extends Model
         'rating_uid',
         'rating_value'
     ];
+
     protected $returnType = Rating::class;
 
     /**
@@ -41,42 +43,37 @@ class RatingsModel extends Model
                 $this->insert(['material_id' => $materialId, 'rating_uid' => $userId, 'rating_value' => $value]);
             }
             return $value;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $old->rating_value;
         }
     }
 
+    public function getRating(int $materialId, string $userId) : ?Rating
+    {
+        return $this->where('material_id', $materialId)
+                    ->where('rating_uid', $userId)
+                    ->first();
+    }
+
     public function getRatingAvg(int $materialId) : float
     {
-        return array_sum(array_column(
-            $this->builder()->selectAvg('rating_value', 'rating')
-                            ->where('material_id', $materialId)
-                            ->groupBy('material_id')
-                            ->get()
-                            ->getResult(),
-            'rating'
-        ));
+        return $this->select('material_id')
+            ->selectAvg('rating_value')
+            ->where('material_id', $materialId)
+            ->groupBy('material_id')
+            ->orderBy('material_id')
+            ->first()
+            ->rating_value;
     }
 
     public function getRatingCount(int $materialId) : int
     {
-        return array_sum(array_column(
-            $this->builder()
-                 ->selectCount('rating_value', 'count')
-                 ->where('material_id', $materialId)
-                 ->groupBy('material_id')
-                 ->get()
-                 ->getResult(),
-            'count'
-        ));
-    }
-
-    public function getRating(int $materialId, string $userId) : ?Rating
-    {
-        return $this->builder()
-                     ->where('material_id', $materialId)
-                     ->where('rating_uid', $userId)
-                     ->get()
-                     ->getCustomRowObject(0, Rating::class);
+        return $this->select('material_id')
+            ->selectCount('rating_value', 'count')
+            ->where('material_id', $materialId)
+            ->groupBy('material_id')
+            ->orderBy('material_id')
+            ->first()
+            ->count;
     }
 }

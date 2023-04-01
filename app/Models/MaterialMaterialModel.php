@@ -5,10 +5,17 @@ namespace App\Models;
 use App\Entities\Material;
 use CodeIgniter\Model;
 
+/**
+ * This model handles the relations between materials. Amount of relations
+ * per material is not limited. Intended to be used a a link between same
+ * material with different language, or with general similarity of topics.
+ *
+ * @author Jan Martinek
+ */
 class MaterialMaterialModel extends Model
 {
     protected $table = 'material_material';
-    protected $primaryKey = 'material_id_left'; // will not work
+    protected $primaryKey = 'material_id_left'; // no primary key
     protected $allowedFields = [
         'material_id_left',
         'material_id_right'
@@ -104,7 +111,7 @@ class MaterialMaterialModel extends Model
             $data['data'][$k] = model(MaterialModel::class)->get($material->id, ['callbacks' => false]);
         }
         return $data;
-            }
+    }
 
     protected function loadThumbnail(array $data)
     {

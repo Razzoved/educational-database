@@ -6,6 +6,14 @@ use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
 use CodeIgniter\Model;
 
+/**
+ * This model encompases most operations on materials over the database.
+ * Handles all loading operations by default (can be disabled by disabling
+ * callbacks on getters) - this means loading of resources, relations, and
+ * other data.
+ *
+ * @author Jan Martinek
+ */
 class MaterialModel extends Model
 {
     protected $table         = 'materials';
@@ -130,8 +138,6 @@ class MaterialModel extends Model
             ->setupSearch($data['search'] ?? "")
             ->setupShow(session()->has('isLoggedIn') && session('isLoggedIn') === true)
             ->allowCallbacks(!isset($data['callbacks']) || $data['callbacks'] === true);
-
-        return $this;
     }
 
     protected function setupSort(string $sort, string $sortDir)
@@ -222,7 +228,7 @@ class MaterialModel extends Model
         }
         // do not launch this on searching for multiple
         if (is_a($data['data'], Material::class)) {
-            $data['data']->properties = model(MaterialPropertyModel::class)->getByMaterial($data['data']->id);
+            $data['data']->properties = model(MaterialPropertyModel::class)->get($data['data']->id);
         }
         return $data;
     }
