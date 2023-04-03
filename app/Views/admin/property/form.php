@@ -37,7 +37,7 @@
         </fieldset>
 
         <!-- hidden attributes (for editing) -->
-        <input type="hidden" id="id" value="<?= set_value('id') ?>">
+        <input type="hidden" id="id" name="id" value="<?= set_value('id') ?>">
 
         <!-- actions -->
         <div class="form__group form__group--horizontal">
