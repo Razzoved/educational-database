@@ -160,20 +160,20 @@ class PropertyModel extends Model
      *                              CALLBACKS
      *  ------------------------------------------------------------------- */
 
-     protected function getUsage(array $data)
-     {
-         if (!isset($data['data'])) {
-             return $data;
-         }
+    protected function getUsage(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
+        }
 
-         foreach ($data['data'] as $k => $v) {
-             $data['data'][$k]->usage = count(
-                model(MaterialPropertyModel::class)
-                    ->where($this->primaryKey, $data['data'][$k]->id)
-                    ->findAll()
-            );
-         }
+        foreach ($data['data'] as $k => $v) {
+            $data['data'][$k]->usage = count(
+            model(MaterialPropertyModel::class)
+                ->where($this->primaryKey, $data['data'][$k]->id)
+                ->findAll()
+        );
+        }
 
-         return $data;
-     }
+        return $data;
+    }
 }
