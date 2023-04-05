@@ -109,6 +109,8 @@ $routes->group('admin', function($routes) {
         $routes->post('edit', 'Admin\User::update');
         $routes->post('delete', 'Admin\User::delete');
     });
+
+    $routes->add('migrate', 'Admin\Migrate::index');
 });
 
 /*
