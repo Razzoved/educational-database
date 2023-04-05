@@ -26,15 +26,13 @@ class MaterialModel extends Model
         'material_content',
         'material_views',
         'material_rating',
-        'material_rating_count'
+        'material_rating_count',
+        'published_at',         // TODO: change db name
+        'updated_at',           // updated manually
     ];
 
     protected $useAutoIncrement = true;
     protected $useSoftDeletes   = false;
-    protected $useTimestamps    = true;
-
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
 
     protected $validationRules = [
         'material_title'   => 'required|string',
@@ -101,20 +99,29 @@ class MaterialModel extends Model
 
     public function saveMaterial(Material $material) : int
     {
-        $material->blame = session('user')->id;
+        if (!$material) {
+            throw new \InvalidArgumentException('Cannot save "null" material');
+        }
+
         $m = $this->get($material->id);
+
+        $material->blame = session('user')->id;
+        $material->views = $m->views ?? 0;
+        $material->rating = $m->rating ?? 0;
+        $material->rating_count = $m->rating_count ?? 0;
+        $material->updated_at = $this->setDate();
 
         $this->db->transStart();
 
-        if ($m !== null) {
-            $material->views = $m->views;
-            $material->rating = $m->rating;
-            $material->rating_count = $m->rating_count;
+        if ($m) {
+            if (
+                $m->status !== $material->status &&
+                $material->status === StatusCast::PUBLIC
+            ) {
+                $material->published_at = $this->setDate();
+            }
             $this->update($material->id, $material);
         } else {
-            $material->views = 0;
-            $material->rating = 0;
-            $material->rating_count = 0;
             $material->id = $this->insert($material, true);
         }
 

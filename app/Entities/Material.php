@@ -7,6 +7,9 @@ use DateTime;
 
 class Material extends Entity
 {
+    const PUBLISH = 'created_at';
+    const UPDATE = 'updated_at';
+
     protected $attributes = [
         'material_id'           => null,
         'material_author'       => null,
@@ -53,6 +56,8 @@ class Material extends Entity
         'views'        => 'material_views',
         'rating'       => 'material_rating',
         'rating_count' => 'material_rating_count',
+        'published'    => Material::PUBLISH,
+        'updated'      => Material::UPDATE,
     ];
 
     public function getGroupedProperties() : array
@@ -66,12 +71,12 @@ class Material extends Entity
 
     public function createdToDate() : string
     {
-        return $this->created_at ? date_format($this->created_at, "d.m.Y") : "";
+        return $this->published ? date_format($this->published, "d.m.Y") : "";
     }
 
     public function updatedToDate() : string
     {
-        return $this->updated_at ? date_format($this->updated_at, "d.m.Y") : "";
+        return $this->updated ? date_format($this->updated, "d.m.Y") : "";
     }
 
     public function sinceLastUpdate() : string
