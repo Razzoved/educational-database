@@ -278,12 +278,12 @@ class Resources
     private function doUnusedRecursive(array &$target, array $source, string $path) : void
     {
         foreach ($source as $key => $value) {
-            $key = (string) $key;
-            $newPath = rtrim($path, '/');
+            $key = rtrim(rtrim((string) $key, '\\'), '/');
+            $newPath = rtrim(rtrim($path, '\\'), '/');
 
             if (is_array($value)) {
-                $newPath .= '/' . rtrim((string) $key, '\\'); // dir ends with '\'
-                if ($key < date('Ymd\\', time()) || $key === 'unused\\') {
+                $newPath .= '/' . $key;
+                if ($key < date('Ymd', time()) || str_starts_with($key, 'unused')) {
                     $this->doUnusedRecursive($target, $value, $newPath);
                 }
             } else if (substr($value, 0, 5) !== 'index') {
