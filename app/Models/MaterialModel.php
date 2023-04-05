@@ -27,7 +27,7 @@ class MaterialModel extends Model
         'material_views',
         'material_rating',
         'material_rating_count',
-        'published_at',         // TODO: change db name
+        'created_at',         // TODO: change db name
         'updated_at',           // updated manually
     ];
 
@@ -113,14 +113,15 @@ class MaterialModel extends Model
 
         if ($material->status !== StatusCast::PUBLIC) {
             $material->published = null;
-        } else if (!$m || $m->status !== $material->status) {
+        } else if (!$m || $m->status !== StatusCast::PUBLIC) {
             $material->published = $this->setDate();
         }
 
         $this->db->transStart();
 
         if ($m) {
-            $this->update($material->id, $material);
+            $data = $material->toRawArray();
+            $this->update($material->id, $data);
         } else {
             $material->id = $this->insert($material, true);
         }
