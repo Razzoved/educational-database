@@ -172,7 +172,7 @@ class MaterialModel extends Model
     {
         if ($filters !== []) {
             $filter = model(MaterialPropertyModel::class)->getCompiledFilter($filters);
-            $this->join("($filter) f", "$this->table.material_id = f.material_id");
+            $this->join("($filter) f", "material_id");
         }
         return $this;
     }
