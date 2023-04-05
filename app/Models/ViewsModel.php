@@ -132,7 +132,7 @@ class ViewsModel extends Model
             $this->insert([
                 'material_id' => $material->id,
                 'material_views' => $material->views,
-                'created_at' => $material->created_at->toDateString()
+                'created_at' => $material->published_at->toDateString()
             ]);
         }
         array_pop($this->allowedFields);

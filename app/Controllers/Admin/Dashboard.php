@@ -35,8 +35,8 @@ class Dashboard extends BaseController
             'materials'         => $this->views->getTopMaterials(5, 30),
             'materialsTotal'    => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], 5),
             'contributors'      => $this->materials->getContributors(),
-            'recentPublished'   => $this->materials->getArray(['sort' => EntitiesMaterial::PUBLISH, 'sortDir' => 'DESC'], 5),
-            'recentUpdated'     => $this->materials->getArray(['sort' => EntitiesMaterial::UPDATE, 'sortDir' => 'DESC'], 5),
+            'recentPublished'   => $this->materials->getArray(['sort' => 'published_at', 'sortDir' => 'DESC'], 5),
+            'recentUpdated'     => $this->materials->getArray(['sort' => 'updated_at', 'sortDir' => 'DESC'], 5),
         ];
         return view(Config::VIEW . 'dashboard', $data);
     }

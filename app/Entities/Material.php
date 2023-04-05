@@ -7,9 +7,6 @@ use DateTime;
 
 class Material extends Entity
 {
-    const PUBLISH = 'created_at';
-    const UPDATE = 'updated_at';
-
     protected $attributes = [
         'material_id'           => null,
         'material_author'       => null,
@@ -20,7 +17,7 @@ class Material extends Entity
         'material_views'        => null,
         'material_rating'       => null,
         'material_rating_count' => null,
-        'created_at'            => null,
+        'published_at'          => null,
         'updated_at'            => null,
         'related'               => null, // not part of table in DB
         'properties'            => null, // not part of table in DB
@@ -37,6 +34,7 @@ class Material extends Entity
         'material_views'        => 'int',
         'material_rating'       => 'float',
         'material_rating_count' => 'int',
+        'published_at'          => 'datetime',
         'related'               => 'array', // not part of table in DB
         'properties'            => 'array', // not part of table in DB
         'resources'             => 'array', // not part of table in DB
@@ -56,8 +54,6 @@ class Material extends Entity
         'views'        => 'material_views',
         'rating'       => 'material_rating',
         'rating_count' => 'material_rating_count',
-        'published'    => Material::PUBLISH,
-        'updated'      => Material::UPDATE,
     ];
 
     public function getGroupedProperties() : array
@@ -69,32 +65,32 @@ class Material extends Entity
         return $result;
     }
 
-    public function createdToDate() : string
+    public function publishedToDate() : string
     {
-        return $this->published ? date_format($this->published, "d.m.Y") : "";
+        return $this->published_at ? date_format($this->published_at, "d.m.Y") : "NOT PUBLISHED";
     }
 
     public function updatedToDate() : string
     {
-        return $this->updated ? date_format($this->updated, "d.m.Y") : "";
+        return $this->updated_at ? date_format($this->updated_at, "d.m.Y") : "ORIGINAL";
     }
 
     public function sinceLastUpdate() : string
     {
-        if (is_null($this->updatedAt)) {
+        if (is_null($this->updated_at)) {
             return 'No updates';
         }
 
         $diff = $this->updated_at->diff(new DateTime('now'));
 
         if (($t = $diff->format("%m")) > 0)
-          $time_ago = $t . ' months';
+          $time_ago = $t . ' month' . ($t > 1 ? 's' : '');
         else if (($t = $diff->format("%d")) > 0)
-          $time_ago = $t . ' days';
+          $time_ago = $t . ' day' ($t > 1 ? 's' : '');
         else if (($t = $diff->format("%H")) > 0)
-          $time_ago = $t . ' hours';
+          $time_ago = $t . ' hour' ($t > 1 ? 's' : '');
         else
-          $time_ago = 'minutes';
+          $time_ago = 'minute' ($t > 1 ? 's' : '');
 
         return $time_ago . ' ago (' . $this->updated_at->format('M j, Y') . ')';
     }

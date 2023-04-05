@@ -38,7 +38,7 @@
                     </h1>
                 </div>
                 <div class="material__row">
-                    <small>Published: <?= $material->createdToDate() ?></small>
+                    <small>Published: <?= $material->publishedToDate() ?></small>
                     <?= view('rating', ['material' => $material]) ?>
                 </div>
             </header>

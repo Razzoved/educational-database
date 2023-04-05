@@ -27,8 +27,8 @@ class MaterialModel extends Model
         'material_views',
         'material_rating',
         'material_rating_count',
-        'created_at',         // TODO: change db name
-        'updated_at',           // updated manually
+        'published_at',
+        'updated_at',
     ];
 
     protected $useAutoIncrement = true;
@@ -109,19 +109,18 @@ class MaterialModel extends Model
         $material->views = $m->views ?? 0;
         $material->rating = $m->rating ?? 0;
         $material->rating_count = $m->rating_count ?? 0;
-        $material->updated = $this->setDate();
+        $material->updated_at = $this->setDate();
 
         if ($material->status !== StatusCast::PUBLIC) {
-            $material->published = null;
+            $material->published_at = null;
         } else if (!$m || $m->status !== StatusCast::PUBLIC) {
-            $material->published = $this->setDate();
+            $material->published_at = $this->setDate();
         }
 
         $this->db->transStart();
 
         if ($m) {
-            $data = $material->toRawArray();
-            $this->update($material->id, $data);
+            $this->update($material->id, $material->toRawArray());
         } else {
             $material->id = $this->insert($material, true);
         }
@@ -151,12 +150,15 @@ class MaterialModel extends Model
     protected function setupSort(string $sort, string $sortDir)
     {
         if (
-            $sort !== $this->createdField &&
-            $sort !== $this->updatedField &&
+            $sort !== 'published_at' &&
+            $sort !== 'updated_at' &&
             $sort !== $this->primaryKey
         ) {
             $sort = 'material_' . $sort;
-            $sort = in_array($sort, $this->allowedFields) || $sort === $this->primaryKey ? $sort : "";
+        }
+
+        if (!in_array($sort, $this->allowedFields) && $sort !== $this->primaryKey) {
+            $sort = "";
         }
 
         if ($sort === "") {

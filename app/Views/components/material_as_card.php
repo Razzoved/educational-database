@@ -18,7 +18,7 @@
         </div>
 
         <div class="card__content">
-            <p><small>Upload date: <?= $material->createdToDate() ?></small></p>
+            <p><small>Published: <?= $material->publishedToDate() ?></small></p>
             <p><?= (strlen($content) > 120) ? substr($content, 0, 117) . '...' : $content ?></p>
         </div>
 

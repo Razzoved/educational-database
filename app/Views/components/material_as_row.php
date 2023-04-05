@@ -37,10 +37,10 @@
         <h2 class="item__title"><?= $material->title?></h2>
         <div class="item__row">
             <p class="item__text">
-                <small>Created at:</small><br><?= $material->createdToDate() ?>
+                <small>Published:</small><br><?= $material->publishedToDate() ?>
             </p>
             <p class="item__text">
-                <small>Last update:</small><br><?= $material->updatedToDate() ?>
+                <small>Updated:</small><br><?= $material->updatedToDate() ?>
             </p>
         </div>
         <div class="item__row">

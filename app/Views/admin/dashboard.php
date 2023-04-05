@@ -63,7 +63,7 @@
                 <?php foreach ($recentPublished as $r) : ?>
                 <li class="dashboard__material" onclick="location.href='<?= base_url('admin/materials/1?search=' . urlencode($r->title)) ?>'">
                     <p class="dashboard__subtitle"><?= $r->title ?><p>
-                    <p><?= $r->published ?></p>
+                    <p><?= $r->publishedToDate() ?></p>
                 </li>
                 <?php endforeach; ?>
             </ul>
@@ -75,7 +75,7 @@
                 <?php foreach ($recentUpdated as $r) : ?>
                 <li class="dashboard__material" onclick="location.href='<?= base_url('admin/materials/1?search=' . urlencode($r->title)) ?>'">
                     <p class="dashboard__subtitle"><?= $r->title ?><p>
-                    <p><?= $r->updated ?></p>
+                    <p><?= $r->sinceLastUpdate() ?></p>
                 </li>
                 <?php endforeach; ?>
             </ul>
