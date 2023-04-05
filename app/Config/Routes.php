@@ -111,6 +111,7 @@ $routes->group('admin', function($routes) {
     });
 
     $routes->add('migrate', 'Admin\Migrate::index');
+    $routes->add('regress', 'Admin\Migrate::back');
 });
 
 /*
