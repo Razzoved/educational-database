@@ -24,15 +24,19 @@ class Dashboard extends BaseController
     public function index() : string
     {
         $data = [
-            'meta_title'     => 'Administration - dashboard',
-            'activePage'     => 'dashboard',
-            'viewsTotal'     => array_sum(array_column($this->views->findAll(), 'material_views')),
-            'viewsHistory'   => $this->views->getDailyTotals(),
-            'materials'      => $this->views->getTopMaterials(5, 30),
-            'materialsTotal' => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], 5),
-            'contributors'   => $this->materials->getContributors(),
-            'recentNew'      => $this->materials->getArray(['sort' => 'created_at', 'sortDir' => 'DESC'], 5),
-            'recentUpdated'  => $this->materials->getArray(['sort' => 'updated_at', 'sortDir' => 'DESC'], 5),
+            'meta_title'        => 'Administration - dashboard',
+            'activePage'        => 'dashboard',
+            'viewsTotal'        => array_reduce(
+                $this->views->findAll(),
+                function ($prev, $mat) { $mat->views += $prev->views; return $mat; },
+                new EntitiesMaterial()
+            )->views,
+            'viewsHistory'      => $this->views->getDailyTotals(),
+            'materials'         => $this->views->getTopMaterials(5, 30),
+            'materialsTotal'    => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], 5),
+            'contributors'      => $this->materials->getContributors(),
+            'recentPublished'   => $this->materials->getArray(['sort' => EntitiesMaterial::PUBLISH, 'sortDir' => 'DESC'], 5),
+            'recentUpdated'     => $this->materials->getArray(['sort' => EntitiesMaterial::UPDATE, 'sortDir' => 'DESC'], 5),
         ];
         return view(Config::VIEW . 'dashboard', $data);
     }

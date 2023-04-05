@@ -60,10 +60,10 @@
         <section>
             <h2>Newest</h2>
             <ul class="dashboard__recent">
-                <?php foreach ($recentNew as $r) : ?>
+                <?php foreach ($recentPublished as $r) : ?>
                 <li class="dashboard__material" onclick="location.href='<?= base_url('admin/materials/1?search=' . urlencode($r->title)) ?>'">
                     <p class="dashboard__subtitle"><?= $r->title ?><p>
-                    <p><?= $r->created_at ?></p>
+                    <p><?= $r->published ?></p>
                 </li>
                 <?php endforeach; ?>
             </ul>
@@ -75,7 +75,7 @@
                 <?php foreach ($recentUpdated as $r) : ?>
                 <li class="dashboard__material" onclick="location.href='<?= base_url('admin/materials/1?search=' . urlencode($r->title)) ?>'">
                     <p class="dashboard__subtitle"><?= $r->title ?><p>
-                    <p><?= $r->updated_at ?></p>
+                    <p><?= $r->updated ?></p>
                 </li>
                 <?php endforeach; ?>
             </ul>
