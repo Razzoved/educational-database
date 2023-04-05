@@ -283,7 +283,7 @@ class Resources
 
             if (is_array($value)) {
                 $newPath .= '/' . $key;
-                if ($key < date('Ymd', time()) || str_starts_with($key, 'unused')) {
+                if ($key < date('Ymd', time()) || substr($key, 0, strlen('unused')) === 'unused') {
                     $this->doUnusedRecursive($target, $value, $newPath);
                 }
             } else if (substr($value, 0, 5) !== 'index') {
