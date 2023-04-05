@@ -109,17 +109,17 @@ class MaterialModel extends Model
         $material->views = $m->views ?? 0;
         $material->rating = $m->rating ?? 0;
         $material->rating_count = $m->rating_count ?? 0;
-        $material->updated_at = $this->setDate();
+        $material->updated = $this->setDate();
+
+        if ($material->status !== StatusCast::PUBLIC) {
+            $material->published = null;
+        } else if (!$m || $m->status !== $material->status) {
+            $material->published = $this->setDate();
+        }
 
         $this->db->transStart();
 
         if ($m) {
-            if (
-                $m->status !== $material->status &&
-                $material->status === StatusCast::PUBLIC
-            ) {
-                $material->published_at = $this->setDate();
-            }
             $this->update($material->id, $material);
         } else {
             $material->id = $this->insert($material, true);
