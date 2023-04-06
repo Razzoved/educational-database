@@ -86,11 +86,11 @@ class Material extends Entity
         if (($t = $diff->format("%m")) > 0)
           $time_ago = $t . ' month' . ($t > 1 ? 's' : '');
         else if (($t = $diff->format("%d")) > 0)
-          $time_ago = $t . ' day' ($t > 1 ? 's' : '');
+          $time_ago = $t . ' day' . ($t > 1 ? 's' : '');
         else if (($t = $diff->format("%H")) > 0)
-          $time_ago = $t . ' hour' ($t > 1 ? 's' : '');
+          $time_ago = $t . ' hour' . ($t > 1 ? 's' : '');
         else
-          $time_ago = 'minute' ($t > 1 ? 's' : '');
+          $time_ago = 'minute' . ($t > 1 ? 's' : '');
 
         return $time_ago . ' ago (' . $this->updated_at->format('M j, Y') . ')';
     }
