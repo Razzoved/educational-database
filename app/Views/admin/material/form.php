@@ -128,7 +128,7 @@
         let newInput = document.createElement('input');
         newInput.setAttribute('name', 'unused_files[]');
         newInput.setAttribute('type', 'hidden');
-        newInput.setAttribute('value', filepath.replace('<?= base_url() ?>/', '').replace('<?= base_url() ?>\\', ''));
+        newInput.setAttribute('value', filepath.replace('<?= base_url() ?>', '').replace('<?= base_url() ?>\\', ''));
 
         unused.appendChild(newInput);
     }

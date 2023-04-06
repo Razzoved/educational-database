@@ -73,7 +73,7 @@
             addToUnused(path.value);
         }
 
-        image.src = '<?= base_url() ?>' + '/' + filepath;
+        image.src = '<?= base_url() ?>' + filepath;
         path.value = filepath;
     }
 </script>
