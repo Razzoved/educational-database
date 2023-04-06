@@ -16,11 +16,14 @@ use CodeIgniter\Model;
 class MaterialPropertyModel extends Model
 {
     protected $table = 'material_property';
-    protected $primaryKey = 'material_id';
-    protected $allowedFields = ['material_id', 'property_id'];
-
+    protected $primaryKey = 'id';
+    protected $allowedFields = [
+        'material_id',
+        'property_id'
+    ];
+    protected $useAutoIncrement = true;
+    protected $allowCallbacks = true;
     protected $afterFind = ['getProperty'];
-
     protected $returnType = Property::class;
 
     /** ----------------------------------------------------------------------

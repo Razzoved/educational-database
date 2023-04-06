@@ -15,31 +15,23 @@ use CodeIgniter\Model;
 class MaterialMaterialModel extends Model
 {
     protected $table = 'material_material';
-    protected $primaryKey = 'material_id_left'; // no primary key
+    protected $primaryKey = 'id';
     protected $allowedFields = [
         'material_id_left',
         'material_id_right'
     ];
-
+    protected $useAutoIncrement = true;
+    protected $allowCallbacks = true;
     protected $afterFind = [
         'loadData',
         'loadThumbnail',
     ];
-
     protected $returnType = Material::class;
 
     /** ----------------------------------------------------------------------
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
-    /**
-     * Looks for ALL pairs of materials where at least one member has
-     * the given id. Returns an array of such materials.
-     *
-     * @param int $id id of material whose tags we want to get
-     *
-     * @return array of objects or strings
-     */
     public function getRelated(int $id) : array
     {
         $left = $this->select($this->allowedFields[0] . ' as material_id')
@@ -117,8 +109,12 @@ class MaterialMaterialModel extends Model
     {
         if (!isset($data['data'])) {
             return $data;
-            }
-        foreach ($data['data'] as $material) {
+        }
+        echo var_dump($data['data']);
+
+        foreach ($data['data'] as $k => $material) {
+            echo $k . ' -> ';
+            echo var_dump($material) . '<br>';
             $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
         }
         return $data;
