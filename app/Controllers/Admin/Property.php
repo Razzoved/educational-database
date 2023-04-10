@@ -18,13 +18,11 @@ class Property extends BaseController
     private const META_TITLE = 'Administration - tags';
 
     private PropertyModel $properties;
-    private MaterialPropertyModel $materialProperties;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
         $this->properties = model(PropertyModel::class);
-        $this->materialProperties = model(MaterialPropertyModel::class);
     }
 
     public function index() : string
@@ -176,7 +174,7 @@ class Property extends BaseController
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => $this->request->getGetPost('sort'),
                 'sortDir'   => $this->request->getGetPost('sortDir'),
-                'callbacks' => true,
+                'usage'     => true,
             ],
             $perPage
         );

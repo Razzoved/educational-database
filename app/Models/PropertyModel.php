@@ -17,15 +17,18 @@ class PropertyModel extends Model
     protected $primaryKey    = 'property_id';
     protected $allowedFields = [
         'property_tag',
-        'property_value'
+        'property_value',
+        'property_priority',
     ];
 
     protected $useAutoIncrement = true;
     protected $useSoftDeletes   = false;
     protected $useTimestamps    = false;
 
-    protected $allowCallbacks = false;
-    protected $afterFind = ['getUsage'];
+    protected $allowCallbacks = true;
+    protected $afterFind = [
+        'getCategory'
+    ];
 
     protected $returnType = Property::class;
 
@@ -35,17 +38,27 @@ class PropertyModel extends Model
 
     public function get(int $id, array $data = []) : ?Property
     {
-        return $this->setupQuery($data)->find($id);
+        $item = $this->setupQuery($data)->find($id);
+        if ($data['usage'] ?? false) {
+            $item->usage = $this->_getUsage($item);
+        }
+        return $item;
     }
 
     public function getArray(array $data = [], int $limit = 0) : array
     {
-        return $this->setupQuery($data)->findAll($limit);
+        return $this->getUsage(
+            $this->setupQuery($data)->findAll($limit),
+            $data['usage'] ?? false,
+        );
     }
 
     public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
     {
-        return $this->setupQuery($data)->paginate($perPage, 'default', null, $page);
+        return $this->getUsage(
+            $this->setupQuery($data)->paginate($perPage, 'default', null, $page),
+            $data['usage'] ?? false,
+        );
     }
 
     public function getByBoth(string $tag, string $value) : ?Property
@@ -160,20 +173,42 @@ class PropertyModel extends Model
      *                              CALLBACKS
      *  ------------------------------------------------------------------- */
 
-    protected function getUsage(array $data)
+    protected function getCategory(array $data)
     {
         if (!isset($data['data'])) {
             return $data;
         }
 
-        foreach ($data['data'] as $k => $v) {
-            $data['data'][$k]->usage = count(
-            model(MaterialPropertyModel::class)
-                ->where($this->primaryKey, $data['data'][$k]->id)
-                ->findAll()
-        );
+        foreach ($data['data'] as $v) {
+            if ($v && $v->property_tag !== 0) {
+                $v->tag = $this->allowCallbacks(false)
+                               ->find($v->property_tag)->value ?? null;
+            }
         }
 
         return $data;
+    }
+
+    /** ----------------------------------------------------------------------
+     *                              HELPERS
+     *  ------------------------------------------------------------------- */
+
+    protected function getUsage(array $items, bool $doUsage) : array
+    {
+        if ($doUsage === true) {
+            foreach ($items as $item) {
+                $item->usage = $this->_getUsage($item);
+            }
+        }
+        return $items;
+    }
+
+    protected function _getUsage(Property $item) : int
+    {
+        return count(
+            model(MaterialPropertyModel::class)
+                ->where($this->primaryKey, $item->id)
+                ->findAll()
+        );
     }
 }
