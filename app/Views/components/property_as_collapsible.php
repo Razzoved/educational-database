@@ -16,16 +16,16 @@ use App\Entities\Property;
     <?php if ($type === 'button') : ?>
         <form method="get" action='<?= base_url('/1') ?>' style="display: block">
             <input type="hidden"
-                name="<?= $property->tag ?>[<?= esc($property->id) ?>]"
+                name="#<?= $property->tag ?>[<?= $property->id ?>]"
                 value="on">
             <button type="submit"><?= esc($property->value) ?></button>
         </form>
     <?php else : ?>
         <input class="filter" type="checkbox"
-            name="<?= $property->tag ?>[<?= esc($property->id) ?>]"
-            id="<?= $property->tag ?>[<?= esc($property->id) ?>]">
+            name="#<?= $property->tag ?>[<?= $property->id ?>]"
+            id="#<?= $property->tag ?>[<?= $property->id ?>]">
         </input>
-        <label for="<?= $property->tag ?>[<?= esc($property->id) ?>]">
+        <label for="#<?= $property->tag ?>[<?= $property->id ?>]">
             <?= esc($property->value) ?>
         </label>
     <?php endif; ?>

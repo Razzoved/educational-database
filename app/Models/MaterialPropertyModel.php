@@ -49,7 +49,10 @@ class MaterialPropertyModel extends Model
                  ->where('material_status', StatusCast::PUBLIC);
         }
 
-        $ids = $this->allowCallbacks(false)->findAll();
+        $ids = array_map(
+            function($p) { return $p->id; },
+            $this->allowCallbacks(false)->findAll()
+        );
 
         $result = model(PropertyModel::class)->where('property_tag', 0)
                                              ->allowCallbacks(true)
@@ -83,7 +86,7 @@ class MaterialPropertyModel extends Model
                 $requiredTags += count($v);
                 $builder->orGroupStart()
                         ->where('properties.property_tag', $k)
-                        ->whereIn('properties.property_value', $v)
+                        ->whereIn('properties.property_id', $v)
                         ->groupEnd();
             }
         }
@@ -157,7 +160,7 @@ class MaterialPropertyModel extends Model
      *                              HELPERS
      *  ------------------------------------------------------------------- */
 
-    protected function recursiveFilter(Property &$source, array $valid)
+    protected function recursiveFilter(Property &$source, array $valid) : bool
     {
         $children = $source->children;
         foreach ($children as $k => $child) {
@@ -165,7 +168,10 @@ class MaterialPropertyModel extends Model
                 unset($children[$k]);
             }
         }
+
+        $source->__set('children', $children);
+
         return count($source->children) > 0
-            || in_array(new Property(['id' => $source->id]), $valid);
+            || in_array($source->id, $valid);
     }
 }

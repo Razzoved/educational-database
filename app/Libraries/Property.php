@@ -23,7 +23,10 @@ class Property
     {
         $filters = [];
         foreach ($source as $key => $value) {
-            $key = str_replace('_', ' ', $key);
+            if (!is_int($key)) {
+                $key = str_replace('#', '', $key);
+                $key = str_replace('_', ' ', $key);
+            }
             if (!in_array($key, $ignore, true)) {
                 $filters[$key] = $value;
             }
