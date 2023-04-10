@@ -3,9 +3,9 @@
         <i class="fa fa-bars"></i>
         Toggle tags
     </button>
-    <?php foreach ($properties as $tag => $values) : ?>
-        <?php if (!empty($values)) : ?>
-            <?= view('components/collapsible_list', ['tag' => $tag, 'values' => $values, 'type' => 'button']) ?>
+    <?php foreach ($properties as $property) : ?>
+        <?php if (isset($property->children) && !empty($property->children)) : ?>
+            <?= view('components/property_as_collapsible', ['property' => $property, 'type' => 'buttons']) ?>
         <?php endif; ?>
     <?php endforeach; ?>
 </div>
