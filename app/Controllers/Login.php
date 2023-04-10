@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use CodeIgniter\Config\Services;
 
 class Login extends BaseController
 {

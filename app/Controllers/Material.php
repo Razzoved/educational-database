@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Entities\Material as EntitiesMaterial;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -122,7 +121,7 @@ class Material extends BaseController
         );
     }
 
-    protected function getMaterials(int $perPage = 20) : array
+    protected function getMaterials(int $perPage = 10) : array
     {
         $uri = new \CodeIgniter\HTTP\URI(current_url());
         return $this->materials->getPage(

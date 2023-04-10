@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\MaterialModel;
-
 class MaterialTopRated extends Material
 {
     public function index() : string
@@ -20,7 +18,7 @@ class MaterialTopRated extends Material
         return view('material_multiple', $data);
     }
 
-    protected function getMaterials(int $perPage = 20) : array
+    protected function getMaterials(int $perPage = 10) : array
     {
         $uri = new \CodeIgniter\HTTP\URI(current_url());
         return $this->materials->getPage(

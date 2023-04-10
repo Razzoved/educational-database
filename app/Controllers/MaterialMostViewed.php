@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\MaterialModel;
-
 class MaterialMostViewed extends Material
 {
     public function index() : string
