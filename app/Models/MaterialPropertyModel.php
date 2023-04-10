@@ -140,7 +140,7 @@ class MaterialPropertyModel extends Model
         }
 
         foreach ($data['data'] as $k => $v) {
-            $data['data'][$k] = model(PropertyModel::class)->get($v->id);
+            if ($v) $data['data'][$k] = model(PropertyModel::class)->get($v->id);
         }
 
         return $data;

@@ -79,8 +79,9 @@ class ViewsModel extends Model
 
         $materials = array();
         foreach ($views as $v) {
-            $material = model(MaterialModel::class)->get($v->id);
+            $material = model(MaterialModel::class)->get($v->id, ['callbacks' => false]);
             if ($material) {
+                $material->resources = model(ResourceModel::class)->getThumbnail($v->id);
                 $material->views = $v->views;
                 $materials[] = $material;
             }
