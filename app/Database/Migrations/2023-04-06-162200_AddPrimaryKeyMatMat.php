@@ -4,6 +4,12 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
+/**
+ * Adds id as a primary key to  material_material table.
+ * This is done for better compatibility with CodeIgniter.
+ *
+ * @author Jan Martinek
+ */
 class AddPrimaryKeyMatMat extends Migration
 {
     public function up()

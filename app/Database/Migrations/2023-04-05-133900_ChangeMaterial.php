@@ -4,6 +4,12 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
+/**
+ * Changes the created_at column to published_at.
+ * Created_at was never used, but published_at is important.
+ *
+ * @author Jan Martinek
+ */
 class ChangeMaterial extends Migration
 {
     public function up()
