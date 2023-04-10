@@ -25,7 +25,8 @@ class PropertyModel extends Model
     protected $useSoftDeletes   = false;
     protected $useTimestamps    = false;
 
-    protected $allowCallbacks = true;
+    // heavy operation, use only if intentionall
+    protected $allowCallbacks = false;
     protected $afterFind = [
         'loadChildren',
     ];
@@ -99,8 +100,8 @@ class PropertyModel extends Model
 
     protected function setupQuery(array $data = []) : PropertyModel
     {
-        if (isset($data['callbacks']) && $data['callbacks'] === false) {
-            $this->allowCallbacks(false);
+        if (isset($data['callbacks']) && $data['callbacks'] === true) {
+            $this->allowCallbacks(true);
         }
         return $this
             ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
@@ -239,6 +240,7 @@ class PropertyModel extends Model
     {
         return count(
             model(MaterialPropertyModel::class)
+                ->allowCallbacks(false)
                 ->where($this->primaryKey, $item->id)
                 ->findAll()
         );

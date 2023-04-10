@@ -50,29 +50,14 @@ class MaterialPropertyModel extends Model
         }
 
         $ids = $this->allowCallbacks(false)->findAll();
-        $result = [];
 
-        // foreach (model(PropertyModel::class)->where('property_tag', 0)->getArray() as $property) {
-        //     $this->recursiveFilter($result, $property, $ids, true);
-        // }
-
-        return model(PropertyModel::class)->where('property_tag', 0)->getArray();
-    }
-
-    protected function recursiveFilter(array &$target, Property $source, array $valid, bool $ignore = false)
-    {
-        if (!$ignore && !in_array(new Property(['id' => $source->id]), $valid)) {
-            return;
+        $result = model(PropertyModel::class)->where('property_tag', 0)
+                                             ->allowCallbacks(true)
+                                             ->getArray();
+        foreach ($result as $property) {
+            $this->recursiveFilter($property, $ids);
         }
-
-        if (!isset($source->children) || empty($source->children)) {
-            $target[$source->priority][] = $source->value;
-        } else foreach ($source->children as $child) {
-            if (!isset($target[$source->priority][$source->value])) {
-                $target[$source->priority][$source->value] = [];
-            }
-            $this->recursiveFilter($target[$source->priority][$source->value], $child, $valid);
-        }
+        return $result;
     }
 
     /**
@@ -166,5 +151,21 @@ class MaterialPropertyModel extends Model
         }
 
         return $data;
+    }
+
+    /** ----------------------------------------------------------------------
+     *                              HELPERS
+     *  ------------------------------------------------------------------- */
+
+    protected function recursiveFilter(Property &$source, array $valid)
+    {
+        $children = $source->children;
+        foreach ($children as $k => $child) {
+            if (!$this->recursiveFilter($child, $valid)) {
+                unset($children[$k]);
+            }
+        }
+        return count($source->children) > 0
+            || in_array(new Property(['id' => $source->id]), $valid);
     }
 }
