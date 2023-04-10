@@ -207,12 +207,10 @@ class MaterialModel extends Model
         if (!isset($data['data'])) {
             return $data;
         }
-        if (is_a($data['data'], Material::class)) {
-            // do not launch this on searching for multiple
+        if ($data['method'] === 'find') {
             $data['data']->resources = model(ResourceModel::class)->getResources($data['data']->id);
-        } else {
-            // only load thumbnail for multiple
-            foreach ($data['data'] as $material) {
+        } else foreach ($data['data'] as $material) {
+            if ($material) {
                 $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
             }
         }
@@ -224,8 +222,7 @@ class MaterialModel extends Model
         if (!isset($data['data'])) {
             return $data;
         }
-        if (is_a($data['data'], Material::class)) {
-            // do not launch this on searching for multiple
+        if ($data['method'] === 'find') {
             $data['data']->related = model(MaterialMaterialModel::class)->getRelated($data['data']->id);
         }
         return $data;
@@ -236,8 +233,7 @@ class MaterialModel extends Model
         if (!isset($data['data'])) {
             return $data;
         }
-        if (is_a($data['data'], Material::class)) {
-            // do not launch this on searching for multiple
+        if ($data['method'] === 'find') {
             $data['data']->properties = model(MaterialPropertyModel::class)->get($data['data']->id);
         }
         return $data;

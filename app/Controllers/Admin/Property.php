@@ -174,6 +174,7 @@ class Property extends BaseController
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => $this->request->getGetPost('sort'),
                 'sortDir'   => $this->request->getGetPost('sortDir'),
+                'callbacks' => false,
                 'usage'     => true,
             ],
             $perPage

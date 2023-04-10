@@ -99,14 +99,18 @@ class MaterialMaterialModel extends Model
         if (!isset($data['data'])) {
             return $data;
         }
-        foreach ($data['data'] as $k => $material) {
+
+        $model = model(MaterialModel::class);
+
+        if ($data['method'] === 'find') {
+            $data['data'] = $model->allowCallbacks(false)->find($data['data']->id);
+        } else foreach ($data['data'] as $k => $material) {
             if ($material) {
-                $data['data'][$k] = model(MaterialModel::class)->get(
-                    $material->id,
-                    ['callbacks' => false]
-                );
+                $model = $model->allowCallbacks(false);
+                $data['data'][$k] = $model->find($material->id);
             }
         }
+
         return $data;
     }
 
@@ -116,14 +120,16 @@ class MaterialMaterialModel extends Model
             return $data;
         }
 
-        echo count($data['data']);
-        echo '<br>';
+        $model = model(ResourceModel::class);
 
-        foreach ($data['data'] as $k => $material) {
+        if ($data['method'] === 'find') {
+            $data['data'] = $model->getThumbnail($data['data']->id);
+        } else foreach ($data['data'] as $material) {
             if ($material) {
-                $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
+                $material->resources = $model->getThumbnail($material->id);
             }
         }
+
         return $data;
     }
 }

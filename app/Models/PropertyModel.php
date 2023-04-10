@@ -27,7 +27,7 @@ class PropertyModel extends Model
 
     protected $allowCallbacks = true;
     protected $afterFind = [
-        'getCategory'
+        'loadChildren',
     ];
 
     protected $returnType = Property::class;
@@ -99,8 +99,8 @@ class PropertyModel extends Model
 
     protected function setupQuery(array $data = []) : PropertyModel
     {
-        if (isset($data['callbacks']) && $data['callbacks'] === true) {
-            $this->allowCallbacks(true);
+        if (isset($data['callbacks']) && $data['callbacks'] === false) {
+            $this->allowCallbacks(false);
         }
         return $this
             ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
@@ -121,6 +121,10 @@ class PropertyModel extends Model
 
         if ($sort !== "") {
             $sort = $this->primaryKey;
+        }
+
+        if ($sort !== 'property_priority') {
+            $this->orderBy('property_priority', 'desc');
         }
 
         $this->orderBy($sort, strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC');
@@ -173,20 +177,48 @@ class PropertyModel extends Model
      *                              CALLBACKS
      *  ------------------------------------------------------------------- */
 
+    protected function loadChildren(array $data)
+    {
+        if (!isset($data['data'])) {
+            return $data;
+        }
+
+        if ($data['method'] === 'find') {
+            $data['data']->children = $this->_loadChildren($data['data']);
+        } else foreach ($data['data'] as $property) {
+            $property->children = $this->_loadChildren($property);
+        }
+
+        return $data;
+    }
+
     protected function getCategory(array $data)
     {
         if (!isset($data['data'])) {
             return $data;
         }
 
-        foreach ($data['data'] as $v) {
-            if ($v && $v->property_tag !== 0) {
-                $v->tag = $this->allowCallbacks(false)
-                               ->find($v->property_tag)->value ?? null;
-            }
+        if ($data['method'] === 'find') {
+            $data['data']->tag = $this->_getCategory($data['data']);
+        } else foreach ($data['data'] as $property) {
+            $property->tag = $this->_getCategory($property);
         }
 
         return $data;
+    }
+
+    protected function _loadChildren(Property $property) : array
+    {
+        return $this->where('property_tag', $property->id)
+                    ->getArray();
+    }
+
+    protected function _getCategory(Property $property) : ?string
+    {
+        $tag = $property->property_tag !== 0
+            ? $this->allowCallbacks(false)->find($property->property_tag)
+            : null;
+        return $tag->value ?? null;
     }
 
     /** ----------------------------------------------------------------------

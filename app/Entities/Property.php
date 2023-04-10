@@ -11,20 +11,20 @@ class Property extends Entity
         'property_tag'      => null,
         'property_value'    => null,
         'property_priority' => null,
-        'category'          => null, // not part of db
+        'children'          => null,
         'usage'             => null, // not part of db
     ];
 
     protected $casts = [
         'property_id'       => 'int',
         'property_priority' => 'int',
-        'category'          => 'string',
+        'children'          => 'array',
         'usage'             => 'int',
     ];
 
     protected $datamap = [
         'id'       => 'property_id',
-        'tag'      => 'category',
+        'tag'      => 'property_tag',
         'value'    => 'property_value',
         'priority' => 'property_priority',
     ];

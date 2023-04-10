@@ -60,7 +60,7 @@ class Material extends Entity
     {
         $result = array();
         foreach ($this->properties as $p) {
-            $result[$p->tag][] = $p->value;
+            $result[$p->priority][$p->value][] = $p->value;
         }
         return $result;
     }

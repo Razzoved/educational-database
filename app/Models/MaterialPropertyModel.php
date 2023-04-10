@@ -23,7 +23,9 @@ class MaterialPropertyModel extends Model
     ];
     protected $useAutoIncrement = true;
     protected $allowCallbacks = true;
-    protected $afterFind = ['getProperty'];
+    protected $afterFind = [
+        'getProperty'
+    ];
     protected $returnType = Property::class;
 
     /** ----------------------------------------------------------------------
@@ -38,11 +40,8 @@ class MaterialPropertyModel extends Model
 
     public function getUsed() : array
     {
-        $this->allowCallbacks(false)
-             ->join('properties', 'property_id')
-             ->select('property_tag, property_value')
-             ->groupBy('property_tag, property_value')
-             ->orderBy('property_tag, property_value')
+        $this->select('property_id')
+             ->groupBy('property_id')
              ->having('COUNT(material_id) >', 0);
 
         if (!session('isLoggedIn')) {
@@ -50,11 +49,30 @@ class MaterialPropertyModel extends Model
                  ->where('material_status', StatusCast::PUBLIC);
         }
 
-        foreach ($this->findAll() as $property) {
-            $result[$property->property_tag][] = $property->property_value;
+        $ids = $this->allowCallbacks(false)->findAll();
+        $result = [];
+
+        // foreach (model(PropertyModel::class)->where('property_tag', 0)->getArray() as $property) {
+        //     $this->recursiveFilter($result, $property, $ids, true);
+        // }
+
+        return model(PropertyModel::class)->where('property_tag', 0)->getArray();
+    }
+
+    protected function recursiveFilter(array &$target, Property $source, array $valid, bool $ignore = false)
+    {
+        if (!$ignore && !in_array(new Property(['id' => $source->id]), $valid)) {
+            return;
         }
 
-        return $result;
+        if (!isset($source->children) || empty($source->children)) {
+            $target[$source->priority][] = $source->value;
+        } else foreach ($source->children as $child) {
+            if (!isset($target[$source->priority][$source->value])) {
+                $target[$source->priority][$source->value] = [];
+            }
+            $this->recursiveFilter($target[$source->priority][$source->value], $child, $valid);
+        }
     }
 
     /**
@@ -139,8 +157,12 @@ class MaterialPropertyModel extends Model
             return $data;
         }
 
-        foreach ($data['data'] as $k => $v) {
-            if ($v) $data['data'][$k] = model(PropertyModel::class)->get($v->id);
+        if ($data['method'] === 'find') {
+            $data['data'] = model(PropertyModel::class)->get($data['data']->id);
+        } else foreach ($data['data'] as $k => $v) {
+            if ($v) {
+                $data['data'][$k] = model(PropertyModel::class)->get($v->id);
+            }
         }
 
         return $data;
