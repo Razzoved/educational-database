@@ -28,7 +28,7 @@ class Material extends Entity
         'material_id'           => 'int',
         'material_author'       => 'string',
         'material_blame'        => 'int',
-        'material_status'       => 'statusCast',
+        'material_status'       => 'status',
         'material_title'        => 'string',
         'material_content'      => 'string',
         'material_views'        => 'int',
@@ -41,7 +41,7 @@ class Material extends Entity
     ];
 
     protected $castHandlers = [
-        'statusCast' => \App\Entities\Cast\StatusCast::class,
+        'status' => \App\Entities\Cast\StatusCast::class,
     ];
 
     protected $datamap = [
