@@ -71,10 +71,6 @@
     &__item {
         color: $clr-light;
         padding: 0.3rem;
-        &:hover {
-            color: $clr-focus;
-            background-color: $clr-focus-bg;
-        }
         input[type='checkbox'] {
             transform: scale(1.5);
             margin-right: 0.5rem;
@@ -105,6 +101,41 @@
         }
     }
 
+    &__item:hover,
+    &__item:hover > input,
+    &__item:hover > label,
+    &__item:hover > button {
+        color: $clr-focus;
+    }
+
+    &--small {
+        border: $clr-dark-transparent 0.5px solid;
+        border-radius: 0;
+        background-color: unset;
+        padding: 0rem;
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+    }
+
+    &--small &__toggle {
+        // replace button defaults
+        border: none;
+        border-radius: unset;
+        border-bottom: $clr-dark-transparent 1px solid;
+        // new properties
+        padding: 0.5rem 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        &:hover * {
+            color: $clr-focus;
+        }
+    }
+
+    &--small &__title {
+        $font-weight: 300;
+    }
+
     &--collapsed &__toggle {
         border: none;
     }
@@ -113,9 +144,9 @@
         transform: rotateZ(0deg);
     }
 
-    &--collapsed &__target,
-    &--collapsed &__target + &__toggle-overflow,
-    &--no-overflow &__item--overflow {
+    &--collapsed > &__target,
+    &--collapsed > &__target + &__toggle-overflow,
+    &--no-overflow > &__target > &__item--overflow {
         display: none;
     }
 }
