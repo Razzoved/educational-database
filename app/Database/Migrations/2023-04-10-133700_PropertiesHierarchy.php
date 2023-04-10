@@ -5,7 +5,6 @@ namespace App\Database\Migrations;
 use App\Models\PropertyModel;
 use CodeIgniter\Database\Migration;
 
-
 /**
  * Expects the property entity to be already edited. Should have:
  * - tag -> category (changed from property_tag).

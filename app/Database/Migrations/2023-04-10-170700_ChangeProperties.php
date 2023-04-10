@@ -2,9 +2,7 @@
 
 namespace App\Database\Migrations;
 
-use App\Models\PropertyModel;
 use CodeIgniter\Database\Migration;
-
 
 /**
  * Changes the type of property_tag to same as id.
