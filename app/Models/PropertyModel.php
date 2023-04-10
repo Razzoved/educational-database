@@ -193,34 +193,35 @@ class PropertyModel extends Model
         return $data;
     }
 
-    protected function getCategory(array $data)
-    {
-        if (!isset($data['data'])) {
-            return $data;
-        }
+    // protected function getCategory(array $data)
+    // {
+    //     if (!isset($data['data'])) {
+    //         return $data;
+    //     }
 
-        if ($data['method'] === 'find') {
-            $data['data']->tag = $this->_getCategory($data['data']);
-        } else foreach ($data['data'] as $property) {
-            $property->tag = $this->_getCategory($property);
-        }
+    //     if ($data['method'] === 'find') {
+    //         $data['data']->tag = $this->_getCategory($data['data']);
+    //     } else foreach ($data['data'] as $property) {
+    //         $property->tag = $this->_getCategory($property);
+    //     }
 
-        return $data;
-    }
+    //     return $data;
+    // }
 
     protected function _loadChildren(Property $property) : array
     {
-        return $this->where('property_tag', $property->id)
+        return $this->allowCallbacks(true)
+                    ->where('property_tag', $property->id)
                     ->getArray();
     }
 
-    protected function _getCategory(Property $property) : ?string
-    {
-        $tag = $property->property_tag !== 0
-            ? $this->allowCallbacks(false)->find($property->property_tag)
-            : null;
-        return $tag->value ?? null;
-    }
+    // protected function _getCategory(Property $property) : ?string
+    // {
+    //     $tag = $property->property_tag !== 0
+    //         ? $this->allowCallbacks(false)->find($property->property_tag)
+    //         : null;
+    //     return $tag->value ?? null;
+    // }
 
     /** ----------------------------------------------------------------------
      *                              HELPERS
