@@ -17,9 +17,7 @@ class Material extends BaseController
 {
     protected MaterialModel $materials;
     protected MaterialPropertyModel $materialProperties;
-    protected ResourceModel $resources;
     protected RatingsModel $ratings;
-    protected ViewsModel $views;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) : void
     {
@@ -27,9 +25,7 @@ class Material extends BaseController
 
         $this->materials = model(MaterialModel::class);
         $this->materialProperties = model(MaterialPropertyModel::class);
-        $this->resources = model(ResourceModel::class);
         $this->ratings = model(RatingsModel::class);
-        $this->views = model(ViewsModel::class);
     }
 
     /**
@@ -67,7 +63,7 @@ class Material extends BaseController
         $session = session();
         if ($id && !$session->has('m-' . $id) && !$session->get('isLoggedIn')) {
             $session->set('m-' . $id, true);
-            $this->views->increment($material);
+            model(ViewsModel::class)->increment($material);
         }
 
         $data = [
