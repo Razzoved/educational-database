@@ -1,0 +1,44 @@
+@import '../defaults/variables';
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    
+    &--underlined {
+        border-bottom: 1px dotted black;
+    }
+
+    & &__text {
+        opacity: 0;
+        transition: opacity 0.5s;
+        
+        /* Style the frame */
+        width: 120px;
+        padding: 0.5rem 0;
+        text-align: center;
+        color: $clr-light;
+        background-color: $clr-dark;
+        border-radius: $border-radius;
+        
+        /* Position the tooltip text */
+        position: absolute;
+        top: -5px;
+        left: 105%; 
+        z-index: 1;
+
+        /* Make arrow */
+        &::after {
+            content: " ";
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            margin-top: -0.5rem;
+            border-left: $clr-dark 0.5rem solid;
+        }
+    }
+  
+    &:hover &__text {
+        opacity: 1;
+        transition: opacity 0.5s;
+    }
+}

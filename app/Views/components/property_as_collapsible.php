@@ -47,7 +47,10 @@ use App\Entities\Property;
                     'value' => $property->value]))
                 : []; ?>
             <?php foreach (array_merge($parent, $property->children) as $child) : ?>
-                <li class="collapsible__item<?= $index > 5 ? ' collapsible__item--overflow' : '' ?>">
+                <li class="collapsible__item<?= $index > 5 ? ' collapsible__item--overflow' : '' ?> tooltip">
+                    <?php if ($property->description !== '') : ?>
+                        <span class="tooltip__text"><?= esc($property->description) ?></span>
+                    <?php endif; ?>
                     <?= view('components/property_as_collapsible', ['property' => $child, 'type' => $type]) ?>
                 </li>
                 <?php $index++; ?>
