@@ -7,53 +7,52 @@
      *
      * @param array  $targets All possible assignment targets (array of id -> name)
      */
+    $title = $title ?? 'Assign resource';
+    $submit = $submit ?? 'Assign';
 ?>
+
 <div class="modal" id="resource-window">
 
-    <div class="modal-content">
-        <div class="modal-header">
-            <h1><?= $title ?? 'Assign resource' ?></h1>
-            <span class="close" id="user-close" onclick="resourceClose()">&#10005</span>
+    <div class="modal__content">
+        
+        <div class="modal__header">
+            <h1 class="modal__title"><?= $title ?></h1>
+            <span class="modal__close" onclick="modalClose('resource-window')">&#10005</span>
         </div>
 
-        <div class="modal-body">
-            <?php $extra = ['class' => 'form-control'] ?>
-            <?php helper('form') ?>
-
-            <?= form_open(base_url('admin/files/assign'), ['id' => 'resource-form']) ?>
-
-            <?= form_hidden("tmp_path", '') ?>
-
-            <div class="form-floating">
-                <?= form_label('Assign to', 'target') ?>
-                <input id="target"
-                        name="target"
-                        list="target-options"
-                        class="form-control col edit-mr"
-                        placeholder="No material selected"
-                        onblur="verifyTarget()">
+        <div class="modal__body">
+            <form class="form" method="post" action="<?= base_url('admin/files/assign') ?>">
+                <input type="hidden" id="tmp_path" name="tmp_path" value="">
+                <label class="form__label" for="target">Assign to</label>
+                <input class="form__input"
+                    id="target"
+                    name="target"
+                    list="target-options"
+                    placeholder="No material selected"
+                    onblur="verifyTarget()">
                 <datalist id="target-options">
                     <?php foreach ($targets as $id => $title) : ?>
-                        <option value='<?= esc($title) ?>' data-value='<?= $id ?>'>
+                        <option value='<?= esc($title) ?>'><?= $id ?></option>
                     <?php endforeach; ?>
                 </datalist>
-            </div>
-
-            <?= form_close() ?>
+            </form>
         </div>
 
-        <div class="modal-footer">
-            <div style="display: flex; justify-content: space-between;">
-                <button type="button" class="btn btn-primary me-2" style="width: 5rem" onclick="resourceSubmit()"><?= $submit ?? 'Submit' ?></button>
-                <button type="button" class="btn btn-danger" style="width: 5rem" onclick="resourceClose()">Cancel</button>
+        <div class="modal__footer">
+            <div class="modal__button-group">
+                <button type="button" class="modal__button modal__button--submit" onclick="resourceSubmit()"><?= $submit ?></button>
+                <button type="button" class="modal__button modal__button--cancel" onclick="modalClose('resource-window')">Cancel</button>
             </div>
         </div>
+
     </div>
 
     <script type="text/javascript">
+        <?= include_once(base_url('js/modal.js')) ?>
+
         let resourceModal = document.getElementById("resource-window");
-        let resourcePath = resourceModal.querySelector(`input[name="tmp_path"]`);
-        let resourceTarget = document.querySelector("#target");
+        let resourceTarget = resourceModal.querySelector("#target");
+        let resourceOptions = resourceModal.querySelector("#target-options");
 
         // When the user clicks anywhere outside of the modal, close it
         window.addEventListener("click", function(event) {
@@ -62,20 +61,14 @@
             }
         });
 
-        async function resourceClose()
+        function resourceOpen(resourceId)
         {
-            resourceModal.style.display = "none";
-        }
-
-        function resourceOpen(id = undefined)
-        {
-            let resource = document.getElementById(id);
-            let name = resource.querySelector('.item__title').innerHTML;
+            let resource = document.getElementById(resourceId);
             if (resource !== undefined) {
-                document.querySelector('#resource-error')?.remove();
-                resourcePath.value = resource.id;
-                resourceTarget.value = '';
-                resourceModal.style.display = "block";
+                modalOpen('resource-modal', [
+                    'tmp_path' => resource.id,
+                    'target' => '',
+                ]);
             } else {
                 console.debug('ERROR: resource is undefined');
             }
@@ -83,33 +76,21 @@
 
         function resourceSubmit()
         {
-            document.querySelector('#resource-error')?.remove();
-            let form = $('#resource-form');
-            let materialId = document.querySelector("#target-options option[value='" + resourceTarget.value + "']").getAttribute('data-value');
-            $.ajax({
-                type: 'POST',
-                url: form.attr('action') + '/' + materialId,
-                dataType: 'json',
-                data: form.serialize(),
-                success: function(unused) {
-                    document.getElementById(resourcePath.value).remove();
-                    resourceClose();
-                },
-                error: (jqXHR) => {
-                    showError(jqXHR);
-                    resourceClose();
-                }
-            })
+            modalSubmit(
+                'resource-modal',
+                (result) => document.getElementById(result).remove(),
+                resourceOptions.querySelector(`option[value='${resourceTarget.value}'`).innerHTML,
+            );
         }
 
         function verifyTarget()
         {
             let option = document.getElementById('target-options').querySelector(`option[value="${resourceTarget.value.replaceAll('"', '\\"')}"]`);
             if (option === null && resourceTarget.value !== "") {
-                resourceTarget.classList.add('border-danger');
+                resourceTarget.classList.add('form__input--invalid');
                 resourceTarget.value = "";
             } else {
-                resourceTarget.classList.remove('border-danger');
+                resourceTarget.classList.remove('form__input--invalid');
             }
         }
     </script>

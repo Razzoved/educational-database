@@ -10,6 +10,7 @@ temp/
 # allowed
 !assets/
 !js/
+!js/*
 !css/
 !.htaccess
 !favicon.ico
