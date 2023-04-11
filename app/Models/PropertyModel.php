@@ -19,6 +19,7 @@ class PropertyModel extends Model
         'property_tag',
         'property_value',
         'property_priority',
+        'property_description',
     ];
 
     protected $useAutoIncrement = true;
