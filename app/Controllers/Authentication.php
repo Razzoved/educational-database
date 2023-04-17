@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 
-class Login extends BaseController
+class Authentication extends BaseController
 {
     protected array $settings = [
         'email' => [
@@ -26,7 +26,7 @@ class Login extends BaseController
         return view('user_login');
     }
 
-    public function authenticate()
+    public function login()
     {
         if (!$this->validate($this->settings)) {
             return view('user_login', ['errors' => $this->validator->getErrors()]);
@@ -43,5 +43,14 @@ class Login extends BaseController
         return previous_url() === base_url('login')
             ? redirect('admin')
             : redirect()->to(previous_url());
+    }
+
+    public function logout()
+    {
+        if (session()->has('isLoggedIn') && session()->get('isLoggedIn') === true) {
+            session()->remove('user');
+            session()->remove('isLoggedIn');
+        }
+        return redirect()->to(base_url());
     }
 }

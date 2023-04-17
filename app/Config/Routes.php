@@ -30,80 +30,58 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 
-/* Viewable by public */
 $routes->group('/', function($routes) {
-    // ALL materials
-    $routes->addRedirect('', '1');
-    $routes->addRedirect('-(:num)', '$1');
-    $routes->add('(:num)', 'Material::index');
-
-    // TOP rated materials
-    $routes->addRedirect('top-rated', 'top-rated/1');
-    $routes->addRedirect('top-rated/-(:num)', 'top-rated/$1');
-    $routes->add('top-rated/(:num)', 'MaterialTopRated::index');
-
-    // MOST viewed materials
-    $routes->addRedirect('most-viewed', 'most-viewed/1');
-    $routes->addRedirect('most-viewed/-(:num)', 'most-viewed/$1');
-    $routes->add('most-viewed/(:num)', 'MaterialMostViewed::index');
+    $routes->add('', 'Material::index');
+    $routes->add('best', 'MaterialTopRated::index');
+    $routes->add('popular', 'MaterialMostViewed::index');
 
     // SINGLE material
-    $routes->add('single/(:num)', 'Material::get/$1');
-    $routes->post('single/rate', 'Material::rate');
+    $routes->get('(:num)', 'Material::get/$1');
+    $routes->post('(:num)', 'Material::rate/$1');
 
     // AUTHENTICATION
-    $routes->get('login', 'Login::index');
-    $routes->post('login', 'Login::authenticate');
+    $routes->get('login', 'Authentication::index');
+    $routes->post('login', 'Authentication::login');
+    $routes->add('logout', 'Authentication::logout');
 });
 
-/* Viewable by authorised users */
-$routes->group('admin', function($routes) {
+$routes->group('/admin', function($routes) {
     $routes->addRedirect('', 'admin/dashboard');
     $routes->add('dashboard', 'Admin\Dashboard::index');
-    $routes->add('logout', 'Admin\User::logout');
-    $routes->add('profile', 'Admin\User::profile');
+    $routes->add('migration', 'Admin\Migration::index');
+    $routes->add('rollback', 'Admin\Migrate::back');
 
-    $routes->group('materials', function($routes) {
-        $routes->addRedirect('', 'admin/materials/1');
-        $routes->addRedirect('-(:num)', 'admin/materials/$1');
-        $routes->add('(:num)', 'Admin\Material::index');
-        $routes->get('edit', 'Admin\MaterialEditor::index');
-        $routes->post('edit', 'Admin\MaterialEditor::save');
-        $routes->add('edit/(:num)', 'Admin\MaterialEditor::get/$1');
-        $routes->add('delete', 'Admin\MaterialEditor::delete');
+    $routes->group('material', function($routes) {
+        $routes->get('', 'Admin\Material::index');
+        $routes->post('', 'Admin\MaterialEditor::save');
+        $routes->get('new', 'Admin\MaterialEditor::index');
+        $routes->get('(:num)', 'Admin\MaterialEditor::get/$1');
+        $routes->delete('(:num)', 'Admin\MaterialEditor::delete/$1');
     });
 
-    $routes->group('tags', function($routes) {
-        $routes->addRedirect('', 'admin/tags/1');
-        $routes->addRedirect('-(:num)', 'admin/tags/$1');
-        $routes->add('(:num)', 'Admin\Property::index');
-        $routes->get('edit/(:num)', 'Admin\Property::edit/$1');
-        $routes->add('update', 'Admin\Property::update');
-        $routes->add('save', 'Admin\Property::save');
-        $routes->add('delete', 'Admin\Property::delete');
+    $routes->group('tag', function($routes) {
+        $routes->get('', 'Admin\Property::index');
+        $routes->post('', 'Admin\Property::save');
+        $routes->get('new', 'Admin\Property::new');
+        $routes->get('(:num)', 'Admin\Property::get/$1');
+        $routes->delete('(:num)', 'Admin\Property::delete/$1');
     });
 
-    $routes->group('files', function($routes) {
-        $routes->add('', 'Admin\Resource::index');
-        $routes->post('upload', 'Admin\Resource::upload');
-        $routes->post('uploadThumbnail', 'Admin\Resource::uploadThumbnail');
-        $routes->post('assign/(:num)', 'Admin\Resource::assign/$1');
-        $routes->post('assign/(:num)/(:bool)', 'Admin\Resource::assign/$1/$2');
-        $routes->post('delete', 'Admin\Resource::delete');
+    $routes->group('file', function($routes) {
+        $routes->get('', 'Admin\Resource::index');
+        $routes->put('', 'Admin\Resource::upload');
+        $routes->post('(:num)', 'Admin\Resource::assign/$1');
+        $routes->patch('(:num)', 'Admin\Resource::replace/$1');
+        $routes->delete('(:num)', 'Admin\Resource::delete/$1');
     });
 
-    $routes->group('users', function($routes) {
-        $routes->addRedirect('', 'admin/users/1');
-        $routes->addRedirect('-(:num)', 'admin/users/$1');
-        $routes->add('(:num)', 'Admin\User::index');
-        $routes->get('edit', 'Admin\User::getUser');
-        $routes->post('new', 'Admin\User::create');
-        $routes->post('edit', 'Admin\User::update');
-        $routes->post('delete', 'Admin\User::delete');
+    $routes->group('user', function($routes) {
+        $routes->get('', 'Admin\User::index');
+        $routes->post('', 'Admin\User::save');
+        $routes->get('new', 'Admin\User::create');
+        $routes->get('(:num)', 'Admin\User::get/$1');
+        $routes->delete('(:num)', 'Admin\User::delete/$1');
     });
-
-    $routes->add('migrate', 'Admin\Migrate::index');
-    $routes->add('regress', 'Admin\Migrate::back');
 });
 
 /*

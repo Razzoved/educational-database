@@ -19,7 +19,7 @@ class Property
         );
     }
 
-    public static function getFilters(array $source, array $ignore = ['search', 'sort', 'sortDir']) : array
+    public static function getFilters(array $source, array $ignore = ['search', 'sort', 'sortDir', 'page']) : array
     {
         $filters = [];
         foreach ($source as $key => $value) {

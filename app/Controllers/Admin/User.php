@@ -26,13 +26,6 @@ class User extends BaseController
         $this->users = model(UserModel::class);
     }
 
-    public function logout() : RedirectResponse
-    {
-        session()->remove('user');
-        session()->remove('isLoggedIn');
-        return redirect()->to(base_url());
-    }
-
     public function index() : string
     {
         if (!$this->request->getPost('sort')) {
@@ -238,9 +231,8 @@ class User extends BaseController
 
     protected function getUsers(int $perPage = 20) : array
     {
-        $uri = new \CodeIgniter\HTTP\URI(current_url());
         return $this->users->getPage(
-            $uri->getTotalSegments(),
+            $this->request->getGetPost('page') ?? 1 ,
             [
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => $this->request->getGetPost('sort'),

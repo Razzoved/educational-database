@@ -166,9 +166,8 @@ class Property extends BaseController
 
     protected function getProperties(int $perPage = 20) : array
     {
-        $uri = new \CodeIgniter\HTTP\URI(current_url());
         return $this->properties->getPage(
-            $uri->getTotalSegments(),
+            $this->request->getGetPost('page') ?? 1 ,
             [
                 'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
                 'search'    => $this->request->getGetPost('search'),

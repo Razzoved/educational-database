@@ -58,7 +58,7 @@ class PropertyModel extends Model
     public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
     {
         return $this->getUsage(
-            $this->setupQuery($data)->paginate($perPage, 'default', null, $page),
+            $this->setupQuery($data)->paginate($perPage, 'default', $page),
             $data['usage'] ?? false,
         );
     }
