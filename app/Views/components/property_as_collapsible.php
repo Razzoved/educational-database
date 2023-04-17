@@ -48,8 +48,8 @@ use App\Entities\Property;
                 : []; ?>
             <?php foreach (array_merge($parent, $property->children) as $child) : ?>
                 <li class="collapsible__item<?= $index > 5 ? ' collapsible__item--overflow' : '' ?> tooltip">
-                    <?php if ($property->description !== '') : ?>
-                        <span class="tooltip__text"><?= esc($property->description) ?></span>
+                    <?php if ($child->description && $child->description !== '') : ?>
+                        <span class="tooltip__text"><?= esc($child->description) ?></span>
                     <?php endif; ?>
                     <?= view('components/property_as_collapsible', ['property' => $child, 'type' => $type]) ?>
                 </li>
@@ -61,7 +61,10 @@ use App\Entities\Property;
             <button type="button" class="collapsible__toggle-overflow" onclick="toggleOverflow(this)">Show more</button>
         <?php endif; ?>
 
-        <script><?= include_once(ROOTPATH . '/public/js/collapsible.js') ?></script>
+        <script>
+            <?php include_once(ROOTPATH . '/public/js/collapsible.js') ?>
+            <?php include_once(ROOTPATH . '/public/js/tooltip.js') ?>
+        </script>
     </section>
 
 <?php endif; ?>

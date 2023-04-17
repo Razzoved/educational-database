@@ -11,9 +11,9 @@ const modalClose = function (id)
 
 /**
  * Prepares a given modal's values, and then displays it.
- * 
- * @param {*} id 
- * @param {*} data 
+ *
+ * @param {*} id
+ * @param {*} data
  */
 function modalOpen(id, data)
 {
@@ -26,12 +26,12 @@ function modalOpen(id, data)
     if (!modal) {
         console.error(`modalOpen: modal of id[${id}] not found`);
         return;
-    }            
+    }
 
     data.forEach(function (item, index) {
         let target = modal.querySelector(`#${index}`);
         if (!target) {
-            console.error(`modalOpen: target of id[${index}] not found`);
+            console.debug(`modalOpen: target of id[${index}] not found`);
             return;
         }
         target.value = item;
@@ -56,7 +56,7 @@ function modalReset(id)
  * Tries to open the error modal if it exists, if not
  * then tries to create a simple error modal. If it
  * fails then sends out an alert.
- * 
+ *
  * @param {*} status   message to show - string|response
  * @param {string} id  id of error modal
  */
@@ -100,7 +100,7 @@ function modalErrorHide(event, modal) {
 
 /**
  * Submits the form from modal.
- * 
+ *
  * @param {string} id            id of modal
  * @param {function} onSuccess   callback to call on success
  * @param {string} urlParameter  optional suffix to url, adds '/' in between

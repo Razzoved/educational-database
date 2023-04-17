@@ -1,44 +1,29 @@
 @import '../defaults/variables';
 
 .tooltip {
-    position: relative;
-    display: inline-block;
-    
     &--underlined {
         border-bottom: 1px dotted black;
     }
 
     & &__text {
         opacity: 0;
-        transition: opacity 0.5s;
-        
+        transition: opacity 0.33s;
+
         /* Style the frame */
-        width: 120px;
-        padding: 0.5rem 0;
+        max-width: 10rem;
+        padding: 0.25rem 0.5rem;
         text-align: center;
         color: $clr-light;
-        background-color: $clr-dark;
+        background-color: $clr-dark-semi-transparent;
         border-radius: $border-radius;
-        
-        /* Position the tooltip text */
-        position: absolute;
-        top: -5px;
-        left: 105%; 
-        z-index: 1;
 
-        /* Make arrow */
-        &::after {
-            content: " ";
-            position: absolute;
-            top: 50%;
-            right: 100%;
-            margin-top: -0.5rem;
-            border-left: $clr-dark 0.5rem solid;
-        }
+        /* Position the tooltip text */
+        position: fixed;
+        z-index: 999; // always on top
     }
-  
+
     &:hover &__text {
         opacity: 1;
-        transition: opacity 0.5s;
+        transition: opacity 0.33s;
     }
 }

@@ -2,11 +2,11 @@
 
 .collapsible {
     cursor: default;
-    position: relative;
     border: $clr-dark 1px solid;
     border-radius: $border-radius-lg;
     background-color: $clr-light-transparent;
     overflow: hidden;
+    position: relative;
 
     & button {
         width: 100%;
