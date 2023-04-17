@@ -167,7 +167,7 @@ class Property extends BaseController
     protected function getProperties(int $perPage = 20) : array
     {
         return $this->properties->getPage(
-            $this->request->getGetPost('page') ?? 1 ,
+            (int) $this->request->getGetPost('page') ?? 1 ,
             [
                 'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
                 'search'    => $this->request->getGetPost('search'),

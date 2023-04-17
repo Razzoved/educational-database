@@ -232,7 +232,7 @@ class User extends BaseController
     protected function getUsers(int $perPage = 20) : array
     {
         return $this->users->getPage(
-            $this->request->getGetPost('page') ?? 1 ,
+            (int) $this->request->getGetPost('page') ?? 1 ,
             [
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => $this->request->getGetPost('sort'),
