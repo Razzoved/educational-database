@@ -5,7 +5,7 @@
      * @var string $homeURL optional parameter, changes the reference of brand image
      * @var string $activePage last url segment of the current page
      */
-    $refUrl = defined('ROOTURL') ? ROOTURL : base_url();
+    $refUrl = defined('ROOTURL') ? ROOTURL : url_to('Material::index');
 
     $activePage = isset($activePage) ? $activePage : '';
     $default = $activePage === '' ? ' active' : '';
@@ -21,22 +21,22 @@
             onclick="window.location.href='<?= $refUrl ?>'">
         <ul class="navbar__list">
             <li class="navbar__item<?= $default ?>">
-                <a class="navbar__button" href="<?= base_url() ?>">
+                <a class="navbar__button" href="<?= url_to('Material::index') ?>">
                     All materials
                 </a>
             </li>
             <li class="navbar__item<?= $topRated ?>">
-                <a class="navbar__button" href="<?= base_url('top-rated') ?>">
+                <a class="navbar__button" href="<?= url_to('MaterialTopRated::index') ?>">
                     Top rated
                 </a>
             </li>
             <li class="navbar__item<?= $mostViewed ?>">
-                <a class="navbar__button" href="<?= base_url('most-viewed') ?>">
+                <a class="navbar__button" href="<?= url_to('MaterialMostViewed::index') ?>">
                     Most viewed
                 </a>
             </li>
             <li class="navbar__item navbar__item--to-right navbar__item--switch<?= session('isLoggedIn') ? '' : ' navbar__item--auth'?><?= $login ?>">
-                <a class="navbar__button" href="<?= base_url('admin') ?>">
+                <a class="navbar__button" href="<?= url_to('Authentication::login') ?>">
                     <?= session('isLoggedIn') ? 'To administration' : 'Login' ?>
                 </a>
             </li>
