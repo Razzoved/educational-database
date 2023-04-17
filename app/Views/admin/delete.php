@@ -55,10 +55,8 @@
         function deleteSubmit()
         {
             $.ajax({
-                type: 'POST',
-                url: '<?= $action ?>',
-                data: {<?= $idName ?? 'id' ?>: deleteModal.getAttribute('data-value')},
-                dataType: 'json',
+                type: 'DELETE',
+                url: '<?= $action ?>'.replace(/[0-9]+/, deleteModal.getAttribute('data-value')),
                 success: function(data) {
                     deleteId(data);
                 },

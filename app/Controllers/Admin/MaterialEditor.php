@@ -109,23 +109,24 @@ class MaterialEditor extends BaseController
      * attribute. It removes material of given ID.
      *
      * If successful, material is echoed back to the client.
+     *
+     * @param int $id ID of material to be removed
      */
-    public function delete() : void
+    public function delete(int $id) : void
     {
         if (!$this->request->isAJAX()) {
             $this->response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED, "Request is not an AJAX request");
             return;
         }
 
-        $id = $this->request->getPost('id');
         if ($id <= 0) {
-            $this->resourceLibrary->echoError('Invalid material id');
+            $this->resourceLibrary->echoError('Invalid material id!', Response::HTTP_BAD_REQUEST);
             return;
         }
 
-        $material = $this->materials->getById((int) $id);
+        $material = $this->materials->get($id);
         if ($material === null) {
-            $this->resourceLibrary->echoError('Material does not exist');
+            $this->resourceLibrary->echoError('Material does not exist!', Response::HTTP_NOT_FOUND);
             return;
         }
 
@@ -133,7 +134,7 @@ class MaterialEditor extends BaseController
             $this->deleteResources($material);
             $this->materials->delete($material->id);
         } catch (Exception $e) {
-            $this->resourceLibrary->echoError('Could not delete material: ' . $e->getMessage());
+            $this->resourceLibrary->echoError('Unknown error happened, try again later!');
             return;
         }
 
