@@ -79,7 +79,7 @@
 
         button.onclick = () => removeById(id);
 
-        a.href = `<?= base_url('materials') ?>/${idValue}`
+        a.href = '<?= url_to('Material::get', $idValue) ?>'
         a.innerHTML = value;
 
         newDiv.id = id;

@@ -40,8 +40,8 @@ class Authentication extends BaseController
             'isLoggedIn' => true,
         ]);
 
-        return previous_url() === base_url('login')
-            ? redirect('admin')
+        return previous_url() === url_to('Authentication::login')
+            ? redirect()->to(url_to('Admin\Dashboard::index'))
             : redirect()->to(previous_url());
     }
 
@@ -51,6 +51,6 @@ class Authentication extends BaseController
             session()->remove('user');
             session()->remove('isLoggedIn');
         }
-        return redirect()->to(base_url());
+        return redirect()->to(url_to('Material::index'));
     }
 }

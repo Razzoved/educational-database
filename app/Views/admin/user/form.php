@@ -2,12 +2,17 @@
     /**
      * MODAL: User editor.
      *
-     * @param string $title Title of modal
-     * @param string $submit Custom text for submit button
+     * @param int $id       id of the user, OPTIONAL
+     * @param string $name  name of the user, OPTIONAL
+     * @param string $email email of the user, OPTIONAL
      */
 
-    $title = $title ?? 'New user';
-    $submit = $submit ?? 'Create';
+    $title = isset($id) && $id !== 0 ? 'Update user' : 'New user';
+    $submit = isset($id) && $id !== 0 ? 'Edit' : 'Create';
+
+    $id = $id ?? "";
+    $name = $name ?? "";
+    $email = $email ?? "";
 ?>
 
 <div class="modal" id="user-window">
@@ -20,33 +25,35 @@
         </div>
 
         <div class="modal__body">
-            <form class="form" method="post" action="<?= base_url('admin/users')?>">
-                <input type="hidden" id="id" name="id">
+            <form class="form" method="post" action="<?= url_to('Admin\User::save')?>">
+                <input type="hidden" id="id" name="id" value="<?= $id ?>">
 
                 <label class="form__label" for="name">Username</label>
                 <input class="form__input"
                     type="text"
                     id="name"
                     name="name"
+                    value="<?= $name ?>"
                     placeholder="Enter username">
-                
+
                 <label class="form__label" for="email">Email</label>
                 <input class="form__input"
                     type="email"
                     id="email"
                     name="email"
+                    value="<?= $email ?>"
                     placeholder="name@example.com">
 
                 <fieldset class="form__group">
                     <small id="pass-notice" hidden='true'>Password will not change if left empty:</small>
-    
+
                     <label class="form__label" for="password">Password</label>
                     <input class="form__input"
                         type="password"
                         id="password"
                         name="password"
                         placeholder="**********">
-                    
+
                     <label class="form__label" for="pass-confirm">Confirm password</label>
                     <input class="form__input"
                         type="password"
@@ -67,65 +74,6 @@
     </div>
 
     <script type="text/javascript">
-        <?= include_once(base_url('js/modal.js')) ?>
-
-        let userEdit = false;
-        let userModal = document.getElementById("user-window");
-        let passwordNote = document.getElementById('pass-notice');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.addEventListener("click", function(event) {
-            if (event.target == userModal) {
-                userModal.style.display = "none";
-            }
-        });
-
-        function userOpen(id = undefined)
-        {
-            userEdit = false;
-            passwordNote.hidden = false;
-
-            if (id !== undefined) {
-                $.ajax({
-                    type: 'GET',
-                    url: '<?= base_url('admin/users/edit') ?>',
-                    data: { id },
-                    dataType: 'json',
-                    success: function(result) {
-                        result = (result.id === undefined)
-                            ? JSON.parse(result)
-                            : result;
-                        userEdit = true;
-                        passwordNote.hidden = false;
-                        modalOpen('user-window', [
-                            'id'    => result.id,
-                            'name'  => result.name,
-                            'email' => result.email,
-                        ]);
-                    },
-                    error: (jqHXR) => showError(jqHXR)
-                });
-            } else {
-                modalOpen('user-window', []);
-            }
-        }
-
-        function userSubmit()
-        {
-            modalSubmit(
-                'user-window',
-                (result) => {
-                    result = (result.id === undefined)
-                        ? JSON.parse(result)
-                        : result;
-                    if (userEdit) {
-                        updateData(result);
-                    } else {
-                        appendData(result);
-                    }
-                },
-                userEdit ? 'edit' : 'new'
-            );
-        }
+        <?= include_once(FCPATH . 'js/modal.js') ?>
     </script>
 </div>

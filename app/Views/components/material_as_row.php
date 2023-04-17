@@ -9,8 +9,8 @@
     use App\Entities\Cast\StatusCast;
 
     $class = 'item' . ($material->status === StatusCast::PUBLIC ? '' : ' private');
-    $view = base_url('single/' . $material->id);
-    $edit = base_url('admin/materials/edit/' . $material->id);
+    $view = url_to('Material::get', $material->id);
+    $edit = url_to('Admin\MaterialEditor::get', $material->id);
 ?>
 <article id="<?= $material->id ?>" class="<?= $class ?>">
     <div class="item__header">

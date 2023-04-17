@@ -1,5 +1,5 @@
 <div id="relation-<?= $id ?? "template"?>" <?php if (isset($hidden) === false || $hidden === true) echo 'hidden'?>>
-    <a href="<?= base_url('single/' . $id) ?>"><?= $value ?></a>
+    <a href="<?= url_to('Material::get', $id) ?>"><?= $value ?></a>
     <input name="relations[<?= $id ?? '0' ?>]"
         type="hidden"
         value="<?= esc($value ?? 'TEMPLATE') ?>"

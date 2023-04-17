@@ -14,14 +14,14 @@
 <div class="modal" id="resource-window">
 
     <div class="modal__content">
-        
+
         <div class="modal__header">
             <h1 class="modal__title"><?= $title ?></h1>
             <span class="modal__close" onclick="modalClose('resource-window')">&#10005</span>
         </div>
 
         <div class="modal__body">
-            <form class="form" method="post" action="<?= base_url('admin/files/assign') ?>">
+            <form class="form" method="post" action="<?= url_to('Admin\Resource::assign') ?>">
                 <input type="hidden" id="tmp_path" name="tmp_path" value="">
                 <label class="form__label" for="target">Assign to</label>
                 <input class="form__input"
@@ -48,7 +48,7 @@
     </div>
 
     <script type="text/javascript">
-        <?= include_once(base_url('js/modal.js')) ?>
+        <?= include_once(FCPATH . 'js/modal.js') ?>
 
         let resourceModal = document.getElementById("resource-window");
         let resourceTarget = resourceModal.querySelector("#target");
@@ -65,10 +65,10 @@
         {
             let resource = document.getElementById(resourceId);
             if (resource !== undefined) {
-                modalOpen('resource-modal', [
-                    'tmp_path' => resource.id,
-                    'target' => '',
-                ]);
+                modalOpen('resource-modal', {
+                    tmp_path: resource.id,
+                    target: '',
+                });
             } else {
                 console.debug('ERROR: resource is undefined');
             }

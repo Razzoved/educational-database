@@ -14,7 +14,7 @@ use App\Entities\Property;
 <?php if (!isset($property->children) || empty($property->children)) : ?>
 
     <?php if ($type === 'button') : ?>
-        <form method="get" action='<?= base_url('/1') ?>' style="display: block">
+        <form method="get" action='<?= url_to('Material::index') ?>' style="display: block">
             <input type="hidden"
                 name="#<?= $property->tag ?>[<?= $property->id ?>]"
                 value="on">

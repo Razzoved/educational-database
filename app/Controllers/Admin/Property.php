@@ -88,7 +88,7 @@ class Property extends BaseController
             return $this->getEditorErrorView($this->validator);
         }
 
-        return redirect()->to(base_url('admin/tags'));
+        return redirect()->to(url_to('Admin\Property::index'));
     }
 
     public function save() : void

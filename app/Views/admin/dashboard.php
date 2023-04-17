@@ -21,7 +21,7 @@
             <h2>Most viewed recently</h2>
             <ol class="dashboard__most-viewed">
                 <?php foreach ($materials as $m) : ?>
-                <li class="dashboard__material" onclick="window.location.href='<?= base_url('single/' . $m->id) ?>'">
+                <li class="dashboard__material" onclick="window.location.href='<?= url_to('Material::get', $m->id) ?>'">
                     <img src="<?= $m->getThumbnail()->getURL() ?>" alt="material thumbnail" />
                     <p class="dashboard__subtitle"><?= $m->title ?><p>
                     <p><?= $m->views ?> view<?= $m->views !== 1 ? 's' : ''?></p>
@@ -34,7 +34,7 @@
             <h2>Most viewed all-time</h2>
             <ol class="dashboard__most-viewed">
                 <?php foreach ($materialsTotal as $m) : ?>
-                <li class="dashboard__material" onclick="window.location.href='<?= base_url('single/' . $m->id) ?>'">
+                <li class="dashboard__material" onclick="window.location.href='<?= url_to('Material::get', $m->id) ?>'">
                     <img src="<?= $m->getThumbnail()->getURL() ?>" alt="material thumbnail" />
                     <p class="dashboard__subtitle"><?= $m->title ?><p>
                     <p><?= $m->views ?> view<?= $m->views !== 1 ? 's' : ''?></p>
@@ -61,7 +61,7 @@
             <h2>Newest</h2>
             <ul class="dashboard__recent">
                 <?php foreach ($recentPublished as $r) : ?>
-                <li class="dashboard__material" onclick="location.href='<?= base_url('admin/materials/1?search=' . urlencode($r->title)) ?>'">
+                <li class="dashboard__material" onclick="location.href='<?= url_to('Admin\Material::index') . '?search=' . urlencode($r->title) ?>'">
                     <p class="dashboard__subtitle"><?= $r->title ?><p>
                     <p><?= $r->publishedToDate() ?></p>
                 </li>
@@ -73,7 +73,7 @@
             <h2>Updated</h2>
             <ul class="dashboard__recent">
                 <?php foreach ($recentUpdated as $r) : ?>
-                <li class="dashboard__material" onclick="location.href='<?= base_url('admin/materials/1?search=' . urlencode($r->title)) ?>'">
+                <li class="dashboard__material" onclick="location.href='<?= url_to('Admin\Material::index') . '?search=' . urlencode($r->title) ?>'">
                     <p class="dashboard__subtitle"><?= $r->title ?><p>
                     <p><?= $r->sinceLastUpdate() ?></p>
                 </li>

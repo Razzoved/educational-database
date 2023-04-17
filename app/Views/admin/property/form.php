@@ -7,23 +7,23 @@
      *
      * @param array  $targets All possible assignment targets (array of id -> name)
      */
-    
+
     $title = $title ?? "Create property";
     $submit = $submit ?? "Create";
     ?>
 
 <div class="modal" id="property-window">
     <div class="modal__content">
-        
+
         <div class="modal__header">
             <h1 class="modal__title"><?= $title ?></h1>
             <span class="modal__close" onclick="modalClose('property-window')">&#10005</span>
         </div>
-        
+
         <div class="modal__body">
-            <form class="form" method="post" action="<?= base_url('admin/tags')?>">
-                <input type="hidden" id="id" name="id" value="<?= set_value('id') ?>">
-                
+            <form class="form" method="post" action="<?= url_to('Admin\Property::index')?>">
+                <input type="hidden" id="id" name="id" value="">
+
                 <fieldset class="form__group">
                     <label for="tag" class="form__label">Tag</label>
                     <input class="form__input"
@@ -31,7 +31,7 @@
                         id="tag"
                         name="tag"
                         placeholder="Enter tag"
-                        value="<?= set_value('tag') ?>"
+                        value=""
                         required>
                     <label for="value" class="form__label">Value</label>
                     <input class="form__input"
@@ -39,10 +39,10 @@
                         id="value"
                         name="value"
                         placeholder="Enter value"
-                        value="<?= set_value('value') ?>"
+                        value=""
                         required>
                 </fieldset>
-                    
+
                 <label for="description" class="form__label">Description</label>
                 <textarea class="form__input"
                     id="description"
@@ -68,7 +68,7 @@
         </div>
 
         <div class="modal__footer">
-            <div style="modal__button-group">
+            <div class="modal__button-group">
                 <button type="modal__button modal__button--submit" onclick="propertySubmit()"><?= $submit ?? 'Submit' ?></button>
                 <button type="modal__button modal__button--cancel" onclick="modalClose('property-window')">Cancel</button>
             </div>
@@ -76,15 +76,15 @@
 
     </div>
     <script type="text/javascript">
-        <?= include_once(base_url('js/modal.js')) ?>
+        <?= include_once(FCPATH . 'js/modal.js') ?>
 
         let propertyEdit = false;
         let propertyModal = document.getElementById("property-window");
 
         // When the user clicks anywhere outside of the modal, close it
         window.addEventListener("click", function(event) {
-            if (event.target == userModal) {
-                userModal.style.display = "none";
+            if (event.target == propertyModal) {
+                propertyModal.style.display = "none";
             }
         });
 
@@ -95,7 +95,7 @@
             if (id !== undefined) {
                 $.ajax({
                     type: 'GET',
-                    url: '<?= base_url('admin/tags/edit') ?>',
+                    url: '<?= url_to('Admin\Property::get', $id) ?>',
                     data: { id },
                     dataType: 'json',
                     success: function(result) {
@@ -103,13 +103,7 @@
                             ? JSON.parse(result)
                             : result;
                         propertyEdit = true;
-                        modalOpen('property-window', [
-                            'id'          => result.id,
-                            'tag'         => result.tag,
-                            'value'       => result.value,
-                            'priority'    => result.priority,
-                            'description' => result.description
-                        ]);
+                        modalOpen('property-window', result);
                     },
                     error: (jqHXR) => showError(jqHXR)
                 });
@@ -135,5 +129,5 @@
                 propertyEdit ? 'edit' : 'new'
             );
         }
-    <script>
+    </script>
 </div>

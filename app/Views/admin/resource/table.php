@@ -25,6 +25,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>
-<?= view('admin/delete', ['action' => base_url('admin/files/delete'), 'idName' => 'path']) ?>
+<?= view('admin/delete', ['action' => url_to('Admin\Resource::delete', 0), 'idName' => 'path']) ?>
 <?= view('admin/resource/form', ['title' => 'Resource assignment', 'submit' => 'Assign', 'targets' => $targets]) ?>
 <?= $this->endSection() ?>

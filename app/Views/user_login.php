@@ -12,7 +12,7 @@
     <?php helper('form') ?> <!-- set_value function -->
 
     <div class="page page--centered page--dark">
-        <form class="form" method="post" action="<?= base_url('login') ?>" autocomplete="on">
+        <form class="form" method="post" action="<?= url_to('Authentication::login') ?>" autocomplete="on">
             <!-- logo with errors -->
             <div class="form__group form__group--centered">
                 <img class="form__logo" src="<?= base_url('public/assets/enai-logo-transparent.png') ?>" alt="ENAI logo">

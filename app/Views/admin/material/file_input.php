@@ -60,7 +60,7 @@
         console.log("SENDING", file);
 
         $.ajax({
-            url: '<?= base_url("admin/files/upload") ?>',
+            url: '<?= url_to("Admin\Resource::upload") ?>',
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             type: 'POST',
             data: formData,

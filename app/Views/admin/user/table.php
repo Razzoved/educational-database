@@ -11,7 +11,7 @@
         <h1 class="page__title"><?= $title ?></h1>
 
         <div class="page-controls">
-            <?= view('search_bar', ['action' => base_url('admin/users/1'), 'options' => $options]) ?>
+            <?= view('search_bar', ['action' => url_to('Admin\User::index'), 'options' => $options]) ?>
             <?= view('sort_bar', ['sorters' => ['Name', 'Email'], 'create' => 'userOpen()']); ?>
         </div>
 
@@ -31,12 +31,38 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>
-<?= view('admin/delete', ['action' => base_url('admin/users/delete'), 'idName' => 'email']) ?>
+<?= view('admin/delete', ['action' => url_to('Admin\User::delete', 0), 'idName' => 'email']) ?>
 <?= view('admin/user/form', ['title' => 'User form', 'submit' => 'Save']) ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
 <script>
+    function userOpen(id = undefined)
+    {
+        userEdit = false;
+        passwordNote.hidden = false;
+
+        if (id !== undefined) {
+            $.ajax({
+                type: 'GET',
+                url: '<?= url_to('Admin\User::get', $id) ?>',
+                data: { id },
+                dataType: 'json',
+                success: function(result) {
+                    result = (result.id === undefined)
+                        ? JSON.parse(result)
+                        : result;
+                    userEdit = true;
+                    passwordNote.hidden = false;
+                    modalOpen('user-window', result);
+                },
+                error: (jqHXR) => showError(jqHXR)
+            });
+        } else {
+            modalOpen('user-window', []);
+        }
+    }
+
     function updateData(data)
     {
         let element = document.getElementById(`${data.email}`);

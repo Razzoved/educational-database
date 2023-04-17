@@ -10,7 +10,7 @@
 <h2><?= $title ?></h5>
 <ul class="relations">
     <?php foreach ($materials as $material) : ?>
-    <li class="relations__item" onclick="window.location.href='<?= base_url('single/' . $material->id) ?>'" >
+    <li class="relations__item" onclick="window.location.href='<?= url_to('Material::get', $material->id) ?>'" >
         <img class="relations__thumbnail"
             src="<?= $material->getThumbnail()->getURL() ?>"
             alt="Relation thumbnail">

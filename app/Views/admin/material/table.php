@@ -14,10 +14,10 @@
     <div class="page__content">
         <h1 class="page__title"><?= $title ?></h1>
         <div class="page-controls">
-            <?= view('search_bar', ['action' => base_url('admin/materials/1'), 'options' => $options]) ?>
+            <?= view('search_bar', ['action' => url_to('Admin\Material::index'), 'options' => $options]) ?>
             <?= view('sort_bar', [
                 'sorters' => ['ID', 'Title', 'Created at', 'Updated at', 'Views'],
-                'create' => "window.location.href='" . base_url('admin/materials/edit') . "'"]) ?>
+                'create' => "window.location.href='" . url_to('Admin\MaterialEditor::index') . "'"]) ?>
         </div>
 
         <div class="table" id="items">
@@ -41,5 +41,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>
-<?= view('admin/delete', ['action' => base_url('admin/materials/delete')]) ?>
+<?= view('admin/delete', ['action' => url_to('Admin\MaterialEditor::delete', 0)]) ?>
 <?= $this->endSection() ?>

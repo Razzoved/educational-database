@@ -36,7 +36,7 @@
 ?>
 
 <div class="page">
-    <form class="form" method="post" method="post" action="<?= base_url('admin/materials/edit') ?>" enctype="multipart/form-data">
+    <form class="form" method="post" method="post" action="<?= url_to('Admin\MaterialEditor::save') ?>" enctype="multipart/form-data">
 
         <!-- title -->
         <div class="form__group form__group--centered form__group--separated">

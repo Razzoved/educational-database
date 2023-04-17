@@ -91,14 +91,12 @@
     let ratings = document.querySelector('.rating');
 
     /**
-     * This function handles user interaction with the rating system.
-     *
-     * @param {string}  materialId  id of material, expected to be convertible to integer
+     * This function handles user interaction with the rating system
      * @param {int}     rating      value the user wants to rate the post with
      */
     function rating_rate(materialId, rating) {
         $.ajax({
-            url: '<?= base_url('single/rate') ?>',
+            url: '<?= url_to('Material::rate', $material->id) ?>',
             type: 'POST',
             dataType: 'json',
             data: {
@@ -142,7 +140,7 @@
         Array.from(ratings.querySelectorAll('.rating__stars > i')).forEach(c => {
             c.setAttribute('onmouseover', `rating_reload_class('${index}', 'hover')`);
             c.setAttribute('onmouseout', `rating_reload_class(0, 'hover')`);
-            c.setAttribute('onclick', `rating_rate('<?= $material->id ?>', ${index})`);
+            c.setAttribute('onclick', `rating_rate(${index})`);
             rating_reload_class(<?= $rating ?>, 'own');
             index++;
         });

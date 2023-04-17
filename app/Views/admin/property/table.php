@@ -21,7 +21,7 @@
         <h1 class="page__title"><?= $title ?></h1>
 
         <div class="page-controls">
-            <?= view('search_bar', ['action' => base_url('admin/tags/1'), 'options' => $options]) ?>
+            <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
             <?= view('sort_bar', ['sorters' => ['Id', 'Tag', 'Value']]) ?>
         </div>
 
@@ -45,7 +45,8 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>
-<?= view('admin/delete', ['action' => base_url('admin/tags/delete')]) ?>
+<?= view('admin/delete', ['action' => url_to('Admin\Property::delete', 0)]) ?>
+<?= view('admin/property/form') ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -56,7 +57,7 @@
         let valuator = document.getElementById('value');
 
         $.ajax({
-            url: '<?= base_url('admin/tags/save') ?>',
+            url: '<?= url_to('Admin\Property::save') ?>',
             type: 'POST',
             dataType: 'json',
             data: {

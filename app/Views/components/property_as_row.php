@@ -5,7 +5,7 @@
      *
      * @var \App\Entities\Property $property object of property entity class
      */
-    $edit = base_url('admin/tags/edit/' . $property->id);
+    $edit = url_to('Admin\Property::get', $property->id);
 ?>
 <!-- MATERIAL DISPLAYED AS AN EDITABLE ROW -->
 <div id="<?= $property->id ?>" class="tooltip">
@@ -13,10 +13,10 @@
         <div class="item__header">
             <h2 class="item__title" data-value="value"><?= $property->value ?></h2>
             <div class="item__controls">
-                <a class="item__edit" href="<?= $edit ?>">
+                <button class="item__edit" type="button" onclick="propertyOpen(<?= $property->id ?>)">
                     Edit
-                </a>
-                <button class="item__delete" type="button" class="delete" onclick="deleteOpen(<?= $property->id ?>)">
+                </button>
+                <button class="item__delete" type="button" onclick="deleteOpen(<?= $property->id ?>)">
                     &#10005;
                 </button>
             </div>
