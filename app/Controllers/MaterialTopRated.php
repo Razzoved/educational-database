@@ -20,9 +20,8 @@ class MaterialTopRated extends Material
 
     protected function getMaterials(int $perPage = 10) : array
     {
-        $uri = new \CodeIgniter\HTTP\URI(current_url());
         return $this->materials->getPage(
-            $uri->getTotalSegments(),
+            (int) $this->request->getGetPost('page') ?? 1,
             [
                 'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
                 'search'    => $this->request->getGetPost('search'),
