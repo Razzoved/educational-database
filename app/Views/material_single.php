@@ -16,7 +16,7 @@
 
 <div class="page">
     <div class="page__sidebar">
-        <?= view('sidebar_buttons', ['properties' => $material->getGroupedProperties()]) ?>
+        <?= view('sidebar_buttons', ['properties' => $material->properties]) ?>
     </div>
 
     <div class="page__content">

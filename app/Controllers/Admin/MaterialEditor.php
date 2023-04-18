@@ -57,6 +57,7 @@ class MaterialEditor extends BaseController
         $material = $this->materials->get($id);
         if (!$material)
             throw PageNotFoundException::forPageNotFound();
+        $material->properties = model(MaterialPropertyModel::class)->getArray($id);
         return $this->setupPost($material)->index();
     }
 

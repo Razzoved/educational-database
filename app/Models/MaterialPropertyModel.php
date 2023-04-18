@@ -22,11 +22,11 @@ class MaterialPropertyModel extends Model
         'property_id'
     ];
     protected $useAutoIncrement = true;
-    protected $allowCallbacks = true;
-    protected $afterFind = [
-        'getProperty'
-    ];
-    protected $returnType = Property::class;
+    // protected $allowCallbacks = true;
+    // protected $afterFind = [
+    //     'getProperty'
+    // ];
+    // protected $returnType = Property::class;
 
     /** ----------------------------------------------------------------------
      *                           PUBLIC METHODS
@@ -34,33 +34,57 @@ class MaterialPropertyModel extends Model
 
     public function get(int $materialId) : array
     {
-        return $this->where("$this->table.material_id", $materialId)
-                    ->findAll();
+        $properties = new Property([
+            'children' => model(PropertyModel::class)
+                ->where('property_tag', 0)
+                ->allowCallbacks(true)
+                ->getArray(),
+        ]);
+
+        $this->select('property_id')
+             ->groupBy('property_id')
+             ->having('COUNT(material_id) > 0')
+             ->where('material_id', $materialId);
+
+        $this->recursiveFilter(
+            $properties,
+            array_column($this->findAll(), 'property_id')
+        );
+
+        return $properties->children;
+    }
+
+    public function getArray(int $materialId) : array
+    {
+        return model(PropertyModel::class)
+            ->join($this->table, 'property_id')
+            ->where('material_id', $materialId)
+            ->getArray();
     }
 
     public function getUsed() : array
     {
+        $properties = new Property([
+            'children' => model(PropertyModel::class)
+                ->where('property_tag', 0)
+                ->allowCallbacks(true)
+                ->getArray(),
+        ]);
+
         $this->select('property_id')
              ->groupBy('property_id')
              ->having('COUNT(material_id) >', 0);
-
         if (!session('isLoggedIn')) {
             $this->join('materials', 'material_id')
                  ->where('material_status', StatusCast::PUBLIC);
         }
 
-        $ids = array_map(
-            function($p) { return $p->id; },
-            $this->allowCallbacks(false)->findAll()
+        $this->recursiveFilter(
+            $properties,
+            array_column($this->findAll(), 'property_id')
         );
 
-        $result = model(PropertyModel::class)->where('property_tag', 0)
-                                             ->allowCallbacks(true)
-                                             ->getArray();
-        foreach ($result as $property) {
-            $this->recursiveFilter($property, $ids);
-        }
-        return $result;
+        return $properties->children;
     }
 
     /**
@@ -106,7 +130,7 @@ class MaterialPropertyModel extends Model
      */
     public function saveMaterial(Material $material) : bool
     {
-        $oldProperties = $this->get($material->id);
+        $oldProperties = $this->getArray($material->id);
 
         $toDelete = array_filter($oldProperties, function($p) use ($material) {
             return $p && !in_array($p, $material->properties);
@@ -139,22 +163,22 @@ class MaterialPropertyModel extends Model
      *                              CALLBACKS
      *  ------------------------------------------------------------------- */
 
-    protected function getProperty(array $data)
-    {
-        if (!isset($data['data'])) {
-            return $data;
-        }
+    // protected function getProperty(array $data)
+    // {
+    //     if (!isset($data['data'])) {
+    //         return $data;
+    //     }
 
-        if ($data['method'] === 'find') {
-            $data['data'] = model(PropertyModel::class)->get($data['data']->id);
-        } else foreach ($data['data'] as $k => $v) {
-            if ($v) {
-                $data['data'][$k] = model(PropertyModel::class)->get($v->id);
-            }
-        }
+    //     if ($data['method'] === 'find') {
+    //         $data['data'] = model(PropertyModel::class)->get($data['data']->id);
+    //     } else foreach ($data['data'] as $k => $v) {
+    //         if ($v) {
+    //             $data['data'][$k] = model(PropertyModel::class)->get($v->id);
+    //         }
+    //     }
 
-        return $data;
-    }
+    //     return $data;
+    // }
 
     /** ----------------------------------------------------------------------
      *                              HELPERS

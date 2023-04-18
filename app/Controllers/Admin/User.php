@@ -6,7 +6,6 @@ use App\Controllers\BaseController;
 use App\Entities\User as EntitiesUser;
 use App\Models\UserModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -17,9 +16,6 @@ class User extends BaseController
 {
     private UserModel $users;
 
-    /**
-     * Constructor.
-     */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
@@ -44,177 +40,114 @@ class User extends BaseController
         return view(Config::VIEW . 'user/table', $data);
     }
 
-    /**
-     * Ajax handler that prepares and echoes back a user.
-     * Expects 'email' to be loaded into _GET.
-     * Throws error if not found.
-     */
-    public function getUser() : void
+    public function save() : void
     {
-        $user = $this->users->getEmail($this->request->getGet('email') ?? "");
-        if ($user === null)
-            throw PageNotFoundException::forPageNotFound();
+        $user = new EntitiesUser($this->request->getPost());
 
-        $user->password = '';
-        echo json_encode($user->toRawArray());
-    }
-
-    /**
-     * Ajax handler for updating user.
-     * Expects 'name', 'email', 'password' to be loaded into _POST.
-     *
-     * @return void if successful, echoes back user
-     */
-    public function update() : void
-    {
         $rules = [
-            'name'  => 'required|min_length[2]|max_length[50]',
-            'email' => 'required|min_length[4]|max_length[320]|valid_email|is_not_unique[users.user_email]',
-        ];
-
-        if ($this->request->getPost('password') !== "") {
-            $rules['password'] = 'required|min_length[4]|max_length[50]';
-            $rules['confirmPassword'] = 'matches[password]';
-        } else {
-            $_POST['password'] = null;
-        }
-
-        $this->ajaxSave($rules, true);
-    }
-
-    /**
-     * Ajax handler for creating user.
-     * Expects 'name', 'email', 'password' to be loaded into _POST.
-     *
-     * @return void if successful, echoes back user
-     */
-    public function create() : void
-    {
-        $rules = [
+            'id'              => 'required|is_not_unique[users.user_id]',
             'name'            => 'required|min_length[2]|max_length[50]',
-            'email'           => 'required|min_length[4]|max_length[320]|valid_email|is_unique[users.user_email]',
+            'email'           => 'required|min_length[4]|max_length[320]|valid_email',
             'password'        => 'required|min_length[4]|max_length[50]',
             'confirmPassword' => 'matches[password]'
         ];
 
-        $this->ajaxSave($rules, false);
-    }
-
-    /**
-     * Ajax handler for deleting a user.
-     * Expects validator to be loaded in _POST.
-     * Expects 'email' to be loaded in either _POST or _GET.
-     *
-     * @return void if successful, echoes back user, else echoes back modal
-     */
-    public function delete() : void
-    {
-        if (!$this->checkAjax()) return;
-
-        if (!$this->validate(['email' => "required|is_not_unique[users.user_email]"]) || !session('user')) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'User deletion error',
-                'message' => $this->validator->listErrors()
-            ]);
-            return;
+        if (!$user->id) {
+            unset($rules['id']);
+            $rules['email'] .= '|is_unique[users.user_email]';
         }
 
-        $email = $this->request->getPost('email') ?? 'DOES NOT HAPPEN';
-
-        // cannot delete self
-        if (session('user')->email === $email) {
-            $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED);
-            echo view('errors/error_modal', [
-                'title' => 'User deletion error',
-                'message' => 'You cannot delete yourself!<br>Please ask the administrator for confirmation.'
-            ]);
-            return;
+        if (!$user->password) {
+            unset($rules['password']);
+            unset($rules['confirmPassword']);
         }
-
-        // try to delete the user
-        try {
-            $this->users->deleteEmail($email);
-        } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED);
-            echo view('errors/error_modal', [
-                'title' => 'User deletion error',
-                'message' => $email . ': ' . $e->getMessage()
-            ]);
-            return;
-        }
-
-        echo json_encode($email);
-    }
-
-    /**
-     * Convenience method that handles ajax requests to save into database.
-     * May result in exception when saving.
-     *
-     * @param array $rules what to check in post data
-     * @param bool $isUpdate wheter to update or insert
-     */
-    private function ajaxSave(array $rules, bool $isUpdate) : void
-    {
-        if (!$this->checkAjax()) return;
 
         if (!$this->validate($rules)) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE, 'User validation failed')
-                           ->setJSON($this->validator->listErrors())
-                           ->send();
+            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            echo view('errors/error_modal', [
+                'title'   => 'Saving of user failed',
+                'message' => array_values($this->validator->getErrors())[0],
+            ]);
             return;
         }
 
-        $user = null;
         try {
-            $user = $this->save($isUpdate);
+            $this->users->save($user);
+            if (!$user->id) {
+                $user = $this->users->find($user->id);
+            }
+            if (is_null($user)) {
+                throw new Exception('NOT FOUND');
+            }
         } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST, $e->getMessage())
-                           ->send();
+            $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            echo view('errors/error_modal', [
+                'title'   => 'Saving of user failed',
+                'message' => 'Could not ' . ($user->id ? 'update' : 'create') . ' the user, please try again later!',
+            ]);
             return;
         }
 
-        if (is_null($user)) {
-            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST, "User saving failed")
-                           ->send();
-            return;
-        }
-
-        echo json_encode($user, JSON_FORCE_OBJECT);
+        echo json_encode($user);
     }
 
-    /**
-     * Convenience method that handles saving to database.
-     * May result in exception when saving.
-     *
-     * @param bool $isUpdate wheter to update or insert
-     * @return ?EntitiesUser object representing the posted data or null
-     */
-    private function save(bool $isUpdate = false) : ?EntitiesUser
+    public function create() : void
     {
-        $data = [
-            'name'     => $this->request->getPost('name'),
-            'email'    => $this->request->getPost('email'),
-        ];
+        echo view(Config::VIEW . 'user/form');
+    }
 
-        // do not overwrite password if not changed
-        $password = $this->request->getPost('password');
-        if ($password && $password !== "") {
-            $data['password'] = $password;
-        }
-
-        $user = new EntitiesUser($data);
-        if ($isUpdate) {
-            $user->id = $this->users->getEmail($data['email'] ?? "")->id ?? null;
-            $this->users->update($user->id, $user);
+    public function get(int $id) : void
+    {
+        $user = $this->users->get($id);
+        if ($user === null) {
+            $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
+            echo view('errors/error_modal', [
+                'title'   => 'User: ' . $id,
+                'message' => 'The user does not exist!'
+            ]);
         } else {
-            $user->id = $this->users->insert($user, true);
+            echo view(Config::VIEW . 'user/form', [
+                'id'    => $user->id,
+                'name'  => $user->name,
+                'email' => $user->email,
+            ]);
+        }
+    }
+
+    public function delete(int $id) : void
+    {
+        $user = $this->users->get($id);
+        if ($user === null) {
+            $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
+            echo view('errors/error_modal', [
+                'title'   => 'User: ' . $id,
+                'message' => 'The user does not exist!'
+            ]);
+            return;
         }
 
-        $user = $this->users->get($user->id);
-        $user->password = '';
+        // cannot delete self
+        if (session('user')->id === $user->id) {
+            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            echo view('errors/error_modal', [
+                'title' => 'User: ' . $id,
+                'message' => 'You cannot delete yourself!'
+            ]);
+            return;
+        }
 
-        return $user;
+        try {
+            $this->users->delete($user->id);
+        } catch (Exception $e) {
+            $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            echo view('errors/error_modal', [
+                'title' => 'User: ' . $id,
+                'message' => 'Could not delete ' . $user->name . '. Please try again later!'
+            ]);
+            return;
+        }
+
+        echo json_encode($id);
     }
 
     private function getOptions() : array
@@ -240,14 +173,5 @@ class User extends BaseController
             ],
             $perPage
         );
-    }
-
-    private function checkAjax() : bool
-    {
-        if (!$this->request->isAJAX()) {
-            $this->response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED)->send();
-            return false;
-        }
-        return true;
     }
 }
