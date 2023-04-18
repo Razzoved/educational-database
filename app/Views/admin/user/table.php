@@ -32,7 +32,6 @@
 
 <?= $this->section('modals') ?>
 <?= view('admin/delete', ['action' => url_to('Admin\User::delete', 0), 'idName' => 'email']) ?>
-<?= view('admin/user/form', ['title' => 'User form', 'submit' => 'Save']) ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>

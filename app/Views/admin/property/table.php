@@ -41,7 +41,6 @@
 
 <?= $this->section('modals') ?>
 <?= view('admin/delete', ['action' => url_to('Admin\Property::delete', 0)]) ?>
-<?= view('admin/property/form') ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
