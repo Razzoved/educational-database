@@ -5,7 +5,7 @@ namespace App\Controllers\Admin;
 use CodeIgniter\Controller;
 use Throwable;
 
-class Migrate extends Controller
+class Migration extends Controller
 {
     public function index()
     {
