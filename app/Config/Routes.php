@@ -62,7 +62,7 @@ $routes->group('/admin', function($routes) {
     $routes->group('tag', function($routes) {
         $routes->get('', 'Admin\Property::index');
         $routes->post('', 'Admin\Property::save');
-        $routes->get('new', 'Admin\Property::new');
+        $routes->get('new', 'Admin\Property::create');
         $routes->get('(:num)', 'Admin\Property::get/$1');
         $routes->delete('(:num)', 'Admin\Property::delete/$1');
     });

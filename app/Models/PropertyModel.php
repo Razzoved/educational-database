@@ -144,23 +144,13 @@ class PropertyModel extends Model
 
     protected function setupFilters(array $filters)
     {
-        if ($filters !== []) {
-            if (isset($filters['Tags'])) {
-                $this->whereIn('property_tag', array_keys($filters['Tags']));
-            }
-
-            if (isset($filters['Values'])) {
-                $this->groupStart();
-                foreach ($filters['Values'] as $value => $state) {
-                    $this->orLike('property_value', $value, 'after');
-                }
-                $this->groupEnd();
-            }
-            if (isset($filters['tag'])) {
-                $this->where('property_tag', $filters['tag']);
-            }
-            if (isset($filters['value'])) {
-                $this->where('property_value', $filters['value']);
+        foreach ($filters as $tag => $id) {
+            if ($id === "on") {
+                $this->orWhere('property_tag', $tag);
+            } else if (is_numeric($id)) {
+                $this->orWhere('property_tag', $id);
+            } else if (is_array($id)) {
+                $this->setupFilters($id);
             }
         }
         return $this;

@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Entities\Property as EntitiesProperty;
 use App\Models\MaterialPropertyModel;
 use App\Models\PropertyModel;
 use CodeIgniter\Config\Services;
@@ -27,17 +28,15 @@ class Property extends BaseController
 
     public function index() : string
     {
-        $filters = [
-            'Tags'   => array_map(function ($p) { return $p->tag; }, $this->properties->getUnique('tag')),
-            'Values' => array_map(function ($p) { return $p->value; }, $this->properties->getDuplicates('value')),
-        ];
+        $filters = new EntitiesProperty(['value' => 'Tags']);
+        $filters->children = $this->properties->where('property_tag', 0)->getArray();
 
         $data = [
             'meta_title' => Property::META_TITLE,
             'title'      => 'Tags',
             'properties' => $this->getProperties(Config::PAGE_SIZE),
-            'options'    => $this->getOptions($filters['Tags']),
-            'filters'    => $filters,
+            'options'    => $this->getOptions(),
+            'filters'    => array($filters),
             'pager'      => $this->properties->pager,
             'activePage' => 'tags',
         ];
@@ -45,22 +44,28 @@ class Property extends BaseController
         return view(Config::VIEW . 'property/table', $data);
     }
 
-    public function edit(int $id) : string
+    public function get(int $id)
     {
         $property = $this->properties->find($id);
-        if ($property === null)
-            throw PageNotFoundException::forPageNotFound();
 
-        $_POST['id'] = $property->id;
-        $_POST['tag'] = $property->tag;
-        $_POST['value'] = $property->value;
+        if ($property === null) {
+            $body = view('errors/error_modal', [
+                'title' => 'Property: ' . $id,
+                'message' => 'Property not found, try again later or with a different id.',
+            ]);
+            return $this->response
+                ->setStatusCode(Response::HTTP_NOT_FOUND)
+                ->setBody($body)
+                ->send();
+        }
 
-        $data = [
-            'meta_title' => Property::META_TITLE . ' editor',
-            'validation' => Services::validation(),
-        ];
-
-        return view(Config::VIEW . 'property/form', $data);
+        echo view(Config::VIEW . 'property/form', [
+            'id'          => $property->id,
+            'tag'         => $property->tag,
+            'value'       => $property->value,
+            'description' => $property->description,
+            'priority'    => $property->priority,
+        ]);
     }
 
     public function update()

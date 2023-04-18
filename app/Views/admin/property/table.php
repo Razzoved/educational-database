@@ -9,11 +9,6 @@
 
     <div class="page__sidebar">
         <h1 class="page__title"><?= $title ?></h1>
-        <div class="page__group page__group--show">
-            <input id="tag" type="text" placeholder="Enter tag category">
-            <input id="value" type="text" placeholder="Enter tag name">
-            <button class="create" type="button" onclick="createProperty()">Create</button>
-        </div>
         <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
     </div>
 
@@ -22,7 +17,7 @@
 
         <div class="page-controls">
             <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
-            <?= view('sort_bar', ['sorters' => ['Id', 'Tag', 'Value']]) ?>
+            <?= view('sort_bar', ['sorters' => ['Id', 'Tag', 'Value'], 'create' => 'propertyOpen()']) ?>
         </div>
 
         <div class="table" id="items">
@@ -51,6 +46,14 @@
 
 <?= $this->section('scripts') ?>
 <script>
+    function propertyOpen(id = undefined)
+    {
+        url = id === undefined
+            ? '<?= url_to('Admin\Property::create') ?>'
+            : '<?= url_to('Admin\Property::get', 0) ?>'.replace(/[0-9]+$/, id);
+        modalOpen(url);
+    }
+
     function createProperty()
     {
         let tagger = document.getElementById('tag');

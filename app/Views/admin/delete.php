@@ -56,7 +56,7 @@
         {
             $.ajax({
                 type: 'DELETE',
-                url: '<?= $action ?>'.replace(/[0-9]+/, deleteModal.getAttribute('data-value')),
+                url: '<?= $action ?>'.replace(/[0-9]+$/, deleteModal.getAttribute('data-value')),
                 success: function(data) {
                     deleteId(data);
                 },

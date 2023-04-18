@@ -8,21 +8,27 @@
      * @param array  $targets All possible assignment targets (array of id -> name)
      */
 
-    $title = $title ?? "Create property";
-    $submit = $submit ?? "Create";
-    ?>
+    $title = isset($id) ? 'Update property' : "Create property";
+    $submit = isset($id) ? 'Update' : "Create";
+
+    $id = $id ?? "";
+    $tag = $tag ?? "";
+    $value = $value ?? "";
+    $description = $description ?? "";
+    $priority = $priority ?? 0;
+?>
 
 <div class="modal" id="property-window">
     <div class="modal__content">
 
         <div class="modal__header">
             <h1 class="modal__title"><?= $title ?></h1>
-            <span class="modal__close" onclick="modalClose('property-window')">&#10005</span>
+            <span class="modal__close" onclick="modalClose()">&#10005</span>
         </div>
 
         <div class="modal__body">
             <form class="form" method="post" action="<?= url_to('Admin\Property::index')?>">
-                <input type="hidden" id="id" name="id" value="">
+                <input type="hidden" id="id" name="id" value="<? $id ?>">
 
                 <fieldset class="form__group">
                     <label for="tag" class="form__label">Tag</label>
@@ -31,7 +37,7 @@
                         id="tag"
                         name="tag"
                         placeholder="Enter tag"
-                        value=""
+                        value="<?= $tag ?>"
                         required>
                     <label for="value" class="form__label">Value</label>
                     <input class="form__input"
@@ -39,7 +45,7 @@
                         id="value"
                         name="value"
                         placeholder="Enter value"
-                        value=""
+                        value="<?= $value ?>"
                         required>
                 </fieldset>
 
@@ -48,7 +54,8 @@
                     id="description"
                     name="description"
                     rows="2"
-                    placeholder="Enter description...">
+                    placeholder="Enter description..."
+                    value="<?= $description ?>">
                 </textarea>
 
                 <fieldset class="slider">
@@ -57,7 +64,7 @@
                         type="range"
                         min="-25"
                         max="100"
-                        value="0"
+                        value="<?= $priority ?>"
                         id="priority"
                         name="priority"
                         oninput="this.parentElement.querySelector('.slider__value').value=this.value">
@@ -69,7 +76,7 @@
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="modal__button modal__button--submit" onclick="propertySubmit()"><?= $submit ?? 'Submit' ?></button>
+                <button type="modal__button modal__button--submit" onclick="modalSubmit()"><?= $submit ?? 'Submit' ?></button>
                 <button type="modal__button modal__button--cancel" onclick="modalClose('property-window')">Cancel</button>
             </div>
         </div>
@@ -77,57 +84,5 @@
     </div>
     <script type="text/javascript">
         <?= include_once(FCPATH . 'js/modal.js') ?>
-
-        let propertyEdit = false;
-        let propertyModal = document.getElementById("property-window");
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.addEventListener("click", function(event) {
-            if (event.target == propertyModal) {
-                propertyModal.style.display = "none";
-            }
-        });
-
-        function propertyOpen(id = undefined)
-        {
-            propertyEdit = false;
-
-            if (id !== undefined) {
-                $.ajax({
-                    type: 'GET',
-                    url: '<?= url_to('Admin\Property::get', $id) ?>',
-                    data: { id },
-                    dataType: 'json',
-                    success: function(result) {
-                        result = (result.id === undefined)
-                            ? JSON.parse(result)
-                            : result;
-                        propertyEdit = true;
-                        modalOpen('property-window', result);
-                    },
-                    error: (jqHXR) => showError(jqHXR)
-                });
-            } else {
-                modalOpen('user-window', []);
-            }
-        }
-
-        function propertySubmit()
-        {
-            modalSubmit(
-                'property-window',
-                (result) => {
-                    result = (result.id === undefined)
-                        ? JSON.parse(result)
-                        : result;
-                    if (propertyEdit) {
-                        updateData(result);
-                    } else {
-                        appendData(result);
-                    }
-                },
-                propertyEdit ? 'edit' : 'new'
-            );
-        }
     </script>
 </div>
