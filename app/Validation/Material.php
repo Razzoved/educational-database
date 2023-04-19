@@ -6,7 +6,7 @@ use App\Entities\Cast\StatusCast;
 
 class Material
 {
-    public function validStatus(?string $status) : bool
+    public function valid_status(?string $status) : bool
     {
         return StatusCast::isValid($status) || StatusCast::isValidIndex($status);
     }

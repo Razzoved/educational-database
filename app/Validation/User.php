@@ -1,18 +1,33 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Validation;
 
 class User
 {
-    public function validUserEmail(string $email) : bool
+    public function user_name_update(string $name, int $id): bool
     {
-        return model(UserModel::class)->getEmail($email) !== null;
+        $users = model(UserModel::class)->where('user_name', $name)->findAll(2);
+        $count = array_count_values($users);
+        return $count === 0 || ($count === 1 && isset($id) && $users[0]->id === $id);
     }
 
-
-    public function validUserPassword(string $password, string $email) : bool
+    public function user_email_update(string $email, int $id): bool
     {
-        $user = model(UserModel::class)->getEmail($email);
-        return $user !== null && password_verify($password, $user->password);
+        $users = model(UserModel::class)->where('user_email', $email)->findAll(2);
+        $count = array_count_values($users);
+        return $count === 0 || ($count === 1 && isset($id) && $users[0]->id === $id);
+    }
+
+    public function user_email(string $email): bool
+    {
+        return model(UserModel::class)->where('user_email', $email)->first() !== null;
+    }
+
+    public function user_password(string $password, string $email): bool
+    {
+        $user = model(UserModel::class)->where('user_email', $email)->first();
+        return $user && password_verify($password, $user->password);
     }
 }

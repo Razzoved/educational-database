@@ -4,14 +4,13 @@ namespace App\Validation;
 
 class Property
 {
-    public function uniqueProperty(?string $tag, ?string $value) : bool
+    public function property_value_update(string $value, int $tag, int $id) : bool
     {
-        return $tag === null || $value === null
-            || model(PropertyModel::class)->builder()
-                                          ->select('*')
-                                          ->where('property_value', $value)
-                                          ->where('property_tag', $tag)
-                                          ->get(1)
-                                          ->getResultArray() === array();
+        $properties = model(PropertyModel::class)
+            ->where('property_tag', $tag)
+            ->where('property_value', $value)
+            ->findAll(2);
+        $count = array_count_values($properties);
+        return $count === 0 || ($count === 1 && isset($id) && $properties[0]->id === $id);
     }
 }
