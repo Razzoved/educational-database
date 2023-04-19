@@ -8,15 +8,15 @@ class Authentication extends BaseController
 {
     protected array $settings = [
         'email' => [
-            'rules'  => 'required|valid_email|validUserEmail',
+            'rules'  => 'required|valid_email|user_email',
             'errors' => [
-                'validUserEmail' => 'Invalid email.'
+                'user_email' => 'Invalid email.'
             ],
         ],
         'password' => [
-            'rules'  => 'required|validUserPassword[{email}]',
+            'rules'  => 'required|user_password[{email}]',
             'errors' => [
-                'validUserPassword' => 'Invalid password.'
+                'user_password' => 'Invalid password.'
             ],
         ],
     ];

@@ -2,15 +2,18 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
+use App\Entities\Resource as EntitiesResource;
 use App\Libraries\Resources;
+use App\Models\ResourceModel;
 use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
 
-class Resource extends BaseController
+class Resource extends ResponseController
 {
-    private Resources $resourceLibrary;
+    protected Resources $resourceLibrary;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
@@ -25,7 +28,7 @@ class Resource extends BaseController
         $targets = array();
         $materials = model(MaterialModel::class)->getArray(['callbacks' => false]);
 
-        foreach ($materials as $key => $material) {
+        foreach ($materials as $material) {
             $targets[$material->id] = $material->title;
         }
 
@@ -40,71 +43,57 @@ class Resource extends BaseController
         return view(Config::VIEW . 'resource/table', $data);
     }
 
-    public function uploadThumbnail() : void
-    {
-        $resource = $this->resourceLibrary->store($this->request->getFile('file'));
-        if ($resource === null) {
-            $this->resourceLibrary->echoError('Thumbnail could not be stored');
-            return;
-        }
-        echo json_encode($resource->tmp_path);
-    }
+    /** ----------------------------------------------------------------------
+     *                           AJAX HANDLERS
+     *  ------------------------------------------------------------------- */
 
-    public function upload() : void
+    public function upload() : ResponseInterface
     {
-        $views = array();
+        $resources = array();
 
         foreach ($this->request->getFiles() as $file) {
-            if (($resource = $this->resourceLibrary->store($file)) !== null) {
-                $views[$resource->path] = view(Config::VIEW . 'material/file_template', [
-                    'id'    => $this->request->getPostGet('id'),
-                    'path'  => $resource->tmp_path,
-                    'value' => $resource->path,
-                ]);
-            }
+            $resource = $this->resourceLibrary->store($file);
+            if ($resource) $resources[] = $resource;
         }
 
-        if ($views === array()) {
-            $this->resourceLibrary->echoError('No files were uploaded');
-            return;
+        if ($resources === array()) {
+            return $this->response->setStatusCode(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                'No files were uploaded'
+            )->send();
         }
 
-        echo json_encode($views);
+        echo json_encode($resources);
     }
 
-    public function assign(int $materialId, bool $replaceThumbnail = false) : void
+    public function assign(int $materialId) : ResponseInterface
     {
-        $path = $this->request->getPost('tmp_path');
-        if ($path === null) {
-            $this->resourceLibrary->echoError('No file present for assigning');
-            return;
+        $resource = new EntitiesResource($this->request->getPost());
+
+        if (!$resource->path) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                'Cannot assign a non-existent resource!'
+            )->send();
         }
 
-        $success = $this->resourceLibrary->assign($materialId, new \App\Entities\Resource([
-            'path'     => $path,
-            'type'     => $replaceThumbnail ? 'thumbnail' : 'file',
-        ]));
-
-        if (!$success) {
-            $this->resourceLibrary->echoError('<strong>Unexpected error</strong>: Assignment to material failed, try again later.');
-            return;
+        if (!$this->resourceLibrary->assign($materialId, $resource)) {
+            return $this->response->setStatusCode(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                'Could not assign resource, try again later!'
+            )->send();
         }
 
-        echo json_encode($path);
+        echo json_encode($resource);
     }
 
-    public function delete() : void
+    public function delete(int $id) : ResponseInterface
     {
-        $success = $this->resourceLibrary->delete(new \App\Entities\Resource([
-            'id' => $this->request->getPost('id'),
-            'path' => $this->request->getPost('path')
-        ]));
-
-        if (!$success) {
-            $this->resourceLibrary->echoError('<strong>Unexpected error</strong>: Attemp to delete resource failed, try again later.');
-            return;
-        }
-
-        echo json_encode($this->request->getPost('id') ?? $this->request->getPost('path'));
+        return $this->doDelete(
+            $id,
+            model(ResourceModel::class)->find,
+            function ($e) { if (!$this->resourceLibrary->delete($e)) throw new Exception('deletion failed'); },
+            'resource'
+        );
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
 use App\Entities\Material as EntitiesMaterial;
 use App\Entities\Property as EntitiesProperty;
 use App\Entities\Resource as EntitiesResource;
@@ -24,7 +23,7 @@ use Psr\Log\LoggerInterface;
  *
  * @author Jan Martinek
  */
-class MaterialEditor extends BaseController
+class MaterialEditor extends ResponseController
 {
     private const META_TITLE = "Administration - material editor";
 
@@ -61,7 +60,7 @@ class MaterialEditor extends BaseController
         return $this->setupPost($material)->index();
     }
 
-    /**1
+    /**
      * Tries to convert post data to a single material and save it onto the
      * server. This operation includes both database and file organization.
      *
@@ -105,42 +104,26 @@ class MaterialEditor extends BaseController
         return redirect('admin/materials');
     }
 
-    /**
-     * Method that responds to AJAX requests that contain an ID
-     * attribute. It removes material of given ID.
-     *
-     * If successful, material is echoed back to the client.
-     *
-     * @param int $id ID of material to be removed
-     */
-    public function delete(int $id) : void
+    /** ----------------------------------------------------------------------
+     *                           AJAX HANDLERS
+     *  ------------------------------------------------------------------- */
+
+    public function delete(int $id) : ResponseInterface
     {
-        if (!$this->request->isAJAX()) {
-            $this->response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED, "Request is not an AJAX request");
-            return;
-        }
-
-        if ($id <= 0) {
-            $this->resourceLibrary->echoError('Invalid material id!', Response::HTTP_BAD_REQUEST);
-            return;
-        }
-
-        $material = $this->materials->get($id);
-        if ($material === null) {
-            $this->resourceLibrary->echoError('Material does not exist!', Response::HTTP_NOT_FOUND);
-            return;
-        }
-
-        try {
-            $this->deleteResources($material);
-            $this->materials->delete($material->id);
-        } catch (Exception $e) {
-            $this->resourceLibrary->echoError('Unknown error happened, try again later!');
-            return;
-        }
-
-        echo json_encode($material->id);
+        return $this->doDelete(
+            $id,
+            $this->materials->get,
+            function ($e) {
+                $this->deleteResources($e);
+                $this->materials->delete($e->id);
+            },
+            'material'
+        );
     }
+
+    /** ----------------------------------------------------------------------
+     *                           HELPER METHODS
+     *  ------------------------------------------------------------------- */
 
     /**
      * Loads a single material into the post for easier handling in views.

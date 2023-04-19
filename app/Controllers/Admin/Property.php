@@ -1,20 +1,18 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
 use App\Entities\Property as EntitiesProperty;
-use App\Models\MaterialPropertyModel;
 use App\Models\PropertyModel;
-use CodeIgniter\Config\Services;
-use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Exception;
 
-class Property extends BaseController
+class Property extends ResponseController
 {
     private const META_TITLE = 'Administration - tags';
 
@@ -30,7 +28,6 @@ class Property extends BaseController
     {
         $filters = new EntitiesProperty(['value' => 'Tags']);
         $filters->children = $this->properties->where('property_tag', 0)->getArray();
-
         $data = [
             'meta_title' => Property::META_TITLE,
             'title'      => 'Tags',
@@ -40,128 +37,71 @@ class Property extends BaseController
             'pager'      => $this->properties->pager,
             'activePage' => 'tags',
         ];
-
         return view(Config::VIEW . 'property/table', $data);
     }
 
-    public function get(int $id)
+    /** ----------------------------------------------------------------------
+     *                           AJAX HANDLERS
+     *  ------------------------------------------------------------------- */
+
+    public function save() : ResponseInterface
     {
-        $property = $this->properties->find($id);
-
-        if ($property === null) {
-            $body = view('errors/error_modal', [
-                'title' => 'Property: ' . $id,
-                'message' => 'Property not found, try again later or with a different id.',
-            ]);
-            return $this->response
-                ->setStatusCode(Response::HTTP_NOT_FOUND)
-                ->setBody($body)
-                ->send();
-        }
-
-        echo view(Config::VIEW . 'property/form', [
-            'id'          => $property->id,
-            'tag'         => $property->tag,
-            'value'       => $property->value,
-            'description' => $property->description,
-            'priority'    => $property->priority,
-        ]);
-    }
-
-    public function update()
-    {
+        $property = new EntitiesProperty($this->request->getPost());
         $rules = [
-            'id'       => "required|integer",
-            'tag'      => "required|string",
-            'value'    => "required|string",
+            'tag'      => "required|is_natural",
+            'value'    => "required|string|not_in_list[page,search,sort,sortDir]|property_value_update[{tag},{id}]",
         ];
 
         if (!$this->validate($rules)) {
-            return $this->getEditorErrorView($this->validator);
+            return $this->toResponse(
+                $property,
+                $this->validator->getErrors(),
+                Response::HTTP_BAD_REQUEST
+            );
         }
-
-        $property = new \App\Entities\Property([
-            'id'    => $this->request->getPost('id'),
-            'tag'   => $this->request->getPost('tag'),
-            'value' => $this->request->getPost('value')
-        ]);
 
         try {
-            $this->properties->update($property->id, $property);
+            if (!$this->properties->save($property)) throw new Exception();
+            if (!$property->id) $property->id = $this->properties->getInsertID();
+            $property->usage = $this->properties->getUsage($property->id);
         } catch (Exception $e) {
-            $this->validator->setError('database', $e->getMessage());
-            return $this->getEditorErrorView($this->validator);
+            return $this->toResponse(
+                $property,
+                ['error' => 'Could not save property, try again later!'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-        return redirect()->to(url_to('Admin\Property::index'));
+        echo json_encode($property);
     }
 
-    public function save() : void
+    public function get(int $id) : ResponseInterface
     {
-        $value = $this->request->getPost('value');
-        $rules = [
-            'tag'      => "required|string|uniqueProperty[{$value}]|not_in_list[search,sort,sortDir]",
-            'value'    => "required|string",
-        ];
-
-        if (!$this->validate($rules, ['tag' => ['uniqueProperty' => 'This tag-value pair is already taken!']])) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'Validation error',
-                'message' => $this->validator->listErrors()
-            ]);
-            return;
+        $property = $this->properties->find($id);
+        if (!$property) {
+            return $this->response->setStatusCode(
+                Response::HTTP_NOT_FOUND,
+                'Property with id ' . $id . ' not found!'
+            )->send();
         }
-
-        $property = new \App\Entities\Property([
-            'tag'   => $this->request->getPost('tag'),
-            'value' => $this->request->getPost('value')
-        ]);
-
-        try {
-            $id = $this->properties->insert($property, true);
-            echo json_encode($this->properties->get($id, ['callbacks' => true]));
-        } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'Validation error',
-                'message' => $e->getMessage()
-            ]);
-        }
+        echo json_encode($property);
     }
 
-    public function delete() : void
+    public function delete(int $id) : ResponseInterface
     {
-        if (!$this->request->isAJAX()) {
-            $this->response->setStatusCode(Response::HTTP_METHOD_NOT_ALLOWED);
-            return;
-        }
-
-        if (!$this->validate(['id' => "required|integer"])) {
-            $this->response->setStatusCode(Response::HTTP_NOT_ACCEPTABLE);
-            echo view('errors/error_modal', [
-                'title' => 'Validation error',
-                'message' => 'Given id is not valid!'
-            ]);
-            return;
-        }
-
-        $id = (int) $this->request->getPostGet('id');
-        $property = $this->properties->get($id, ['callbacks' => true]);
-
-        if (!is_null($property) && $property->usage == 0) {
-            $this->properties->delete($id);
-            echo json_encode($property->id);
-        } else {
-            $this->response->setStatusCode(Response::HTTP_PRECONDITION_FAILED);
-            echo view('errors/error_modal', [
-                'title' => 'Database error',
-                'message' => 'Already in use by ' . $property->usage . ' materials!'
-            ]);
-        }
+        return $this->doDelete(
+            $id,
+            $this->properties->find,
+            function ($e) { $this->properties->delete($e->id); },
+            'tag'
+        );
     }
 
-    protected function getOptions(array $result = []) : array
+    /** ----------------------------------------------------------------------
+     *                           HELPER METHODS
+     *  ------------------------------------------------------------------- */
+
+    protected function getOptions(array $result = []): array
     {
         foreach ($this->properties->getUnique('value') as $property) {
             $result[] = $property->value;
@@ -169,10 +109,10 @@ class Property extends BaseController
         return $result;
     }
 
-    protected function getProperties(int $perPage = 20) : array
+    protected function getProperties(int $perPage = 20): array
     {
         return $this->properties->getPage(
-            (int) $this->request->getGetPost('page') ?? 1 ,
+            (int) $this->request->getGetPost('page') ?? 1,
             [
                 'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
                 'search'    => $this->request->getGetPost('search'),
@@ -182,17 +122,6 @@ class Property extends BaseController
                 'usage'     => true,
             ],
             $perPage
-        );
-    }
-
-    private function getEditorErrorView(\CodeIgniter\Validation\Validation $validator) : string
-    {
-        return view(
-            Config::VIEW . 'property/form',
-            [
-                'meta_title' => Property::META_TITLE . ' editor',
-                'validation' => $validator,
-            ]
         );
     }
 }

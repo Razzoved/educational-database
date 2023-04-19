@@ -1,18 +1,16 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
 use App\Entities\User as EntitiesUser;
 use App\Models\UserModel;
-use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 
-class User extends BaseController
+class User extends ResponseController
 {
     private UserModel $users;
 
@@ -22,12 +20,9 @@ class User extends BaseController
         $this->users = model(UserModel::class);
     }
 
-    public function index() : string
+    public function index(): string
     {
-        if (!$this->request->getPost('sort')) {
-            $_POST['sort'] = 'name';
-        }
-
+        $_POST['sort'] = $this->request->getPost('sort') ?? 'name';
         $data = [
             'meta_title' => 'Administration - Users',
             'title'      => 'User editor',
@@ -36,121 +31,79 @@ class User extends BaseController
             'pager'      => $this->users->pager,
             'activePage' => 'users',
         ];
-
         return view(Config::VIEW . 'user/table', $data);
     }
 
-    public function save() : void
+    /** ----------------------------------------------------------------------
+     *                           AJAX HANDLERS
+     *  ------------------------------------------------------------------- */
+
+    public function save(): ResponseInterface
     {
         $user = new EntitiesUser($this->request->getPost());
-
         $rules = [
-            'id'              => 'required|is_not_unique[users.user_id]',
-            'name'            => 'required|min_length[2]|max_length[50]',
-            'email'           => 'required|min_length[4]|max_length[320]|valid_email',
-            'password'        => 'required|min_length[4]|max_length[50]',
-            'confirmPassword' => 'matches[password]'
+            'name'  => 'required|min_length[4]|max_length[50]|user_name_update[{id}]',
+            'email' => 'required|min_length[4]|max_length[320]|user_email_update[{id}]',
         ];
-
-        if (!$user->id) {
-            unset($rules['id']);
-            $rules['email'] .= '|is_unique[users.user_email]';
-        }
-
-        if (!$user->password) {
-            unset($rules['password']);
-            unset($rules['confirmPassword']);
+        if ($user->password) {
+            $rules['password'] = 'required|min_length[6]|max_length[50]';
+            $rules['confirmPassword'] = 'matches[password]';
         }
 
         if (!$this->validate($rules)) {
-            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
-            echo view('errors/error_modal', [
-                'title'   => 'Saving of user failed',
-                'message' => array_values($this->validator->getErrors())[0],
-            ]);
-            return;
+            return $this->toResponse(
+                $user,
+                $this->validator->getErrors(),
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         try {
-            $this->users->save($user);
-            if (!$user->id) {
-                $user = $this->users->find($user->id);
-            }
-            if (is_null($user)) {
-                throw new Exception('NOT FOUND');
-            }
+            if (!$this->users->save($user)) throw new Exception();
+            if (!$user->id) $user->id = $this->users->getInsertID();
         } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
-            echo view('errors/error_modal', [
-                'title'   => 'Saving of user failed',
-                'message' => 'Could not ' . ($user->id ? 'update' : 'create') . ' the user, please try again later!',
-            ]);
-            return;
+            return $this->toResponse(
+                $user,
+                ['database' => 'Saving failed, try again later!'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         echo json_encode($user);
     }
 
-    public function create() : void
+    public function get(int $id): ResponseInterface
     {
-        echo view(Config::VIEW . 'user/form');
+        $user = $this->users->find($id);
+        if (!$user) {
+            return $this->response->setStatusCode(
+                Response::HTTP_NOT_FOUND,
+                'User with id ' . $id . ' not found!'
+            )->send();
+        }
+        echo json_encode($user);
     }
 
-    public function get(int $id) : void
+    public function delete(int $id): ResponseInterface
     {
-        $user = $this->users->get($id);
-        if ($user === null) {
-            $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
-            echo view('errors/error_modal', [
-                'title'   => 'User: ' . $id,
-                'message' => 'The user does not exist!'
-            ]);
-        } else {
-            echo view(Config::VIEW . 'user/form', [
-                'id'    => $user->id,
-                'name'  => $user->name,
-                'email' => $user->email,
-            ]);
-        }
+        return $this->doDelete(
+            $id,
+            $this->users->find,
+            function ($e) {
+                if (session('user')->id === $e->id) {
+                    throw new Exception('cannot delete self');
+                }
+                $this->users->delete($e->id);
+            },
+            'user'
+        );
     }
 
-    public function delete(int $id) : void
-    {
-        $user = $this->users->get($id);
-        if ($user === null) {
-            $this->response->setStatusCode(Response::HTTP_NOT_FOUND);
-            echo view('errors/error_modal', [
-                'title'   => 'User: ' . $id,
-                'message' => 'The user does not exist!'
-            ]);
-            return;
-        }
+    /** ----------------------------------------------------------------------
+     *                           HELPER METHODS
+     *  ------------------------------------------------------------------- */
 
-        // cannot delete self
-        if (session('user')->id === $user->id) {
-            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
-            echo view('errors/error_modal', [
-                'title' => 'User: ' . $id,
-                'message' => 'You cannot delete yourself!'
-            ]);
-            return;
-        }
-
-        try {
-            $this->users->delete($user->id);
-        } catch (Exception $e) {
-            $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
-            echo view('errors/error_modal', [
-                'title' => 'User: ' . $id,
-                'message' => 'Could not delete ' . $user->name . '. Please try again later!'
-            ]);
-            return;
-        }
-
-        echo json_encode($id);
-    }
-
-    private function getOptions() : array
+    protected function getOptions(): array
     {
         $result = [];
 
@@ -162,10 +115,10 @@ class User extends BaseController
         return $result;
     }
 
-    protected function getUsers(int $perPage = 20) : array
+    protected function getUsers(int $perPage = 20): array
     {
         return $this->users->getPage(
-            (int) $this->request->getGetPost('page') ?? 1 ,
+            (int) $this->request->getGetPost('page') ?? 1,
             [
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => $this->request->getGetPost('sort'),

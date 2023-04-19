@@ -62,7 +62,6 @@ $routes->group('/admin', function($routes) {
     $routes->group('tag', function($routes) {
         $routes->get('', 'Admin\Property::index');
         $routes->post('', 'Admin\Property::save');
-        $routes->get('new', 'Admin\Property::create');
         $routes->get('(:num)', 'Admin\Property::get/$1');
         $routes->delete('(:num)', 'Admin\Property::delete/$1');
     });
@@ -71,14 +70,12 @@ $routes->group('/admin', function($routes) {
         $routes->get('', 'Admin\Resource::index');
         $routes->put('', 'Admin\Resource::upload');
         $routes->post('(:num)', 'Admin\Resource::assign/$1');
-        $routes->patch('(:num)', 'Admin\Resource::replace/$1');
         $routes->delete('(:num)', 'Admin\Resource::delete/$1');
     });
 
     $routes->group('user', function($routes) {
         $routes->get('', 'Admin\User::index');
         $routes->post('', 'Admin\User::save');
-        $routes->get('new', 'Admin\User::create');
         $routes->get('(:num)', 'Admin\User::get/$1');
         $routes->delete('(:num)', 'Admin\User::delete/$1');
     });
