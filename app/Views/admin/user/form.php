@@ -66,7 +66,7 @@
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="button" class="modal__button modal__button--submit" onclick="userSubmit()"><?= $submit ?></button>
+                <button type="submit" class="modal__button modal__button--submit" onclick="modalSubmit()"><?= $submit ?></button>
                 <button type="button" class="modal__button modal__button--cancel" onclick="modalClose('user-window')">Cancel</button>
             </div>
         </div>

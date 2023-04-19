@@ -23,7 +23,7 @@
 
         <div class="modal__footer">
             <div style="float:right">
-                <button type="button" class="modal__button modal__button--submit" onclick="deleteSubmit()">Delete</button>
+                <button type="submit" class="modal__button modal__button--submit" onclick="deleteSubmit()">Delete</button>
                 <button type="button" class="modal__button modal__button--close" onclick="deleteClose.click()">Cancel</button>
             </div>
         </div>
@@ -50,20 +50,14 @@
             }
         });
 
-        const deleteOpen = function(id)
-        {
-            messageElement.innerHTML = messageOriginal.replace('[]', `[${id}]`);
-            deleteModal.setAttribute('data-value', id);
-            deleteModal.style.display = "block";
-        }
-
-        const deleteSubmit = function()
-        {
+        deleteModal.addEventListener("submit", function(event) {
+            event.preventDefault();
+            
             const response = await fetch('
                 <?= $action ?>'.replace(/[0-9]+$)/, deleteModal.getAttribute('data-value')),
                 { method: 'DELETE' }
             );
-
+    
             if (!response.ok) {
                 messageElement.innerHTML = "Error: " +
                     "item with id: <strong>" +
@@ -71,9 +65,16 @@
                     "</strong> could not be deleted." +
                     "<br>Do you want to try again?";
             } else {
-                deleteId(data);
+                document.getElementById("delete-close")?.remove();
                 deleteModal.style.display = "none";
             }
+        });
+
+        const deleteOpen = function(id)
+        {
+            messageElement.innerHTML = messageOriginal.replace('[]', `[${id}]`);
+            deleteModal.setAttribute('data-value', id);
+            deleteModal.style.display = "block";
         }
     </script>
 </div>

@@ -40,7 +40,7 @@
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="button" class="modal__button modal__button--submit" onclick="resourceSubmit()"><?= $submit ?></button>
+                <button type="submit" class="modal__button modal__button--submit" onclick="modalSubmit()"><?= $submit ?></button>
                 <button type="button" class="modal__button modal__button--cancel" onclick="modalClose('resource-window')">Cancel</button>
             </div>
         </div>
@@ -50,47 +50,20 @@
     <script type="text/javascript">
         <?= include_once(FCPATH . 'js/modal.js') ?>
 
-        let resourceModal = document.getElementById("resource-window");
-        let resourceTarget = resourceModal.querySelector("#target");
-        let resourceOptions = resourceModal.querySelector("#target-options");
+        const target = document.getElementById('target');
+        const options = document.getElementById('target-options');
 
-        // When the user clicks anywhere outside of the modal, close it
-        window.addEventListener("click", function(event) {
-            if (event.target === resourceModal) {
-                resourceModal.style.display = "none";
-            }
-        });
-
-        function resourceOpen(resourceId)
+        const verifyTarget = function()
         {
-            let resource = document.getElementById(resourceId);
-            if (resource !== undefined) {
-                modalOpen('resource-modal', {
-                    tmp_path: resource.id,
-                    target: '',
-                });
-            } else {
-                console.debug('ERROR: resource is undefined');
-            }
-        }
-
-        function resourceSubmit()
-        {
-            modalSubmit(
-                'resource-modal',
-                (result) => document.getElementById(result).remove(),
-                resourceOptions.querySelector(`option[value='${resourceTarget.value}'`).innerHTML,
+            const option = options.querySelector(
+                `option[value="${target.value.replaceAll('"', '\\"')}"]`
             );
-        }
 
-        function verifyTarget()
-        {
-            let option = document.getElementById('target-options').querySelector(`option[value="${resourceTarget.value.replaceAll('"', '\\"')}"]`);
-            if (option === null && resourceTarget.value !== "") {
-                resourceTarget.classList.add('form__input--invalid');
-                resourceTarget.value = "";
+            if (target.value !== "" && option === null) {
+                target.classList.add('form__input--invalid');
+                target.value = "";
             } else {
-                resourceTarget.classList.remove('form__input--invalid');
+                target.classList.remove('form__input--invalid');
             }
         }
     </script>

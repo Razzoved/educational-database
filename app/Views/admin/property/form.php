@@ -31,7 +31,7 @@
                 <input type="hidden" id="id" name="id" value="<? $id ?>">
 
                 <fieldset class="form__group">
-                    <label for="tag" class="form__label">Tag</label>
+                    <label for="tag" class="form__label">Category</label>
                     <input class="form__input"
                         type="text"
                         id="tag"
@@ -67,7 +67,7 @@
                         value="<?= $priority ?>"
                         id="priority"
                         name="priority"
-                        oninput="this.parentElement.querySelector('.slider__value').value=this.value">
+                        onchange="updateSlider(this)">
                     <p class="slider__value">0</p>
                 </fieldset>
 
@@ -76,13 +76,19 @@
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="modal__button modal__button--submit" onclick="modalSubmit()"><?= $submit ?? 'Submit' ?></button>
-                <button type="modal__button modal__button--cancel" onclick="modalClose('property-window')">Cancel</button>
+                <button type="submit" class="modal__button modal__button--submit" onclick="modalSubmit()"><?= $submit ?></button>
+                <button type="button" class="modal__button modal__button--cancel" onclick="modalClose('property-window')">Cancel</button>
             </div>
         </div>
 
     </div>
     <script type="text/javascript">
         <?= include_once(FCPATH . 'js/modal.js') ?>
+
+        const updateSlide = function(sliderInput)
+        {
+            const sliderValue = sliderInput.closest('.slider').querySelector('.slider__value');
+            sliderValue.innerHTML = sliderInput.value;
+        }
     </script>
 </div>
