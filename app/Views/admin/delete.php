@@ -8,61 +8,72 @@
 ?>
 <div class="modal" id="delete-window">
 
-    <div class="modal-content">
-        <div class="modal-header">
-            <h1>Confirm deletion</h1>
+    <div class="modal__content">
+        <div class="modal__header">
+            <h1 id="delete-title">Confirm deletion</h1>
             <span class="close" id="delete-close">&#10005</span>
         </div>
 
-        <div class="modal-body">
-            <p>Warning: This action is irreversible!</p>
-            <p id="warnMsg">Are you sure you want to delete <?= $itemType ?? 'item' ?> with id: <strong>[]</strong>?</p>
+        <div class="modal__body">
+            <p id="delete-message">
+                Warning: This action is irreversible!<br>
+                Are you sure you want to delete <?= $itemType ?? 'item' ?> with id: <strong>[]</strong>?
+            </p>
         </div>
 
-        <div class="modal-footer">
+        <div class="modal__footer">
             <div style="float:right">
-                <button type="button" class="btn btn-submit" onclick="deleteSubmit()">Yes</button>
-                <button type="button" class="btn btn-danger" onclick="deleteClose.click()">No</button>
+                <button type="button" class="modal__button modal__button--submit" onclick="deleteSubmit()">Delete</button>
+                <button type="button" class="modal__button modal__button--close" onclick="deleteClose.click()">Cancel</button>
             </div>
         </div>
     </div>
 
     <script type="text/javascript">
-        var deleteModal = document.getElementById("delete-window");
-        var deleteClose = document.getElementById("delete-close");
+        const deleteModal = document.getElementById("delete-window");
 
-        // When the user clicks on <span> (x), close the modal
-        deleteClose.onclick = function() {
+        const titleElement = deleteModal.querySelector('#delete-title');
+        const titleOriginal = titleElement.innerHTML;
+
+        const messageElement = deleteModal.querySelector('#delete-message');
+        const messageOriginal = deleteMessage.innerHTML;
+
+        document.getElementById("delete-close").onclick = function()
+        {
             deleteModal.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the modal, close it
-        window.addEventListener("click", function(event) {
+        window.addEventListener("click", function(event)
+        {
             if (event.target == deleteModal) {
                 deleteModal.style.display = "none";
             }
         });
 
-        /** Function for buttons that need delete box */
-        function deleteOpen(id)
+        const deleteOpen = function(id)
         {
-            let warn = deleteModal.querySelector('#warnMsg');
-            warn.innerHTML = warn.innerHTML.replace(/\[.*\]/, `[${id}]`);
+            messageElement.innerHTML = messageOriginal.replace('[]', `[${id}]`);
             deleteModal.setAttribute('data-value', id);
             deleteModal.style.display = "block";
         }
 
-        function deleteSubmit()
+        const deleteSubmit = function()
         {
-            $.ajax({
-                type: 'DELETE',
-                url: '<?= $action ?>'.replace(/[0-9]+$/, deleteModal.getAttribute('data-value')),
-                success: function(data) {
-                    deleteId(data);
-                },
-                error: (jqXHR) => showError(jqXHR)
-            })
-            deleteModal.style.display = "none";
+            const response = await fetch('
+                <?= $action ?>'.replace(/[0-9]+$)/, deleteModal.getAttribute('data-value')),
+                { method: 'DELETE' }
+            );
+
+            if (!response.ok) {
+                messageElement.innerHTML = "Error: " +
+                    "item with id: <strong>" +
+                    deleteModal.getAttribute('data-value') +
+                    "</strong> could not be deleted." +
+                    "<br>Do you want to try again?";
+            } else {
+                deleteId(data);
+                deleteModal.style.display = "none";
+            }
         }
     </script>
 </div>
