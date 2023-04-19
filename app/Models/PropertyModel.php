@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Property;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Model;
 
 /**
@@ -163,6 +164,34 @@ class PropertyModel extends Model
         }
         return $this->orLike('property_tag', $search, 'both', true, true)
                     ->orLike('property_value', $search, 'both', true, true);
+    }
+
+    /**
+     * Override of the default 'delete' method.
+     *
+     * @param int $id     The id of the property to delete.
+     * @param bool $purge If true, acts as a 'force' delete (ignores usage check).
+     */
+    public function delete($id = null, bool $purge = false)
+    {
+        $this->db->transStart();
+
+        // find item and check (along with usage) if it exists
+        $item = $this->get((int) $id, ['usage' => $purge]);
+        if (!$item || ($purge && $item->usage > 0)) {
+            throw new DatabaseException('Cannot delete property: ' . json_encode($id));
+        }
+
+        // delete children and self
+        $item->children = $this->where('property_tag', $id)->findAll();
+        foreach ($item->children as $child) {
+            $this->delete($child->id, $purge);
+        }
+        $result = parent::delete($id, $purge);
+
+        $this->db->transComplete();
+
+        return $result;
     }
 
     /** ----------------------------------------------------------------------

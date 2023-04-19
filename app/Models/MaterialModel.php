@@ -37,7 +37,7 @@ class MaterialModel extends Model
     protected $validationRules = [
         'material_title'   => 'required|string',
         'material_author'  => 'required|string',
-        'material_status'  => 'required|validStatus',
+        'material_status'  => 'required|valid_status',
         'material_content' => 'string',
         'material_blame'   => 'required',
     ];
@@ -52,7 +52,7 @@ class MaterialModel extends Model
         ],
         'material_status' => [
             'required'    => 'Status must be present.',
-            'validStatus' => 'Invalid status.'
+            'valid_status' => 'Invalid status.'
         ],
         'material_content' => [
             'string' => 'Content must be a valid string.'
