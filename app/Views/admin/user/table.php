@@ -17,10 +17,15 @@
 
         <div class="table" id="items">
         <?php
-            echo view_cell('\App\Libraries\User::getRowTemplate');
-            $index = 0;
-            foreach($users as $user) {
-                echo view_cell('\App\Libraries\User::toRow', ['user' => $user, 'index' => $index++]);
+            if ($users === []) {
+                echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
+                echo '<h2 style="text-align:center">None were found.</h2>';
+            } else foreach($users as $user) {
+                echo view('admin/user/item', [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]);
             }
         ?>
         </div>
@@ -31,7 +36,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>
-<?= view('admin/delete', ['action' => url_to('Admin\User::delete', 0), 'idName' => 'email']) ?>
+<?= view('admin/delete', ['action' => url_to('Admin\User::delete', 0)]) ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
