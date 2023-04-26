@@ -23,7 +23,7 @@
         </div>
 
         <div class="card__footer">
-            <?= view('rating', ['material' => $material]) ?>
+            <?= view('material/rating', ['material' => $material]) ?>
             <a href="<?= $url ?>">Details</a>
         </div>
     </div>

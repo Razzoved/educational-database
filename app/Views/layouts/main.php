@@ -15,12 +15,10 @@
         <div class="page">
             <?php if (isset($title)) echo ('<h1 class="page__title">' . $title . '</h1>') ?>
             <div class="page__body">
-                <!-- render sidebar if present -->
-                <?php $sidebar = $this->renderSection('sidebar') ?? false ?>
-                <?php if ($sidebar) echo ('<div class="page__sidebar">' . $sidebar . '</div>') ?>
-                <!-- render content if present -->
-                <?php $content = $this->renderSection('content') ?? false ?>
-                <?php if ($content) echo ('<div class="page__content">' . $content . '</div>') ?>
+                <?= $this->renderSection('sidebar') ?>
+                <div class="page__content">
+                    <?= $this->renderSection('content') ?>
+                </div>
             </div>
         </div>
     </main>

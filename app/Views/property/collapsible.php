@@ -32,7 +32,7 @@ use App\Entities\Property;
                     'value' => $property->value]))
                 : []; ?>
             <?php foreach (array_merge($parent, $property->children) as $child) : ?>
-                <li class="collapsible__item<?= $index > 5 ? ' collapsible__item--overflow' : '' ?> tooltip">
+                <li class="collapsible__item<?= $index >= 5 ? ' collapsible__item--overflow' : '' ?> tooltip">
                     <?php if ($child->description && $child->description !== '') : ?>
                         <span class="tooltip__text"><?= esc($child->description) ?></span>
                     <?php endif; ?>

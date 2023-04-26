@@ -2,12 +2,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    align-items: center;
 
     &__stars {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        gap: 0.2rem;
+        display: block;
+        white-space: nowrap;
+        max-width: 100%;
+        padding: 0.2rem 0;
+        overflow: hidden;
     }
 
     &__star {
@@ -39,5 +41,10 @@
 
     &__count, &__views {
         line-height: 1.4rem;
+    }
+
+    &__stats {
+        display: inline-block;
+        max-width: 100%;
     }
 }

@@ -1,44 +1,45 @@
 <?php
     /**
-     * Template for a single material page.
+     * View of a single material page.
      *
      * Expects:
      * @param App\Entities\Material $material   material which material to render
      * @param ?App\Entities\Rating  $rating     rating from the current user
      */
-
+    $hasSidebar = true;
     $rating = $rating->rating_value ?? 0;
 ?>
 
 <?= $this->extend('layouts/main') ?>
 
-<?= $this->renderSection('sidebar') ?>
-<?= view('property/filter_button', ['properties' => $material->properties]) ?>
+<?= $this->section('sidebar') ?>
+<?php if (isset($material->properties) && !empty($material->properties)) {
+    echo '<div class="page__sidebar">';
+    echo view('property/filter_button', ['properties' => $material->properties]);
+    echo '</div>';
+} ?>
 <?= $this->endSection() ?>
 
-<?= $this->renderSection('content') ?>
+<?= $this->section('content') ?>
 <article class="material">
     <!-- Header -->
-    <header class="material__header">
-        <div class="material__row">
-            <img class="material__thumbnail"
-                src="<?= $material->getThumbnail()->getURL() ?>"
-                alt="Material image"
-                <?=isset($material->referTo)
-                    ? 'onclick=\'window.location.href="'. esc($material->referTo) . '"\''
-                    : '' ?>>
-            <h1 class="material__title">
-                <button class="material__go-back" type='button' onclick="window.history.back()">
-                    Go back
-                </button>
-                <?= $material->title ?>
-            </h1>
+    <div class="material__header">
+        <img class="material__thumbnail"
+            src="<?= $material->getThumbnail()->getURL() ?>"
+            alt="Material image"
+            <?= isset($material->referTo)
+                ? 'onclick=\'window.location.href="'. esc($material->referTo) . '"\''
+                : '' ?>>
+        <div class="material__details">
+            <button class="material__go-back" type='button' onclick="window.history.back()">
+                Go back
+            </button>
+            <div class="material__dynamic-row">
+                <small>Published: <?= $material->publishedToDate() ?></small>
+                <?= view('material/rating', ['material' => $material, 'twoLines' => true]) ?>
+            </div>
         </div>
-        <div class="material__row">
-            <small>Published: <?= $material->publishedToDate() ?></small>
-            <?= view('rating', ['material' => $material]) ?>
-        </div>
-    </header>
+    </div>
 
     <!-- Content -->
     <?php if ($material->content != "") : ?>
@@ -53,6 +54,8 @@
         <?= view('resource/link', [
             'resources' => $material->getLinks(),
             'title' => 'Attached links'
+        ], [
+            'saveData' => false
         ]) ?>
     </section>
     <?php endif; ?>
@@ -63,6 +66,8 @@
         <?= view('resource/link', [
             'resources' => $material->getFiles(),
             'title' => 'Downloadable files'
+        ], [
+            'saveData' => false
         ]) ?>
     </section>
     <?php endif; ?>
@@ -73,6 +78,8 @@
         <?= view('material/relation', [
             'materials' => $material->related,
             'title' => 'Related materials'
+        ], [
+            'saveData' => false
         ]) ?>
     </section>
     <?php endif; ?>

@@ -1,7 +1,23 @@
+<?php
+    /**
+     * Template for a single material page.
+     *
+     * Expects:
+     * @param array $filters
+     * @param array $options
+     * @param array $materials
+     * @param mixed $pager
+     */
+?>
+
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('sidebar') ?>
-<?= view('property/filter_checkbox', ['properties' => $filters]) ?>
+<?php if (isset($filters) && !empty($filters)) {
+    echo '<div class="page__sidebar">';
+    echo view('property/filter_checkbox', ['properties' => $filters]);
+    echo '</div>';
+} ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>

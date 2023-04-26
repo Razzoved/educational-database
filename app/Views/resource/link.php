@@ -8,7 +8,7 @@
         <img class="links__thumbnail" src="<?= \App\Libraries\Resources::pathToFileURL($resource->getRootPath()) ?>"></img>
         <a class="links__href" href="<?= $resource->getURL() ?>" download>
         <?php else : ?>
-        <a class="links__href" href="<?= $resource->getURL() ?>">
+        <a class="links__href" target="_blank" href="<?= $resource->getURL() ?>">
         <?php endif; ?>
         <?= $resource->getName($resource->isLink()) ?>
         </a>
