@@ -22,14 +22,17 @@
 
         <div class="table" id="items">
         <?php
-            echo view_cell('\App\Libraries\Property::getRowTemplate');
-            $index = 0;
-            foreach($properties as $property) {
-                echo view_cell('\App\Libraries\Property::toRow', ['property' => $property, 'index' => $index++]);
-            }
             if ($properties === []) {
                 echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
                 echo '<h2 style="text-align:center">None were found.</h2>';
+            } else foreach($properties as $property) {
+                echo view_cell('\App\Libraries\Property::toRow', [
+                    'id'          => $property->id,
+                    'title'       => $property->value,
+                    'tag'         => $property->category,
+                    'usage'       => $property->usage,
+                    'description' => $property->description
+                ]);
             }
             ?>
         </div>
