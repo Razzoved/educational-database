@@ -44,7 +44,7 @@ class Material extends BaseController
             'activePage' => '',
         ];
 
-        return view('material_multiple', $data);
+        return view('material/all', $data);
     }
 
     /**
@@ -73,7 +73,7 @@ class Material extends BaseController
             'rating'        => $this->ratings->getRating($material->id, session('id') ?? ''),
         ];
 
-        return view('material_single', $data);
+        return view('material/one', $data);
     }
 
     /**

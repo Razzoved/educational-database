@@ -15,7 +15,7 @@ class MaterialTopRated extends Material
             'pager'      => $this->materials->pager,
             'activePage' => 'top-rated',
         ];
-        return view('material_multiple', $data);
+        return view('material/all', $data);
     }
 
     protected function getMaterials(int $perPage = 10) : array
