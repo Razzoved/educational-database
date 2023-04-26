@@ -1,0 +1,42 @@
+@import '../defaults/variables';
+
+.go-up {
+    display: none;
+
+    /* hook to single position */
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 99;
+
+    /* style */
+    border: none;
+    outline: none;
+    border-radius: 100%;
+    border: $clr-light 1px solid;
+    background-color: $clr-dark;
+    cursor: pointer;
+    padding: 1rem;
+    aspect-ratio: 1 / 1;
+    text-align: center;
+
+    & > i {
+        color: $clr-light;
+        font-size: 1.6rem;
+    }
+
+    & > span {
+        color: $clr-light;
+        font-size: 1.2rem;
+    }
+
+    &:hover {
+        border: $clr-focus 1px solid;
+        background-color: $clr-focus-bg;
+    }
+
+    &:hover > i,
+    &:hover > span {
+        color: $clr-focus;
+    }
+}

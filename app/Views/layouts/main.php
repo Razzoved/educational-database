@@ -11,7 +11,7 @@
 <body>
     <?= $this->include('navigation_bar') ?>
 
-    <main class="container">
+    <main id="top" class="container">
         <div class="page">
             <?php if (isset($title)) echo ('<h1 class="page__title">' . $title . '</h1>') ?>
             <div class="page__body">
@@ -23,6 +23,7 @@
         </div>
     </main>
 
+    <?= $this->include('go_up') ?>
     <?= $this->include('footer') ?>
 
     <?= $this->renderSection('scripts') ?>

@@ -14,12 +14,13 @@
 <body>
     <?= $this->include('admin/navigation_bar') ?>
 
-    <main class="container">
+    <main id="top" class="container">
         <?= $this->renderSection('content') ?>
     </main>
 
     <?= $this->renderSection('modals') ?>
 
+    <?= $this->include('go_up') ?>
     <?= $this->include('footer') ?>
 
     <?= $this->renderSection('scripts') ?>
