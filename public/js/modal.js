@@ -13,8 +13,7 @@ const modalClose = function(event)
  * @param {string} target address to send request to
  * @param {object} data   data to send to server
  */
-const modalOpen = async function(target, data)
-{
+const modalOpen = async (target, data) => {
     try {
         const response = await fetch(target, {
             method: "GET",
@@ -46,8 +45,7 @@ const modalOpen = async function(target, data)
  * @param {string} urlParameter  optional suffix to url, adds '/' in between
  * @param {string} method        form submission method (POST, GET, etc.)
  */
-const modalSubmit = async function()
-{
+const modalSubmit = async () => {
     try {
         const form = document.querySelector('#modal form');
         if (!form) {
