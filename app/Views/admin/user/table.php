@@ -6,10 +6,9 @@
 
 <?= $this->section('content') ?>
 <div class="page">
+    <h1 class="page__title"><?= $title ?></h1>
 
     <div class="page__content">
-        <h1 class="page__title"><?= $title ?></h1>
-
         <div class="page-controls">
             <?= view('search_bar', ['action' => url_to('Admin\User::index'), 'options' => $options]) ?>
             <?= view('sort_bar', ['sorters' => ['Name', 'Email'], 'create' => 'userOpen()']); ?>

@@ -11,8 +11,9 @@
 
 <?= $this->section('content') ?>
 <div class="page">
+    <h1 class="page__title"><?= $title ?></h1>
+
     <div class="page__content">
-        <h1 class="page__title"><?= $title ?></h1>
         <div class="table" id="items">
         <?php
             if ($resources === []) {
