@@ -13,7 +13,7 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->renderSection('sidebar') ?>
-<?= view('sidebar_buttons', ['properties' => $material->properties]) ?>
+<?= view('property/filter_button', ['properties' => $material->properties]) ?>
 <?= $this->endSection() ?>
 
 <?= $this->renderSection('content') ?>
@@ -50,7 +50,7 @@
     <!-- Links -->
     <?php if ($material->getLinks() !== []) : ?>
     <section class="material__attachments">
-        <?= view('components/resources_as_links', [
+        <?= view('resource/link', [
             'resources' => $material->getLinks(),
             'title' => 'Attached links'
         ]) ?>
@@ -60,7 +60,7 @@
     <!-- Downloadable -->
     <?php if ($material->getFiles() !== []) : ?>
     <section class="material__attachments">
-        <?= view('components/resources_as_links', [
+        <?= view('resource/link', [
             'resources' => $material->getFiles(),
             'title' => 'Downloadable files'
         ]) ?>
@@ -70,7 +70,7 @@
     <!-- Related -->
     <?php if ($material->related !== []) : ?>
     <section class="material__attachments">
-        <?= view('components/materials_as_relations', [
+        <?= view('material/relation', [
             'materials' => $material->related,
             'title' => 'Related materials'
         ]) ?>

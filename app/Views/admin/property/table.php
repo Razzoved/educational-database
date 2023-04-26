@@ -9,7 +9,7 @@
 
     <div class="page__sidebar">
         <h1 class="page__title"><?= $title ?></h1>
-        <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
+        <?= view('property/filter_checkbox', ['properties' => $filters]) ?>
     </div>
 
     <div class="page__content">
@@ -48,14 +48,7 @@
 
 <?= $this->section('scripts') ?>
 <script>
-    const template = `<?= view('./item') ?>`
-
-    const propertyOpen = (id = undefined) => {
-        url = id === undefined
-            ? '<?= url_to('Admin\Property::create') ?>'
-            : '<?= url_to('Admin\Property::get', 0) ?>'.replace(/[0-9]+$/, id);
-        modalOpen(url);
-    }
+    const template = `<?= view('admin/property/item') ?>`
 
     const appendData = (data) => {
     }

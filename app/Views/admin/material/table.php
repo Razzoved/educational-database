@@ -8,7 +8,7 @@
 <div class="page">
     <div class="page__sidebar">
         <h1 class="page__title"><?= $title ?></h1>
-        <?= view('sidebar_checkboxes', ['properties' => $filters]) ?>
+        <?= view('property/filter_checkbox', ['properties' => $filters]) ?>
     </div>
 
     <div class="page__content">
@@ -16,20 +16,17 @@
         <div class="page-controls">
             <?= view('search_bar', ['action' => url_to('Admin\Material::index'), 'options' => $options]) ?>
             <?= view('sort_bar', [
-                'sorters' => ['ID', 'Title', 'Created at', 'Updated at', 'Views'],
+                'sorters' => ['ID', 'Title', 'Published at', 'Updated at', 'Views'],
                 'create' => "window.location.href='" . url_to('Admin\MaterialEditor::index') . "'"]) ?>
         </div>
 
         <div class="table" id="items">
         <?php
-            echo view_cell('\App\Libraries\Material::getRowTemplate');
-            $index = 0;
-            foreach($materials as $material) {
-                echo view_cell('\App\Libraries\Material::toRow', ['material' => $material, 'index' => $index++]);
-            }
             if ($materials === []) {
                 echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
                 echo '<h2 style="text-align:center">None were found.</h2>';
+            } else foreach($materials as $material) {
+                echo view('admin/material/item', ['material' => $material]);
             }
             ?>
         </div>

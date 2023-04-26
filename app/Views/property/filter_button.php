@@ -5,7 +5,7 @@
     </button>
     <?php foreach ($properties as $property) : ?>
         <?php if (isset($property->children) && !empty($property->children)) : ?>
-            <?= view('components/property_as_collapsible', ['property' => $property, 'type' => 'button']) ?>
+            <?= view('property/collapsible', ['property' => $property, 'type' => 'button']) ?>
         <?php endif; ?>
     <?php endforeach; ?>
 </div>

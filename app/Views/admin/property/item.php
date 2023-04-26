@@ -33,7 +33,7 @@
 <div id="<?= $id ?>" class="tooltip">
     <div class="item">
         <div class="item__header">
-            <h2 class="item__title" data-value="value"><?= $value ?></h2>
+            <h2 class="item__title" data-value="value"><?= $title ?></h2>
             <div class="item__controls">
                 <button class="item__edit" type="button" onclick="propertyOpen(<?= $id ?>)">
                     Edit
