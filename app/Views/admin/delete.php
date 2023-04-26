@@ -50,14 +50,14 @@
             }
         });
 
-        deleteModal.addEventListener("submit", function(event) {
+        deleteModal.addEventListener("submit", async function(event) {
             event.preventDefault();
-            
-            const response = await fetch('
-                <?= $action ?>'.replace(/[0-9]+$)/, deleteModal.getAttribute('data-value')),
+
+            const response = await fetch(
+                '<?= $action ?>'.replace(/[0-9]+$)/, deleteModal.getAttribute('data-value')),
                 { method: 'DELETE' }
             );
-    
+
             if (!response.ok) {
                 messageElement.innerHTML = "Error: " +
                     "item with id: <strong>" +
