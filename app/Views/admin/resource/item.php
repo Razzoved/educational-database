@@ -1,23 +1,31 @@
 <?php
-    /**
-     * Template for displaying resource as a row in administration.
-     *
-     * @var \App\Entities\Resource $resource non null object to display
-     */
+    /* TEMPLATE: shows single resource in administration panel */
 
-    $tmp = explode('/', $resource->path);
-    $name = end($tmp);
+    /**
+     * @var int $id id of the resource
+     */
+    $id = $id ?? '@id@';
+
+    /**
+     * @var string $path path to thumbnail, may be different than resource path
+     */
+    $path = $path ?? '@path@';
+
+    /**
+     * @var string $name    name of the resource (usually basename($path))
+     */
+    $name = $name ?? '@name@';
 ?>
-<!-- MATERIAL DISPLAYED AS AN EDITABLE ROW -->
-<div id="<?= $resource->path ?>" class="item">
+
+<div id="<?= $id ?>" class="item">
     <div class="item__header">
         <image class="item__logo"
-            src="<?= \App\Libraries\Resources::pathToFileURL($resource->getRootPath()) ?>">
+            src="<?= $path ?>">
         <div class="item__controls">
-            <button type="button" class="item__edit" onclick="resourceOpen('<?= $resource->path ?>')">
+            <button type="button" class="item__edit" onclick="resourceOpen('<?= $id ?>')">
                 Assign
             </button>
-            <button type="button" class="item__delete" onclick="deleteOpen('<?= $resource->path ?>')">
+            <button type="button" class="item__delete" onclick="deleteOpen('<?= $id ?>')">
                 &#10005;
             </button>
         </div>

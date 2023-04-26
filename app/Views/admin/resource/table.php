@@ -1,22 +1,29 @@
-<?= $this->extend('layouts/admin') ?>
+<?php
+    /**
+     * Administration panel for managing unused resources.
+     *
+     * @var string $title    Page header, required.
+     * @var array $resources collection of App\Entities\Resource objects
+     */
+?>
 
-<?= $this->section('header') ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<?= $this->endSection() ?>
+<?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
 <div class="page">
-
     <div class="page__content">
         <h1 class="page__title"><?= $title ?></h1>
         <div class="table" id="items">
         <?php
-            foreach($resources as $index => $resource) {
-                echo view('components/resource_as_unused', ['resource' => $resource, 'index' => $index, 'showButtons' => true]);
-            }
             if ($resources === []) {
                 echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
                 echo '<h2 style="text-align:center">None were found.</h2>';
+            } else foreach($resources as $resource) {
+                echo view('admin/resource/item', [
+                    'id'   => $resource->id,
+                    'path' => \App\Libraries\Resources::pathToFileURL($resource->getRootPath()),
+                    'name' => basename($resource->path),
+                ]);
             }
         ?>
         </div>
@@ -25,5 +32,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>
-<?= view('admin/delete', ['action' => url_to('Admin\Resource::delete', 0), 'idName' => 'path']) ?>
+<?= view('admin/delete', ['action' => url_to('Admin\Resource::delete', 0)]) ?>
 <?= $this->endSection() ?>
