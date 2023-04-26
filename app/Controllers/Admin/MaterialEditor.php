@@ -5,14 +5,14 @@ namespace App\Controllers\Admin;
 use App\Entities\Material as EntitiesMaterial;
 use App\Entities\Property as EntitiesProperty;
 use App\Entities\Resource as EntitiesResource;
+use App\Exceptions\BadPostException;
 use App\Libraries\Resources;
-use App\Models\MaterialMaterialModel;
 use App\Models\MaterialModel;
 use App\Models\PropertyModel;
 use App\Models\ResourceModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use CodeIgniter\Files\Exceptions\FileException;
 use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -25,39 +25,38 @@ use Psr\Log\LoggerInterface;
  */
 class MaterialEditor extends ResponseController
 {
-    private const META_TITLE = "Administration - material editor";
-
     private MaterialModel $materials;
+    private ResourceModel $resources;
     private PropertyModel $properties;
     private Resources $resourceLibrary;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
-
         $this->materials = model(MaterialModel::class);
-        $this->properties = model(PropertyModel::class);
+        $this->resources = model(ResourceModel::class, true, $this->materials->db);
+        $this->properties = model(PropertyModel::class, true, $this->materials->db);
         $this->resourceLibrary = new Resources($this->response);
     }
 
-    public function index(array $errors = []) : string
+    public function index(EntitiesMaterial $material = new EntitiesMaterial(), array $errors = []) : string
     {
-        $data = [
-            'meta_title'           => self::META_TITLE,
+        return view(Config::VIEW . 'material/form', [
+            'meta_title'           => "Administration - material editor",
+            'material'             => $material,
             'errors'               => $errors,
-            'available_properties' => $this->getAllPropertiesAsStrings(),
-            'available_relations'  => $this->getAllMaterialsAsStrings(),
-        ];
-        return view(Config::VIEW . 'material/form', $data);
+            'available_properties' => $this->properties->where('property_tag', 0)->getArray(),
+            'available_relations'  => $this->materials->allowCallbacks(false)->where('id !=', $material->id)->getArray(),
+        ]);
     }
 
     public function get(int $id) : string
     {
         $material = $this->materials->get($id);
-        if (!$material)
+        if (!$material) {
             throw PageNotFoundException::forPageNotFound();
-        $material->properties = model(MaterialPropertyModel::class)->getArray($id);
-        return $this->setupPost($material)->index();
+        }
+        return $this->index($material);
     }
 
     /**
@@ -66,42 +65,40 @@ class MaterialEditor extends ResponseController
      *
      * Requires following _POST format:
      *      compulsory material attributes
-     *      optional properties - properties (tag => [vals] array)
+     *      optional properties - properties (array of ids)
      *      optional resources - thumbnail, files, links (key => val array)
-     *      unused_files (
+     *      unused_files (key => val array)
      */
     public function save()
     {
         $material = new EntitiesMaterial($this->request->getPost());
 
-        $material->resources = $this->loadResources(
-            $material->id,
-            $this->request->getPost('thumbnail'),
-            $this->request->getPost('files'),
-            $this->request->getPost('links')
-        );
-
-        $material->properties = $this->loadProperties(
-            $this->request->getPost('properties')
-        );
-
-        $material->related = $this->loadRelated(
-            $material->id ?? $material->title,
-            $this->request->getPost('relations')
-        );
-
         try {
-            $material->id = $this->materials->saveMaterial($material);
-            $this->deleteRemovedFiles($material)
-                 ->moveTemporaryFiles($material);
+            $this->transformData($material);
+            $this->materials->saveMaterial($material);
+            $this->deleteRemovedFiles($material);
+            $this->moveTemporaryFiles($material);
+        } catch (BadPostException $e) {
+            return $this->index(
+                new EntitiesMaterial($this->request->getPost()),
+                array($e->getMessage())
+            );
+        } catch (FileException $e) {
+            return $this->index($material, array($e->getMessage()));
         } catch (Exception $e) {
-            $errors = $this->materials->errors() !== []
-                ? $this->materials->errors()
-                : [$e->getMessage()];
-            return $this->setupPost($material)->index($errors);
+            if (!empty($this->materials->errors())) {
+                $errors = $this->materials->errors();
+            } else if (!empty($this->resources->errors())) {
+                $errors = $this->resources->errors();
+            } else if (!empty($this->properties->errors())) {
+                $errors = $this->properties->errors();
+            } else {
+                $errors = array('Unknown error occurred, try again later!');
+            }
+            return $this->index($material, $errors);
         }
 
-        return redirect('admin/materials');
+        return redirect()->to(url_to('Admin\Material::index'));
     }
 
     /** ----------------------------------------------------------------------
@@ -125,130 +122,79 @@ class MaterialEditor extends ResponseController
      *                           HELPER METHODS
      *  ------------------------------------------------------------------- */
 
-    /**
-     * Loads a single material into the post for easier handling in views.
-     *
-     * @param   EntitiesMaterial $material material to load
-     * @return  self to enable method chaining
-     */
-    private function setupPost(EntitiesMaterial $material) : MaterialEditor
+     /**
+      * Fills the material's fields that should contain objects with objects.
+      *
+      * @return EntitiesMaterial resulting object, subdata may be only partial
+      * @throws BadPostException if the post data is invalid
+      */
+    private function transformData(EntitiesMaterial $material) : EntitiesMaterial
     {
-        $properties = array();
-        foreach ($material->properties as $p) {
-            $properties[$p->tag][] = $p->value;
-        }
-
-        $links = array();
-        foreach ($material->getLinks() as $r) {
-            $links[] = $r->getURL();
-        }
-
-        $files = array();
-        foreach ($material->getFiles() as $r) {
-            $files[$r->getRootPath()] = $r->getName();
-        }
-
-        $relations = array();
-        foreach (model(MaterialMaterialModel::class)->getRelated($material->id) as $r) {
-            $relations[$r->id] = $r->title;
-        }
-
-        $_POST = [
-            'id'         => $material->id,
-            'author'     => $material->author,
-            'status'     => \App\Entities\Cast\StatusCast::getIndex($material->status),
-            'title'      => $material->title,
-            'content'    => $material->content,
-            'thumbnail'  => $material->getThumbnail()->getRootPath(),
-            'properties' => $properties,
-            'links'      => $links,
-            'files'      => $files,
-            'relations'  => $relations,
-        ];
-
-        return $this;
+        $material->related = $this->toRelations($material->id);
+        $material->properties = $this->toProperties();
+        $material->resources = [];
+        $this->toResources($material, 'file');
+        $this->toResources($material, 'link');
+        $this->toResources($material, 'thumbnail');
+        return $material;
     }
 
-    private function loadResources(?int $materialId, ?string $thumbnail, ?array $files, ?array $links) : array
+    private function toResources(EntitiesMaterial &$material, string $type) : void
     {
-        $resources = array();
-
-        $this->toResources($resources, is_null($thumbnail) ? [] : [$thumbnail], 'thumbnail');
-        $this->toResources($resources, $files ?? [], 'file');
-        $this->toResources($resources, $links ?? [], 'link');
-
-        if ($materialId) {
-            foreach ($resources as $resource) {
-                $resource->parentId = $materialId;
+        $items = $this->request->getPost($type);
+        if ($items && !is_array($items)) {
+            throw new BadPostException('Resources: ' . $type . ' must be an array or null.');
+        }
+        foreach ($items as $tmpPath => $path) {
+            switch ($type) {
+                case 'file':
+                case 'thumbnail':
+                    $path = basename($path);
+                    break;
+                case 'link':
+                    $tmpPath = $path;
+                    break;
+                default:
+                    throw new BadPostException('Resource type: ' . $type . ' not supported');
             }
-        }
-
-        return $resources;
-    }
-
-    private function toResources(array &$target, array $items, string $type) : void
-    {
-        foreach ($items ?? [] as $tmpPath => $path) {
             if (!$tmpPath && !$path) continue;
-            $target[] = new EntitiesResource([
+            if (isset($material->resources[$tmpPath])) {
+                throw new BadPostException('Resource: ' . esc($tmpPath) . ' already added');
+            }
+            $material->resources[$tmpPath] = new EntitiesResource([
+                'parentId' => $material->id,
                 'type'     => $type,
-                'path'     => $type === 'link' ? $path : basename($path),
-                'tmp_path' => is_numeric($tmpPath) ? $path : $tmpPath,
+                'path'     => $path,
+                'tmp_path' => $tmpPath,
             ]);
         }
     }
 
-    private function loadProperties(?array $properties) : array
+    private function toProperties() : array
     {
         $result = [];
-        foreach ($properties ?? [] as $tag => $values) {
-            foreach ($values as $value) {
-                $p = $this->properties->getByBoth($tag, $value);
-                if ($p) $result[] = $p;
+        foreach ($this->request->getPost('properties') ?? [] as $id) {
+            if (isset($result[$id])) {
+                throw new BadPostException('Property: ' . $id . ' already added');
             }
+            $result[$id] = new EntitiesProperty(['id' => $id]);
         }
         return $result;
     }
 
-    private function loadRelated(mixed $identifier, ?array $relations) : array
+    private function toRelations(int $identifier) : array
     {
         $result = [];
-        foreach ($relations ?? [] as $id => $value) {
-            if ((is_int($identifier) && $id !== $identifier) ||
-                (!is_int($identifier) && $value !== $identifier))
-                $result[] = $id;
+        foreach ($this->request->getPost('relations') ?? [] as $id) {
+            if ($identifier === $id) {
+                throw new BadPostException('Cannot have relation with itself.');
+            }
+            if (isset($result[$id])) {
+                throw new BadPostException('Relation: ' . $id . ' already added');
+            }
+            $result[$id] = new EntitiesMaterial(['id' => $id]);
         }
         return $result;
-    }
-
-    /**
-     * Gets all properties as an array of ['tag' => 'values'] records. This
-     * method should be used before sending material to form.
-     *
-     * @return array array of stringified properties (['tag' => 'values'])
-     */
-    private function getAllPropertiesAsStrings() : array
-    {
-        $properties = [];
-        foreach ($this->properties->getArray(['callbacks' => false]) as $property) {
-            $properties[$property->tag][] = $property->value;
-        }
-        return $properties;
-    }
-
-    /**
-     * Gets all materials as an array of ['id' => 'title'] records. This
-     * method should be used before sending material to form.
-     *
-     * @return array array of stringified materials (['id' => 'title'])
-     */
-    private function getAllMaterialsAsStrings() : array
-    {
-        $materials = [];
-        foreach ($this->materials->getArray(['callbacks' => false]) as $material) {
-            $materials[$material->id] = $material->title;
-        }
-        return $materials;
     }
 
     /**
@@ -262,9 +208,9 @@ class MaterialEditor extends ResponseController
     private function moveTemporaryFiles(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($material->resources as $r) {
-            $found = model(ResourceModel::class)->getByPath(
-                    $material->id,
-                    basename($r->path)
+            $found = $this->resources->getByPath(
+                $material->id,
+                basename($r->path)
             );
             if ($found === null) {
                 $this->resourceLibrary->assign($material->id, $r);
@@ -288,11 +234,10 @@ class MaterialEditor extends ResponseController
                 || substr($path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX
                 ? $path
                 : basename($path);
-            $resource = model(ResourceModel::class)->getByPath($material->id, $path);
-            if ($resource === null) {
-                $resource = new EntitiesResource(['path' => $path, 'tmp_path' => $path]);
-            }
-            $this->resourceLibrary->unassign($resource);
+            $resource = $this->resources->getByPath($material->id, $path);
+            $this->resourceLibrary->unassign(
+                $resource ?? new EntitiesResource(['path' => $path, 'tmp_path' => $path])
+            );
         }
         return $this;
     }
