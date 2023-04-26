@@ -6,12 +6,12 @@
      * @param string $idName name of id parameter (required if name !== 'id')
      */
 ?>
-<div class="modal" id="delete-window">
+<form class="modal" id="delete-window">
 
     <div class="modal__content">
         <div class="modal__header">
             <h1 id="delete-title">Confirm deletion</h1>
-            <span class="close" id="delete-close">&#10005</span>
+            <span class="modal__close" id="delete-close" onclick="deleteClose()">&#10005</span>
         </div>
 
         <div class="modal__body">
@@ -22,12 +22,12 @@
         </div>
 
         <div class="modal__footer">
-            <div style="float:right">
-                <button type="submit" class="modal__button modal__button--submit" onclick="deleteSubmit()">Delete</button>
-                <button type="button" class="modal__button modal__button--close" onclick="deleteClose.click()">Cancel</button>
+            <div class="modal__button-group">
+                <button type="submit" class="modal__button modal__button--red">Delete</button>
+                <button type="button" class="modal__button" onclick="deleteClose()">Cancel</button>
             </div>
         </div>
-    </div>
+</form>
 
     <script type="text/javascript">
         const deleteModal = document.getElementById("delete-window");
@@ -36,17 +36,22 @@
         const titleOriginal = titleElement.innerHTML;
 
         const messageElement = deleteModal.querySelector('#delete-message');
-        const messageOriginal = deleteMessage.innerHTML;
+        const messageOriginal = messageElement.innerHTML;
 
-        document.getElementById("delete-close").onclick = function()
-        {
-            deleteModal.style.display = "none";
+        const deleteOpen = (id) => {
+            messageElement.innerHTML = messageOriginal.replace('[]', `[${id}]`);
+            deleteModal.setAttribute('data-value', id);
+            deleteModal.classList.add('modal--visible');
+        }
+
+        const deleteClose = () => {
+            deleteModal.classList.remove('modal--visible');
         }
 
         window.addEventListener("click", function(event)
         {
             if (event.target == deleteModal) {
-                deleteModal.style.display = "none";
+                deleteClose();
             }
         });
 
@@ -54,7 +59,7 @@
             event.preventDefault();
 
             const response = await fetch(
-                '<?= $action ?>'.replace(/[0-9]+$)/, deleteModal.getAttribute('data-value')),
+                '<?= $action ?>'.replace(/[0-9]+$/, deleteModal.getAttribute('data-value')),
                 { method: 'DELETE' }
             );
 
@@ -69,12 +74,5 @@
                 deleteModal.style.display = "none";
             }
         });
-
-        const deleteOpen = function(id)
-        {
-            messageElement.innerHTML = messageOriginal.replace('[]', `[${id}]`);
-            deleteModal.setAttribute('data-value', id);
-            deleteModal.style.display = "block";
-        }
     </script>
 </div>
