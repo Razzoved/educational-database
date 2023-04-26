@@ -47,5 +47,8 @@
     &__stats {
         display: inline-block;
         max-width: 100%;
+        & > :not(:first-child) {
+            margin-left: 0.5rem;
+        }
     }
 }
