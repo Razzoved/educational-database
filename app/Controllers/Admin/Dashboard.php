@@ -32,9 +32,9 @@ class Dashboard extends BaseController
                 new EntitiesMaterial()
             )->views,
             'viewsHistory'      => $this->views->getDailyTotals(),
-            'materials'         => $this->views->getTopMaterials(5, 30),
+            'materials'         => $this->views->getTopMaterials(5, "", 30),
             'materialsTotal'    => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], 5),
-            'contributors'      => $this->materials->getContributors(),
+            'editors'           => $this->materials->getBlame(),
             'recentPublished'   => $this->materials->getArray(['sort' => 'published_at', 'sortDir' => 'DESC'], 5),
             'recentUpdated'     => $this->materials->getArray(['sort' => 'updated_at', 'sortDir' => 'DESC'], 5),
         ];

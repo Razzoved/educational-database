@@ -86,15 +86,15 @@ class MaterialModel extends Model
         return $this->setupQuery($data)->paginate($perPage, 'default', $page);
     }
 
-    public function getContributors() : array
+    public function getBlame() : array
     {
-        return $this->builder()
-                    ->select('material_author as contributor')
-                    ->selectCount('*', 'total_posts')
-                    ->groupBy('material_author')
-                    ->orderBy('total_posts', 'desc')
-                    ->get()
-                    ->getResultArray();
+        return model(UserModel::class)
+            ->join($this->table, 'material_blame=user_id')
+            ->select('user_name')
+            ->selectCount('*', 'total_posts')
+            ->groupBy('material_blame')
+            ->orderBy('total_posts', 'desc')
+            ->findAll();
     }
 
     public function saveMaterial(Material $material) : int
@@ -160,15 +160,29 @@ class MaterialModel extends Model
         if (!in_array($sort, $this->allowedFields) && $sort !== $this->primaryKey) {
             $sort = "";
         }
-
         if ($sort === "") {
-            $sort = $this->primaryKey;
+            $sort = 'published_at';
         }
 
-        return $this->orderBy(
-            $sort,
-            strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC'
-        );
+        $this->orderBy($sort, strtolower($sortDir) === 'asc' ? 'asc' : 'desc');
+
+        if ($sort !== 'published_at') {
+            $this->orderBy('published_at', 'desc');
+        }
+        if ($sort !== 'updated_at') {
+            $this->orderBy('updated_at', 'desc');
+        }
+        if ($sort !== 'material_rating') {
+            $this->orderBy('material_rating', 'desc');
+        }
+        if ($sort !== 'material_rating_count') {
+            $this->orderBy('material_rating_count', 'desc');
+        }
+        if ($sort !== 'material_views') {
+            $this->orderBy('material_views', 'desc');
+        }
+
+        return $this;
     }
 
     protected function setupFilters(array $filters)

@@ -44,12 +44,12 @@
         </section>
 
         <section>
-            <h2>Contributors</h2>
+            <h2>Last blamed</h2>
             <ol class="dashboard__contributors">
-                <?php foreach ($contributors as $c) : ?>
+                <?php foreach ($editors as $e) : ?>
                 <li class="dashboard__contributor">
-                    <p><?= $c['contributor'] ?></p>
-                    <strong><?= $c['total_posts'] ?></strong>
+                    <p><?= $e->name ?></p>
+                    <strong><?= $e->total_posts ?></strong>
                 </li>
                 <?php endforeach; ?>
             </ol>
