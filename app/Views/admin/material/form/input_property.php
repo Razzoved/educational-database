@@ -42,8 +42,9 @@
 
     </div>
 
-    <!-- listener for changes on tag selector that loads corresponding options to value selector -->
     <script>
+        <?= include_once(FCPATH . 'js/property-selector') ?>
+
         let available = <?= json_encode($available) ?>;
 
         // handle change of tag selector

@@ -49,21 +49,29 @@ class Resource extends ResponseController
 
     public function upload() : ResponseInterface
     {
-        $resources = array();
+        $file = $this->request->getFile('file');
 
-        foreach ($this->request->getFiles() as $file) {
-            $resource = $this->resourceLibrary->store($file);
-            if ($resource) $resources[] = $resource;
-        }
-
-        if ($resources === array()) {
+        $resource = $this->resourceLibrary->store($file);
+        if (!$resource) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
                 'No files were uploaded'
             )->send();
         }
 
-        echo json_encode($resources);
+        echo json_encode($resource);
+    }
+
+    public function uploadImage() : ResponseInterface
+    {
+        $rules = ['file' => 'is_image[file]'];
+        if (!$this->validate($rules)) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                'File is not an image'
+            )->send();
+        }
+        return $this->upload();
     }
 
     public function assign(int $materialId) : ResponseInterface

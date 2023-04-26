@@ -17,16 +17,12 @@
 
     <div class="form__group form__group--horizontal" id="file-group">
     <?php
-        $index = 0;
-        foreach (array_keys($files) as $file) {
-            echo view('admin/material/file_template', [
+        foreach (array_keys($files) as $index => $file) {
+            echo view('admin/material/form/item_file', [
                 'id' => $index,
                 'value' => $files[$file],
                 'path' => $file,
-                'hidden' => false,
-                'readonly' => true
             ]);
-            $index++;
         }
     ?>
     </div>

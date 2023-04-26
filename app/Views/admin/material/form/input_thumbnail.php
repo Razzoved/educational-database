@@ -45,7 +45,7 @@
         formData.append("file", file)
 
         $.ajax({
-            url: '<?= url_to("Admin\Resource::replace") ?>',
+            url: '<?= url_to("Admin\Resource::uploadImage") ?>',
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             type: 'POST',
             data: formData,

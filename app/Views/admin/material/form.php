@@ -17,10 +17,9 @@
             'bullist numlist checklist outdent indent | removeformat | code table help',
         })
     </script>
+    <!-- end of TinyMCE -->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="<?= base_url('public/js/dynamics.js') ?>"></script>
-    <script type="text/javascript" src="<?= base_url('public/js/property_selector.js') ?>"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
