@@ -104,7 +104,8 @@
     &__item:hover,
     &__item:hover > input,
     &__item:hover > label,
-    &__item:hover > button {
+    &__item:hover > button,
+    &__item:hover > form > button {
         color: $clr-focus;
     }
 
