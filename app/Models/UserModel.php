@@ -24,6 +24,7 @@ class UserModel extends Model
 
     protected $beforeInsert = ['hashPassword'];
     protected $beforeUpdate = ['hashPassword'];
+    protected $afterFind    = ['hidePassword'];
 
     protected $returnType = User::class;
 
@@ -137,6 +138,19 @@ class UserModel extends Model
         $data['data']['user_password'] = password_hash($data['data']['user_password'], PASSWORD_DEFAULT);
         unset($data['data']['password']);
 
+        return $data;
+    }
+
+    protected function hidePassword(array $data) : array
+    {
+        if (!isset($data['data'])) {
+            return $data;
+        }
+        if ($data['method'] === 'find') {
+            $data['data']->password = null;
+        } else foreach ($data['data'] as $k => $v) {
+            if ($v) $v->password = null;
+        }
         return $data;
     }
 }

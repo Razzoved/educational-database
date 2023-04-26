@@ -27,7 +27,7 @@ class User
 
     public function user_password(string $password, string $email): bool
     {
-        $user = model(UserModel::class)->where('user_email', $email)->first();
+        $user = model(UserModel::class)->where('user_email', $email)->allowCallbacks(false)->first();
         return $user && password_verify($password, $user->password);
     }
 }
