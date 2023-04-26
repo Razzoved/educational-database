@@ -5,8 +5,9 @@
     align-items: center;
 
     &__stars {
-        display: block;
+        display: flex;
         white-space: nowrap;
+        gap: 0.25rem;
         max-width: 100%;
         padding: 0.2rem 0;
         overflow: hidden;
