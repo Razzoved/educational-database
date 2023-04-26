@@ -47,7 +47,7 @@ class Resource extends ResponseController
      *                           AJAX HANDLERS
      *  ------------------------------------------------------------------- */
 
-    public function upload() : ResponseInterface
+    public function upload() : Response
     {
         $file = $this->request->getFile('file');
 
@@ -56,25 +56,25 @@ class Resource extends ResponseController
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
                 'No files were uploaded'
-            )->send();
+            );
         }
 
-        echo json_encode($resource);
+        return $this->response->setJSON($resource);
     }
 
-    public function uploadImage() : ResponseInterface
+    public function uploadImage() : Response
     {
         $rules = ['file' => 'is_image[file]'];
         if (!$this->validate($rules)) {
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
                 'File is not an image'
-            )->send();
+            );
         }
         return $this->upload();
     }
 
-    public function assign(int $materialId) : ResponseInterface
+    public function assign(int $materialId) : Response
     {
         $resource = new EntitiesResource($this->request->getPost());
 
@@ -82,20 +82,20 @@ class Resource extends ResponseController
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
                 'Cannot assign a non-existent resource!'
-            )->send();
+            );
         }
 
         if (!$this->resourceLibrary->assign($materialId, $resource)) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
                 'Could not assign resource, try again later!'
-            )->send();
+            );
         }
 
-        echo json_encode($resource);
+        return $this->response->setJSON($resource);
     }
 
-    public function delete(int $id) : ResponseInterface
+    public function delete(int $id) : Response
     {
         return $this->doDelete(
             $id,

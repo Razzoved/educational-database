@@ -44,7 +44,7 @@ class Property extends ResponseController
      *                           AJAX HANDLERS
      *  ------------------------------------------------------------------- */
 
-    public function save() : ResponseInterface
+    public function save() : Response
     {
         $property = new EntitiesProperty($this->request->getPost());
         $rules = [
@@ -72,22 +72,22 @@ class Property extends ResponseController
             );
         }
 
-        echo json_encode($property);
+        return $this->response->setJSON($property);
     }
 
-    public function get(int $id) : ResponseInterface
+    public function get(int $id) : Response
     {
         $property = $this->properties->find($id);
         if (!$property) {
             return $this->response->setStatusCode(
                 Response::HTTP_NOT_FOUND,
                 'Property with id ' . $id . ' not found!'
-            )->send();
+            );
         }
-        echo json_encode($property);
+        return $this->response->setJSON($property);
     }
 
-    public function delete(int $id) : ResponseInterface
+    public function delete(int $id) : Response
     {
         return $this->doDelete(
             $id,
