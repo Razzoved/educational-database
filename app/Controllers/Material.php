@@ -112,8 +112,7 @@ class Material extends BaseController
         } catch (Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
-                $e->getMessage(),
-                // 'Unexpected error occured while rating, try again later!'
+                'Unexpected error occured while rating, try again later!'
             );
         }
 
