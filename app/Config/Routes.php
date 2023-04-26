@@ -40,7 +40,7 @@ $routes->group('/', function($routes) {
     $routes->post('(:num)', 'Material::rate/$1');
 
     // AUTHENTICATION
-    $routes->get('login', 'Authentication::index', ['filter' => 'checkAuth']);
+    $routes->add('login', 'Authentication::index', ['filter' => 'checkAuth']);
     $routes->post('login', 'Authentication::login', ['filter' => 'checkAuth']);
     $routes->add('logout', 'Authentication::logout');
 });
