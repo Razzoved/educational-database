@@ -38,7 +38,7 @@ class User extends ResponseController
      *                           AJAX HANDLERS
      *  ------------------------------------------------------------------- */
 
-    public function save(): ResponseInterface
+    public function save()
     {
         $user = new EntitiesUser($this->request->getPost());
         $rules = [
@@ -69,28 +69,30 @@ class User extends ResponseController
             );
         }
 
-        echo json_encode($user);
+        return $this->response->setJSON($user);
     }
 
-    public function get(int $id): ResponseInterface
+    public function get(int $id): Response
     {
         $user = $this->users->find($id);
         if (!$user) {
             return $this->response->setStatusCode(
                 Response::HTTP_NOT_FOUND,
                 'User with id ' . $id . ' not found!'
-            )->send();
+            );
         }
-        echo json_encode($user);
+        return $this->response->setJSON($user);
     }
 
-    public function delete(int $id): ResponseInterface
+    public function delete(int $id): Response
     {
         return $this->doDelete(
             $id,
-            $this->users->find,
+            function ($i) {
+                return $this->users->find($i);
+            },
             function ($e) {
-                if (session('user')->id === $e->id) {
+                if (session('user') && session('user')->id === $e->id) {
                     throw new Exception('cannot delete self');
                 }
                 $this->users->delete($e->id);
