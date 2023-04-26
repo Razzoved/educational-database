@@ -13,22 +13,7 @@ use App\Entities\Property;
 
 <?php if (!isset($property->children) || empty($property->children)) : ?>
 
-    <?php if ($type === 'button') : ?>
-        <form method="get" action='<?= url_to('Material::index') ?>' style="display: block">
-            <input type="hidden"
-                name="#<?= $property->tag ?>[<?= $property->id ?>]"
-                value="on">
-            <button type="submit"><?= esc($property->value) ?></button>
-        </form>
-    <?php else : ?>
-        <input class="filter" type="checkbox"
-            name="#<?= $property->tag ?>[<?= $property->id ?>]"
-            id="#<?= $property->tag ?>[<?= $property->id ?>]">
-        </input>
-        <label for="#<?= $property->tag ?>[<?= $property->id ?>]">
-            <?= esc($property->value) ?>
-        </label>
-    <?php endif; ?>
+<?= $this->include('property/item') ?>
 
 <?php else : ?>
 
@@ -51,7 +36,7 @@ use App\Entities\Property;
                     <?php if ($child->description && $child->description !== '') : ?>
                         <span class="tooltip__text"><?= esc($child->description) ?></span>
                     <?php endif; ?>
-                    <?= view('components/property_as_collapsible', ['property' => $child, 'type' => $type]) ?>
+                    <?= view('property/collapsible', ['property' => $child, 'type' => $type]) ?>
                 </li>
                 <?php $index++; ?>
             <?php endforeach; ?>
