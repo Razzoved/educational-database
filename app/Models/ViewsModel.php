@@ -68,25 +68,26 @@ class ViewsModel extends Model
      * @param int $n maximum number of materials to return
      * @param int $days number of days to look back
      */
-    public function getTopMaterials(int $n = 0, int $days = 30) : array
+    public function getTopMaterials(int $n = 1, string $search = "", int $days = 30) : array
     {
-        $views = $this->select('material_id')
-            ->selectSum('material_views')
+        $select = 'material_id, material_status, material_title, ' .
+        'material_author, material_blame, material_content,' .
+        'material_rating, material_rating_count, published_at, updated_at';
+
+        $views = model(MaterialModel::class)
+            ->select($select)
+            ->selectSum($this->table . '.material_views', 'material_views')
+            ->join($this->table, 'material_id')
             ->groupBy('material_id')
             ->orderBy('material_views', 'desc')
             ->where('created_at >', $this->date($days))
-            ->findAll($n);
+            ->getArray(['callbacks' => false, 'sort' => 'published_at', 'sortDir' => 'desc', 'search' => $search], $n);
 
-        $materials = array();
         foreach ($views as $v) {
-            $material = model(MaterialModel::class)->get($v->id, ['callbacks' => false]);
-            if ($material) {
-                $material->resources = model(ResourceModel::class)->getThumbnail($v->id);
-                $material->views = $v->views;
-                $materials[] = $material;
-            }
+            $v->resources = model(ResourceModel::class)->getThumbnail($v->id);
         }
-        return $materials;
+
+        return $views;
     }
 
     /**
