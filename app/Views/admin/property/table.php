@@ -21,8 +21,7 @@
         <div class="table" id="items">
         <?php
             if ($properties === []) {
-                echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
-                echo '<h2 style="text-align:center">None were found.</h2>';
+                echo $this->include('none');
             } else foreach($properties as $property) {
                 echo view('admin/property/item', [
                     'id'          => $property->id,

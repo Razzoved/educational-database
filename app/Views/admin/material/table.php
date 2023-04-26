@@ -23,8 +23,7 @@
         <div class="table" id="items">
         <?php
             if ($materials === []) {
-                echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
-                echo '<h2 style="text-align:center">None were found.</h2>';
+                echo $this->include('none');
             } else foreach($materials as $material) {
                 echo view('admin/material/item', ['material' => $material]);
             }

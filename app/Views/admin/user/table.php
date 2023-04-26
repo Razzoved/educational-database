@@ -17,8 +17,7 @@
         <div class="table" id="items">
         <?php
             if ($users === []) {
-                echo '<hr style="margin-top: 1rem; margin-bottom: 1rem">';
-                echo '<h2 style="text-align:center">None were found.</h2>';
+                echo $this->include('none');
             } else foreach($users as $user) {
                 echo view('admin/user/item', [
                     'id' => $user->id,
