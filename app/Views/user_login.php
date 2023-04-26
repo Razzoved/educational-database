@@ -16,7 +16,7 @@
             <!-- logo with errors -->
             <div class="form__group form__group--centered">
                 <img class="form__logo" src="<?= base_url('public/assets/enai-logo-transparent.png') ?>" alt="ENAI logo">
-                <?= $this->include('errors/validation_single') ?>
+                <?= $this->include('errors/one') ?>
             </div>
             <!-- user inputs -->
             <fieldset class="form__group">

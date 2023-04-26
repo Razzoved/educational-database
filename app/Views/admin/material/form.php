@@ -40,7 +40,7 @@
         <!-- title -->
         <div class="form__group form__group--centered form__group--separated">
             <h1 class="form__title">Material editor</h1>
-            <?= $this->include('errors/validation') ?>
+            <?= $this->include('errors/all') ?>
         </div>
 
         <!-- thumbnail, basic data -->

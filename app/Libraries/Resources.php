@@ -266,7 +266,7 @@ class Resources
     ) : void
     {
         $this->response->setStatusCode($errorCode);
-        echo view('errors/error_modal', [
+        echo view('errors/modal', [
             'title'     => "Resource manipulation",
             'message'   => $message
         ]);
