@@ -64,13 +64,6 @@ class PropertyModel extends Model
         );
     }
 
-    public function getByBoth(string $tag, string $value) : ?Property
-    {
-        return $this->where('property_tag', $tag)
-                    ->where('property_value', $value)
-                    ->first();
-    }
-
     public function getUnique(string $column = "value") : array
     {
         $column = 'property_' . $column;
