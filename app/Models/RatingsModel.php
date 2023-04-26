@@ -63,7 +63,7 @@ class RatingsModel extends Model
             ->groupBy('material_id')
             ->orderBy('material_id')
             ->first()
-            ->rating_value;
+            ->rating_value ?? 0;
     }
 
     public function getRatingCount(int $materialId) : int
@@ -74,6 +74,6 @@ class RatingsModel extends Model
             ->groupBy('material_id')
             ->orderBy('material_id')
             ->first()
-            ->count;
+            ->count ?? 0;
     }
 }

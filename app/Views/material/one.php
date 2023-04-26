@@ -94,24 +94,24 @@
      * This function handles user interaction with the rating system
      * @param {int}     rating      value the user wants to rate the post with
      */
-    function rating_rate(materialId, rating) {
-        $.ajax({
-            url: '<?= url_to('Material::rate', $material->id) ?>',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                id: materialId,
-                value: rating,
-            },
-            success: function(result) {
-                rating_reload_class(result.average, 'active');
-                rating_reload_class(result.user, 'own');
-                ratings.querySelector('.rating__count-value').innerHTML = result.count + 'x';
-            },
-            error: function(status) {
-                alert('Unexpected error: could not rate the material');
-            },
+    const ratingRate = async (rating) => {
+        const response = await fetch('<?= url_to('Material::rate', $material->id) ?>', {
+            method: 'POST',
+            body: new URLSearchParams({'value': rating})
         });
+
+        if (!response.ok) {
+            console.error(`error: ${response.statusText}`);
+            alert(`Could not rate material: ${response.statusText}`);
+            return;
+        }
+
+        const data = await response.json();
+        console.debug(data);
+
+        ratingReloadClass(data.average, 'active');
+        ratingReloadClass(data.user, 'own');
+        ratings.querySelector('.rating__count-value').innerHTML = data.count + 'x';
     }
 
     /**
@@ -122,7 +122,7 @@
      * @param {number} value        used for comparison
      * @param {string} className    added/removed
      */
-    function rating_reload_class(value, className) {
+    const ratingReloadClass = (value, className) => {
         index = 1;
         Array.from(ratings.querySelectorAll('.rating__stars > i')).forEach(c => {
             index++ <= value
@@ -136,13 +136,11 @@
      * Each of its child elements gets coloring and interaction.
     */
     window.addEventListener('DOMContentLoaded', (event) => {
-        var index = 1;
-        Array.from(ratings.querySelectorAll('.rating__stars > i')).forEach(c => {
-            c.setAttribute('onmouseover', `rating_reload_class('${index}', 'hover')`);
-            c.setAttribute('onmouseout', `rating_reload_class(0, 'hover')`);
-            c.setAttribute('onclick', `rating_rate(${index})`);
-            rating_reload_class(<?= $rating ?>, 'own');
-            index++;
+        Array.from(ratings.querySelectorAll('.rating__stars > i')).forEach((c, index) => {
+            c.setAttribute('onmouseover', `ratingReloadClass('${index + 1}', 'hover')`);
+            c.setAttribute('onmouseout', `ratingReloadClass(0, 'hover')`);
+            c.setAttribute('onclick', `ratingRate(${index + 1})`);
+            ratingReloadClass(<?= $rating ?>, 'own');
         });
     });
 </script>

@@ -11,6 +11,8 @@ use App\Models\MaterialPropertyModel;
 use App\Models\RatingsModel;
 use App\Models\ResourceModel;
 use App\Models\ViewsModel;
+use CodeIgniter\HTTP\Response;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 class Material extends BaseController
@@ -82,30 +84,43 @@ class Material extends BaseController
      * @uses $_POST['id'] id of material to rate
      * @uses $_POST['value'] value of rating to set for the user
      */
-    public function rate() : void
+    public function rate(int $id) : Response
     {
-        $id = (int) $this->request->getPost('id');
         $value = (int) $this->request->getPost('value');
-        $material = null;
+        if (!$value) {
+            return $this->response->setStatusCode(Response::HTTP_BAD_REQUEST, 'No value was given!');
+        }
 
-        if (!$id) return;
+        $material = $this->materials->find($id);
+        if (!$material) {
+            return $this->response->setStatusCode(Response::HTTP_NOT_FOUND, 'Material not found!');
+        }
+
         if (session('id') === null) {
             session()->set('id', session_id());
         }
 
-        $newValue = $this->ratings->setRating($id, session('id'), $value);
-        $material = ($newValue === null || $newValue === $value) ? $this->materials->find($id) : null;
+        try {
+            $newValue = $this->ratings->setRating($id, session('id'), $value);
 
-        if ($material) {
             $material->rating = $this->ratings->getRatingAvg($id);
             $material->rating_count = $this->ratings->getRatingCount($id);
-            $this->materials->update($id, $material);
+
+            if ($newValue === null || $newValue === $value) {
+                $this->materials->update($id, $material);
+            }
+        } catch (Exception $e) {
+            return $this->response->setStatusCode(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                $e->getMessage(),
+                // 'Unexpected error occured while rating, try again later!'
+            );
         }
 
-        echo json_encode([
-            'average' => $material->rating ?? null,
-            'count' => $material->rating_count ?? null,
-            'user' => $newValue
+        return $this->response->setJSON([
+            'average' => $material->rating,
+            'count'   => $material->rating_count,
+            'user'    => $newValue
         ]);
     }
 
