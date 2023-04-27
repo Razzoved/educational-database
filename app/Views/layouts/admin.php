@@ -20,6 +20,7 @@
 
     <?= $this->renderSection('modals') ?>
 
+    <?= $this->include('tooltip') ?>
     <?= $this->include('go_up') ?>
     <?= $this->include('footer') ?>
 
