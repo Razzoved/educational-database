@@ -89,7 +89,7 @@ class UserModel extends Model
             $sort = $this->primaryKey;
         }
 
-        $this->orderBy($sort, strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC');
+        $this->orderBy($sort, strtolower($sortDir) === 'asc' ? 'ASC' : 'DESC');
 
         if ($sort !== 'user_name') {
             $this->orderBy('user_name');
