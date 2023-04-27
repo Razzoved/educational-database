@@ -126,7 +126,7 @@ class Material extends BaseController
     protected function getOptions() : array
     {
         return array_column(
-            $this->materials->getArray(['sort' => 'title', 'callbacks' => false]),
+            $this->materials->getArray(['sort' => 'published_at', 'callbacks' => false]),
             'material_title'
         );
     }
