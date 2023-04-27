@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Entities\Property;
-use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Model;
+use CodeIgniter\Validation\Exceptions\ValidationException;
 
 /**
  * Model that handles all operations on properties.
@@ -100,6 +100,7 @@ class PropertyModel extends Model
         }
         return $this
             ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
+            ->setupCategory($data['category'] ?? false)
             ->setupFilters($data['filters'] ?? [])
             ->setupSearch($data['search'] ?? "");
     }
@@ -109,28 +110,29 @@ class PropertyModel extends Model
         if (
             $sort !== $this->createdField &&
             $sort !== $this->updatedField &&
-            $sort !== $this->primaryKey
+            $sort !== $this->primaryKey &&
+            $sort !== 'category'
         ) {
             $sort = 'property_' . $sort;
             $sort = in_array($sort, $this->allowedFields) || $sort === $this->primaryKey ? $sort : "";
         }
 
-        if ($sort !== "") {
+        if ($sort === "") {
             $sort = $this->primaryKey;
-        }
-
-        if ($sort !== 'property_priority') {
-            $this->orderBy('property_priority', 'desc');
         }
 
         $this->orderBy($sort, strtolower($sortDir) === 'desc' ? 'DESC' : 'ASC');
 
+        if ($sort !== 'property_priority') {
+            $this->orderBy($this->table . '.property_priority', 'desc');
+        }
+
         if ($sort !== 'property_tag') {
-            $this->orderBy('property_tag');
+            $this->orderBy($this->table . '.property_tag', 'asc');
         }
 
         if ($sort !== 'property_value') {
-            $this->orderBy('property_value');
+            $this->orderBy($this->table . '.property_value', 'asc');
         }
 
         return $this;
@@ -140,9 +142,9 @@ class PropertyModel extends Model
     {
         foreach ($filters as $tag => $id) {
             if ($id === "on") {
-                $this->orWhere('property_tag', $tag);
+                $this->orWhere($this->table . '.property_tag', $tag);
             } else if (is_numeric($id)) {
-                $this->orWhere('property_tag', $id);
+                $this->orWhere($this->table . '.property_tag', $id);
             } else if (is_array($id)) {
                 $this->setupFilters($id);
             }
@@ -155,8 +157,17 @@ class PropertyModel extends Model
         if ($search === "") {
             return $this;
         }
-        return $this->orLike('property_tag', $search, 'both', true, true)
-                    ->orLike('property_value', $search, 'both', true, true);
+        return $this->orLike("{$this->db->prefixTable($this->table)}.property_tag", $search, 'both', true, true)
+                    ->orLike("{$this->db->prefixTable($this->table)}.property_value", $search, 'both', true, true);
+    }
+
+    protected function setupCategory(bool $category)
+    {
+        if ($category) {
+            $this->join("{$this->table} AS c", "c.property_id = {$this->table}.property_tag", 'left')
+                 ->select("{$this->table}.*, c.property_value AS category");
+        }
+        return $this;
     }
 
     /**
@@ -169,14 +180,23 @@ class PropertyModel extends Model
     {
         $this->db->transStart();
 
-        // find item and check (along with usage) if it exists
-        $item = $this->get((int) $id, ['usage' => $purge]);
-        if (!$item || ($purge && $item->usage > 0)) {
-            throw new DatabaseException('Cannot delete property: ' . json_encode($id));
+        $item = $this->get((int) $id, ['callbacks' => false, 'usage' => !$purge]);
+
+        if (!$item || (!$purge && $item->usage > 0)) {
+            throw new ValidationException(
+                "Cannot delete property: <strong>{$item->value}</strong>. " .
+                "It is used by <strong>{$item->usage}</strong> materials."
+            );
         }
 
-        // delete children and self
         $item->children = $this->where('property_tag', $id)->findAll();
+        if (!$purge && !empty(!$item->children)) {
+            throw new ValidationException(
+                "Cannot delete property: <strong>{$item->value}</strong>. " .
+                "It contains nested tags."
+            );
+        }
+
         foreach ($item->children as $child) {
             $this->delete($child->id, $purge);
         }
@@ -206,35 +226,12 @@ class PropertyModel extends Model
         return $data;
     }
 
-    // protected function getCategory(array $data)
-    // {
-    //     if (!isset($data['data'])) {
-    //         return $data;
-    //     }
-
-    //     if ($data['method'] === 'find') {
-    //         $data['data']->tag = $this->_getCategory($data['data']);
-    //     } else foreach ($data['data'] as $property) {
-    //         $property->tag = $this->_getCategory($property);
-    //     }
-
-    //     return $data;
-    // }
-
     protected function _loadChildren(Property $property) : array
     {
         return $this->allowCallbacks(true)
                     ->where('property_tag', $property->id)
                     ->getArray();
     }
-
-    // protected function _getCategory(Property $property) : ?string
-    // {
-    //     $tag = $property->property_tag !== 0
-    //         ? $this->allowCallbacks(false)->find($property->property_tag)
-    //         : null;
-    //     return $tag->value ?? null;
-    // }
 
     /** ----------------------------------------------------------------------
      *                              HELPERS

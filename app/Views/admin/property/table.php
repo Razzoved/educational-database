@@ -15,7 +15,7 @@
     <div class="page__content">
         <div class="page-controls">
             <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
-            <?= view('sort_bar', ['sorters' => ['Id', 'Tag', 'Value'], 'create' => 'propertyOpen()']) ?>
+            <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value'], 'create' => 'propertyOpen()']) ?>
         </div>
 
         <div class="table" id="items">
@@ -26,7 +26,7 @@
                 echo view('admin/property/item', [
                     'id'          => $property->id,
                     'title'       => $property->value,
-                    'tag'         => $property->category,
+                    'tag'         => $property->category ?? "",
                     'usage'       => $property->usage,
                     'description' => $property->description
                 ]);
@@ -46,8 +46,5 @@
 <?= $this->section('scripts') ?>
 <script>
     const template = `<?= view('admin/property/item') ?>`
-
-    const appendData = (data) => {
-    }
 </script>
 <?= $this->endSection() ?>

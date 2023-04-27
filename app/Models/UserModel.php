@@ -85,7 +85,7 @@ class UserModel extends Model
             $sort = in_array($sort, $this->allowedFields) || $sort === $this->primaryKey ? $sort : "";
         }
 
-        if ($sort !== "") {
+        if ($sort === "") {
             $sort = $this->primaryKey;
         }
 

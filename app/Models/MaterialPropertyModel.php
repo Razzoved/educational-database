@@ -68,7 +68,7 @@ class MaterialPropertyModel extends Model
             'children' => model(PropertyModel::class)
                 ->where('property_tag', 0)
                 ->allowCallbacks(true)
-                ->getArray(),
+                ->getArray(['sort' => 'priority']),
         ]);
 
         $this->select('property_id')
