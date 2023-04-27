@@ -46,7 +46,7 @@ class MaterialEditor extends ResponseController
             'material'             => $material,
             'errors'               => $errors,
             'available_properties' => $this->properties->where('property_tag', 0)->getArray(),
-            'available_relations'  => $this->materials->allowCallbacks(false)->where('id !=', $material->id)->getArray(),
+            'available_relations'  => $this->materials->allowCallbacks(false)->where('material_id !=', $material->id)->getArray(),
         ]);
     }
 
