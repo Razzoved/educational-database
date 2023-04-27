@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\HTTP\Response;
+use CodeIgniter\Validation\Exceptions\ValidationException;
 use Exception;
 
 class ResponseController extends BaseController
@@ -22,6 +23,11 @@ class ResponseController extends BaseController
 
         try {
             $delete($entity);
+        } catch (ValidationException $e) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                $e->getMessage(),
+            );
         } catch (Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
@@ -34,13 +40,6 @@ class ResponseController extends BaseController
 
     protected function toResponse(Entity $entity, array $errors = [], int $statusCode = Response::HTTP_OK): Response
     {
-        // $body = $entity->toArray();
-        // if ($errors !== []) {
-        //     $body['errors'] = $errors;
-        // }
-        // return $this->response
-        //     ->setStatusCode($statusCode >= 100 ? $statusCode : Response::HTTP_INTERNAL_SERVER_ERROR)
-        //     ->setJSON($body);
         return $this->response
             ->setStatusCode(
                 $statusCode >= 100
