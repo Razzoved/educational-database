@@ -14,8 +14,6 @@ use Exception;
 
 class Property extends ResponseController
 {
-    private const META_TITLE = 'Administration - tags';
-
     private PropertyModel $properties;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
@@ -26,10 +24,14 @@ class Property extends ResponseController
 
     public function index() : string
     {
-        $filters = new EntitiesProperty(['value' => 'Tags']);
-        $filters->children = $this->properties->where('property_tag', 0)->getArray();
+        $filters = new EntitiesProperty(['value' => 'Categories']);
+        $filters->children = $this->properties
+            ->where('property_tag', 0)
+            ->getArray(['callbacks' => true]);
+        $this->getCategories($filters);
+
         $data = [
-            'meta_title' => Property::META_TITLE,
+            'meta_title' => 'Administration - tags',
             'title'      => 'Tags',
             'properties' => $this->getProperties(Config::PAGE_SIZE),
             'options'    => $this->getOptions(),
@@ -91,7 +93,9 @@ class Property extends ResponseController
     {
         return $this->doDelete(
             $id,
-            $this->properties->find,
+            function ($i) {
+                return $this->properties->find($i);
+            },
             function ($e) { $this->properties->delete($e->id); },
             'tag'
         );
@@ -119,9 +123,23 @@ class Property extends ResponseController
                 'sort'      => $this->request->getGetPost('sort'),
                 'sortDir'   => $this->request->getGetPost('sortDir'),
                 'callbacks' => false,
+                'category'  => true,
                 'usage'     => true,
             ],
             $perPage
         );
+    }
+
+    protected function getCategories(EntitiesProperty &$source) : void
+    {
+        $children = $source->children;
+        foreach ($children as $k => $child) {
+            if (empty($child->children)) {
+                unset($children[$k]);
+            } else {
+                $this->getCategories($child);
+            }
+        }
+        $source->__set('children', $children);
     }
 }
