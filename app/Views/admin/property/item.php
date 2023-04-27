@@ -25,12 +25,11 @@
      * @var string $description Description of the property.
      *
      * Must be "" if you want it to be empty.
-     * If handled in 'js' you may want to remove 'tooltipText' element on empty.
      */
-    $description = $description ?? '@description@';
+    $description = isset($description) && $description !== "" ? "data-tooltip='{$description}'" : '@description@';
 ?>
 
-<div id="<?= $id ?>" class="tooltip">
+<div id="<?= $id ?>" <?= $description ?>>
     <div class="item">
         <div class="item__header">
             <h2 class="item__title" data-value="value"><?= $title ?></h2>
@@ -55,7 +54,4 @@
             </p>
         </div>
     </div>
-    <?php if ($description !== '') : ?>
-        <span class="tooltip__text"><?= $description ?></span>
-    <?php endif; ?>
 </div>
