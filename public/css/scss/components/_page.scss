@@ -1,23 +1,36 @@
 @import '../defaults/variables';
 
 .page {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
+    // layout
+    display: grid;
+    grid-template:
+        "a a" auto
+        "b c" 1fr / minmax(15rem, 0.3fr) 1fr;
+    // sizing
+    width: 100%;
+    max-width: 100%;
     height: fit-content;
     overflow-x: scroll;
     overflow-y: hidden;
+
+    // styling
     gap: 1rem;
     margin: 0.25rem;
     padding: 1rem;
-    z-index: 1;
     background-color: $clr-light-semi-transparent;
-    box-shadow: 0.2rem 0.1rem 1.5rem 0rem #00a8a89c;
+    box-shadow: 0.2rem 0.2rem 1rem 0rem #00a8a89c;
     border-radius: $border-radius-lg + 1rem;
 
+    &--no-sidebar {
+        grid-template:
+            "a a" auto
+            "c c" 1fr;
+    }
+
     &--centered {
+        grid-template: ".";
         margin: auto;
-        margin-top: 10vh;
+        max-width: 30rem;
     }
 
     &--dark {
@@ -28,30 +41,21 @@
     }
 
     &__title {
+        grid-area: a;
         width: 100%;
         border-bottom: $clr-dark-transparent 2px dashed;
         padding-bottom: 1rem;
     }
 
-    &__body {
-        flex: 1 1 0;
-        display: flex;
-        flex-flow: row wrap;
-        gap: 1rem;
-    }
-
-    &__content {
-        overflow: visible;
-        flex: 9999 1 30rem;
-    }
-
     &__sidebar {
-        overflow: visible;
-        flex-basis: 18rem;
-        flex-grow: 1;
+        grid-area: b;
         display: flex;
         flex-direction: column;
         justify-content: baseline;
+    }
+
+    &__content {
+        grid-area: c;
     }
 
     &__toggler {
@@ -84,9 +88,11 @@
     }
 
     @media screen and (max-width: $sm) {
-        // hide top padding from title
-        &__sidebar &__title {
-            display: none;
+        &:not(.page--no-sidebar) {
+            grid-template:
+                "a" auto
+                "b" auto
+                "c" 1fr;
         }
         // default all group elements in group after toggling
         &__group > * {

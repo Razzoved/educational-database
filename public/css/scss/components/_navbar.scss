@@ -26,8 +26,11 @@
         text-align: center;
         justify-content: center;
         resize: both;
-        height: var(--height);
+        width: auto;
+        height: auto;
         padding: calc(var(--padding) / 2) calc(var(--padding) / 2);
+        max-width: 100%;
+        max-height: var(--height);
     }
 
     & &__list {

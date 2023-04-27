@@ -32,6 +32,8 @@
 
     $control = ['class' => 'form-control'];
     $label = ['class' => 'form-label'];
+
+    $path = 'admin/material/form'
 ?>
 
 <div class="page">
@@ -50,7 +52,7 @@
                 <label for="thumbnail" class="form__label form__label--small">
                     Thumbnail (click to edit)
                 </label>
-                <?= view('admin/material/thumbnail_input', ['thumbnail' => $thumbnail]) ?>
+                <?= view("{$path}/input_thumbnail", ['thumbnail' => $thumbnail]) ?>
             </div>
 
             <div class="form__group form__group--major">
@@ -73,19 +75,19 @@
 
         <fieldset class="form__group">
             <label for="properties" class="form__label">Tags</label>
-            <?= view('admin/material/property_selector', ['used' => $properties, 'available' => $available_properties]) ?>
+            <?= view("{$path}/input_property", ['used' => $properties, 'available' => $available_properties]) ?>
 
             <label for="tiny" class="form__label">Content</label>
             <textarea id="tiny" name="content" cols="60" rows="20"><?= set_value('content', '', false) ?></textarea>
 
             <label for="links" class="form__label">Links to relevant sites</label>
-            <?= view('admin/material/link_input', ['label' => $label, 'links' => set_value('links', [], false)]) ?>
+            <?= view("{$path}/input_link", ['label' => $label, 'links' => set_value('links', [], false)]) ?>
 
             <label for="files" class="form__label">Attached files</label>
-            <?= view('admin/material/file_input', ['label' => $label, 'files' => set_value('files', [], false)]) ?>
+            <?= view("{$path}/input_file", ['label' => $label, 'files' => set_value('files', [], false)]) ?>
 
             <label for="relations" class="form__label">Related materials</label>
-            <?= view('admin/material/relation_input', ['label' => $label, 'available' => $available_relations, 'relations' => set_value('relations', [], false)]) ?>
+            <?= view("{$path}/input_relation", ['label' => $label, 'available' => $available_relations, 'relations' => set_value('relations', [], false)]) ?>
         </fieldset>
 
         <!-- hidden attributes (for editing) -->

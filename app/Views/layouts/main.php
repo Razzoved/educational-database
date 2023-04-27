@@ -14,11 +14,9 @@
     <main id="top" class="container">
         <div class="page">
             <?php if (isset($title)) echo ('<h1 class="page__title">' . $title . '</h1>') ?>
-            <div class="page__body">
-                <?= $this->renderSection('sidebar') ?>
-                <div class="page__content">
-                    <?= $this->renderSection('content') ?>
-                </div>
+            <?= $this->renderSection('sidebar') ?>
+            <div class="page__content">
+                <?= $this->renderSection('content') ?>
             </div>
         </div>
     </main>

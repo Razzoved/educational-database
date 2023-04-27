@@ -10,7 +10,7 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="page">
+<div class="page page--no-sidebar">
     <h1 class="page__title"><?= $title ?></h1>
 
     <div class="page__content">
