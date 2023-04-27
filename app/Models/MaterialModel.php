@@ -21,7 +21,6 @@ class MaterialModel extends Model
     protected $allowedFields = [
         'material_status',
         'material_title',
-        'material_author',
         'material_blame',
         'material_content',
         'material_views',
@@ -36,7 +35,6 @@ class MaterialModel extends Model
 
     protected $validationRules = [
         'material_title'   => 'required|string',
-        'material_author'  => 'required|string',
         'material_status'  => 'required|valid_status',
         'material_content' => 'string',
         'material_blame'   => 'required',
@@ -45,10 +43,6 @@ class MaterialModel extends Model
         'material_title'  => [
             'required' => 'Title must be present.',
             'string'   => 'Title must be a valid string.'
-        ],
-        'material_author'  => [
-            'required' => 'Author must be present.',
-            'string'   => 'Author must be a valid string.'
         ],
         'material_status' => [
             'required'    => 'Status must be present.',

@@ -62,25 +62,12 @@
                     placeholder="Enter title"
                     value="<?= set_value('title') ?>"
                     required>
-                <!-- sender + status -->
-                <div class="form__group form__group--horizontal">
-                    <div class="form__group">
-                        <label for="sender" class="form__label">Sender</label>
-                        <input class="form__input"
-                            type="text"
-                            name="author"
-                            placeholder="Name of whoever sent the material"
-                            value="<?= set_value('author') ?>"
-                            required>
-                    </div>
-                    <div class="form__group">
-                        <label for="status" class="form__label">Status</label>
-                        <?= form_dropdown(['id' => 'status', 'name' => 'status'],
-                            \App\Entities\Cast\StatusCast::VALID_VALUES,
-                            set_value('status'),
-                            ['class' => 'form__input']) ?>
-                    </div>
-                </div>
+                <!-- status -->
+                <label for="status" class="form__label">Status</label>
+                <?= form_dropdown(['id' => 'status', 'name' => 'status'],
+                    \App\Entities\Cast\StatusCast::VALID_VALUES,
+                    set_value('status'),
+                    ['class' => 'form__input']) ?>
             </div>
         </fieldset>
 

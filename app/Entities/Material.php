@@ -9,7 +9,6 @@ class Material extends Entity
 {
     protected $attributes = [
         'material_id'           => null,
-        'material_author'       => null,
         'material_blame'        => null,
         'material_status'       => null,
         'material_title'        => null,
@@ -26,7 +25,6 @@ class Material extends Entity
 
     protected $casts = [
         'material_id'           => 'int',
-        'material_author'       => 'string',
         'material_blame'        => 'int',
         'material_status'       => 'status',
         'material_title'        => 'string',
@@ -46,7 +44,6 @@ class Material extends Entity
 
     protected $datamap = [
         'id'           => 'material_id',
-        'author'       => 'material_author',
         'blame'        => 'material_blame',
         'status'       => 'material_status',
         'title'        => 'material_title',

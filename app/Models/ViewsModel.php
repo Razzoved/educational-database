@@ -71,8 +71,8 @@ class ViewsModel extends Model
     public function getTopMaterials(int $n = 1, string $search = "", int $days = 30) : array
     {
         $select = 'material_id, material_status, material_title, ' .
-        'material_author, material_blame, material_content,' .
-        'material_rating, material_rating_count, published_at, updated_at';
+        'material_blame, material_content, material_rating, ' .
+        'material_rating_count, published_at, updated_at';
 
         $views = model(MaterialModel::class)
             ->select($select)
