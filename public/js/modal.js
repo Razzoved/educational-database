@@ -1,7 +1,28 @@
+String.prototype.fill = function(data = undefined) {
+    let result = this;
+    if (data) {
+        console.debug('Data to fill: ', data);
+    }
+    for (var k in data) {
+        result = result.replaceAll(`@${k.toLowerCase()}@`, data[k]);
+    }
+    return result;
+}
+
+String.prototype.html = function(data = undefined) {
+    let result = this.fill(data);
+    if ((match = result.match(/@[^ @]*@/)) !== null) {
+        console.warn('Template not fully filled, please check your arguments');
+        console.debug('Found: ', match);
+    }
+    const parser = new DOMParser();
+    return parser.parseFromString(result, 'text/html')?.body.firstElementChild;
+};
+
 const modalClose = function(event)
 {
-    const modal = this.document.getElementById('modal');
-    if (modal && (event.target === modal || event === null)) {
+    const modal = document.getElementById('modal');
+    if (modal && (event === null || event.target === modal)) {
         modal.remove();
     }
 }
@@ -10,26 +31,20 @@ const modalClose = function(event)
  * Sends a request to the server for a modal to be opened.
  * Shows the result if response is HTTP_OK.
  *
- * @param {string} target address to send request to
- * @param {object} data   data to send to server
+ * @param {string} target   address to send request to
+ * @param {string} template html in form of string, contains placeholders
  */
-const modalOpen = async (target, data) => {
+const modalOpen = async (target, template) => {
     try {
-        const response = await fetch(target, {
-            method: "GET",
-            ...(data !== undefined ? { body: JSON.stringify(data) } : {}),
-        });
-        if (!response.body) {
-            throw new Error('No response from server');
+        if (target) {
+            const response = await fetch(target);
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            template = template.fill({...(await response.json())});
         }
-
-        const parser = new DOMParser();
-        const result = parser.parseFromString(response.body, 'text/html');
-        if (result.id !== 'modal') {
-            throw new Error('Invalid result');
-        }
-
-        document.body.appendChild(result);
+        const element = document.body.appendChild(template.html());
+        element.classList.add("modal--visible");
     } catch (err) {
         console.error(`modalSubmit: ${err.message}`);
         alert('Failed to open modal');
@@ -37,14 +52,6 @@ const modalOpen = async (target, data) => {
     }
 }
 
-/**
- * Submits the form from modal.
- *
- * @param {string} id            id of modal
- * @param {function} onSuccess   callback to call on success
- * @param {string} urlParameter  optional suffix to url, adds '/' in between
- * @param {string} method        form submission method (POST, GET, etc.)
- */
 const modalSubmit = async () => {
     try {
         const form = document.querySelector('#modal form');
@@ -54,31 +61,30 @@ const modalSubmit = async () => {
 
         const response = await fetch(form.action, {
             method: form.method,
-            contentType: 'application/json',
-            body: (new FormData(form)).serialize(),
+            body: new FormData(form),
         });
-        if (!response.body) {
-            throw new Error('No response from server');
+        if (!response.ok) {
+            throw new Error(response.statusText);
         }
 
-        const parser = new DOMParser();
-        const result = parser.parseFromString(response.body, 'text/html');
-        if (result.id !== 'modal') {
-            throw new Error('Invalid result');
+        if (!itemTemplate || !items) {
+            throw new Error('Internal error, make sure itemTemplate is defined and element with id "items" exists');
         }
 
-        if (result.className === 'modal') {
-            const target = document.getElementById('dynamic');
-            target.appendChild(result);
+        const data = await response.json();
+        const template = itemTemplate.html(data);
+
+        const existing = document.getElementById(data.id);
+        if (existing) {
+            existing.replaceWith(template);
         } else {
-            document.body.appendChild(result);
+            items.insertAdjacentElement('afterbegin', template);
         }
-    } catch (err) {
-        console.error(`modalSubmit: ${err.message}`);
-        alert('Failed to submit modal');
         modalClose(null);
+    } catch (err) {
+        modal.querySelector('#error')?.remove();
+        modal.querySelector('.modal__body').insertAdjacentElement('afterbegin',
+            `<p id="error" style="text-align: center"><strong style="color: red">${err.message}</strong></p>`.html()
+        );
     }
 }
-
-// When the user clicks anywhere outside of the modal, close it
-window.addEventListener("click", modalClose);

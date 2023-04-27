@@ -134,10 +134,15 @@ class UserModel extends Model
         if (!isset($data['data']['user_password'])) {
             return $data;
         }
-
-        $data['data']['user_password'] = password_hash($data['data']['user_password'], PASSWORD_DEFAULT);
-        unset($data['data']['password']);
-
+        // prevent overwrite in case of empty password
+        if ($data['data']['user_password'] === '') {
+            unset($data['data']['user_password']);
+        } else {
+            $data['data']['user_password'] = password_hash(
+                $data['data']['user_password'],
+                PASSWORD_DEFAULT
+            );
+        }
         return $data;
     }
 

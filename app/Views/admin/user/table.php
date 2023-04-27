@@ -23,7 +23,7 @@
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                ]);
+                ], ['saveData' => false]);
             }
         ?>
         </div>
@@ -39,5 +39,23 @@
 
 <?= $this->section('scripts') ?>
 <script>
+    <?php include_once(FCPATH . 'js/modal.js') ?>
+
+    const formTemplate = `<?= json_encode(view('admin/user/form', ['title' => null, 'submit' => null])) ?>`;
+    const itemTemplate = `<?= json_encode(view('admin/user/item')) ?>`;
+
+    const url = '<?= url_to('Admin\User::get', 0) ?>';
+    const items = document.getElementById('items');
+
+    const userOpen = async (id = undefined) => {
+        const template = formTemplate.fill(id
+            ? { title: 'Update user', submit: 'Update' }
+            : { title: 'New user', submit: 'Create' }
+        ).fill(id
+            ? {}
+            : { id: "", name: "", email: "" }
+        );
+        modalOpen(id ? url.replace(/0$/, id) : undefined, template);
+    }
 </script>
 <?= $this->endSection() ?>

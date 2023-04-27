@@ -7,21 +7,21 @@
      * @param string $email email of the user, OPTIONAL
      */
 
-    $title = isset($id) && $id !== 0 ? 'Update user' : 'New user';
-    $submit = isset($id) && $id !== 0 ? 'Edit' : 'Create';
+    $title = $title ?? '@title@';
+    $submit = $submit ?? '@submit@';
 
-    $id = $id ?? "";
-    $name = $name ?? "";
-    $email = $email ?? "";
+    $id = $id ?? "@id@";
+    $name = $name ?? "@name@";
+    $email = $email ?? "@email@";
 ?>
 
-<div class="modal" id="user-window">
+<div class="modal" id="modal">
 
     <div class="modal__content">
 
         <div class="modal__header">
             <h1 class="modal__title"><?= $title ?></h1>
-            <span class="modal__close" onclick="modalClose('user-window')">&#10005</span>
+            <span class="modal__close" onclick="modalClose(null)">&#10005</span>
         </div>
 
         <div class="modal__body">
@@ -34,7 +34,8 @@
                     id="name"
                     name="name"
                     value="<?= $name ?>"
-                    placeholder="Enter username">
+                    placeholder="Enter username"
+                    autocomplete="username">
 
                 <label class="form__label" for="email">Email</label>
                 <input class="form__input"
@@ -42,7 +43,8 @@
                     id="email"
                     name="email"
                     value="<?= $email ?>"
-                    placeholder="name@example.com">
+                    placeholder="name@example.com"
+                    autocomplete="email">
 
                 <fieldset class="form__group">
                     <small id="pass-notice" hidden='true'>Password will not change if left empty:</small>
@@ -52,28 +54,30 @@
                         type="password"
                         id="password"
                         name="password"
-                        placeholder="**********">
+                        placeholder="**********"
+                        autocomplete="new-password">
 
-                    <label class="form__label" for="pass-confirm">Confirm password</label>
+                    <label class="form__label" for="confirmPassword">Confirm password</label>
                     <input class="form__input"
                         type="password"
-                        id="confirm-password"
-                        name="confirm-password"
-                        placeholder="**********">
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="**********"
+                        autocomplete="new-password">
                 </fieldset>
             </form>
         </div>
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="submit" class="modal__button modal__button--submit" onclick="modalSubmit()"><?= $submit ?></button>
-                <button type="button" class="modal__button modal__button--cancel" onclick="modalClose('user-window')">Cancel</button>
+                <button type="submit" class="modal__button modal__button--green" onclick="modalSubmit()"><?= $submit ?></button>
+                <button type="button" class="modal__button" onclick="modalClose(null)">Cancel</button>
             </div>
         </div>
 
     </div>
 
     <script type="text/javascript">
-        <?= include_once(FCPATH . 'js/modal.js') ?>
+        <?php include_once(FCPATH . 'js/modal.js') ?>
     </script>
 </div>

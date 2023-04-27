@@ -6,18 +6,18 @@ namespace App\Validation;
 
 class User
 {
-    public function user_name_update(string $name, int $id): bool
+    public function user_name_update(string $name, string $params, array $data): bool
     {
         $users = model(UserModel::class)->where('user_name', $name)->findAll(2);
-        $count = array_count_values($users);
-        return $count === 0 || ($count === 1 && isset($id) && $users[0]->id === $id);
+        $count = sizeof($users);
+        return $count === 0 || ($count === 1 && isset($data[$params]) && $users[0]->id === (int) $data[$params]);
     }
 
-    public function user_email_update(string $email, int $id): bool
+    public function user_email_update(string $email, string $params, array $data): bool
     {
         $users = model(UserModel::class)->where('user_email', $email)->findAll(2);
-        $count = array_count_values($users);
-        return $count === 0 || ($count === 1 && isset($id) && $users[0]->id === $id);
+        $count = sizeof($users);
+        return $count === 0 || ($count === 1 && isset($data[$params]) && $users[0]->id === (int) $data[$params]);
     }
 
     public function user_email(string $email): bool

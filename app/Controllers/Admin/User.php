@@ -42,8 +42,8 @@ class User extends ResponseController
     {
         $user = new EntitiesUser($this->request->getPost());
         $rules = [
-            'name'  => 'required|min_length[4]|max_length[50]|user_name_update[{id}]',
-            'email' => 'required|min_length[4]|max_length[320]|user_email_update[{id}]',
+            'name'  => 'required|min_length[4]|max_length[50]|user_name_update[id]',
+            'email' => 'required|min_length[4]|max_length[320]|user_email_update[id]',
         ];
         if ($user->password) {
             $rules['password'] = 'required|min_length[6]|max_length[50]';
@@ -59,7 +59,7 @@ class User extends ResponseController
         }
 
         try {
-            if (!$this->users->save($user)) throw new Exception();
+            if (!$this->users->save($user->toRawArray())) throw new Exception();
             if (!$user->id) $user->id = $this->users->getInsertID();
         } catch (Exception $e) {
             return $this->toResponse(

@@ -34,12 +34,22 @@ class ResponseController extends BaseController
 
     protected function toResponse(Entity $entity, array $errors = [], int $statusCode = Response::HTTP_OK): Response
     {
-        $body = $entity->toArray();
-        if ($errors !== []) {
-            $body['errors'] = $errors;
-        }
+        // $body = $entity->toArray();
+        // if ($errors !== []) {
+        //     $body['errors'] = $errors;
+        // }
+        // return $this->response
+        //     ->setStatusCode($statusCode >= 100 ? $statusCode : Response::HTTP_INTERNAL_SERVER_ERROR)
+        //     ->setJSON($body);
         return $this->response
-            ->setStatusCode($statusCode >= 100 ? $statusCode : Response::HTTP_INTERNAL_SERVER_ERROR)
-            ->setJSON($body);
+            ->setStatusCode(
+                $statusCode >= 100
+                    ? $statusCode
+                    : Response::HTTP_INTERNAL_SERVER_ERROR,
+                !empty($errors)
+                    ? array_shift($errors)
+                    : ''
+            )
+            ->setJSON($entity);
     }
 }

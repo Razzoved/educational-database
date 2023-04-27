@@ -69,10 +69,13 @@
                     deleteModal.getAttribute('data-value') +
                     "</strong> could not be deleted." +
                     "<br>Do you want to try again?";
-            } else {
-                document.getElementById("delete-close")?.remove();
-                deleteModal.style.display = "none";
+                return;
             }
+
+            const data = await response.json();
+            document.getElementById(data.id)?.remove();
+            document.getElementById("delete-close")?.remove();
+            deleteModal.style.display = "none";
         });
     </script>
 </div>
