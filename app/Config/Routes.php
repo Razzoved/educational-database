@@ -72,6 +72,7 @@ $routes->group('/admin', function($routes) {
         $routes->put('image', 'Admin\Resource::uploadImage');
         $routes->post('(:num)', 'Admin\Resource::assign/$1');
         $routes->delete('(:num)', 'Admin\Resource::delete/$1');
+        $routes->delete('(:any)', 'Admin\Resource::deleteUnused/$1');
     });
 
     $routes->group('user', function($routes) {

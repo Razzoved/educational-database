@@ -102,6 +102,7 @@ define('ROOTURL', 'https://www.academicintegrity.eu');
 
 define('PERM', 'uploads/');
 define('TEMP', 'temp/');
+define('UNUSED', 'unused/');
 
 define('ASSET_PREFIX', 'public/assets/');
 define('SAVE_PREFIX', 'public/' . PERM);
@@ -110,4 +111,4 @@ define('TEMP_PREFIX', 'public/' . TEMP);
 define('SAVE_PATH', ROOTPATH . SAVE_PREFIX);
 define('TEMP_PATH', ROOTPATH . TEMP_PREFIX);
 
-define('UNUSED_PATH', TEMP_PATH . 'unused/');
+define('UNUSED_PATH', TEMP_PATH . UNUSED);

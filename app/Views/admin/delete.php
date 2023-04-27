@@ -3,7 +3,6 @@
      * MODAL: confirmation for delete.
      *
      * @param string $itemType type of item to be deleted (material/...)
-     * @param string $idName name of id parameter (required if name !== 'id')
      */
 ?>
 <form class="modal" id="delete-window">
@@ -59,15 +58,15 @@
             event.preventDefault();
 
             const response = await fetch(
-                '<?= $action ?>'.replace(/[0-9]+$/, deleteModal.getAttribute('data-value')),
+                '<?= $action ?>'.replace(/([0-9]+|@segment@)$/, deleteModal.getAttribute('data-value')),
                 { method: 'DELETE' }
             );
 
             if (!response.ok) {
-                messageElement.innerHTML = "Error: " +
-                    "item with id: <strong>" +
+                messageElement.innerHTML ="Item with id: <strong>" +
                     deleteModal.getAttribute('data-value') +
                     "</strong> could not be deleted." +
+                    "<br><em style='margin: 1rem; color: red;'>" + response.statusText + "</em>" +
                     "<br>Do you want to try again?";
                 return;
             }

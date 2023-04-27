@@ -104,4 +104,40 @@ class Resource extends ResponseController
             'resource'
         );
     }
+
+    public function deleteUnused(string ...$path) : Response
+    {
+        if (sizeof($path) < 4) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                'Missing leading segments'
+            );
+        }
+
+        $prefix = $path[0] . '/' . $path[1] . '/' . $path[2] . '/';
+
+        if ($prefix !== TEMP_PREFIX . UNUSED) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                'Invalid path prefix.'
+            );
+        }
+
+        $path = implode('/', $path);
+        if (strpos($path, '../') !== false) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                'Path cannot contain "../" (cannot go up)!'
+            );
+        }
+
+        if ($path && !unlink(ROOTPATH . $path)) {
+            return $this->response->setStatusCode(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                'Could not delete file: ' . $path . '<br>Please try again later!'
+            );
+        }
+
+        return $this->response->setJSON([ 'id' => $path ]);
+    }
 }

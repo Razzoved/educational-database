@@ -20,7 +20,7 @@
                 echo $this->include('none');
             } else foreach($resources as $resource) {
                 echo view('admin/resource/item', [
-                    'id'   => $resource->id,
+                    'id'   => $resource->path,
                     'path' => \App\Libraries\Resources::pathToFileURL($resource->getRootPath()),
                     'name' => basename($resource->path),
                 ]);
@@ -32,5 +32,5 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>
-<?= view('admin/delete', ['action' => url_to('Admin\Resource::delete', 0)]) ?>
+<?= view('admin/delete', ['action' => url_to('Admin\Resource::deleteUnused', '@segment@')]) ?>
 <?= $this->endSection() ?>
