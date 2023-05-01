@@ -1,12 +1,12 @@
 // variables and defaults
-@import 'defaults/variables';
-@import 'defaults/fonts';
+@import 'variables';
+@import 'fonts';
 
 // components
-@import 'components/container';
-@import 'components/navbar';
-@import 'components/page';
-@import 'components/footer';
+@import '../components/container';
+@import '../components/navbar';
+@import '../components/page';
+@import '../components/footer';
 
 *,
 *::before,
@@ -108,4 +108,11 @@ input:read-only {
     &, & > * {
         color: $clr-active;
     }
+}
+
+#items {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: 0.5rem;
 }

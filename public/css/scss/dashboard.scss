@@ -1,12 +1,13 @@
+@import 'defaults/style';
 @import 'defaults/variables';
 
 .dashboard {
-    display: flex;
-    flex-flow: row wrap;
-    width: 100%;
+    // display: flex;
+    // flex-flow: row wrap;
+    // width: 100%;
 
     section {
-        flex-grow: 1;
+        flex-grow: 0;
         flex-shrink: 1;
         margin: 0.5rem;
         border-radius: $border-radius-lg;
@@ -84,5 +85,13 @@
 
     &__views {
         max-width: 100%;
+    }
+}
+
+@media screen and (min-width: $md-l) {
+    .page:has(.page__sidebar) {
+        grid-template:
+            "a a" auto
+            "c b" 1fr / 1fr minmax(15rem, 0.3fr);
     }
 }

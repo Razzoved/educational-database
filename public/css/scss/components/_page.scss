@@ -12,7 +12,6 @@
     height: fit-content;
     overflow-x: scroll;
     overflow-y: hidden;
-
     // styling
     gap: 1rem;
     margin: 0.25rem;
@@ -51,7 +50,7 @@
         grid-area: b;
         display: flex;
         flex-direction: column;
-        justify-content: baseline;
+        justify-content: flex-start;
     }
 
     &__content {
