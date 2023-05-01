@@ -1,153 +1,176 @@
 @import '../defaults/variables';
 
 .collapsible {
-    cursor: default;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5rem;
     border: $clr-dark 1px solid;
     border-radius: $border-radius-lg;
     background-color: $clr-light-transparent;
+    max-height: 100%;
+    align-items: center;
     overflow: hidden;
-    position: relative;
 
-    & button {
+    & > * {
         width: 100%;
     }
 
-    &:hover {
-        border-color: $clr-focus;
-        box-shadow: none;
+    &__header {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.5rem;
+        border-bottom: $clr-dark-transparent 1px solid;
+        background-color: $clr-gray-transparent;
+
+        &:hover {
+            background-color: $clr-focus-bg;
+        }
+        &:hover * {
+            color: $clr-focus;
+            background-color: unset;
+        }
     }
 
     &__toggle {
-        // replace button defaults
-        background-color: $clr-gray-transparent;
+        display: flex;
+        flex: 1 1 0;
         border: unset;
         border-radius: unset;
-        border-bottom: $clr-dark-transparent 1px solid;
-        // new properties
-        padding: 0.5rem 0.5rem;
-        display: flex;
+        background-color: unset;
         align-items: center;
         gap: 0.4rem;
-        &:hover * {
-            color: $clr-focus;
+
+        i {
+            color: $clr-dark;
+            transform: rotateZ(90deg);
+            transition: transform 250ms ease-in-out;
+            margin-right: 0.5rem;
+            font-size: 30px;
+        }
+        span {
+            font-weight: bold;
         }
     }
 
     &__toggle-overflow {
+        width: 100%;
         color: $clr-hyperlink;
-        background-color: initial;
         border: unset;
         border-radius: unset;
+        background-color: initial;
         border-top: $clr-dark-transparent 1px solid;
-        &:hover {
-            background-color: $clr-focus-bg;
-        }
     }
 
-    &__indicator {
-        color: $clr-dark;
-        transform: rotateZ(90deg);
-        transition: transform 250ms ease-in-out;
-        margin-right: 0.5rem;
-        font-size: 30px;
-    }
-
-    &__title {
-        color: $clr-dark;
-        font-size: $fs-button;
-        font-weight: 600;
-    }
-
-    &__target {
-        padding: 0.5rem 0.5rem;
-        display: flex;
-        flex-direction: column;
+    &__content {
         word-wrap: break-word;
         list-style: none;
         line-break: strict;
-        cursor: pointer;
+        height: auto;
+        max-height: 500px;
+        transition: max-height 250ms ease-in;
+        overflow: auto;
+    }
+
+    &__items {
+        list-style: none;
+        & &:last-child {
+            margin-bottom: 0.5rem;
+        }
     }
 
     &__item {
-        color: $clr-light;
-        padding: 0.3rem;
-        input[type='checkbox'] {
-            transform: scale(1.5);
-            margin-right: 0.5rem;
-            float: left;
-            cursor: pointer;
-            &:hover {
-                background-color: $clr-focus-bg;
-            }
-        }
-        input[type='checkbox'] + label {
-            display: flex;
-            height: 100%;
-            line-height: 100%;
-            align-items: center;
-            text-align: left;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        button[type='submit'] {
-            padding: 0.1rem;
-            border: none;
-            text-align: left;
-            justify-content: center;
-            text-decoration: none;
-            // override default colors
-            color: $clr-text;
-            background-color: transparent;
-        }
+        width: 100%;
     }
 
-    &__item:hover,
-    &__item:hover > input,
-    &__item:hover > label,
-    &__item:hover > button,
-    &__item:hover > form > button {
-        color: $clr-focus;
+    input[type=checkbox] {
+        width: 1.3em;
+        height: 1.3em;
+        background-color: $clr-light-semi-transparent;
+        border-radius: 50%;
+        vertical-align: middle;
+        border: 1px solid #ddd;
+        -webkit-appearance: none;
+        appearance: none;
+        outline: none;
+        cursor:cell;
     }
 
-    &--small {
-        border: $clr-dark-transparent 0.5px solid;
+    input[type=checkbox]:checked {
+        background-color: $clr-active-bg;
+    }
+
+    & & {
+        overflow: visible;
+        gap: 0;
+        border: none;
         border-radius: 0;
         background-color: unset;
-        padding: 0rem;
-        margin-left: -0.5rem;
-        margin-right: -0.5rem;
     }
 
-    &--small &__toggle {
-        // replace button defaults
-        border: none;
-        border-radius: unset;
-        border-bottom: $clr-dark-transparent 1px solid;
-        // new properties
-        padding: 0.5rem 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        &:hover * {
-            color: $clr-focus;
+    & & > &__content {
+        max-width: 95%;
+    }
+
+    & & &__header {
+        border: unset;
+        background-color: unset;
+    }
+
+    & > &__header:has(&__toggle-group:checked) + &__content {
+        display: none;
+    }
+
+    &--collapsed > &__header &__toggle {
+        i {
+            transform: rotateZ(0deg);
         }
     }
 
-    &--small &__title {
-        $font-weight: 300;
+    &--collapsed {
+        gap: 0;
+        transition: gap 250ms ease-in;
     }
 
-    &--collapsed &__toggle {
-        border: none;
+    &--collapsed > &__content {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 250ms ease-in;
     }
 
-    &--collapsed &__indicator {
-        transform: rotateZ(0deg);
-    }
-
-    &--collapsed > &__target,
-    &--collapsed > &__target + &__toggle-overflow,
-    &--no-overflow > &__target > &__item--overflow {
+    &--no-overflow > &__content > &__items > &__item--overflow {
         display: none;
+    }
+}
+
+.filter {
+    display: flex;
+    flex-flow: row wrap;
+    padding: 0.35rem 0.5rem;
+    text-align: start;
+    justify-content: center;
+    border: unset;
+
+    &__label {
+        cursor: pointer;
+        flex: 1 1 0;
+        border: unset;
+        color: $clr-text;
+        background-color: unset;
+    }
+    &:has(&__checkbox) &__label {
+        padding-left: 1rem;
+    }
+
+    &:not(:hover):has(&__checkbox:not(:checked)) &__label {
+        opacity: 0.8;
+    }
+    &:hover {
+        background-color: $clr-light-semi-transparent;
+    }
+    &:hover &__label {
+        color: $clr-focus;
     }
 }

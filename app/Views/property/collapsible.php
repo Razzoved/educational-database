@@ -1,55 +1,62 @@
 <?php
-    /** Renders a collapsible list onto a page:
-     *  Data format: [priorities][properties] ... [properties]
+    /**
+     * Renders a collapsible list onto a page:
+     * Data format: [priorities][properties] ... [properties]
      *
-     *  Expects:
-     *  @param string $type - buttons or checkboxes
-     *  @param Property $property
+     * Expects:
+     * @param Property $property property to display
+     * @param string $type       buttons or checkboxes
+     * @param int $maxIndex      maximum number of items before overflow
      */
-
-use App\Entities\Property;
-
+    $childCount = sizeof($property->children);
+    $maxIndex = $maxIndex ?? 4;
+    $isFirstLevel = $property->tag == 0;
 ?>
 
-<?php if (!isset($property->children) || empty($property->children)) : ?>
+<?php if ($childCount > 0) : ?>
 
-<?= $this->include('property/item') ?>
+<div class="collapsible collapsible--no-overflow<?= !$isFirstLevel ? ' collapsible--collapsed' : '' ?>">
 
-<?php else : ?>
+    <div class="collapsible__header">
 
-    <section class="collapsible collapsible--no-overflow<?= $property->tag != 0 ? ' collapsible--small collapsible--collapsed' : '' ?>">
+        <?php if (!$isFirstLevel) : ?>
+            <input class="collapsible__toggle-group"
+                type="checkbox"
+                name="group"
+                value="<?= $property->id ?>"
+                title="Use all from group"
+            />
+        <?php endif; ?>
+
         <button class="collapsible__toggle" type="button" onclick="toggleCollapsible(this)">
-            <i class="collapsible__indicator fa-solid fa-caret-right"></i>
-            <h2 class="collapsible__title"><?= $property->value ?></h2>
+            <i class="fa-solid fa-caret-right"></i>
+            <span><?= $property->value ?></span>
         </button>
 
-        <?php $index = 0; ?>
-        <ul class="collapsible__target">
-            <?php $parent = $property->tag != 0
-                ? array(new Property([
-                    'id' => $property->id,
-                    'tag' => $property->tag,
-                    'value' => $property->value]))
-                : []; ?>
-            <?php foreach (array_merge($parent, $property->children) as $child) : ?>
-                <li class="collapsible__item<?= $index >= 5 ? ' collapsible__item--overflow' : '' ?> tooltip">
-                    <?php if ($child->description && $child->description !== '') : ?>
-                        <span class="tooltip__text"><?= esc($child->description) ?></span>
-                    <?php endif; ?>
-                    <?= view('property/collapsible', ['property' => $child, 'type' => $type]) ?>
-                </li>
-                <?php $index++; ?>
+    </div>
+
+    <div class="collapsible__content">
+
+        <ul class="collapsible__items">
+            <?php $index = 0 ?>
+            <?php foreach ($property->children as $item) : ?>
+                <?= view('property/collapsible_item', [
+                    'isOverflow' => $index++ >= $maxIndex,
+                    'property' => $item,
+                    'type' => $type
+                ]) ?>
             <?php endforeach; ?>
         </ul>
 
-        <?php if ($index > 5) : ?>
-            <button type="button" class="collapsible__toggle-overflow" onclick="toggleOverflow(this)">Show more</button>
+        <?php if ($childCount >= $maxIndex) : ?>
+            <button class="collapsible__toggle-overflow" type="button" onclick="toggleOverflow(this)">Show more</button>
         <?php endif; ?>
 
-        <script>
-            <?php include_once(ROOTPATH . '/public/js/collapsible.js') ?>
-            <?php include_once(ROOTPATH . '/public/js/tooltip.js') ?>
-        </script>
-    </section>
+    </div>
+
+    <script type="text/javascript">
+        <?php include_once(FCPATH . 'js/collapsible.js') ?>
+    </script>
+</div>
 
 <?php endif; ?>

@@ -19,17 +19,15 @@
 
 body {
     background: $bg-gradient;
-    & *::-webkit-scrollbar {
-        width: 0.8rem;
-        background-color: unset;
+    & div::-webkit-scrollbar {
+        width: 0.4rem;
         border: none;
     }
-    & *::-webkit-scrollbar-track {
+    & div::-webkit-scrollbar-track {
         border: none;
-        background-color: transparent;
+        background-color: $clr-gray-transparent;
     }
-    & *::-webkit-scrollbar-thumb {
-        border-radius: $border-radius-lg;
+    & div::-webkit-scrollbar-thumb {
         background-color: $clr-dark;
         background-clip: border-box;
     }

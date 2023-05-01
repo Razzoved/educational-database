@@ -3,12 +3,13 @@
         <i class="fa fa-bars"></i>
         Toggle filters
     </button>
+    <button type="button" class="page__reset" onclick="submitSearch()">
+        Apply filters
+    </button>
     <button type="button" class="page__reset" onclick="resetFilters()">
         Reset filters
     </button>
     <?php foreach ($properties as $property) : ?>
-        <?php if (isset($property->children) && !empty($property->children)) : ?>
-            <?= view('property/collapsible', ['property' => $property, 'type' => 'checkbox']) ?>
-        <?php endif; ?>
+        <?= view('property/collapsible', ['property' => $property, 'type' => 'checkbox']) ?>
     <?php endforeach; ?>
 </div>
