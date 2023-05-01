@@ -28,7 +28,7 @@
                     'title'       => $property->value,
                     'tag'         => $property->category ?? "",
                     'usage'       => $property->usage,
-                    'description' => $property->description
+                    'description' => $property->description ?? "",
                 ]);
             }
             ?>

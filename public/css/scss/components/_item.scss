@@ -1,14 +1,9 @@
 @import '../defaults/variables';
 
 .item {
-    margin-bottom: 1rem;
     border: $clr-dark 1px solid;
     border-radius: $border-radius-lg;
     padding: 0.5rem;
-
-    &--stretch {
-        flex-grow: 1;
-    }
 
     & &__header {
         display: flex;

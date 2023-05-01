@@ -9,7 +9,7 @@
      */
 ?>
 
-<div class="item item--stretch" id="file-<?= $id ?? "template"?>" data-value="<?= $path ?? '' ?>">
+<div class="item" id="file-<?= $id ?? "template"?>" data-value="<?= $path ?? '' ?>">
     <div class="item__header">
         <image class="img-fluid rounded edit-mr"
         style="width: 6rem; height: 6rem; object-fit: scale-down"

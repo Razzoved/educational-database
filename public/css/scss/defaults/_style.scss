@@ -113,6 +113,6 @@ input:read-only {
 #items {
     display: flex;
     flex-flow: column nowrap;
-    align-items: center;
+    align-items: stretch;
     gap: 0.5rem;
 }

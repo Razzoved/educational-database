@@ -26,7 +26,9 @@
      *
      * Must be "" if you want it to be empty.
      */
-    $description = isset($description) && $description !== "" ? "data-tooltip='{$description}'" : '@description@';
+    $description = isset($description)
+        ? ($description === "" ? "" : "data-tooltip='{$description}'")
+        : '@description@';
 ?>
 
 <div id="<?= $id ?>" <?= $description ?>>
