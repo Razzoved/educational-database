@@ -1,14 +1,33 @@
 @import '../defaults/variables';
 
 .card {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template: "a b" 1fr / 20% 1fr;
+    cursor: pointer;
     overflow: hidden;
-    align-items: center;
     border: $clr-dark 1px solid;
     border-radius: $border-radius-lg;
     background-color: $clr-light;
-    cursor: pointer;
+
+    &__thumbnail {
+        grid-area: a;
+        background-color: $clr-focus;
+        img {
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: scale-down;
+            object-position: center center;
+        }
+    }
+
+    &__body {
+        grid-area: b;
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 1rem;
+        padding: 1rem;
+    }
 
     &__header * {
         overflow: hidden;
@@ -21,41 +40,6 @@
             -webkit-line-clamp: 2;
             line-clamp: 2;
         }
-    }
-
-    &__thumbnail {
-        img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            object-position: center center;
-        }
-        // flex-grow: 1;
-        // flex-shrink: 1;
-        background-color: $clr-focus;
-        // height: 100%;
-        // // sizing
-        max-width: 20%;
-        height: 100%;
-        min-height: 100%;
-        // @media screen and (max-width: $xs) {
-        //     max-width: 30%;
-        // }
-        // @media screen and (max-width: $xs-l) {
-        //     max-width: 100%;
-        // }
-    }
-
-    &__body {
-        flex-basis: 20rem;
-        flex-grow: 9999;
-        text-align: left;
-        padding: 1rem;
-    }
-
-    &__content {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
     }
 
     &__footer {
@@ -77,5 +61,16 @@
 
     &:hover &__header {
         color: $clr-focus;
+    }
+
+    @media screen and (max-width: $xs-l) {
+        & {
+            grid-template:
+                "a" 15rem
+                "b" auto;
+        }
+        &__thumbnail img {
+            object-fit: cover;
+        }
     }
 }

@@ -9,9 +9,10 @@
 ?>
 
 <div class="card" onclick="window.location.href='<?= $url ?>'">
-    <img class="card__thumbnail"
-        src="<?= $material->getThumbnail()->getURL() ?>"
-        alt="Missing image">
+    <div class="card__thumbnail">
+        <img src="<?= $material->getThumbnail()->getURL() ?>"
+             alt="Material thumbnail">
+    </div>
     <div class="card__body">
         <div class="card__header">
             <h2><?= $material->title ?></h5>
