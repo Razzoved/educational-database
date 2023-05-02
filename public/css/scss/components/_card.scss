@@ -29,16 +29,29 @@
         padding: 1rem;
     }
 
-    &__header * {
+    &__content p,
+    &__header h2 {
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
         line-clamp: 1;
-        @media screen and (max-width: $xs-l) {
+    }
+
+    &__content p {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+
+    &__header h2 {
+        @media screen and (max-width: $xs) {
             -webkit-line-clamp: 2;
             line-clamp: 2;
+        }
+        @media screen and (max-width: $xs-l) {
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
         }
     }
 
