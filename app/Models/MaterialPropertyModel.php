@@ -64,12 +64,7 @@ class MaterialPropertyModel extends Model
 
     public function getUsed() : array
     {
-        $properties = new Property([
-            'children' => model(PropertyModel::class)
-                ->where('property_tag', 0)
-                ->allowCallbacks(true)
-                ->getArray(['sort' => 'priority']),
-        ]);
+        $properties = model(PropertyModel::class)->getTree();
 
         $this->select('property_id')
              ->groupBy('property_id')

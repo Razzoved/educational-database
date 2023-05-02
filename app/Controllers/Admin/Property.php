@@ -24,10 +24,8 @@ class Property extends ResponseController
 
     public function index() : string
     {
-        $filters = new EntitiesProperty(['value' => 'Categories']);
-        $filters->children = $this->properties
-            ->where('property_tag', 0)
-            ->getArray(['callbacks' => true]);
+        $filters = $this->properties->getTree();
+        $filters->value = 'Categories';
         $this->getCategories($filters);
 
         $data = [

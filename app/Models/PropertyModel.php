@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Property;
+use App\Libraries\Cache;
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Exceptions\ValidationException;
 
@@ -27,10 +28,12 @@ class PropertyModel extends Model
     protected $useSoftDeletes   = false;
     protected $useTimestamps    = false;
 
-    // heavy operation, use only if intentionall
-    protected $allowCallbacks = false;
+    protected $allowCallbacks = true;
+    protected $beforeFind = [
+        'checkCache',
+    ];
     protected $afterFind = [
-        'loadChildren',
+        'saveCache',
     ];
 
     protected $returnType = Property::class;
@@ -207,22 +210,66 @@ class PropertyModel extends Model
         return $result;
     }
 
+    public function loadChildren(Property $property) : Property
+    {
+        return Cache::checkCache(
+            function () use ($property) {
+                $children = [];
+                foreach ($this->where('property_tag', $property->id)->getArray(['sort' => 'priority']) as $child) {
+                    $children[] = $this->loadChildren($child);
+                }
+                $property->children = $children;
+                return $property;
+            },
+            $property->id,
+            "property",
+        );
+    }
+
+    public function getTree() : Property
+    {
+        $root = new Property(['value' => 'root']);
+        $root->children = Cache::checkCache(
+            function() {
+                $categories = [];
+                foreach ($this->where('property_tag', 0)->getArray(['sort' => 'priority']) as $category) {
+                    $categories[] = $this->loadChildren($category);
+                }
+                return $categories;
+            },
+            "tree",
+            "property",
+        );
+        return $root;
+    }
+
     /** ----------------------------------------------------------------------
      *                              CALLBACKS
      *  ------------------------------------------------------------------- */
 
-    protected function loadChildren(array $data)
+    protected function checkCache(array $data)
+    {
+        if (isset($data['id']) && $item = Cache::getCache($data['id'], 'property')) {
+            $data['data']       = $item;
+            $data['returnData'] = true;
+        }
+        return $data;
+    }
+
+    protected function saveCache(array $data)
     {
         if (!isset($data['data'])) {
             return $data;
         }
-
-        if ($data['method'] === 'find') {
-            $data['data']->children = $this->_loadChildren($data['data']);
-        } else foreach ($data['data'] as $property) {
-            $property->children = $this->_loadChildren($property);
+        if ($data['method'] !== 'findAll') {
+            Cache::checkCache(
+                function () use ($data) {
+                    return  $this->loadChildren($data['data']);
+                },
+                $data['data']->id,
+                'property'
+            );
         }
-
         return $data;
     }
 
