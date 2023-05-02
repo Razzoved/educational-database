@@ -98,8 +98,6 @@ define('EVENT_PRIORITY_HIGH', 10);
  *
  * @author Jan Martinek
  */
-define('ROOTURL', 'https://www.academicintegrity.eu');
-
 define('PERM', 'uploads/');
 define('TEMP', 'temp/');
 define('UNUSED', 'unused/');

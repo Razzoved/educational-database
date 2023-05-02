@@ -2,41 +2,47 @@
     /**
      * Navigation bar for the public domain.
      *
-     * @var string $homeURL optional parameter, changes the reference of brand image
      * @var string $activePage last url segment of the current page
      */
-    $refUrl = defined('ROOTURL') ? ROOTURL : url_to('Material::index');
+    $homeURL = model(ConfigModel::class)->find('home_url')->value ?? url_to('Material::index');
 
-    $activePage = isset($activePage) ? $activePage : '';
-    $default = $activePage === '' ? ' active' : '';
-    $topRated = $activePage === 'top-rated' ? ' active' : '';
-    $mostViewed = $activePage === 'most-viewed' ? ' active' : '';
-    $login = $activePage === 'login' ? ' active' : '';
+    // resolve active page
+    $url = (string) current_url(true)->setQuery('');
+
+    $url_all = url_to('Material::index');
+    $url_top = url_to('MaterialTopRated::index');
+    $url_mst = url_to('MaterialMostViewed::index');
+    $url_lgn = url_to('Authentication::index');
+
+    $all = $url === $url_all ? ' active' : '';
+    $top = $url === $url_top ? ' active' : '';
+    $mst = $url === $url_mst ? ' active' : '';
+    $lgn = $url === $url_lgn ? ' active' : '';
 ?>
 <nav class="navbar">
     <div class="navbar__container">
         <img class="navbar__logo"
             src="<?= base_url('public/assets/enai-logo-transparent.png') ?>"
             alt="ENAI logo"
-            onclick="window.location.href='<?= $refUrl ?>'">
+            onclick="window.location.href='<?= $homeURL ?>'">
         <ul class="navbar__list">
-            <li class="navbar__item<?= $default ?>">
-                <a class="navbar__button" href="<?= url_to('Material::index') ?>">
+            <li class="navbar__item<?= $all ?>">
+                <a class="navbar__button" href="<?= $url_all ?>">
                     All materials
                 </a>
             </li>
-            <li class="navbar__item<?= $topRated ?>">
-                <a class="navbar__button" href="<?= url_to('MaterialTopRated::index') ?>">
+            <li class="navbar__item<?= $top ?>">
+                <a class="navbar__button" href="<?= $url_top ?>">
                     Top rated
                 </a>
             </li>
-            <li class="navbar__item<?= $mostViewed ?>">
-                <a class="navbar__button" href="<?= url_to('MaterialMostViewed::index') ?>">
+            <li class="navbar__item<?= $mst ?>">
+                <a class="navbar__button" href="<?= $url_mst ?>">
                     Most viewed
                 </a>
             </li>
-            <li class="navbar__item navbar__item--to-right navbar__item--switch<?= session('isLoggedIn') ? '' : ' navbar__item--auth'?><?= $login ?>">
-                <a class="navbar__button" href="<?= url_to('Authentication::login') ?>">
+            <li class="navbar__item navbar__item--to-right navbar__item--switch<?= session('isLoggedIn') ? '' : ' navbar__item--auth' ?><?= $lgn ?>">
+                <a class="navbar__button" href="<?= $url_lgn ?>">
                     <?= session('isLoggedIn') ? 'To administration' : 'Login' ?>
                 </a>
             </li>

@@ -9,7 +9,6 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 use App\Models\MaterialModel;
 use App\Models\MaterialPropertyModel;
 use App\Models\RatingsModel;
-use App\Models\ResourceModel;
 use App\Models\ViewsModel;
 use CodeIgniter\HTTP\Response;
 use Exception;
@@ -45,7 +44,6 @@ class Material extends BaseController
             'pager'      => $this->materials->pager,
             'activePage' => '',
         ];
-
         return view('material/all', $data);
     }
 

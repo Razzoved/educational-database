@@ -33,15 +33,11 @@ class AddConfig extends Migration
         try {
             $defaults = [
                 [
-                    'config_id' => 'default_image',
-                    'config_value' => 'assets/default_image.png'
-                ],
-                [
-                    'config_id' => 'about_page',
+                    'config_id' => 'about_url',
                     'config_value' => 'https://www.academicintegrity.eu/wp/about-enai'
                 ],
                 [
-                    'config_id' => 'home_page',
+                    'config_id' => 'home_url',
                     'config_value' => 'https://www.academicintegrity.eu'
                 ],
             ];

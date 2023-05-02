@@ -184,9 +184,10 @@ class Resources
 
     public static function pathToURL(?string $rootPath) : string
     {
-        $path = ASSET_PREFIX . 'missing.png';
         if ($rootPath && file_exists(ROOTPATH . $rootPath)) {
             $path = $rootPath;
+        } else {
+            $path = ASSET_PREFIX . 'default_image.png';
         }
         return base_url($path);
     }
@@ -194,7 +195,7 @@ class Resources
     public static function pathToFileURL(?string $rootPath) : string
     {
         $prefix = ASSET_PREFIX;
-        $path = 'missing.png';
+        $path = 'default_image.png';
 
         if ($rootPath) {
             $splitPath = explode('.', $rootPath);

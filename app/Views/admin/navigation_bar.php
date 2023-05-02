@@ -1,47 +1,48 @@
 <?php
     /**
-     * Navigation bar for the public domain.
-     *
-     * @var string $activePage last url segment of the current page
+     * Navigation bar for the admin domain.
      */
-    $refUrl = defined('ROOTURL') ? ROOTURL : url_to('Material::index');
-    $activePage = isset($activePage) ? $activePage : '';
 
-    $dash = $activePage === 'dashboard' ? ' active' : '';
-    $mats = $activePage === 'materials' ? ' active' : '';
-    $prop = $activePage === 'tags' ? ' active' : '';
-    $file = $activePage === 'files' ? ' active' : '';
-    $user = $activePage === 'users' ? ' active' : '';
+     // path to root website
+    $homeURL = model(ConfigModel::class)->find('home_url')->value ?? url_to('Admin\Material::index');
+
+    // resolve active page
+    $url = (string) current_url(true)->setQuery('');
+    $dash = $url === url_to('Admin\Dashboard::index') ? ' active' : '';
+    $mats = $url === url_to('Admin\Material::index')  ? ' active' : '';
+    $prop = $url === url_to('Admin\Property::index')  ? ' active' : '';
+    $file = $url === url_to('Admin\Resource::index')  ? ' active' : '';
+    $user = $url === url_to('Admin\User::index')      ? ' active' : '';
 ?>
 <nav class="navbar">
     <div class="navbar__container">
         <img class="navbar__logo"
             src="<?= base_url('public/assets/enai-logo-transparent.png') ?>"
             alt="ENAI logo"
-            onclick="window.location.href='<?= $refUrl ?>'">
+            onclick="window.location.href='<?= $homeURL ?>'">
         <ul class="navbar__list">
-            <li class="navbar__item">
-                <a class="navbar__button<?= $dash ?>" href="<?= url_to('Admin\Dashboard::index') ?>")?>
+            <li class="navbar__item<?= $dash ?>">
+                <a class="navbar__button" href="<?= url_to('Admin\Dashboard::index') ?>")?>
                     <i class="fa-solid fa-gauge"></i> Dashboard
                 </a>
             </li>
-            <li class="navbar__item">
-                <a class="navbar__button<?= $mats ?>" href="<?= url_to('Admin\Material::index') ?>")?>
+            <li class="navbar__item<?= $mats ?>">
+                <a class="navbar__button" href="<?= url_to('Admin\Material::index') ?>")?>
                     <i class="fa-solid fa-box-archive"></i> Materials
                 </a>
             </li>
-            <li class="navbar__item">
-                <a class="navbar__button<?= $prop ?>" href="<?= url_to('Admin\Property::index') ?>")?>
+            <li class="navbar__item<?= $prop ?>">
+                <a class="navbar__button" href="<?= url_to('Admin\Property::index') ?>")?>
                     <i class="fa-solid fa-tags"></i> Tags
                 </a>
             </li>
-            <li class="navbar__item">
-                <a class="navbar__button<?= $file ?>" href="<?= url_to('Admin\Resource::index') ?>")?>
+            <li class="navbar__item<?= $file ?>">
+                <a class="navbar__button" href="<?= url_to('Admin\Resource::index') ?>")?>
                     <i class="fa-solid fa-file"></i> Files
                 </a>
             </li>
-            <li class="navbar__item">
-                <a class="navbar__button<?= $user ?>" href="<?= url_to('Admin\User::index') ?>")?>
+            <li class="navbar__item<?= $user ?>">
+                <a class="navbar__button" href="<?= url_to('Admin\User::index') ?>")?>
                     <i class="fa-solid fa-user"></i> Users
                 </a>
             </li>

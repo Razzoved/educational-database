@@ -32,11 +32,14 @@
         </a>
     </section>
 
-    <section class="footer__small-area">
-        <a href="http://www.academicintegrity.eu/wp/about-enai" style="color: white">
-            About
-        </a>
-    </section>
+    <?php $aboutURL = model(ConfigModel::class)->find('about_url') ?>
+    <?php if ($aboutURL) : ?>
+        <section class="footer__small-area">
+            <a href="<?= $aboutURL->value ?>" style="color: white">
+                About
+            </a>
+        </section>
+    <?php endif; ?>
 
     <!-- Copyright -->
     <section class="footer__small-area">
