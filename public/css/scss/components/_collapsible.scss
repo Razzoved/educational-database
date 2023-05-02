@@ -119,8 +119,13 @@
         background-color: unset;
     }
 
-    & > &__header:has(&__toggle-group:checked) + &__content {
-        display: none;
+    & > &__header:has(&__toggle-group:checked) {
+        & + .collapsible__content {
+            display: none;
+        }
+        & .collapsible__toggle > i {
+            transform: rotateZ(0deg);
+        }
     }
 
     &--collapsed > &__header &__toggle {
