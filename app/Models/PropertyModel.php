@@ -79,19 +79,6 @@ class PropertyModel extends Model
                     ->findAll();
     }
 
-    public function getDuplicates(string $column = "value") : array
-    {
-        $column = 'property_' . $column;
-        if (!in_array($column, $this->allowedFields)) {
-            return [];
-        }
-        return $this->select($column)
-                    ->orderBy($column)
-                    ->groupBy($column)
-                    ->having('COUNT(*) >', 1)
-                    ->findAll();
-    }
-
     /** ----------------------------------------------------------------------
      *                        UNIFIED QUERY SETUP
      *  ------------------------------------------------------------------- */
@@ -271,13 +258,6 @@ class PropertyModel extends Model
             );
         }
         return $data;
-    }
-
-    protected function _loadChildren(Property $property) : array
-    {
-        return $this->allowCallbacks(true)
-                    ->where('property_tag', $property->id)
-                    ->getArray(['sort' => 'priority']);
     }
 
     /** ----------------------------------------------------------------------
