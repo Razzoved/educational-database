@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Entities\Config;
 use App\Libraries\Cache;
 use CodeIgniter\Model;
-use Exception;
 
 class ConfigModel extends Model
 {
