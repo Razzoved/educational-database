@@ -230,7 +230,7 @@ class PropertyModel extends Model
     {
         return $this->allowCallbacks(true)
                     ->where('property_tag', $property->id)
-                    ->getArray();
+                    ->getArray(['sort' => 'priority']);
     }
 
     /** ----------------------------------------------------------------------

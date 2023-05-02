@@ -74,6 +74,7 @@ class MaterialPropertyModel extends Model
         $this->select('property_id')
              ->groupBy('property_id')
              ->having('COUNT(material_id) >', 0);
+
         if (!session('isLoggedIn')) {
             $this->join('materials', 'material_id')
                  ->where('material_status', StatusCast::PUBLIC);
