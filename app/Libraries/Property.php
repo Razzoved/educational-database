@@ -2,20 +2,31 @@
 
 namespace App\Libraries;
 
+use CodeIgniter\HTTP\CLIRequest;
+use CodeIgniter\HTTP\IncomingRequest;
+
 class Property
 {
-    public static function getFilters(array $source, array $ignore = ['search', 'sort', 'sortDir', 'page']) : array
+    /**
+     * Loads all filters into an array, separated by AND and OR for separate
+     * where clauses.
+     *
+     * @param CLIRequest|IncomingRequest $request handle to controllers request
+     */
+    public static function getFilters($request) : array
     {
         $filters = [];
-        foreach ($source as $key => $value) {
-            if (!is_int($key)) {
-                $key = str_replace('#', '', $key);
-                $key = str_replace('_', ' ', $key);
-            }
-            if (!in_array($key, $ignore, true)) {
-                $filters[$key] = $value;
-            }
+
+        $and = $request->getGetPost('filter');
+        $or = $request->getGetPost('group');
+
+        if ($and) {
+            $filters['and'] = is_array($and) ? $and : array($and);
         }
+        if ($or) {
+            $filters['or'] = is_array($or) ? $or : array($or);
+        }
+
         return $filters;
     }
 }

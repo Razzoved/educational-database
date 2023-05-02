@@ -23,7 +23,7 @@ class MaterialTopRated extends Material
         return $this->materials->getPage(
             (int) $this->request->getGetPost('page') ?? 1,
             [
-                'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
+                'filters'   => \App\Libraries\Property::getFilters($this->request),
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => 'rating',
                 'sortDir'   => 'DESC',

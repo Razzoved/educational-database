@@ -134,7 +134,7 @@ class Material extends BaseController
         return $this->materials->getPage(
             (int) $this->request->getGetPost('page') ?? 1,
             [
-                'filters'   => \App\Libraries\Property::getFilters($this->request->getGetPost() ?? []),
+                'filters'   => \App\Libraries\Property::getFilters($this->request),
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => $this->request->getGetPost('sort'),
                 'sortDir'   => $this->request->getGetPost('sortDir'),
