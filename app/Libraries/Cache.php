@@ -17,12 +17,12 @@ class Cache
      *
      * @return mixed Cached data or newly searched data.
      */
-    public static function checkCache(callable $callback, $key, string $prefix = "") : mixed
+    public static function check(callable $callback, $key, string $prefix = "") : mixed
     {
-        $data = Cache::getCache($key, $prefix);
+        $data = Cache::get($key, $prefix);
         if (is_null($data)) {
             $data = $callback();
-            Cache::saveCache($data, $key, $prefix);
+            Cache::save($data, $key, $prefix);
         }
         return $data;
     }
@@ -35,7 +35,7 @@ class Cache
      *
      * @return bool Succes or failure
      */
-    public static function deleteCache($key, string $prefix = "") : bool
+    public static function delete($key, string $prefix = "") : bool
     {
         $cache = Services::cache();
         return $cache->delete(Cache::handlePrefix($key, $prefix));
@@ -52,7 +52,7 @@ class Cache
      *
      * @return bool Succes or failure
      */
-    public static function saveCache($value, $key, string $prefix = "", int $ttl = 600) : bool
+    public static function save($value, $key, string $prefix = "", int $ttl = 600) : bool
     {
         $cache = Services::cache();
 
@@ -72,7 +72,7 @@ class Cache
      *
      * @return mixed Succes or failure
      */
-    public static function getCache($key, string $prefix = "") : mixed
+    public static function get($key, string $prefix = "") : mixed
     {
         $cache = Services::cache();
         return $cache->get(Cache::handlePrefix($key, $prefix));

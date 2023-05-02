@@ -35,6 +35,12 @@ class PropertyModel extends Model
     protected $afterFind = [
         'saveCache',
     ];
+    protected $afterUpdate = [
+        'revalidateCache',
+    ];
+    protected $afterDelete = [
+        'revalidateCache',
+    ];
 
     protected $returnType = Property::class;
 
@@ -169,7 +175,7 @@ class PropertyModel extends Model
     {
         $this->db->transStart();
 
-        $item = $this->get((int) $id, ['callbacks' => false, 'usage' => !$purge]);
+        $item = $this->get((int) $id, ['usage' => !$purge]);
 
         if (!$item || (!$purge && $item->usage > 0)) {
             throw new ValidationException(
@@ -179,7 +185,7 @@ class PropertyModel extends Model
         }
 
         $item->children = $this->where('property_tag', $id)->findAll();
-        if (!$purge && !empty(!$item->children)) {
+        if (!$purge && !empty($item->children)) {
             throw new ValidationException(
                 "Cannot delete property: <strong>{$item->value}</strong>. " .
                 "It contains nested tags."
@@ -198,7 +204,7 @@ class PropertyModel extends Model
 
     public function loadChildren(Property $property) : Property
     {
-        return Cache::checkCache(
+        return Cache::check(
             function () use ($property) {
                 $children = [];
                 foreach ($this->where('property_tag', $property->id)->getArray(['sort' => 'priority']) as $child) {
@@ -215,7 +221,7 @@ class PropertyModel extends Model
     public function getTree() : Property
     {
         $root = new Property(['value' => 'root']);
-        $root->children = Cache::checkCache(
+        $root->children = Cache::check(
             function() {
                 $categories = [];
                 foreach ($this->where('property_tag', 0)->getArray(['sort' => 'priority']) as $category) {
@@ -235,7 +241,7 @@ class PropertyModel extends Model
 
     protected function checkCache(array $data)
     {
-        if (isset($data['id']) && $item = Cache::getCache($data['id'], 'property')) {
+        if (isset($data['id']) && $item = Cache::get($data['id'], 'property')) {
             $data['data']       = $item;
             $data['returnData'] = true;
         }
@@ -248,7 +254,7 @@ class PropertyModel extends Model
             return $data;
         }
         if ($data['method'] !== 'findAll') {
-            Cache::checkCache(
+            Cache::check(
                 function () use ($data) {
                     return  $this->loadChildren($data['data']);
                 },
@@ -257,6 +263,22 @@ class PropertyModel extends Model
             );
         }
         return $data;
+    }
+
+    protected function revalidateCache(array $data)
+    {
+        if (!isset($data['id'])) {
+            return;
+        }
+        foreach ($data['id'] as $id) {
+            $item = Cache::get($id, 'property');
+            if (!is_null($item)) {
+                Cache::delete($id, 'property');
+            }
+            if (!is_null($item) && $item->tag === 0) {
+                Cache::delete('tree', 'property');
+            }
+        }
     }
 
     /** ----------------------------------------------------------------------
