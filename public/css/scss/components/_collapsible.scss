@@ -7,7 +7,6 @@
     border: $clr-dark 1px solid;
     border-radius: $border-radius-lg;
     background-color: $clr-light-transparent;
-    max-height: 100%;
     align-items: center;
     overflow: hidden;
 
@@ -56,7 +55,6 @@
     }
 
     &__toggle-overflow {
-        width: 100%;
         color: $clr-hyperlink;
         border: unset;
         border-radius: unset;
@@ -65,20 +63,16 @@
     }
 
     &__content {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        transition: grid-template-rows 250ms;
         word-wrap: break-word;
-        list-style: none;
         line-break: strict;
-        height: auto;
-        max-height: 500px;
-        transition: max-height 250ms ease-in;
-        overflow: auto;
     }
 
     &__items {
+        overflow: hidden;
         list-style: none;
-        & &:last-child {
-            margin-bottom: 0.5rem;
-        }
     }
 
     &__item {
@@ -141,9 +135,7 @@
     }
 
     &--collapsed > &__content {
-        overflow: hidden;
-        max-height: 0;
-        transition: max-height 250ms ease-in;
+        grid-template-rows: 0fr 0;
     }
 
     &--no-overflow > &__content > &__items > &__item--overflow {

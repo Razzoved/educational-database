@@ -15,12 +15,11 @@
 </div>
 
 <script type="text/javascript">
-    if (typeof lastSearch === 'undefined') {
-        console.error('Missing lastSearch data, sorters will not work as intended!');
+    if (params === undefined) {
+        console.error('Query params undefined, sorters will not work as intended!');
     }
 
-    function toggleSort(element)
-    {
+    const toggleSort = (element) => {
         let sort = document.createElement('input');
         sort.type = 'hidden';
         sort.name = 'sort';
@@ -29,7 +28,7 @@
         let sortDir = document.createElement('input');
         sortDir.type = 'hidden';
         sortDir.name = 'sortDir';
-        sortDir.value = lastSearch['sort'] === element.value && lastSearch['sortDir'] === 'ASC' ? 'DESC' : 'ASC';
+        sortDir.value = params.get('sort') === element.value && params.get('sortDir') === 'ASC' ? 'DESC' : 'ASC';
 
         let form = document.querySelector('form');
         form.action = "";
@@ -38,18 +37,17 @@
         form.submit();
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        let sortButton = document.querySelector(`.sort > button[value='${lastSearch['sort']}']`);
+    // Sets up the active toggler (coloration and direction of arrow).
+    document.addEventListener("DOMContentLoaded", () => {
+        const sortButton = document.querySelector(`.sort__button[value='${params.get('sort')}']`);
         if (!sortButton) {
-            console.error(`No sort button was found for: ${lastSearch['sort']}`);
+            console.error(`No sort button was found for: ${params.get('sort')}`);
             return;
         }
         sortButton.classList.add('active');
-
-        let sortIcon = sortButton.querySelector(`i`);
-        if (!sortIcon || lastSearch['sortDir'] === 'ASC') {
-            return;
+        const sortIcon = sortButton.querySelector(`i`);
+        if (sortIcon && params.get('sortDir').toUpperCase() === 'DESC') {
+            sortIcon.classList.add('down');
         }
-        sortIcon.classList.add('down');
     });
 </script>

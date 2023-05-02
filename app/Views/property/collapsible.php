@@ -22,6 +22,7 @@
         <?php if (!$isFirstLevel) : ?>
             <input class="collapsible__toggle-group"
                 type="checkbox"
+                id="filter_<?= $property->id ?>"
                 name="group"
                 value="<?= $property->id ?>"
                 title="Use all from group"

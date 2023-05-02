@@ -32,7 +32,7 @@
             <input class="filter__checkbox"
                 type="checkbox"
                 name="filter"
-                value="<?= $property->value ?>"
+                value="<?= $property->id ?>"
                 id="filter_<?= $property->id ?>">
             </input>
             <label class="filter__label" for="filter_<?= $property->id ?>">
