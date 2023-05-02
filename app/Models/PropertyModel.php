@@ -130,14 +130,13 @@ class PropertyModel extends Model
 
     protected function setupFilters(array $filters)
     {
-        foreach ($filters as $tag => $id) {
-            if ($id === "on") {
-                $this->orWhere($this->table . '.property_tag', $tag);
-            } else if (is_numeric($id)) {
-                $this->orWhere($this->table . '.property_tag', $id);
-            } else if (is_array($id)) {
-                $this->setupFilters($id);
-            }
+        // can be used to filter by different field
+        $identifier = $this->table . '.' . ($filters['id'] ?? 'property_tag');
+        if (isset($filters['and']) && $filters['and'] !== []) {
+            $this->whereIn($identifier, $filters['and']);
+        }
+        if (isset($filters['or']) && $filters['or'] !== []) {
+            $this->orWhereIn($identifier, $filters['or']);
         }
         return $this;
     }
