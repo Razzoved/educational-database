@@ -11,12 +11,7 @@
 
 <!-- last search data, used for dynamic page elements -->
 <script>
-    let lastSearch = <?= json_encode($_GET === [] ? $_POST : $_GET) ?>;
-
-    if (typeof lastSearch['sort'] === 'function' || lastSearch['sort'] === undefined) {
-        lastSearch['sort'] = 'id';
-    }
-    if (lastSearch['sortDir'] === undefined) {
-        lastSearch['sortDir'] = 'ASC';
-    }
+    const params = new URL(window.location).searchParams;
+    if (!params.has('sort')) params.set('sort', 'id');
+    if (!params.has('sortDir')) params.set('sortDir', 'desc');
 </script>
