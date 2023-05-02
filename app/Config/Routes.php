@@ -49,7 +49,7 @@ $routes->group('/admin', function($routes) {
     $routes->addRedirect('', 'admin/dashboard');
     $routes->add('dashboard', 'Admin\Dashboard::index');
     $routes->add('migration', 'Admin\Migration::index');
-    $routes->add('rollback', 'Admin\Migrate::back');
+    $routes->add('rollback', 'Admin\Migration::back');
 
     $routes->group('material', function($routes) {
         $routes->get('', 'Admin\Material::index');
