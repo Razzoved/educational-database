@@ -73,8 +73,7 @@
 
             const data = await response.json();
             document.getElementById(data.id)?.remove();
-            document.getElementById("delete-close")?.remove();
-            deleteModal.style.display = "none";
+            deleteClose();
         });
     </script>
 </div>
