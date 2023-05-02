@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Config;
+use App\Libraries\Cache;
 use CodeIgniter\Model;
 use Exception;
 
@@ -19,48 +20,55 @@ class ConfigModel extends Model
     protected $beforeFind = [
         'checkCache'
     ];
-    protected $afterUpdate = [
-        'updateCache'
+    protected $afterFind = [
+        'saveCache',
     ];
+    protected $afterUpdate = [
+        'revalidateCache'
+    ];
+    protected $afterDelete = [
+        'revalidateCache'
+    ];
+
     protected $returnType = Config::class;
-
-    public function update($id = null, $data = null) : bool
-    {
-        $retVal = parent::update($id, $data);
-        if ($retVal) {
-            $item = $this->find($id);
-
-        }
-        return $retVal;
-    }
 
     /** ----------------------------------------------------------------------
      *                              CALLBACKS
      *  ------------------------------------------------------------------- */
 
-    protected function checkCache($data)
-    {
-        if (!isset($data['data'])) {
-            return $data;
-        }
+     protected function checkCache(array $data)
+     {
+         if (isset($data['id']) && $item = Cache::get($data['id'], 'config')) {
+             $data['data']       = $item;
+             $data['returnData'] = true;
+         }
+         return $data;
+     }
 
-        echo $data;
+     protected function saveCache(array $data)
+     {
+         if (!isset($data['data'])) {
+             return $data;
+         }
+         if ($data['method'] !== 'findAll') {
+             $item = Cache::get($data['data']->id, 'config');
+             if (is_null($item)) {
+                 Cache::save($data['data'], $data['data']->id, 'config');
+             }
+         }
+         return $data;
+     }
 
-        // if ($data['method'] === 'find') {
-        //     $this->checkCache($data['data']->id);
-        //     $data['data'] = $this->allowCallbacks(false)->find($data['data']->id);
-        // } else foreach ($data['data'] as $k => $material) {
-        //     if ($material) {
-        //         $model = $model->allowCallbacks(false);
-        //         $data['data'][$k] = $model->find($material->id);
-        //     }
-        // }
-
-        return $data;
-    }
-
-    protected function _checkCache($id)
-    {
-
-    }
+     protected function revalidateCache(array $data)
+     {
+         if (!isset($data['id'])) {
+             return;
+         }
+         foreach ($data['id'] as $id) {
+             $item = Cache::get($id, 'config');
+             if (!is_null($item)) {
+                 Cache::delete($id, 'config');
+             }
+         }
+     }
 }
