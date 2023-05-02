@@ -20,7 +20,7 @@
 
         <div class="card__content">
             <p><small>Published: <?= $material->publishedToDate() ?></small></p>
-            <p><?= (strlen($content) > 120) ? substr($content, 0, 117) . '...' : $content ?></p>
+            <p><?= mb_substr($content, 0, 300) ?></p>
         </div>
 
         <div class="card__footer">
