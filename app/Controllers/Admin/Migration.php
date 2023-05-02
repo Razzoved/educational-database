@@ -14,7 +14,7 @@ class Migration extends Controller
 
         $migrate = \Config\Services::migrations();
 
-        $oldHistory = $migrate->getHistory();
+        $oldHistory = array_reverse($migrate->getHistory());
 
         try {
             echo '<li>Starting migration</li>';
@@ -28,7 +28,7 @@ class Migration extends Controller
         }
         echo '</ol>';
 
-        $this->printResult($migrate->getHistory(), $oldHistory);
+        $this->printResult(array_reverse($migrate->getHistory()), $oldHistory);
     }
 
     public function back()
@@ -75,11 +75,11 @@ class Migration extends Controller
         }
 
 
-        echo '<ol>';
+        echo '<ul>';
         foreach ($difference as $d) {
             echo '<li><pre>' . print_r($d, true) . '</pre></li>';
         }
-        echo '</ol>';
+        echo '</ul>';
 
         echo '<hr>';
     }
