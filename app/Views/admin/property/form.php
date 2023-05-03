@@ -23,7 +23,7 @@
 
         <div class="modal__header">
             <h1 class="modal__title"><?= $title ?></h1>
-            <span class="modal__close" onclick="modalClose()">&#10005</span>
+            <span class="modal__close" onclick="modalClose()">&#10005;</span>
         </div>
 
         <div class="modal__body">

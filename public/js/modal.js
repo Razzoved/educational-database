@@ -19,7 +19,7 @@ String.prototype.html = function(data = undefined) {
     return parser.parseFromString(result, 'text/html')?.body.firstElementChild;
 };
 
-const modalClose = function(event)
+const modalClose = function(event = null)
 {
     const modal = document.getElementById('modal');
     if (modal && (event === null || event.target === modal)) {
@@ -48,7 +48,7 @@ const modalOpen = async (target, template) => {
     } catch (err) {
         console.error(`modalSubmit: ${err.message}`);
         alert('Failed to open modal');
-        modalClose(null);
+        modalClose();
     }
 }
 
@@ -80,7 +80,7 @@ const modalSubmit = async () => {
         } else {
             items.insertAdjacentElement('afterbegin', template);
         }
-        modalClose(null);
+        modalClose();
     } catch (err) {
         modal.querySelector('#error')?.remove();
         modal.querySelector('.modal__body').insertAdjacentElement('afterbegin',

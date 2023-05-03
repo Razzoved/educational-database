@@ -21,7 +21,7 @@
 
         <div class="modal__header">
             <h1 class="modal__title"><?= $title ?></h1>
-            <span class="modal__close" onclick="modalClose(null)">&#10005</span>
+            <span class="modal__close" onclick="modalClose()">&#10005;</span>
         </div>
 
         <div class="modal__body">
@@ -71,7 +71,7 @@
         <div class="modal__footer">
             <div class="modal__button-group">
                 <button type="submit" class="modal__button modal__button--green" onclick="modalSubmit()"><?= $submit ?></button>
-                <button type="button" class="modal__button" onclick="modalClose(null)">Cancel</button>
+                <button type="button" class="modal__button" onclick="modalClose()">Cancel</button>
             </div>
         </div>
 
