@@ -50,10 +50,7 @@
     const userOpen = async (id = undefined) => {
         const template = formTemplate.fill(id
             ? { title: 'Update user', submit: 'Update' }
-            : { title: 'New user', submit: 'Create' }
-        ).fill(id
-            ? {}
-            : { id: "", name: "", email: "" }
+            : { title: 'New user', submit: 'Create', id: "", name: "", email: "" }
         );
         modalOpen(id ? url.replace(/0$/, id) : undefined, template);
     }
