@@ -254,7 +254,7 @@ class PropertyModel extends Model
             return $data;
         }
         if ($data['method'] !== 'findAll') {
-            Cache::check(
+            $data['data'] = Cache::check(
                 function () use ($data) {
                     return  $this->loadChildren($data['data']);
                 },
