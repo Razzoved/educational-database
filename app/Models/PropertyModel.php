@@ -272,13 +272,17 @@ class PropertyModel extends Model
         }
         foreach ($data['id'] as $id) {
             $item = Cache::get($id, 'property');
-            if (!is_null($item)) {
-                Cache::delete($id, 'property');
-            }
-            if (!is_null($item) && $item->tag === 0) {
-                Cache::delete('tree', 'property');
-            }
+            $this->__autoload__($item);
         }
+    }
+
+    protected function _revalidateCache(Property $item)
+    {
+        while (!is_null($item)) {
+            Cache::delete($item->id);
+            $item = Cache::get($item->tag, 'property');
+        }
+        Cache::delete('tree', 'property');
     }
 
     /** ----------------------------------------------------------------------
