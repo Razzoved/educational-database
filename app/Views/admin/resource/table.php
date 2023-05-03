@@ -4,6 +4,7 @@
      *
      * @var string $title    Page header, required.
      * @var array $resources collection of App\Entities\Resource objects
+     * @var array $targets   collection of App\Entities\Material objects
      */
 ?>
 
@@ -33,4 +34,24 @@
 
 <?= $this->section('modals') ?>
 <?= view('admin/delete', ['action' => url_to('Admin\Resource::deleteUnused', '@segment@')]) ?>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script type="text/javascript">
+    <?php include_once(FCPATH . 'js/modal.js') ?>
+
+    const itemTemplate = `<?= json_encode(view('admin/resource/item')) ?>`;
+    const formTemplate = `<?= json_encode(view('admin/resource/form', ['targets' => $targets])) ?>`;
+
+    const url = '<?= url_to('Admin\Resource::get', 0) ?>';
+    const items = document.getElementById('items');
+
+    const resourceOpen = async (tmpPath) => {
+        if (!tmpPath) {
+            console.error('Resource path must be provided');
+        } else {
+            modalOpen(url, formTemplate.fill({ tmp_path: tmpPath }));
+        }
+    }
+</script>
 <?= $this->endSection() ?>

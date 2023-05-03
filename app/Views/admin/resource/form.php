@@ -2,16 +2,17 @@
     /**
      * MODAL: Resource assigner.
      *
-     * @param string $title Title of modal
-     * @param string $submit Custom text for submit button
-     *
-     * @param array  $targets All possible assignment targets (array of id -> name)
+     * @param string $title   Title of modal
+     * @param string $submit  Custom text for submit button
+     * @param array  $targets All possible materials.
      */
-    $title = $title ?? 'Assign resource';
-    $submit = $submit ?? 'Assign';
+    $title = 'Add to material';
+    $submit = 'Assign';
+
+    $tmpPath = $tmpPath ?? '@tmp_path@';
 ?>
 
-<div class="modal" id="resource-window">
+<div class="modal" id="modal">
 
     <div class="modal__content">
 
@@ -22,17 +23,17 @@
 
         <div class="modal__body">
             <form class="form" method="post" action="<?= url_to('Admin\Resource::assign') ?>">
-                <input type="hidden" id="tmp_path" name="tmp_path" value="">
-                <label class="form__label" for="target">Assign to</label>
+                <input type="hidden" id="tmp_path" name="tmp_path" value="<?= $tmpPath ?>" required>
+                <label class="form__label" for="target">Assign to<i id="target-display"></i></label>
                 <input class="form__input"
                     id="target"
                     name="target"
                     list="target-options"
                     placeholder="No material selected"
-                    onblur="verifyTarget()">
+                    required>
                 <datalist id="target-options">
                     <?php foreach ($targets as $id => $title) : ?>
-                        <option value='<?= esc($title) ?>'><?= $id ?></option>
+                        <option value='<?= $id ?>'><?= esc($title) ?></option>
                     <?php endforeach; ?>
                 </datalist>
             </form>
@@ -40,8 +41,8 @@
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="submit" class="modal__button modal__button--submit" onclick="modalSubmit()"><?= $submit ?></button>
-                <button type="button" class="modal__button modal__button--cancel" onclick="modalClose('resource-window')">Cancel</button>
+                <button type="submit" class="modal__button modal__button--submit" onclick="verifyTarget() && modalSubmit()"><?= $submit ?></button>
+                <button type="button" class="modal__button modal__button--cancel" onclick="modalClose()">Cancel</button>
             </div>
         </div>
 
@@ -51,20 +52,20 @@
         <?= include_once(FCPATH . 'js/modal.js') ?>
 
         const target = document.getElementById('target');
-        const options = document.getElementById('target-options');
+        const targetDisplay = document.getElementById('target-display');
+        const targetOptions = document.getElementById('target-options');
 
         const verifyTarget = function()
         {
-            const option = options.querySelector(
-                `option[value="${target.value.replaceAll('"', '\\"')}"]`
-            );
-
-            if (target.value !== "" && option === null) {
-                target.classList.add('form__input--invalid');
-                target.value = "";
+            const option = targetOptions.querySelector('option:selected');
+            if (option === null) {
+                target.value = '';
+                targetDisplay.innerHTML = '';
+                target.focus();
             } else {
-                target.classList.remove('form__input--invalid');
+                targetDisplay.innerHTML = `: ${option.innerHTML}`;
             }
+            return option !== null;
         }
     </script>
 </div>
