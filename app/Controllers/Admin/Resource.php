@@ -74,8 +74,17 @@ class Resource extends ResponseController
         return $this->upload();
     }
 
-    public function assign(int $materialId) : Response
+    public function assign() : Response
     {
+        $materialId = $this->request->getPost('target');
+
+        if (!$materialId || !is_int($materialId)) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                'Invalid material id!'
+            );
+        }
+
         $resource = new EntitiesResource($this->request->getPost());
 
         if (!$resource->path) {
@@ -85,7 +94,7 @@ class Resource extends ResponseController
             );
         }
 
-        if (!$this->resourceLibrary->assign($materialId, $resource)) {
+        if (!$this->resourceLibrary->assign((int) $materialId, $resource)) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
                 'Could not assign resource, try again later!'

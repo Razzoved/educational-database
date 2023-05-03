@@ -68,9 +68,9 @@ $routes->group('/admin', function($routes) {
 
     $routes->group('file', function($routes) {
         $routes->get('', 'Admin\Resource::index');
+        $routes->post('', 'Admin\Resource::assign');
         $routes->put('', 'Admin\Resource::upload');
         $routes->put('image', 'Admin\Resource::uploadImage');
-        $routes->post('(:num)', 'Admin\Resource::assign/$1');
         $routes->delete('(:num)', 'Admin\Resource::delete/$1');
         $routes->delete('(:any)', 'Admin\Resource::deleteUnused/$1');
     });
