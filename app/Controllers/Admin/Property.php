@@ -87,6 +87,16 @@ class Property extends ResponseController
         return $this->response->setJSON($property);
     }
 
+    public function getAll() : Response
+    {
+        $properties = $this->properties->getArray(['sort' => 'priority']);
+
+        if (empty($properties)) {
+            $this->response->setStatusCode(Response::HTTP_NO_CONTENT);
+        }
+        return $this->response->setJSON($properties);
+    }
+
     public function delete(int $id) : Response
     {
         return $this->doDelete(
