@@ -1,8 +1,14 @@
-<?= $this->extend('layouts/admin') ?>
+<?php
+    /**
+     * Administration panel for managing properties (tags and categories).
+     *
+     * @var string $title    Page header, required.
+     * @var array $resources collection of App\Entities\Resource objects
+     * @var array $targets   collection of App\Entities\Material objects
+     */
+?>
 
-<?= $this->section('header') ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<?= $this->endSection() ?>
+<?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
 <div class="page">
@@ -15,7 +21,7 @@
     <div class="page__content">
         <div class="page-controls">
             <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
-            <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value'], 'create' => 'propertyOpen()']) ?>
+            <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value', ''], 'create' => 'propertyOpen()']) ?>
         </div>
 
         <div class="table" id="items">
@@ -45,6 +51,28 @@
 
 <?= $this->section('scripts') ?>
 <script>
-    const template = `<?= view('admin/property/item') ?>`
+    <?php include_once(FCPATH . 'js/modal.js') ?>
+
+    const itemTemplate = `<?= json_encode(view('admin/property/item')) ?>`;
+    const formTemplate = `<?= json_encode(view('admin/property/form', ['title' => null, 'submit' => null])) ?>`;
+
+    const url = '<?= url_to('Admin\Property::get', 0) ?>';
+    const items = document.getElementById('items');
+
+    const propertyOpen = async (id = undefined) => {
+        const template = formTemplate.fill(id
+            ? { title: 'Update tag', submit: 'Update' }
+            : {
+                title: 'New tag',
+                submit: 'Create',
+                id: "",
+                tag: "",
+                category: "",
+                description: "",
+                priority: "",
+            }
+        );
+        modalOpen(id ? url.replace(/0$/, id) : undefined, template);
+    }
 </script>
 <?= $this->endSection() ?>

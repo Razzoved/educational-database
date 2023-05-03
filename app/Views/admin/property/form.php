@@ -4,18 +4,16 @@
      *
      * @param string $title Title of modal
      * @param string $submit Custom text for submit button
-     *
-     * @param array  $targets All possible assignment targets (array of id -> name)
      */
+    $title = $title ?? '@title@';
+    $submit = $submit ?? '@submit@';
 
-    $title = isset($id) ? 'Update property' : "Create property";
-    $submit = isset($id) ? 'Update' : "Create";
-
-    $id = $id ?? "";
-    $tag = $tag ?? "";
-    $value = $value ?? "";
-    $description = $description ?? "";
-    $priority = $priority ?? 0;
+    $id = $id ?? "@id@";
+    $tag = $tag ?? "@tag@";
+    $category = $category ?? "@category@";
+    $value = $value ?? "@value@";
+    $description = $description ?? "@description@";
+    $priority = $priority ?? "@priority@";
 ?>
 
 <div class="modal" id="property-window">
@@ -27,18 +25,23 @@
         </div>
 
         <div class="modal__body">
-            <form class="form" method="post" action="<?= url_to('Admin\Property::index')?>">
-                <input type="hidden" id="id" name="id" value="<? $id ?>">
+            <form class="form" method="post" action="<?= url_to('Admin\Property::save')?>">
+                <input type="hidden" id="id" name="id" value="<? $id ?>" required>
 
                 <fieldset class="form__group">
                     <label for="tag" class="form__label">Category</label>
                     <input class="form__input"
-                        type="text"
-                        id="tag"
-                        name="tag"
+                        id="category"
+                        name="category"
+                        list="category-options"
                         placeholder="Enter tag"
-                        value="<?= $tag ?>"
+                        value="<?= $category ?>"
+                        onchange="updateTag(this.value)"
                         required>
+                    <datalist id="category-options">
+                    </datalist>
+                    <input type="hidden" id="tag" name="tag" value="<? $tag ?>">
+
                     <label for="value" class="form__label">Value</label>
                     <input class="form__input"
                         type="text"
@@ -49,26 +52,28 @@
                         required>
                 </fieldset>
 
-                <label for="description" class="form__label">Description</label>
-                <textarea class="form__input"
-                    id="description"
-                    name="description"
-                    rows="2"
-                    placeholder="Enter description..."
-                    value="<?= $description ?>">
-                </textarea>
+                <fieldset class="form__group">
+                    <label for="description" class="form__label">Description</label>
+                    <textarea class="form__input"
+                        id="description"
+                        name="description"
+                        rows="2"
+                        placeholder="Enter description..."
+                        value="<?= $description ?>">
+                    </textarea>
 
-                <fieldset class="slider">
-                    <label for="priority" class="form__label">Priority</label>
-                    <input class="slider__input"
-                        type="range"
-                        min="-25"
-                        max="100"
-                        value="<?= $priority ?>"
-                        id="priority"
-                        name="priority"
-                        onchange="updateSlider(this)">
-                    <p class="slider__value">0</p>
+                    <div class="slider">
+                        <label for="priority" class="form__label">Priority</label>
+                        <input class="slider__input"
+                            type="range"
+                            min="-25"
+                            max="100"
+                            value="<?= $priority ?>"
+                            id="priority"
+                            name="priority"
+                            onchange="updateSlider(this.parentElement)">
+                        <p class="slider__value">0</p>
+                    </div>
                 </fieldset>
 
             </form>
@@ -83,12 +88,34 @@
 
     </div>
     <script type="text/javascript">
-        <?= include_once(FCPATH . 'js/modal.js') ?>
+        const tag = document.getElementById('tag');
+        const category = document.getElementById('category');
+        const categoryOptions = document.getElementById('category-options');
 
-        const updateSlide = function(sliderInput)
-        {
-            const sliderValue = sliderInput.closest('.slider').querySelector('.slider__value');
+        const updateTag = (value) => {
+            const option = categoryOptions.querySelector('option:selected');
+            if (!option === null) {
+                tag.value = option.getAttribute('data-tag');
+            }
+        }
+
+        const updateSlider = (slider) => {
+            const sliderInput = slider.querySelector('.slider__input');
+            const sliderValue = slider.querySelector('.slider__value');
             sliderValue.innerHTML = sliderInput.value;
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch(<?= url_to('Admin/Property::getAll') ?>)
+                .then(response => response.json())
+                .then(response => response.map(r => {
+                    const option = document.createElement('option');
+                    option.value = r.value;
+                    option.setAttribute('data-tag', r.id);
+                    return option;
+                }))
+                .then(response => categoryOptions.replaceChildren(...response))
+                .catch(error => console.log('Error fetching categories'));
+        });
     </script>
 </div>
