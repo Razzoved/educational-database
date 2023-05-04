@@ -4,6 +4,8 @@
     --height: 6rem;
     --padding: 1rem;
     --font-size: 1.25rem;
+    z-index: 1;
+    position: relative;
     background-color: $clr-dark;
     box-shadow: 0rem 0.5rem 1rem $clr-dark-transparent;
     border-bottom: $clr-dark solid 0.15rem;
@@ -24,19 +26,18 @@
         cursor: pointer;
         color: $clr-light;
         text-align: center;
-        justify-content: center;
         resize: both;
         width: auto;
         height: auto;
         padding: calc(var(--padding) / 2) calc(var(--padding) / 2);
         max-width: 100%;
         max-height: var(--height);
+        align-self: flex-start;
     }
 
     & &__list {
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
+        flex-flow: row wrap;
         flex-grow: 1;
         list-style: none;
         gap: 0.2rem;
@@ -44,22 +45,7 @@
 
     & &__item {
         white-space: nowrap;
-        * {
-            color: $clr-light;
-            background-color: unset;
-        }
-        &.active {
-            color: unset;
-            background-color: unset;
-        }
-        &.active * {
-            color: $clr-active;
-            background-color: $clr-active-bg;
-        }
-        &:hover * {
-            color: $clr-focus;
-            background-color: $clr-focus-bg;
-        }
+        background-color: unset;
     }
 
     & &__item--to-right {
@@ -74,25 +60,50 @@
         background-color: $clr-dark-transparent;
     }
 
-    & &__button, & &__toggle {
-        border-radius: $border-radius;
-        padding: 1rem 1rem;
+    & &__button,
+    & &__toggle {
+        padding: 1rem;
+        text-align: left;
         font-weight: bold;
         font-size: var(--font-size);
-        text-align: left;
-        & > i {
-            margin-right: 0.2rem;
+        border-radius: $border-radius;
+        &, & > i {
+            color: $clr-light;
+            background-color: unset;
         }
+        & > i {
+            margin-right: 0.3rem;
+        }
+    }
+
+    &__button {
+        display: block;
     }
 
     &__toggle {
         display: none;
     }
 
+    & &__item.active &__button,
+    & &__item.active &__toggle {
+        background-color: $clr-active-bg;
+        &, & > i {
+            color: $clr-active;
+        }
+    }
+
+    & &__item:hover &__button,
+    & &__item:hover &__toggle {
+        background-color: $clr-light-semi-transparent;
+        &, & > i {
+            color: $clr-dark;
+        }
+    }
+
     @media screen and (max-width: $sm) {
         // show toggle
         &__toggle {
-            display: inline;
+            display: block;
         }
 
         &:not(.navbar--responsive) {
@@ -100,6 +111,7 @@
             .navbar__item {
                 display: none;
             }
+
             // move toggle to right
             .navbar__item:has(.navbar__toggle) {
                 display: initial;
@@ -111,29 +123,38 @@
             // make list vertical instead of horizontal
             .navbar__container,
             .navbar__list {
-                width: 100%;
-                align-items: flex-start;
-                flex-direction: column;
+                flex-flow: column nowrap;
             }
+
+            .navbar__list {
+                width: 100%;
+                align-items: center;
+                & > :last-child {
+                    margin-bottom: 0.5rem;
+                }
+            }
+
             // show all links
             .navbar__item {
                 width: 100%;
-                display: flex;
-                & > a,
-                & > i {
-                    width: 100%;
-                }
+                margin: 0 0.5rem;
             }
+
+            .navbar__button,
+            .navbar__toggle {
+                text-align: center;
+            }
+
             // center toggle
             .navbar__toggle {
                 text-align: center;
             }
+
             // colorize toggle button
             .navbar__item:not(:hover) .navbar__toggle {
-                background-color: $clr-gray-transparent;
-                * {
+                background-color: $clr-dark-transparent;
+                &, & > i {
                     color: $clr-active;
-                    background-color: unset;
                 }
             }
         }

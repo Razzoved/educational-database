@@ -4,7 +4,7 @@
     width: fit-content;
     justify-content: center;
     margin: auto;
-    margin-top: 1rem;
+    margin-top: 1.5rem; // margin-page: 2 - gap-page: 0.5
 
     &__list {
         display:flex;
@@ -46,7 +46,7 @@
     }
 
     &__button {
-        height: 100%;
+        display: block;
         padding: 0.5rem 1.5rem;
         border: $clr-light 1px solid;
         border-radius: unset;

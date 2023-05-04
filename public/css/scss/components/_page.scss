@@ -7,18 +7,16 @@
         "a a" auto
         "c c" 1fr;
     // sizing
+    flex: 1 1 100%;
     width: 100%;
     max-width: 100%;
-    height: fit-content;
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
     // styling
     gap: 1rem;
-    margin: 0.25rem;
-    padding: 1rem;
+    padding: 2rem;
     background-color: $clr-light-semi-transparent;
     box-shadow: 0.2rem 0.2rem 1rem 0rem #00a8a89c;
-    border-radius: $border-radius-lg + 1rem;
 
     &:has(&__sidebar) {
         grid-template:
@@ -30,6 +28,8 @@
         grid-template: ".";
         margin: auto;
         max-width: 30rem;
+        max-height: fit-content;
+        border-radius: $border-radius-lg + 1rem;
     }
 
     &--dark {
@@ -87,6 +87,9 @@
     }
 
     @media screen and (max-width: $sm) {
+        & {
+            padding: 2rem 1rem;
+        }
         &:has(&__sidebar) {
             grid-template:
                 "a" auto
@@ -94,14 +97,28 @@
                 "c" 1fr;
         }
         // default all group elements in group after toggling
+        &__group .collapsible,
         &__group > * {
             display: none;
         }
+        &__group--show .collapsible,
         &__group--show > * {
             display: initial;
         }
+        &__group--show &__toggler:not(:hover) {
+            background-color: $clr-active-bg;
+            &, & > i {
+                color: $clr-active;
+            }
+        }
         &__toggler {
             display: block;
+        }
+    }
+
+    @media screen and (max-width: $xs-l) {
+        & {
+            padding: 2rem 0.5rem;
         }
     }
 }

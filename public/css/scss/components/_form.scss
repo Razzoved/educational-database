@@ -55,7 +55,7 @@
         width: 100%;
         max-width: 100%;
         color: $clr-text;
-        background-color: $clr-light-transparent;
+        background-color: $clr-light-semi-transparent;
         border-radius: 0.4rem;
         border: $clr-dark 1px solid;
         &:not(:last-child) {
@@ -67,12 +67,16 @@
     }
 
     .page--dark &__input {
-        color: $clr-light;
-        &:hover {
-            color: $clr-text;
+        background-color: $clr-dark-semi-transparent;
+        color: $clr-light-semi-transparent;
+        &::placeholder {
+            color: $clr-light-transparent;
         }
-        &:focus:hover {
-            color: $clr-focus;
+        &:hover {
+            color: white;
+        }
+        &:focus {
+            color: $clr-active;
         }
     }
 
