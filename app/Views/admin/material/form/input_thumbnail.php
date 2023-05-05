@@ -8,7 +8,7 @@
      */
 
     $IMG_REGEX = '/.*\.(?:jpg|jpeg|tiff|gif|png|bmp)$/';
-    $THUMBNAIL = \App\Libraries\Resources::pathToURL($thumbnail);
+    $THUMBNAIL = \App\Libraries\Resource::pathToURL($thumbnail);
 ?>
 <div style="align-items: center">
 

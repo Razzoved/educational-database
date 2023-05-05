@@ -13,7 +13,7 @@
     <div class="item__header">
         <image class="img-fluid rounded edit-mr"
         style="width: 6rem; height: 6rem; object-fit: scale-down"
-        src="<?= App\Libraries\Resources::pathToFileURL($path ?? '') ?>"
+        src="<?= App\Libraries\Resource::pathToFileURL($path ?? '') ?>"
         alt="No image">
         <div class="item__controls">
             <button class="item__delete" type="button" <?php if (isset($id)) echo "onclick=\"removeFile('file-$id')\"" ?>>
