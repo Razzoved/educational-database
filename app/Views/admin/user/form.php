@@ -46,8 +46,17 @@
                     placeholder="name@example.com"
                     autocomplete="email">
 
-                <fieldset class="form__group">
-                    <small id="pass-notice" hidden='true'>Password will not change if left empty:</small>
+                <div class="form__group form__group--horizontal">
+                    <label class="form__label" for="changePassword">Change passsword</label>
+                    <input class="form__input"
+                        type="checkbox"
+                        id="changePassword"
+                        name="changePassword"
+                        onchange="togglePassword(event)"
+                        value=true>
+                </div>
+
+                <fieldset id="password-changer" class="form__group" hidden>
 
                     <label class="form__label" for="password">Password</label>
                     <input class="form__input"
@@ -64,6 +73,7 @@
                         name="confirmPassword"
                         placeholder="**********"
                         autocomplete="new-password">
+
                 </fieldset>
             </form>
         </div>
@@ -79,5 +89,23 @@
 
     <script type="text/javascript">
         <?php include_once(FCPATH . 'js/modal.js') ?>
+
+        var passwordGroup = document.getElementById('password-changer');
+
+        var togglePassword = (event) => {
+            const checkbox = event.target;
+            if (checkbox.checked) {
+                passwordGroup.hidden = false;
+                passwordGroup.disabled = false;
+            } else {
+                passwordGroup.hidden = true;
+                passwordGroup.disabled = true;
+            }
+        };
+
+        if (document.querySelector('#modal input[name="id"]').value === "") {
+            changePassword.click();
+            changePassword.parentElement.remove();
+        }
     </script>
 </div>

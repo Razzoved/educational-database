@@ -12,6 +12,8 @@ use Psr\Log\LoggerInterface;
 
 class User extends ResponseController
 {
+    const DEFAULT_SORT = 'name';
+
     private UserModel $users;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
@@ -22,7 +24,7 @@ class User extends ResponseController
 
     public function index(): string
     {
-        $_POST['sort'] = $this->request->getPost('sort') ?? 'name';
+        $_GET['sort'] = $this->request->getGetPost('sort') ?? self::DEFAULT_SORT;
         $data = [
             'meta_title' => 'Administration - Users',
             'title'      => 'User editor',
@@ -41,13 +43,14 @@ class User extends ResponseController
     public function save()
     {
         $user = new EntitiesUser($this->request->getPost());
+
         $rules = [
             'name'  => 'required|min_length[4]|max_length[50]|user_name_update[id]',
-            'email' => 'required|min_length[4]|max_length[320]|user_email_update[id]',
+            'email' => 'required|min_length[4]|max_length[320]|valid_email|user_email_update[id]',
         ];
-        if ($user->password) {
+        if (!$user->id || $this->request->getPost('changePassword') == true) {
             $rules['password'] = 'required|min_length[6]|max_length[50]';
-            $rules['confirmPassword'] = 'matches[password]';
+            $rules['confirmPassword'] = 'required|matches[password]';
         }
 
         if (!$this->validate($rules)) {
@@ -61,6 +64,8 @@ class User extends ResponseController
         try {
             if (!$this->users->save($user->toRawArray())) throw new Exception();
             if (!$user->id) $user->id = $this->users->getInsertID();
+            unset($user->password);
+            unset($user->confirmPassword);
         } catch (Exception $e) {
             return $this->toResponse(
                 $user,
@@ -123,7 +128,7 @@ class User extends ResponseController
             (int) $this->request->getGetPost('page') ?? 1,
             [
                 'search'    => $this->request->getGetPost('search'),
-                'sort'      => $this->request->getGetPost('sort'),
+                'sort'      => $this->request->getGetPost('sort') ?? self::DEFAULT_SORT,
                 'sortDir'   => $this->request->getGetPost('sortDir'),
             ],
             $perPage

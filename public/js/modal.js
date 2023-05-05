@@ -74,7 +74,6 @@ const modalHandleResult = (template, existing) => {
         }
         existing.remove();
     } else {
-        const template = itemTemplate.html(data);
         if (existing) {
             existing.replaceWith(template);
         } else {
