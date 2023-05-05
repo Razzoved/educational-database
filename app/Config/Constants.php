@@ -98,13 +98,16 @@ define('EVENT_PRIORITY_HIGH', 10);
  *
  * @author Jan Martinek
  */
-define('PERM', 'uploads/');
-define('TEMP', 'temp/');
-define('UNUSED', 'unused/');
+define('WINDOWS_SEPARATOR', '\\');
+define('UNIX_SEPARATOR', '/');
 
-define('ASSET_PREFIX', 'public/assets/');
-define('SAVE_PREFIX', 'public/' . PERM);
-define('TEMP_PREFIX', 'public/' . TEMP);
+define('PERM', 'uploads' . UNIX_SEPARATOR);
+define('TEMP', 'temp' . UNIX_SEPARATOR);
+define('UNUSED', 'unused' . UNIX_SEPARATOR);
+
+define('ASSET_PREFIX', 'public' . UNIX_SEPARATOR . 'assets' . UNIX_SEPARATOR);
+define('SAVE_PREFIX', 'public' . UNIX_SEPARATOR . PERM);
+define('TEMP_PREFIX', 'public' . UNIX_SEPARATOR . TEMP);
 
 define('SAVE_PATH', ROOTPATH . SAVE_PREFIX);
 define('TEMP_PATH', ROOTPATH . TEMP_PREFIX);

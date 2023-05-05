@@ -2,6 +2,7 @@
 
 namespace App\Entities;
 
+use App\Entities\Cast\PathCast;
 use CodeIgniter\Entity\Entity;
 
 class Resource extends Entity
@@ -20,8 +21,8 @@ class Resource extends Entity
     protected $casts = [
         'resource_id'   => 'int',
         'material_id'   => 'int',
-        'resource_path' => 'string',
-        'resource_type' => 'string',
+        'resource_path' => 'path',
+        'resource_type' => 'path',
     ];
 
     protected $datamap = [
@@ -31,9 +32,13 @@ class Resource extends Entity
         'type'     => 'resource_type',
     ];
 
+    protected $castHandlers = [
+        'path' => \App\Entities\Cast\PathCast::class,
+    ];
+
     public function isLink() : bool
     {
-        return $this->type == 'link' || substr($this->path, 0, 4) === 'http';
+        return $this->type == 'link' || !strncmp($this->path, 'http', 4);
     }
 
     public function isThumbnail() : bool
@@ -43,65 +48,49 @@ class Resource extends Entity
 
     public function isAsset() : bool
     {
-        return substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX
-            || substr($this->path, 0, strlen('missing')) === "missing";
+        return substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX;
     }
 
     public function isTemporary() : bool
     {
-        return $this->tmp_path !== null && substr($this->tmp_path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX;
+        return $this->tmp_path && substr($this->tmp_path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX;
     }
 
     public function isAssigned() : bool
     {
-        return $this->parentId > 0 && !$this->isTemporary();
-    }
-
-
-    public function getName(bool $showExtension = true) : string
-    {
-        if (!$showExtension) {
-            $p = explode('.', $this->path);
-            array_pop($p);
-            return join('.', $p);
-        }
-        return $this->path;
+        return !(
+            $this->parentId <= 0 ||
+            $this->isAsset() ||
+            $this->isTemporary()
+        );
     }
 
     public function getURL() : string
     {
-        if ($this->isLink()) {
-            return $this->path;
-        }
-
-        if ($this->isTemporary()) {
-            return base_url($this->tmp_path);
-        }
-
-        return base_url($this->getPrefix() . $this->path);
+        return base_url($this->getPrefix() . ($this->isTemporary()
+            ? $this->tmpPath
+            : $this->path
+        ));
     }
 
     public function getRootPath() : string
     {
-        if ($this->isLink()) {
-            throw new \Exception('Resource is of LINK type. Links are not located in subfolders of root');
-        }
-
-        return $this->getPrefix() . $this->path;
+        return $this->isLink()
+            ? throw new \Exception('Links are not children of root!')
+            : $this->getPrefix() . $this->path;
     }
 
     private function getPrefix()
     {
-        if (!$this->isAsset() && $this->isAssigned()) {
-            return SAVE_PREFIX . $this->parentId . '/';
-        }
-        return '';
+        return $this->isAssigned()
+            ? SAVE_PREFIX . $this->parentId . UNIX_SEPARATOR
+            : '';
     }
 
-    public static function getMissing()
+    public static function getDefaultImage()
     {
         return new Resource([
-            'path' => ASSET_PREFIX . 'missing.png',
+            'path' => model(ConfigModel::class)->find('default_image')->value,
             'type' => 'thumbnail',
         ]);
     }

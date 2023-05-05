@@ -99,7 +99,7 @@ class Material extends Entity
                 return $r;
             };
         }
-        return Resource::getMissing();
+        return Resource::getDefaultImage();
     }
 
     public function getLinks() : array
