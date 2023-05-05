@@ -12,14 +12,16 @@ class Property extends Entity
         'property_value'       => null,
         'property_priority'    => null,
         'property_description' => null,
-        'children'             => null, // not part of db
-        'usage'                => null, // not part of db
+        'category'             => null, // not part of db, but loaded
+        'children'             => null, // not part of db (on demand)
+        'usage'                => null, // not part of db (on demand)
     ];
 
     protected $casts = [
         'property_id'          => 'int',
         'property_priority'    => 'int',
         'property_description' => 'string',
+        'category'             => 'string',
         'children'             => 'array',
         'usage'                => 'int',
     ];
