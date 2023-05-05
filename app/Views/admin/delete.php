@@ -56,7 +56,7 @@
                 return;
             }
             messageElement.innerHTML = messageOriginal.replace('[]', `[${id}]`);
-            deleteModal.querySelector("form").action = deleteAction.replace(/@segment@/, id);
+            deleteModal.querySelector("form").action = deleteAction.replace(/([0-9]+|@segment@)/, id);
             deleteModal.classList.add('modal--visible');
         }
 
