@@ -17,9 +17,8 @@
 
     <main id="top" class="container">
         <?= $this->renderSection('content') ?>
+        <?= $this->renderSection('modals') ?>
     </main>
-
-    <?= $this->renderSection('modals') ?>
 
     <?= $this->include('tooltip') ?>
     <?= $this->include('go_up') ?>
@@ -27,7 +26,6 @@
 
     <?= $this->renderSection('scripts') ?>
     <script type="text/javascript" src="<?= base_url('public/js/tabular.js') ?>"></script>
-    <script type="text/javascript" src="<?= base_url('public/js/error.js') ?>"></script>
 </body>
 
 </html>

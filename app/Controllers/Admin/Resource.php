@@ -3,7 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Entities\Resource as EntitiesResource;
-use App\Libraries\Resources;
+use App\Libraries\Resource as ResourceLib;
 use App\Models\ResourceModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
@@ -13,12 +13,9 @@ use Psr\Log\LoggerInterface;
 
 class Resource extends ResponseController
 {
-    protected Resources $resourceLibrary;
-
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
-        $this->resourceLibrary = new Resources($this->response);
     }
 
     public function index() : string
@@ -35,7 +32,7 @@ class Resource extends ResponseController
         $data = [
             'meta_title' => 'Administration - unused files',
             'title'      => 'Unused files',
-            'resources'  => $this->resourceLibrary->getUnused(),
+            'resources'  => ResourceLib::getUnused(),
             'targets'    => $targets,
             'activePage' => 'files',
         ];
@@ -49,36 +46,32 @@ class Resource extends ResponseController
 
     public function upload() : Response
     {
-        $file = $this->request->getFile('file');
+        $type = self::resolveType($this->request->getPost('fileType'));
 
-        $resource = $this->resourceLibrary->store($file);
-        if (!$resource) {
+        if ($type === 'thumbnail' && !$this->validate(['file' => 'is_image[file]'])) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                'File is not an image'
+            );
+        }
+
+        try {
+            $resource = ResourceLib::store($this->request->getFile('file'));
+        } catch (Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
-                'No files were uploaded'
+                'File could not be uploaded!'
             );
         }
 
         return $this->response->setJSON($resource);
     }
 
-    public function uploadImage() : Response
-    {
-        $rules = ['file' => 'is_image[file]'];
-        if (!$this->validate($rules)) {
-            return $this->response->setStatusCode(
-                Response::HTTP_BAD_REQUEST,
-                'File is not an image'
-            );
-        }
-        return $this->upload();
-    }
-
     public function assign() : Response
     {
         $materialId = $this->request->getPost('target');
 
-        if (!$materialId || !is_int($materialId)) {
+        if (!$materialId || !is_numeric($materialId)) {
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
                 'Invalid material id!'
@@ -86,19 +79,23 @@ class Resource extends ResponseController
         }
 
         $resource = new EntitiesResource($this->request->getPost());
+        $resource->type = 'file';
 
-        if (!$resource->path) {
+        if (!$resource->tmp_path || !is_file(ROOTPATH . $resource->tmp_path)) {
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
                 'Cannot assign a non-existent resource!'
             );
         }
 
-        if (!$this->resourceLibrary->assign((int) $materialId, $resource)) {
-            return $this->response->setStatusCode(
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-                'Could not assign resource, try again later!'
-            );
+        try {
+            ResourceLib::assign((int) $materialId, $resource);
+        } catch (Exception $e) {
+            // return $this->response->setStatusCode(
+            //     Response::HTTP_INTERNAL_SERVER_ERROR,
+            //     'Could not assign resource, try again later!'
+            // );
+            throw $e;
         }
 
         return $this->response->setJSON($resource);
@@ -109,44 +106,63 @@ class Resource extends ResponseController
         return $this->doDelete(
             $id,
             model(ResourceModel::class)->find,
-            function ($e) { if (!$this->resourceLibrary->delete($e)) throw new Exception('deletion failed'); },
+            function ($e) { ResourceLib::delete($e); },
             'resource'
         );
     }
 
+    public function deleteUnusedAll() : Response
+    {
+        $all = ResourceLib::getUnused();
+        $paths = array();
+        foreach ($all as $resource) {
+            $this->deleteUnused($resource->path);
+            $paths[] = $resource->path;
+        }
+        return $this->response->setJSON($paths);
+    }
+
     public function deleteUnused(string ...$path) : Response
     {
-        if (sizeof($path) < 4) {
+        $prefix = TEMP_PREFIX;
+        $path = implode(UNIX_SEPARATOR, $path);
+
+        if (substr($path, 0, strlen($prefix)) !== $prefix) {
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
-                'Missing leading segments'
+                "Invalid prefix, needs to be: {$prefix}!"
             );
         }
 
-        $prefix = $path[0] . '/' . $path[1] . '/' . $path[2] . '/';
-
-        if ($prefix !== TEMP_PREFIX . UNUSED) {
+        if (strpos($path, '..' . UNIX_SEPARATOR) !== false) {
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
-                'Invalid path prefix.'
+                'Path must not go up above current directory!'
             );
         }
 
-        $path = implode('/', $path);
-        if (strpos($path, '../') !== false) {
-            return $this->response->setStatusCode(
-                Response::HTTP_BAD_REQUEST,
-                'Path cannot contain "../" (cannot go up)!'
-            );
-        }
-
-        if ($path && !unlink(ROOTPATH . $path)) {
+        try {
+            ResourceLib::delete(new EntitiesResource([
+                'path' => $path,
+                'tmp_path' => $path
+            ]));
+        } catch (Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
-                'Could not delete file: ' . $path . '<br>Please try again later!'
+                $e->getMessage()
             );
         }
 
         return $this->response->setJSON([ 'id' => $path ]);
+    }
+
+    private static function resolveType($value) : string
+    {
+        switch ($value) {
+            case 'thumbnail':
+                return $value;
+            default:
+                return 'file';
+        }
     }
 }

@@ -19,11 +19,25 @@ String.prototype.html = function(data = undefined) {
     return parser.parseFromString(result, 'text/html')?.body.firstElementChild;
 };
 
-const modalClose = function(event = null)
+HTMLElement.prototype.reapplyScripts = function() {
+    scripts = Array.from(this.querySelectorAll('script')).forEach((e) => {
+        const script = document.createElement('script');
+        script.text = e.innerText;
+        e.remove();
+        this.appendChild(script);
+    });
+}
+
+const modalClose = function(event = null, modalId = 'modal')
 {
-    const modal = document.getElementById('modal');
+    const modal = document.getElementById(modalId);
     if (modal && (event === null || event.target === modal)) {
-        modal.remove();
+        if (modalId !== 'modal') {
+            modal.querySelector('#error')?.remove();
+            modal.classList.remove('modal--visible');
+        } else {
+            modal.remove();
+        }
     }
 }
 
@@ -44,6 +58,7 @@ const modalOpen = async (target, template) => {
             template = template.fill({...(await response.json())});
         }
         const element = document.body.appendChild(template.html());
+        element.reapplyScripts();
         element.classList.add("modal--visible");
     } catch (err) {
         console.error(`modalSubmit: ${err.message}`);
@@ -52,39 +67,56 @@ const modalOpen = async (target, template) => {
     }
 }
 
-const modalSubmit = async () => {
-    try {
-        const form = document.querySelector('#modal form');
-        if (!form) {
-            throw new Error('Form not found');
+const modalHandleResult = (template, existing) => {
+    if (template === undefined) {
+        if (!existing) {
+            throw new Error('Cannot remove nonexistent element');
         }
-
-        const response = await fetch(form.action, {
-            method: form.method,
-            body: new FormData(form),
-        });
-        if (!response.ok) {
-            throw new Error(response.statusText);
-        }
-
-        if (!itemTemplate || !items) {
-            throw new Error('Internal error, make sure itemTemplate is defined and element with id "items" exists');
-        }
-
-        const data = await response.json();
+        existing.remove();
+    } else {
         const template = itemTemplate.html(data);
-
-        const existing = document.getElementById(data.id);
         if (existing) {
             existing.replaceWith(template);
         } else {
             items.insertAdjacentElement('afterbegin', template);
         }
-        modalClose();
-    } catch (err) {
+    }
+}
+
+const modalSubmit = async (shouldDelete = false, modalId = 'modal') => {
+    const modal = document.getElementById(modalId);
+    if (modal) try {
+        const form = modal.querySelector('form');
+
+        if (!form) {
+            throw new Error('Form not found');
+        }
+        if (!items || (!shouldDelete && !itemTemplate)) {
+            throw new Error('Items or templates not found');
+        }
+
+        const response = await fetch(form.action, {
+            method: form.getAttribute('data-method') ?? form.method,
+            body: new FormData(form),
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return response.json();
+        }).then(response => {
+            return Array.isArray(response) ? response : Array(response);
+        });
+
+        response.forEach(item => {
+            const existing = document.getElementById(item.id ?? item);
+            modalHandleResult(shouldDelete ? undefined : itemTemplate.html(item), existing);
+        });
+
+        modalClose(null, modalId);
+    } catch (error) {
         modal.querySelector('#error')?.remove();
         modal.querySelector('.modal__body').insertAdjacentElement('afterbegin',
-            `<p id="error" style="text-align: center"><strong style="color: red">${err.message}</strong></p>`.html()
+            `<p id="error" style="text-align: center"><strong style="color: red">${error.message}</strong></p>`.html()
         );
     }
 }

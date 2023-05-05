@@ -5,7 +5,7 @@
     <?php foreach ($resources as $resource) : ?>
     <li class="links__item">
         <?php if (!$resource->isLink()) : ?>
-        <img class="links__thumbnail" src="<?= \App\Libraries\Resources::pathToFileURL($resource->getRootPath()) ?>"></img>
+        <img class="links__thumbnail" src="<?= \App\Libraries\Resource::pathToFileURL($resource->getRootPath()) ?>"></img>
         <a class="links__href" href="<?= $resource->getURL() ?>" download>
         <?php else : ?>
         <a class="links__href" target="_blank" href="<?= $resource->getURL() ?>">

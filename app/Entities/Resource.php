@@ -38,7 +38,7 @@ class Resource extends Entity
 
     public function isLink() : bool
     {
-        return $this->type == 'link' || !strncmp($this->path, 'http', 4);
+        return $this->type == 'link' || ($this->path && substr($this->path, 0, 4) === 'http');
     }
 
     public function isThumbnail() : bool
@@ -48,7 +48,7 @@ class Resource extends Entity
 
     public function isAsset() : bool
     {
-        return substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX;
+        return $this->path && substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX;
     }
 
     public function isTemporary() : bool

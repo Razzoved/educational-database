@@ -15,12 +15,12 @@ use CodeIgniter\Entity\Cast\BaseCast;
  */
 class PathCast extends BaseCast
 {
-    public static function get($value, array $params = []) : string
+    public static function get($value, array $params = [])
     {
-        return $value;
+        return $value ?? "";
     }
 
-    public static function set($value, array $params = []) : string
+    public static function set($value, array $params = [])
     {
         if (substr($value, 0, 4) === "http") {
             return $value;

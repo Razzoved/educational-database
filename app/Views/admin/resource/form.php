@@ -30,6 +30,7 @@
                     name="target"
                     list="target-options"
                     placeholder="No material selected"
+                    autocomplete="off"
                     required>
                 <datalist id="target-options">
                     <?php foreach ($targets as $id => $title) : ?>
@@ -41,7 +42,7 @@
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="submit" class="modal__button modal__button--submit" onclick="verifyTarget() && modalSubmit()"><?= $submit ?></button>
+                <button type="submit" class="modal__button modal__button--submit"><?= $submit ?></button>
                 <button type="button" class="modal__button modal__button--cancel" onclick="modalClose()">Cancel</button>
             </div>
         </div>
@@ -49,23 +50,33 @@
     </div>
 
     <script type="text/javascript">
-        <?= include_once(FCPATH . 'js/modal.js') ?>
+        <?php include_once(FCPATH . 'js/modal.js') ?>
 
-        const target = document.getElementById('target');
-        const targetDisplay = document.getElementById('target-display');
-        const targetOptions = document.getElementById('target-options');
+        var target = document.getElementById('target');
+        var targetOptions = document.getElementById('target-options');
 
-        const verifyTarget = function()
-        {
-            const option = targetOptions.querySelector('option:selected');
-            if (option === null) {
-                target.value = '';
-                targetDisplay.innerHTML = '';
-                target.focus();
-            } else {
-                targetDisplay.innerHTML = `: ${option.innerHTML}`;
+        var setError = (hasError = false) => {
+            modal.querySelector('#error')?.remove();
+            if (hasError) {
+                modal.querySelector('.modal__body').insertAdjacentElement('afterbegin', (
+                    '<p id="error" style="text-align: center"><strong style="color: red">Invalid material</strong></p>'
+                ).html());
             }
-            return option !== null;
         }
+
+        var verifyOption = () => {
+            const isValid = Array.from(targetOptions.querySelectorAll('option'))
+                .filter(option => option.value === target.value)
+                .length > 0;
+            setError(!isValid);
+            return isValid;
+        }
+
+        target.addEventListener('change', verifyOption);
+
+        document.querySelector('.modal__button--submit').addEventListener('click', (event) => {
+            event.preventDefault();
+            return verifyOption() && modalSubmit();
+        });
     </script>
 </div>
