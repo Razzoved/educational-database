@@ -19,15 +19,13 @@
 
     <div class="collapsible__header">
 
-        <?php if (!$isFirstLevel) : ?>
-            <input class="collapsible__toggle-group"
-                type="checkbox"
-                id="filter_<?= $property->id ?>"
-                name="group"
-                value="<?= $property->id ?>"
-                title="Use all from group"
-            />
-        <?php endif; ?>
+        <input class="collapsible__toggle-group"
+            type="checkbox"
+            id="filter_<?= $property->id ?>"
+            name="group"
+            value="<?= $property->id ?>"
+            title="Use all from group"
+        />
 
         <button class="collapsible__toggle" type="button" onclick="toggleCollapsible(this)">
             <i class="fa-solid fa-caret-right"></i>
