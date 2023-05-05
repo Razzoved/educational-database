@@ -19,9 +19,9 @@
     </div>
 
     <div class="page__content">
-        <div class="page-controls">
+        <div class="page__controls">
             <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
-            <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value', ''], 'create' => 'propertyOpen()']) ?>
+            <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value'], 'create' => 'propertyOpen()']) ?>
         </div>
 
         <div class="table" id="items">
@@ -67,9 +67,10 @@
                 submit: 'Create',
                 id: "",
                 tag: "",
+                value: "",
                 category: "",
                 description: "",
-                priority: "",
+                priority: 0,
             }
         );
         modalOpen(id ? url.replace(/0$/, id) : undefined, template);

@@ -15,6 +15,13 @@
     <h1 class="page__title"><?= $title ?></h1>
 
     <div class="page__content">
+
+        <?php if (!empty($resources)) : ?>
+        <div class="page__controls">
+            <button type="button" onclick="deleteOpenAll('<?= url_to('Admin\Resource::deleteUnusedAll') ?>')">Delete all</button>
+        </div>
+        <?php endif; ?>
+
         <div class="table" id="items">
         <?php
             if ($resources === []) {
@@ -22,7 +29,7 @@
             } else foreach($resources as $resource) {
                 echo view('admin/resource/item', [
                     'id'   => $resource->path,
-                    'path' => \App\Libraries\Resources::pathToFileURL($resource->getRootPath()),
+                    'path' => \App\Libraries\Resource::pathToFileURL($resource->getRootPath()),
                     'name' => basename($resource->path),
                 ]);
             }
@@ -43,14 +50,13 @@
     const itemTemplate = `<?= json_encode(view('admin/resource/item')) ?>`;
     const formTemplate = `<?= json_encode(view('admin/resource/form', ['targets' => $targets])) ?>`;
 
-    const url = '<?= url_to('Admin\Resource::get', 0) ?>';
     const items = document.getElementById('items');
 
     const resourceOpen = async (tmpPath) => {
         if (!tmpPath) {
             console.error('Resource path must be provided');
         } else {
-            modalOpen(url, formTemplate.fill({ tmp_path: tmpPath }));
+            modalOpen(undefined, formTemplate.fill({ tmp_path: tmpPath }));
         }
     }
 </script>
