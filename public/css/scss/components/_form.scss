@@ -10,6 +10,8 @@
     &__logo {
         max-width: 100%;
         object-fit: scale-down;
+        background-color: $clr-dark-transparent;
+        border-radius: 1rem;
     }
 
     &__group {
@@ -64,6 +66,14 @@
         &:focus {
             border: $clr-active 2px solid;
         }
+    }
+
+    .page--dark &__logo {
+        background-color: unset;
+    }
+
+    .page--dark &__label {
+        color: $clr-light-semi-transparent;
     }
 
     .page--dark &__input {

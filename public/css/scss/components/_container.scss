@@ -5,10 +5,6 @@
     margin: 0 auto;
     height: 100%;
 
-    &__child {
-        max-width: 100%;
-    }
-
     @media screen and (min-width: $xs) {
         width: 750px;
     }

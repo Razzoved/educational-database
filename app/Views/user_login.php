@@ -11,7 +11,7 @@
 <?= $this->section('content') ?>
     <?php helper('form') ?> <!-- set_value function -->
 
-    <div class="page page--centered page--dark">
+    <div class="page page--centered page--dark page--w30">
         <form class="form" method="post" action="<?= url_to('Authentication::login') ?>" autocomplete="on">
             <!-- logo with errors -->
             <div class="form__group form__group--centered">

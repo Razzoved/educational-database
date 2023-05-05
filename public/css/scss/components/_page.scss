@@ -25,11 +25,10 @@
     }
 
     &--centered {
-        grid-template: ".";
+        flex-grow: 0;
         margin: auto;
-        max-width: 30rem;
-        max-height: fit-content;
-        border-radius: $border-radius-lg + 1rem;
+        grid-template: "." auto;
+        border-radius: $border-radius-lg + 2rem;
     }
 
     &--dark {
@@ -37,6 +36,10 @@
         * {
             color: $clr-light;
         }
+    }
+
+    &--w30 {
+        max-width: 30rem;
     }
 
     &__title {
