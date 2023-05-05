@@ -12,6 +12,6 @@
 <!-- last search data, used for dynamic page elements -->
 <script>
     const params = new URL(window.location).searchParams;
-    if (!params.has('sort')) params.set('sort', 'id');
-    if (!params.has('sortDir')) params.set('sortDir', 'desc');
+    if (!params.has('sort')) params.set('sort', '<?= $_GET['sort'] ?? 'id' ?>');
+    if (!params.has('sortDir')) params.set('sortDir', '<?= $_GET['sortDir'] ?? 'desc' ?>');
 </script>
