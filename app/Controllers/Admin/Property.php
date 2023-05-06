@@ -48,7 +48,7 @@ class Property extends ResponseController
         $property = new EntitiesProperty($this->request->getPost());
         $rules = [
             'id'          => 'permit_empty|is_natural',
-            'tag'         => "required|is_natural",
+            'tag'         => "required|is_natural|valid_tag[id]",
             'value'       => "required|string|property_value_update[tag,id]",
             'description' => "permit_empty|string",
             'priority'    => "required|integer|greater_than_equal_to[-25]|less_than_equal_to[100]",
@@ -63,10 +63,16 @@ class Property extends ResponseController
         }
 
         try {
-            if (!$this->properties->save($property->toRawArray())) throw new Exception();
-            if (!$property->id) $property->id = $this->properties->getInsertID();
-            $property->usage = $this->properties->getUsage($property->id);
+            if (!$this->properties->save($property->toRawArray())) {
+                throw new Exception('Unexpected error while saving!');
+            }
+            if (!$property->id) {
+                $property->id = $this->properties->getInsertID();
+            }
+            $property = $this->properties->get($property->id);
+            unset($property->children); // can be commented to get children
         } catch (Exception $e) {
+            $this->logger->error($e->getMessage(), $property ?? []);
             return $this->toResponse(
                 $property,
                 ['error' => 'Could not save property, try again later!'],

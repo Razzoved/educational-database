@@ -8,4 +8,5 @@ return [
     'user_email'            => 'User with this email adress does not exist!',
     'user_password'         => 'Invalid password!',
     'valid_status'          => 'Invalid status, should be one of: <pre>' . print_r(\App\Entities\Cast\StatusCast::VALID_VALUES, true) . '</pre>',
+    'valid_tag'             => 'Circular depndency deteceted at TAG!',
 ];

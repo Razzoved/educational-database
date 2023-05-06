@@ -301,7 +301,7 @@ class PropertyModel extends Model
      *                              HELPERS
      *  ------------------------------------------------------------------- */
 
-    protected function getTreeRecursive(Property $property) : Property
+    public function getTreeRecursive(Property $property) : Property
     {
         return Cache::check(
             function () use ($property) {
