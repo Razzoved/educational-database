@@ -15,6 +15,9 @@ use CodeIgniter\Validation\Exceptions\ValidationException;
  */
 class PropertyModel extends Model
 {
+    private const CAT_ALIAS = 'categories';
+    private const USG_ALIAS = 'usages';
+
     protected $table         = 'properties';
     protected $primaryKey    = 'property_id';
     protected $allowedFields = [
@@ -48,29 +51,27 @@ class PropertyModel extends Model
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
+    public function find($id = null) : ?Property
+    {
+        // reduces the number of callback calls
+        return $id == 0
+            ? null
+            : parent::find($id);
+    }
+
     public function get(int $id, array $data = []) : ?Property
     {
-        $item = $this->setupQuery($data)->find($id);
-        if ($data['usage'] ?? false) {
-            $item->usage = $this->_getUsage($item);
-        }
-        return $item;
+        return $this->setupQuery($data, $id)->find($id);
     }
 
     public function getArray(array $data = [], int $limit = 0) : array
     {
-        return $this->getUsage(
-            $this->setupQuery($data)->findAll($limit),
-            $data['usage'] ?? false,
-        );
+        return $this->setupQuery($data)->findAll($limit);
     }
 
     public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
     {
-        return $this->getUsage(
-            $this->setupQuery($data)->paginate($perPage, 'default', $page),
-            $data['usage'] ?? false,
-        );
+        return $this->setupQuery($data)->paginate($perPage, 'default', $page);
     }
 
     public function getUnique(string $column = "value") : array
@@ -85,84 +86,21 @@ class PropertyModel extends Model
                     ->findAll();
     }
 
-    /** ----------------------------------------------------------------------
-     *                        UNIFIED QUERY SETUP
-     *  ------------------------------------------------------------------- */
-
-    protected function setupQuery(array $data = []) : PropertyModel
+    public function getTree() : Property
     {
-        if (isset($data['callbacks']) && $data['callbacks'] === true) {
-            $this->allowCallbacks(true);
-        }
-        return $this
-            ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
-            ->setupCategory($data['category'] ?? false)
-            ->setupFilters($data['filters'] ?? [])
-            ->setupSearch($data['search'] ?? "");
-    }
-
-    protected function setupSort(string $sort, string $sortDir)
-    {
-        if (
-            $sort !== $this->createdField &&
-            $sort !== $this->updatedField &&
-            $sort !== $this->primaryKey &&
-            $sort !== 'category'
-        ) {
-            $sort = 'property_' . $sort;
-            $sort = in_array($sort, $this->allowedFields) || $sort === $this->primaryKey ? $sort : "";
-        }
-
-        if ($sort === "") {
-            $sort = $this->primaryKey;
-        }
-
-        $this->orderBy($sort, strtolower($sortDir) === 'asc' ? 'ASC' : 'DESC');
-
-        if ($sort !== 'property_priority') {
-            $this->orderBy($this->table . '.property_priority', 'desc');
-        }
-
-        if ($sort !== 'property_tag') {
-            $this->orderBy($this->table . '.property_tag', 'asc');
-        }
-
-        if ($sort !== 'property_value') {
-            $this->orderBy($this->table . '.property_value', 'asc');
-        }
-
-        return $this;
-    }
-
-    protected function setupFilters(array $filters)
-    {
-        // can be used to filter by different field
-        $identifier = $this->table . '.' . ($filters['id'] ?? 'property_tag');
-        if (isset($filters['and']) && $filters['and'] !== []) {
-            $this->whereIn($identifier, $filters['and']);
-        }
-        if (isset($filters['or']) && $filters['or'] !== []) {
-            $this->orWhereIn($identifier, $filters['or']);
-        }
-        return $this;
-    }
-
-    protected function setupSearch(string $search)
-    {
-        if ($search === "") {
-            return $this;
-        }
-        return $this->orLike("{$this->db->prefixTable($this->table)}.property_tag", $search, 'both', true, true)
-                    ->orLike("{$this->db->prefixTable($this->table)}.property_value", $search, 'both', true, true);
-    }
-
-    protected function setupCategory(bool $category)
-    {
-        if ($category) {
-            $this->join("{$this->table} AS c", "c.property_id = {$this->table}.property_tag", 'left')
-                 ->select("{$this->table}.*, c.property_value AS category");
-        }
-        return $this;
+        $root = new Property(['value' => 'root']);
+        $root->children = Cache::check(
+            function() {
+                $categories = [];
+                foreach ($this->getArray(['tag' => 0]) as $category) {
+                    $categories[] = $this->getTreeRecursive($category);
+                }
+                return $categories;
+            },
+            "tree",
+            "property",
+        );
+        return $root;
     }
 
     /**
@@ -202,37 +140,108 @@ class PropertyModel extends Model
         return $result;
     }
 
-    public function loadChildren(Property $property) : Property
+    /** ----------------------------------------------------------------------
+     *                        UNIFIED QUERY SETUP
+     *  ------------------------------------------------------------------- */
+
+    protected function setupQuery(array $data = [], ?int $id = null) : PropertyModel
     {
-        return Cache::check(
-            function () use ($property) {
-                $children = [];
-                foreach ($this->where('property_tag', $property->id)->getArray(['sort' => 'priority']) as $child) {
-                    $children[] = $this->loadChildren($child);
-                }
-                $property->children = $children;
-                return $property;
-            },
-            $property->id,
-            "property",
-        );
+        if (isset($data['callbacks'])) {
+            $this->allowCallbacks($data['callbacks'] === true);
+        }
+        return $this
+            ->setupSelect($id, $data)
+            ->setupSearch($data['search'] ?? "")
+            ->setupFilters($data['filters'] ?? [])
+            ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "");
     }
 
-    public function getTree() : Property
+    protected function setupSelect(?int $id, array $data)
     {
-        $root = new Property(['value' => 'root']);
-        $root->children = Cache::check(
-            function() {
-                $categories = [];
-                foreach ($this->where('property_tag', 0)->getArray(['sort' => 'priority']) as $category) {
-                    $categories[] = $this->loadChildren($category);
-                }
-                return $categories;
-            },
-            "tree",
-            "property",
-        );
-        return $root;
+        $category = self::CAT_ALIAS;
+        $usage = self::USG_ALIAS;
+
+        $usageQuery = model(MaterialPropertyModel::class)->builder()
+            ->select('property_id')
+            ->selectCount('property_id', 'usage')
+            ->groupBy('property_id');
+        if (!is_null($id)) {
+            $usageQuery = $usageQuery->where('property_id', $id);
+        }
+        $usageQuery = $usageQuery->getCompiledSelect();
+
+        $this->select("{$this->table}.*, {$usage}.usage as usage, {$category}.property_value as category")
+             ->join("{$this->table} as {$category}", "{$this->table}.property_tag = {$category}.property_id", 'left')
+             ->join("({$usageQuery}) as {$usage}", "{$this->table}.property_id = {$usage}.property_id", 'left');
+
+        $sort = $data['sort'] ?? false;
+        $sortDir = isset($data['sortDir']) && strtoupper($data['sortDir']) === 'ASC' ? 'ASC' : 'DESC';
+
+        if ($sort === 'category') {
+            $this->orderBy('property_value', $sortDir, null, $category);
+        }
+        if ($sort === 'usage') {
+            $this->orderBy('usage', $sortDir, null, $usage);
+        }
+
+        return $this;
+    }
+
+    protected function setupSort(string $sort, string $sortDir)
+    {
+        if (
+            $sort !== $this->createdField &&
+            $sort !== $this->updatedField &&
+            $sort !== $this->primaryKey
+        ) {
+            $sort = 'property_' . $sort;
+            $sort = in_array($sort, $this->allowedFields) || $sort === $this->primaryKey ? $sort : "";
+        }
+
+        if ($sort === "") {
+            $sort = 'property_priority';
+        }
+
+        $this->orderBy($sort, strtolower($sortDir) === 'asc' ? 'ASC' : 'DESC');
+
+        if ($sort !== 'property_priority') {
+            $this->orderBy('property_priority', 'desc');
+        }
+        if ($sort !== 'property_tag') {
+            $this->orderBy('property_tag');
+        }
+        if ($sort !== 'property_value') {
+            $this->orderBy('property_value');
+        }
+        if ($sort !== $this->primaryKey) {
+            $this->orderBy($this->primaryKey);
+        }
+
+        return $this;
+    }
+
+    protected function setupFilters(array $filters)
+    {
+        // can be used to filter by different field
+        $identifier = $filters['id'] ?? 'property_tag';
+        $identifier = "{$this->table}.{$identifier}";
+
+        if (isset($filters['and']) && $filters['and'] !== []) {
+            $this->whereIn($identifier, $filters['and']);
+        }
+        if (isset($filters['or']) && $filters['or'] !== []) {
+            $this->orWhereIn($identifier, $filters['or']);
+        }
+        return $this;
+    }
+
+    protected function setupSearch(string $search)
+    {
+        if ($search === "") {
+            return $this;
+        }
+        return $this->orLike("property_value", $search, 'both', true, true, self::CAT_ALIAS)
+                    ->orLike("property_value", $search, 'both', true, true);
     }
 
     /** ----------------------------------------------------------------------
@@ -247,6 +256,21 @@ class PropertyModel extends Model
         }
         return $data;
     }
+
+    // protected function getCategory(array $data)
+    // {
+    //     if (!isset($data['data'])) {
+    //         return $data;
+    //     }
+    //     if ($data['method'] !== 'findAll') {
+    //         $parent = Cache::get($data['data']->tag, 'property') ?? $this->allowCallbacks(false)->find($data['data']->tag);
+    //         $data['data']->category = $parent->value ?? "";
+    //     } else foreach ($data['data'] as $property) {
+    //         $parent = Cache::get($property->tag, 'property') ?? $this->allowCallbacks(false)->find($property->tag);
+    //         $property->category = $parent->value ?? "";
+    //     }
+    //     return $data;
+    // }
 
     protected function saveCache(array $data)
     {
@@ -272,8 +296,10 @@ class PropertyModel extends Model
         }
         foreach ($data['id'] as $id) {
             $item = Cache::get($id, 'property');
-            $this->__autoload__($item);
+            $this->_revalidateCache($item);
+            unset($id);
         }
+        return $data;
     }
 
     protected function _revalidateCache(Property $item)
@@ -289,23 +315,46 @@ class PropertyModel extends Model
      *                              HELPERS
      *  ------------------------------------------------------------------- */
 
-    protected function getUsage(array $items, bool $doUsage) : array
+    protected function getTreeRecursive(Property $property) : Property
     {
-        if ($doUsage === true) {
-            foreach ($items as $item) {
-                $item->usage = $this->_getUsage($item);
-            }
-        }
-        return $items;
+        return Cache::check(
+            function () use ($property) {
+                $children = [];
+                foreach ($this->where('property_tag', $property->id)->getArray() as $child) {
+                    $children[] = $this->getTreeRecursive($child);
+                }
+                $property->children = $children;
+                return $property;
+            },
+            $property->id,
+            "property",
+        );
     }
 
-    protected function _getUsage(Property $item) : int
+    protected function where(string $field, $value = null, $escape = null, $prefix = null) : PropertyModel
     {
-        return count(
-            model(MaterialPropertyModel::class)
-                ->allowCallbacks(false)
-                ->where($this->primaryKey, $item->id)
-                ->findAll()
-        );
+        $prefix = $prefix ?? $this->table;
+        if ($prefix !== '') {
+            $prefix .= '.';
+        }
+        return parent::where($prefix . $field, $value, $escape);
+    }
+
+    protected function orLike(string $field, string $match = '', string $side = 'both', $escape = null, $insensitiveSearch = false, $prefix = null) : PropertyModel
+    {
+        $prefix = $prefix ?? "{$this->db->prefixTable($this->table)}";
+        if ($prefix !== '') {
+            $prefix .= '.';
+        }
+        return parent::orLike($prefix . $field, $match, $side, $escape, $insensitiveSearch);
+    }
+
+    protected function orderBy(string $field, string $direction = '', $escape = null, $prefix = null) : PropertyModel
+    {
+        $prefix = $prefix ?? $this->table;
+        if ($prefix !== '') {
+            $prefix .= '.';
+        }
+        return parent::orderBy($prefix . $field, $direction, $escape);
     }
 }
