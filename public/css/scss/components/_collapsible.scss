@@ -158,6 +158,9 @@
         border: unset;
         color: $clr-text;
         background-color: unset;
+        &:hover {
+            background-color: unset;
+        }
     }
     &:has(&__checkbox) &__label {
         padding-left: 1rem;

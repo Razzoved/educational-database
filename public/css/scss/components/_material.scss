@@ -147,17 +147,20 @@
     overflow-y: auto;
     max-height: 32rem;
     gap: 1rem;
-    justify-content: space-around;
+    justify-content: flex-start;
 
     &__item {
         cursor: pointer;
-        flex: 1 1 12rem;
         margin: 0.5rem;
-        padding: 0.5rem;
+        overflow: hidden;
         text-align: center;
-        border: $clr-gray-transparent 2px dashed;
-        border-radius: $border-radius;
-        box-shadow: inset 0rem 0rem 2rem $clr-gray-transparent;
+        background-color: $clr-dark;
+        border: $clr-gray-transparent 1px solid;
+        border-radius: $border-radius + 1rem;
+        width: 10rem;
+        @media screen and (max-width: $xs) {
+            width: 100%;
+        }
         &:hover {
             background-color: $clr-focus-bg;
         }
@@ -167,7 +170,7 @@
     }
 
     &__thumbnail {
-        background-color: $clr-active-bg;
+        background-color: $clr-focus;
         width: 10rem;
         height: 10rem;
         resize: both;
@@ -178,7 +181,8 @@
     }
 
     &__title {
-        color: $clr-hyperlink;
+        padding: 1rem;
+        color: $clr-light;
         font-weight: bold;
     }
 
