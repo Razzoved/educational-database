@@ -1,9 +1,5 @@
 <?= $this->extend('layouts/admin') ?>
 
-<?= $this->section('header') ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<?= $this->endSection() ?>
-
 <?= $this->section('content') ?>
 <div class="page">
     <h1 class="page__title"><?= $title ?></h1>
