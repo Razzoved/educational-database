@@ -28,16 +28,15 @@ class Property extends ResponseController
         $filters->value = 'Categories';
         $this->getCategories($filters);
 
-        $data = [
+        return $this->view('property/table', [
             'meta_title' => 'Administration - tags',
             'title'      => 'Tags',
-            'properties' => $this->getProperties(Config::PAGE_SIZE),
+            'properties' => $this->getProperties(ADMIN_PAGE_SIZE),
             'options'    => $this->getOptions(),
             'filters'    => array($filters),
             'pager'      => $this->properties->pager,
             'activePage' => 'tags',
-        ];
-        return view(Config::VIEW . 'property/table', $data);
+        ]);
     }
 
     /** ----------------------------------------------------------------------
@@ -48,8 +47,11 @@ class Property extends ResponseController
     {
         $property = new EntitiesProperty($this->request->getPost());
         $rules = [
-            'tag'      => "required|is_natural",
-            'value'    => "required|string|not_in_list[page,search,sort,sortDir]|property_value_update[{tag},{id}]",
+            'id'          => 'permit_empty|is_natural',
+            'tag'         => "required|is_natural",
+            'value'       => "required|string|property_value_update[tag,id]",
+            'description' => "permit_empty|string",
+            'priority'    => "required|integer|greater_than_equal_to[-25]|less_than_equal_to[100]",
         ];
 
         if (!$this->validate($rules)) {
@@ -61,7 +63,7 @@ class Property extends ResponseController
         }
 
         try {
-            if (!$this->properties->save($property)) throw new Exception();
+            if (!$this->properties->save($property->toRawArray())) throw new Exception();
             if (!$property->id) $property->id = $this->properties->getInsertID();
             $property->usage = $this->properties->getUsage($property->id);
         } catch (Exception $e) {
@@ -130,8 +132,6 @@ class Property extends ResponseController
                 'search'    => $this->request->getGetPost('search'),
                 'sort'      => $this->request->getGetPost('sort'),
                 'sortDir'   => $this->request->getGetPost('sortDir'),
-                'callbacks' => false,
-                'category'  => true,
                 'usage'     => true,
             ],
             $perPage

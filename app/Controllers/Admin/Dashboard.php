@@ -10,6 +10,9 @@ use Psr\Log\LoggerInterface;
 
 class Dashboard extends BaseController
 {
+    protected const COUNT_TOP = 10;
+    protected const COUNT_RECENT = 10;
+
     protected $views;
     protected $materials;
 
@@ -26,18 +29,22 @@ class Dashboard extends BaseController
         $data = [
             'meta_title'        => 'Administration - dashboard',
             'activePage'        => 'dashboard',
-            'viewsTotal'        => array_reduce(
-                $this->views->findAll(),
-                function ($prev, $mat) { $mat->views += $prev->views; return $mat; },
-                new EntitiesMaterial()
-            )->views,
             'viewsHistory'      => $this->views->getDailyTotals(),
-            'materials'         => $this->views->getTopMaterials(5, "", 30),
-            'materialsTotal'    => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], 5),
+            'materials'         => $this->views->getTopMaterials(self::COUNT_TOP, "", 30),
+            'materialsTotal'    => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], self::COUNT_TOP),
             'editors'           => $this->materials->getBlame(),
-            'recentPublished'   => $this->materials->getArray(['sort' => 'published_at', 'sortDir' => 'DESC'], 5),
-            'recentUpdated'     => $this->materials->getArray(['sort' => 'updated_at', 'sortDir' => 'DESC'], 5),
+            'recentPublished'   => $this->materials->getArray(['sort' => 'published_at', 'sortDir' => 'DESC'], self::COUNT_RECENT),
+            'recentUpdated'     => $this->materials->getArray(['sort' => 'updated_at', 'sortDir' => 'DESC'], self::COUNT_RECENT),
         ];
-        return view(Config::VIEW . 'dashboard', $data);
+
+        $data['viewsTotal'] = array_reduce(
+            $this->views->findAll(),
+            function ($prev, $mat) {
+                $mat->views += $prev->views; return $mat;
+            },
+            new EntitiesMaterial()
+        )->views;
+
+        return $this->view('dashboard', $data);
     }
 }

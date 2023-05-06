@@ -25,15 +25,15 @@ class User extends ResponseController
     public function index(): string
     {
         $_GET['sort'] = $this->request->getGetPost('sort') ?? self::DEFAULT_SORT;
-        $data = [
+
+        return $this->view('user/table', [
             'meta_title' => 'Administration - Users',
             'title'      => 'User editor',
             'options'    => $this->getOptions(),
-            'users'      => $this->getUsers(Config::PAGE_SIZE),
+            'users'      => $this->getUsers(ADMIN_PAGE_SIZE),
             'pager'      => $this->users->pager,
             'activePage' => 'users',
-        ];
-        return view(Config::VIEW . 'user/table', $data);
+        ]);
     }
 
     /** ----------------------------------------------------------------------

@@ -9,7 +9,8 @@ class MaterialMostViewed extends Material
     public function index() : string
     {
         $materials = model(ViewsModel::class)->getTopMaterials(30, $this->request->getGet('search') ?? "");
-        $data = [
+
+        return $this->view('material/all', [
             'meta_title' => 'Materials - monthly views',
             'title'      => 'Most viewed materials <em>from past 30 days</em>',
             'filters'    => [],
@@ -17,7 +18,6 @@ class MaterialMostViewed extends Material
             'materials'  => $materials,
             'pager'      => null,
             'activePage' => 'most-viewed',
-        ];
-        return view('material/all', $data);
+        ]);
     }
 }

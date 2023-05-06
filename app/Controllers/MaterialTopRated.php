@@ -6,7 +6,7 @@ class MaterialTopRated extends Material
 {
     public function index() : string
     {
-        $data = [
+        return $this->view('material/all', [
             'meta_title' => 'Materials - top rated',
             'title'      => 'Top rated materials',
             'filters'    => $this->materialProperties->getUsed(),
@@ -14,8 +14,7 @@ class MaterialTopRated extends Material
             'materials'  => $this->getMaterials(),
             'pager'      => $this->materials->pager,
             'activePage' => 'top-rated',
-        ];
-        return view('material/all', $data);
+        ]);
     }
 
     protected function getMaterials(int $perPage = 10) : array

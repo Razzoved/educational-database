@@ -44,7 +44,7 @@ class Material extends BaseController
             'pager'      => $this->materials->pager,
             'activePage' => '',
         ];
-        return view('material/all', $data);
+        return $this->view('material/all', $data);
     }
 
     /**
@@ -66,18 +66,20 @@ class Material extends BaseController
             model(ViewsModel::class)->increment($material);
         }
 
-        $data = [
-            'meta_title'    => $material->title,
-            'title'         => $material->title,
-            'material'      => $material,
-            'rating'        => $this->ratings->getRating($material->id, session('id') ?? ''),
-        ];
-
-        return view('material/one', $data);
+        return $this->view('material/one', [
+            'meta_title' => $material->title,
+            'title'      => $material->title,
+            'material'   => $material,
+            'rating'     => $this->ratings->getRating($material->id, session('id') ?? ''),
+        ]);
     }
 
+    /** ----------------------------------------------------------------------
+     *                           AJAX HANDLERS
+     *  ------------------------------------------------------------------- */
+
     /**
-     * AJAX request handler for rating updates. Echoes back the new rating values.
+     * Request handler for rating updates. Echoes back the new rating values.
      *
      * @uses $_POST['id'] id of material to rate
      * @uses $_POST['value'] value of rating to set for the user
@@ -120,6 +122,10 @@ class Material extends BaseController
             'user'    => $newValue
         ]);
     }
+
+    /** ----------------------------------------------------------------------
+     *                               HELPERS
+     *  ------------------------------------------------------------------- */
 
     protected function getOptions() : array
     {

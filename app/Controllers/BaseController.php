@@ -55,4 +55,24 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
     }
+
+    /**
+     * Extension of default BaseController, handles optional
+     * admin routes and automatically adds 'saveData' to the
+     * view call.
+     *
+     * This is done to allow for layout extension in the called
+     * view.
+     *
+     * @param string $path    path to view file
+     * @param array  $data    optional data to be passed
+     * @param array  $options optional view options
+     */
+    protected function view(string $path, array $data = [], array $options = []) : string
+    {
+        if (strpos(get_class($this), '\\Admin\\') !== false) {
+            $path = 'admin/' . $path;
+        }
+        return view($path, $data, array_merge($options, ['saveData' => true]));
+    }
 }

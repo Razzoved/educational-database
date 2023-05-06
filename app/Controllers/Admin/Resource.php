@@ -5,19 +5,11 @@ namespace App\Controllers\Admin;
 use App\Entities\Resource as EntitiesResource;
 use App\Libraries\Resource as ResourceLib;
 use App\Models\ResourceModel;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
-use Psr\Log\LoggerInterface;
 
 class Resource extends ResponseController
 {
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-    {
-        parent::initController($request, $response, $logger);
-    }
-
     public function index() : string
     {
         helper('filesystem');
@@ -29,15 +21,13 @@ class Resource extends ResponseController
             $targets[$material->id] = $material->title;
         }
 
-        $data = [
+        return $this->view('resource/table', [
             'meta_title' => 'Administration - unused files',
             'title'      => 'Unused files',
             'resources'  => ResourceLib::getUnused(),
             'targets'    => $targets,
             'activePage' => 'files',
-        ];
-
-        return view(Config::VIEW . 'resource/table', $data);
+        ]);
     }
 
     /** ----------------------------------------------------------------------
@@ -155,6 +145,10 @@ class Resource extends ResponseController
 
         return $this->response->setJSON([ 'id' => $path ]);
     }
+
+    /** ----------------------------------------------------------------------
+     *                               HELPERS
+     *  ------------------------------------------------------------------- */
 
     private static function resolveType($value) : string
     {

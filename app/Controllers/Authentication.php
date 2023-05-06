@@ -23,13 +23,13 @@ class Authentication extends BaseController
 
     public function index() : string
     {
-        return view('user_login');
+        return $this->view('user_login');
     }
 
     public function login()
     {
         if (!$this->validate($this->settings)) {
-            return view('user_login', ['errors' => $this->validator->getErrors()]);
+            return $this->view('user_login', ['errors' => $this->validator->getErrors()]);
         }
 
         $user = model(UserModel::class)->getEmail($this->request->getPost('email') ?? "");

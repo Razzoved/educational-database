@@ -6,7 +6,7 @@ use App\Entities\Material as EntitiesMaterial;
 use App\Entities\Property as EntitiesProperty;
 use App\Entities\Resource as EntitiesResource;
 use App\Exceptions\BadPostException;
-use App\Libraries\Resources;
+use App\Libraries\Resource as ResourceLib;
 use App\Models\MaterialModel;
 use App\Models\PropertyModel;
 use App\Models\ResourceModel;
@@ -28,20 +28,19 @@ class MaterialEditor extends ResponseController
     private MaterialModel $materials;
     private ResourceModel $resources;
     private PropertyModel $properties;
-    private Resources $resourceLibrary;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         parent::initController($request, $response, $logger);
+
         $this->materials = model(MaterialModel::class);
         $this->resources = model(ResourceModel::class, true, $this->materials->db);
         $this->properties = model(PropertyModel::class, true, $this->materials->db);
-        $this->resourceLibrary = new Resources($this->response);
     }
 
     public function index(EntitiesMaterial $material = new EntitiesMaterial(), array $errors = []) : string
     {
-        return view(Config::VIEW . 'material/form', [
+        return $this->view('material/form', [
             'meta_title'           => "Administration - material editor",
             'material'             => $material,
             'errors'               => $errors,
@@ -213,7 +212,7 @@ class MaterialEditor extends ResponseController
                 basename($r->path)
             );
             if ($found === null) {
-                $this->resourceLibrary->assign($material->id, $r);
+                ResourceLib::assign($material->id, $r);
             }
         }
         return $this;
@@ -235,7 +234,7 @@ class MaterialEditor extends ResponseController
                 ? $path
                 : basename($path);
             $resource = $this->resources->getByPath($material->id, $path);
-            $this->resourceLibrary->unassign(
+            ResourceLib::unassign(
                 $resource ?? new EntitiesResource(['path' => $path, 'tmp_path' => $path])
             );
         }
@@ -252,7 +251,7 @@ class MaterialEditor extends ResponseController
     private function deleteResources(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($material->resources as $resource) {
-            $this->resourceLibrary->delete($resource);
+            ResourceLib::delete($resource);
         }
         return $this;
     }
