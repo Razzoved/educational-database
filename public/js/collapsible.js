@@ -93,7 +93,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     params.forEach((val, key) => {
-        console.log(val, key);
-        if (val) reapplyFilter(key, val);
+        if (val && !(
+            key === 'sort' ||
+            key === 'sortDir'
+        )) {
+            reapplyFilter(key, val)
+        }
     });
 });

@@ -28,6 +28,12 @@ HTMLElement.prototype.reapplyScripts = function() {
     });
 }
 
+HTMLInputElement.prototype.verifyOption = function() {
+    const result = Array.from(this.list.querySelectorAll('option'))
+        .filter(option => option.value === this.value);
+    return result.length > 0 && result[0];
+}
+
 const modalClose = function(event = null, modalId = 'modal')
 {
     const modal = document.getElementById(modalId);
@@ -65,6 +71,29 @@ const modalOpen = async (target, template) => {
         alert('Failed to open modal');
         modalClose();
     }
+}
+
+const modalClearError = (modal, message = "") => {
+    const error = modal.querySelector('#error');
+    if (error && (message == "" || error.innerHTML.includes(message))) {
+        error.remove();
+    }
+}
+
+const modalSetError = (modal, message) => {
+    message =`<p id="error" style="text-align: center">
+        <strong style="color: red">
+            ${message}
+        </strong>
+    </p>`.html();
+
+    const error = modal.querySelector('#error');
+    if (error) {
+        error.replaceWith(message);
+    } else {
+        modal.querySelector('.modal__body').insertAdjacentElement('afterbegin', message);
+    }
+
 }
 
 const modalHandleResult = (template, existing) => {
@@ -113,9 +142,6 @@ const modalSubmit = async (shouldDelete = false, modalId = 'modal') => {
 
         modalClose(null, modalId);
     } catch (error) {
-        modal.querySelector('#error')?.remove();
-        modal.querySelector('.modal__body').insertAdjacentElement('afterbegin',
-            `<p id="error" style="text-align: center"><strong style="color: red">${error.message}</strong></p>`.html()
-        );
+        modalSetError(modal, error.message);
     }
 }
