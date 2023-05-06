@@ -10,7 +10,7 @@
         <?php else : ?>
         <a class="links__href" target="_blank" href="<?= $resource->getURL() ?>">
         <?php endif; ?>
-        <?= $resource->getName($resource->isLink()) ?>
+        <?= $resource->isLink() ? $resource->path : basename($resource->path) ?>
         </a>
     </li>
     <?php endforeach; ?>
