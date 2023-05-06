@@ -14,10 +14,6 @@
 ?>
 <article id="<?= $material->id ?>" class="<?= $class ?>">
     <div class="item__header">
-        <p class="item__text">
-            <small>ID:</small><br>
-            <strong><?= $material->id ?></strong>
-        </p>
         <img class="item__logo"
             src="<?= $material->getThumbnail()->getURL() ?>"
             alt="missing_img">
@@ -37,18 +33,25 @@
         <h2 class="item__title"><?= $material->title?></h2>
         <div class="item__row">
             <p class="item__text">
-                <small>Published:</small><br><?= $material->publishedToDate() ?>
+                <small>ID:</small><br>
+                <strong><?= $material->id ?></strong>
             </p>
-            <p class="item__text">
-                <small>Updated:</small><br><?= $material->updatedToDate() ?>
-            </p>
-        </div>
-        <div class="item__row">
             <p class="item__text">
                 <small>Views:</small><br><?= $material->views ?>
             </p>
             <p class="item__text">
-                <small>Rating:</small><br><?= $material->rating ?>
+                <small>Published:</small><br><?= $material->publishedToDate() ?>
+            </p>
+        </div>
+        <div class="item__row">
+            <p class="item__text">
+                <small>Status:</small><br><?= $material->status ?>
+            </p>
+            <p class="item__text">
+                <small>Rating:</small><br><?= $material->rating ?><?= $material->rating_count > 0 ? "&nbsp;&nbsp;<u style='opacity: .5; font-size: 75%;'>{$material->rating_count}x</u>" : "" ?>
+            </p>
+            <p class="item__text">
+                <small>Updated:</small><br><?= $material->updatedToDate() ?>
             </p>
         </div>
     </section>
