@@ -97,16 +97,15 @@
         xValues.push(date.getDate() + '.' + (date.getMonth() + 1) + '.');
     }
 
-    console.log(xValues);
-    console.log(yValues);
-
     new Chart("views-chart", {
         type: "line",
         data: {
             labels: xValues,
             datasets: [{
                 data: yValues,
-                borderColor: "black",
+                borderColor: document.querySelector('.page').classList.contains('page--dark')
+                    ? "white"
+                    : "black",
                 fill: false
             }]
         },
