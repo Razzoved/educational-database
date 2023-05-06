@@ -1,23 +1,21 @@
 @import 'defaults/variables';
 
 .dashboard {
-    // display: flex;
-    // flex-flow: row wrap;
-    // width: 100%;
+    background-color: $clr-dark-transparent;
 
     section {
         flex-grow: 0;
         flex-shrink: 1;
         margin: 0.5rem;
         border-radius: $border-radius-lg;
-        border: $clr-gray-transparent 2px dashed;
-        background-color: $clr-light-transparent;
+        background-color: $clr-light-semi-transparent;
         overflow: hidden;
         h2 {
             text-align: center;
-            border-bottom: $clr-gray-transparent 2px dashed;
+            font-weight: bold;
             padding-bottom: 0.5rem;
             margin-bottom: 0.5rem;
+            border-bottom: $clr-dark-transparent 2px solid;
         }
         & > * {
             padding: 1rem;
