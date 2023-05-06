@@ -53,6 +53,8 @@
     }
 
     &__input {
+        @extend input;
+        padding: 0.5rem;
         height: 2rem;
         width: 100%;
         max-width: 100%;
@@ -60,17 +62,6 @@
         background-color: $clr-light-semi-transparent;
         border-radius: 0.4rem;
         border: $clr-dark 1px solid;
-
-        resize: none;
-        &--rV {
-            resize: vertical;
-        }
-        &--rH {
-            resize: horizontal;
-        }
-        &--rB {
-            resize: both;
-        }
 
         &:not(:last-child) {
             margin-bottom: 0.5rem;
@@ -82,6 +73,20 @@
         &[type='checkbox'] {
             width: 2rem;
             height: 2rem;
+        }
+
+        &:is(textarea) {
+            resize: none;
+            height: auto;
+        }
+        &:is(textarea) &--rV {
+            resize: vertical;
+        }
+        &:is(textarea) &--rH {
+            resize: horizontal;
+        }
+        &:is(textarea) &--rB {
+            resize: both;
         }
     }
 
@@ -129,6 +134,7 @@
         flex: 1 1 0;
     }
     &__value {
-        width: auto
+        text-align: center;
+        width: 6rem;
     }
 }
