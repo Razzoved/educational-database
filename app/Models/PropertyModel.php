@@ -265,7 +265,7 @@ class PropertyModel extends Model
         if ($data['method'] !== 'findAll') {
             $data['data'] = Cache::check(
                 function () use ($data) {
-                    return  $this->loadChildren($data['data']);
+                    return  $this->getTreeRecursive($data['data']);
                 },
                 $data['data']->id,
                 'property',
@@ -288,10 +288,10 @@ class PropertyModel extends Model
         return $data;
     }
 
-    protected function _revalidateCache(Property $item)
+    protected function _revalidateCache(?Property $item)
     {
         while (!is_null($item)) {
-            Cache::delete($item->id);
+            Cache::delete($item->id, 'property');
             $item = Cache::get($item->tag, 'property');
         }
         Cache::delete('tree', 'property');
