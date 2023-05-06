@@ -34,12 +34,7 @@ class MaterialPropertyModel extends Model
 
     public function get(int $materialId) : array
     {
-        $properties = new Property([
-            'children' => model(PropertyModel::class)
-                ->where('property_tag', 0)
-                ->allowCallbacks(true)
-                ->getArray(),
-        ]);
+        $properties = model(PropertyModel::class)->getTree();
 
         $this->select('property_id')
              ->groupBy('property_id')
@@ -154,27 +149,6 @@ class MaterialPropertyModel extends Model
 
         return $this->db->transStatus();
     }
-
-    /** ----------------------------------------------------------------------
-     *                              CALLBACKS
-     *  ------------------------------------------------------------------- */
-
-    // protected function getProperty(array $data)
-    // {
-    //     if (!isset($data['data'])) {
-    //         return $data;
-    //     }
-
-    //     if ($data['method'] === 'find') {
-    //         $data['data'] = model(PropertyModel::class)->get($data['data']->id);
-    //     } else foreach ($data['data'] as $k => $v) {
-    //         if ($v) {
-    //             $data['data'][$k] = model(PropertyModel::class)->get($v->id);
-    //         }
-    //     }
-
-    //     return $data;
-    // }
 
     /** ----------------------------------------------------------------------
      *                              HELPERS
