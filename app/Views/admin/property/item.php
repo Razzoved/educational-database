@@ -31,29 +31,27 @@
         : '@description@';
 ?>
 
-<div id="<?= $id ?>" <?= $description ?>>
-    <div class="item">
-        <div class="item__header">
-            <h2 class="item__title" data-value="value"><?= $title ?></h2>
-            <div class="item__controls">
-                <button class="item__edit" type="button" onclick="propertyOpen(<?= $id ?>)">
-                    Edit
-                </button>
-                <button class="item__delete" type="button" onclick="deleteOpen(<?= $id ?>)">
-                    &#10005;
-                </button>
-            </div>
+<div id="<?= $id ?>" <?= $description ?>class="item">
+    <div class="item__header">
+        <h2 class="item__title" data-value="value"><?= $title ?></h2>
+        <div class="item__controls">
+            <button class="item__edit" type="button" onclick="propertyOpen(<?= $id ?>)">
+                Edit
+            </button>
+            <button class="item__delete" type="button" onclick="deleteOpen(<?= $id ?>)">
+                &#10005;
+            </button>
         </div>
-        <div class="item__row">
-            <p class="item__text" data-value="tag">
-                <?= $tag ?>
-            </p>
-            <p class="item__text" data-value="id">
-                <small>ID:</small><br><?= $id ?>
-            </p>
-            <p class="item__text" data-value="usage">
-                <small>Usage:</small><br><?= $usage ?>
-            </p>
-        </div>
+    </div>
+    <div class="item__row">
+        <p class="item__text" data-value="id">
+            <small>ID:</small><br><?= $id ?>
+        </p>
+        <p class="item__text" data-value="tag">
+            <?= $tag ?>
+        </p>
+        <p class="item__text" data-value="usage">
+            <small>Usage:</small><br><?= $usage ?>
+        </p>
     </div>
 </div>
