@@ -21,7 +21,7 @@
     <div class="page__content">
         <div class="page__controls">
             <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
-            <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value'], 'create' => 'propertyOpen()']) ?>
+            <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value', 'Priority', 'Usage'], 'create' => 'propertyOpen()']) ?>
         </div>
 
         <div class="table" id="items">

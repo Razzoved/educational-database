@@ -15,7 +15,7 @@
 
     <?php if (!empty($property->children)) : ?>
 
-        <?= view('property/collapsible', ['property' => $property, 'type' => $type], ['saveData' => false]) ?>
+        <?= view('property/collapsible', ['property' => $property, 'type' => $type]) ?>
 
     <?php elseif ($type === 'button') : ?>
 
