@@ -14,15 +14,20 @@ class Cache
      *                           cache. The function should return the data that needs to be cached.
      * @param string|int $key    Required parameter, that should, in combination with prefix be unique.
      * @param string $prefix     Optional prefix for the key.
+     * @param ?int $ttl          Optional TTL in seconds
      *
      * @return mixed Cached data or newly searched data.
      */
-    public static function check(callable $callback, $key, string $prefix = "") : mixed
+    public static function check(callable $callback, $key, string $prefix = "", ?int $ttl = null) : mixed
     {
         $data = Cache::get($key, $prefix);
         if (is_null($data)) {
             $data = $callback();
-            Cache::save($data, $key, $prefix);
+            if (!is_null($ttl)) {
+                Cache::save($data, $key, $prefix, $ttl);
+            } else {
+                Cache::save($data, $key, $prefix);
+            }
         }
         return $data;
     }
