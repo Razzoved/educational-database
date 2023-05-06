@@ -16,7 +16,7 @@
         <div class="page__controls">
             <?= view('search_bar', ['action' => url_to('Admin\Material::index'), 'options' => $options]) ?>
             <?= view('sort_bar', [
-                'sorters' => ['ID', 'Title', 'Published at', 'Updated at', 'Views'],
+                'sorters' => ['ID', 'Title', 'Status', 'Published at', 'Updated at', 'Views'],
                 'create' => "window.location.href='" . url_to('Admin\MaterialEditor::index') . "'"]) ?>
         </div>
 
