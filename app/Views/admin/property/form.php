@@ -16,7 +16,7 @@
     $priority = $priority ?? "@priority@";
 ?>
 
-<div class="modal" id="property-window">
+<div class="modal" id="modal">
     <div class="modal__content">
 
         <div class="modal__header">
@@ -25,22 +25,22 @@
         </div>
 
         <div class="modal__body">
-            <form class="form" method="post" action="<?= url_to('Admin\Property::save')?>">
-                <input type="hidden" id="id" name="id" value="<? $id ?>" required>
+            <form class="form" method="post" action="<?= url_to('Admin\Property::save')?>" autocomplete="off">
+                <input type="hidden" id="id" name="id" value="<?= $id ?>" required>
 
                 <fieldset class="form__group">
-                    <label for="tag" class="form__label">Category</label>
+                    <label for="category" class="form__label">Category</label>
                     <input class="form__input"
                         id="category"
                         name="category"
                         list="category-options"
                         placeholder="Enter tag"
                         value="<?= $category ?>"
-                        onchange="updateTag(this.value)"
+                        oninput="updateTag()"
                         required>
                     <datalist id="category-options">
                     </datalist>
-                    <input type="hidden" id="tag" name="tag" value="<? $tag ?>">
+                    <input type="hidden" id="tag" name="tag" value="<?= $tag ?>">
 
                     <label for="value" class="form__label">Value</label>
                     <input class="form__input"
@@ -57,12 +57,10 @@
                     <textarea class="form__input"
                         id="description"
                         name="description"
-                        rows="2"
-                        placeholder="Enter description..."
-                        value="<?= $description ?>">
-                    </textarea>
+                        maxlength="255"
+                        placeholder="Enter description..."><?= $description ?></textarea>
 
-                    <div class="slider">
+                    <div class="form__group form__group--horizontal slider">
                         <label for="priority" class="form__label">Priority</label>
                         <input class="slider__input"
                             type="range"
@@ -71,8 +69,13 @@
                             value="<?= $priority ?>"
                             id="priority"
                             name="priority"
-                            onchange="updateSlider(this.parentElement)">
-                        <p class="slider__value">0</p>
+                            oninput="updateSliderValue(this)">
+                        <input class="form__input slider__value"
+                            type="number"
+                            title="Priority value"
+                            value="<?= $priority ?>"
+                            oninput="updateSliderInput(this)"
+                            required>
                     </div>
                 </fieldset>
 
@@ -81,32 +84,57 @@
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="submit" class="modal__button modal__button--submit" onclick="modalSubmit()"><?= $submit ?></button>
-                <button type="button" class="modal__button modal__button--cancel" onclick="modalClose('property-window')">Cancel</button>
+                <button type="submit" class="modal__button modal__button--submit" onclick="validate() && modalSubmit()"><?= $submit ?></button>
+                <button type="button" class="modal__button modal__button--cancel" onclick="modalClose()">Cancel</button>
             </div>
         </div>
 
     </div>
     <script type="text/javascript">
-        const tag = document.getElementById('tag');
-        const category = document.getElementById('category');
-        const categoryOptions = document.getElementById('category-options');
+        <?php include_once(FCPATH . 'js/modal.js') ?>
 
-        const updateTag = (value) => {
-            const option = categoryOptions.querySelector('option:selected');
-            if (!option === null) {
-                tag.value = option.getAttribute('data-tag');
+        var propertyModal = document.getElementById('modal');
+
+        var tag = document.getElementById('tag');
+        var category = document.getElementById('category');
+        var categoryOptions = document.getElementById('category-options');
+
+        var validate = () => {
+            const message = 'Invalid category';
+            const result = category.value == '' ? true : category.verifyOption();
+            if (result) {
+                modalClearError(propertyModal, message);
+            } else {
+                modalSetError(propertyModal, message);
+            }
+            return result;
+        }
+
+        var updateTag = () => {
+            const option = validate();
+            if (option) {
+                tag.value = option === true ? 0 : option.getAttribute('data-tag');
             }
         }
 
-        const updateSlider = (slider) => {
-            const sliderInput = slider.querySelector('.slider__input');
-            const sliderValue = slider.querySelector('.slider__value');
-            sliderValue.innerHTML = sliderInput.value;
+        var updateSliderValue = (slider) => {
+            const sliderValue = slider.closest('.slider').querySelector('.slider__value');
+            sliderValue.value = slider.value;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch(<?= url_to('Admin/Property::getAll') ?>)
+        var updateSliderInput = (slider) => {
+            const sliderInput = slider.closest('.slider').querySelector('.slider__input');
+            if (parseInt(slider.value) > parseInt(sliderInput.max)) {
+                slider.value = sliderInput.max;
+            }
+            if (parseInt(slider.value) < parseInt(sliderInput.min)) {
+                slider.value = sliderInput.min;
+            }
+            sliderInput.value = slider.value;
+        }
+
+        var fetchProperties = () => {
+            fetch('<?= url_to('Admin\Property::getAll') ?>')
                 .then(response => response.json())
                 .then(response => response.map(r => {
                     const option = document.createElement('option');
@@ -115,7 +143,10 @@
                     return option;
                 }))
                 .then(response => categoryOptions.replaceChildren(...response))
+                .then(() => updateTag())
                 .catch(error => console.log('Error fetching categories'));
-        });
+        }
+
+        fetchProperties();
     </script>
 </div>
