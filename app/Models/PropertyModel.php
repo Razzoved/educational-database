@@ -88,11 +88,11 @@ class PropertyModel extends Model
 
     public function getTree() : Property
     {
-        $root = new Property(['value' => 'root']);
+        $root = new Property(['value' => 'Categories']);
         $root->children = Cache::check(
             function() {
                 $categories = [];
-                foreach ($this->getArray(['tag' => 0]) as $category) {
+                foreach ($this->where('property_tag', 0)->getArray() as $category) {
                     $categories[] = $this->getTreeRecursive($category);
                 }
                 return $categories;
@@ -257,21 +257,6 @@ class PropertyModel extends Model
         return $data;
     }
 
-    // protected function getCategory(array $data)
-    // {
-    //     if (!isset($data['data'])) {
-    //         return $data;
-    //     }
-    //     if ($data['method'] !== 'findAll') {
-    //         $parent = Cache::get($data['data']->tag, 'property') ?? $this->allowCallbacks(false)->find($data['data']->tag);
-    //         $data['data']->category = $parent->value ?? "";
-    //     } else foreach ($data['data'] as $property) {
-    //         $parent = Cache::get($property->tag, 'property') ?? $this->allowCallbacks(false)->find($property->tag);
-    //         $property->category = $parent->value ?? "";
-    //     }
-    //     return $data;
-    // }
-
     protected function saveCache(array $data)
     {
         if (!isset($data['data'])) {
@@ -283,7 +268,8 @@ class PropertyModel extends Model
                     return  $this->loadChildren($data['data']);
                 },
                 $data['data']->id,
-                'property'
+                'property',
+                3600 * 12,
             );
         }
         return $data;
@@ -331,7 +317,7 @@ class PropertyModel extends Model
         );
     }
 
-    protected function where(string $field, $value = null, $escape = null, $prefix = null) : PropertyModel
+    public function where(string $field, $value = null, $escape = null, $prefix = null) : PropertyModel
     {
         $prefix = $prefix ?? $this->table;
         if ($prefix !== '') {
@@ -340,7 +326,7 @@ class PropertyModel extends Model
         return parent::where($prefix . $field, $value, $escape);
     }
 
-    protected function orLike(string $field, string $match = '', string $side = 'both', $escape = null, $insensitiveSearch = false, $prefix = null) : PropertyModel
+    public function orLike(string $field, string $match = '', string $side = 'both', $escape = null, $insensitiveSearch = false, $prefix = null) : PropertyModel
     {
         $prefix = $prefix ?? "{$this->db->prefixTable($this->table)}";
         if ($prefix !== '') {
@@ -349,7 +335,7 @@ class PropertyModel extends Model
         return parent::orLike($prefix . $field, $match, $side, $escape, $insensitiveSearch);
     }
 
-    protected function orderBy(string $field, string $direction = '', $escape = null, $prefix = null) : PropertyModel
+    public function orderBy(string $field, string $direction = '', $escape = null, $prefix = null) : PropertyModel
     {
         $prefix = $prefix ?? $this->table;
         if ($prefix !== '') {
