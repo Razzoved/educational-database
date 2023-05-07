@@ -42,6 +42,8 @@ $routes->group('/', function($routes) {
     // AUTHENTICATION
     $routes->add('login', 'Authentication::index', ['filter' => 'checkAuth']);
     $routes->post('login', 'Authentication::login', ['filter' => 'checkAuth']);
+    $routes->add('reset', 'Authentication::reset', ['filter' => 'checkAuth']);
+    $routes->post('reset', 'Authentication::resetSubmit', ['filter' => 'checkAuth']);
     $routes->add('logout', 'Authentication::logout');
 });
 

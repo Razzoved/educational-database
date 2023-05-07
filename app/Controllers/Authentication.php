@@ -29,6 +29,7 @@ class Authentication extends BaseController
             'user' => $user,
             'isLoggedIn' => true,
         ]);
+        session()->remove('reset');
 
         return previous_url() === url_to('Authentication::login')
             ? redirect()->to(url_to('Admin\Dashboard::index'))
@@ -42,5 +43,91 @@ class Authentication extends BaseController
             session()->remove('isLoggedIn');
         }
         return redirect()->to(url_to('Material::index'));
+    }
+
+    /**
+     * Creates a new token and saves it to uses's session for reset use.
+     * Shows a reset view to the user.
+     *
+     * @param string $email The email address to send token to.
+     */
+    public function reset(string $email) : string
+    {
+        $user = model(UserModel::class)->getEmail($email);
+        unset($user->password);
+
+        if (!$user) {
+            $this->request->setGlobal('post', $email);
+            return $this->view('user_login', [
+                'errors' => array('No user exists with this email address!')
+            ]);
+        }
+
+        $token = sha1(uniqid((string) mt_rand(), true));
+
+        $msg = \Config\Services::email();
+        $msg->setTo($email);
+        $msg->setSubject('RESET PASSWORD for ' . base_url());
+        $msg->setMessage("
+            Hello {$user->name}!
+
+            --------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            | TOKEN | {$token}
+            --------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+            This token will work until another email is sent or your session runs out.
+        ");
+        $msg->send();
+
+        if (!session()->has('reset')) {
+            session()->set('reset', []);
+        }
+        session()->push('reset', [ $user->id => $token ]);
+
+        return $this->view('user_reset', [ 'id' => $user->id ]);
+    }
+
+    /**
+     *
+     */
+    public function resetSubmit()
+    {
+        $rules = [
+            'id'              => 'required|is_natural',
+            'token'           => 'required|string',
+            'password'        => 'required|min_length[6]|max_length[50]',
+            'confirmPassword' => 'required|matches[password]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->view('user_reset', [
+                'errors' => $this->validator->getErrors()
+            ]);
+        }
+
+        $id = $this->request->getPost('id');
+
+        // verify against session
+        $reset = session()->get('reset');
+        if (!isset($reset[$id]) || $reset[$id] !== $this->request->getPost('token')) {
+            return $this->view('user_reset', [
+                'errors' => array('Invalid token!')
+            ]);
+        }
+
+        // save data and clear session
+        try {
+            model(UserModel::class)->update($id, [
+                'user_password' => $this->request->getPost('password'),
+            ]);
+            unset($reset[$id]);
+            session()->set('reset', $reset);
+        } catch (\Exception $e) {
+            return $this->view('user_reset', [
+                'errors' => array('Could not update password')
+            ]);
+        }
+
+        return redirect()->to(url_to('Admin\Dashboard::index'));
     }
 }
