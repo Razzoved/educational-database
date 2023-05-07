@@ -3,10 +3,9 @@
      * Partial view that generates property form selections.
      * It requires property_selector javascript file to be loaded.
      *
-     * Expects:
-     * @param used       already used properties (from database/previous form)
-     * @param available  all selectable properties
+     * @param array $properties properties already loaded into the material
      */
+    helper('form');
 ?>
 
 <div class="property">

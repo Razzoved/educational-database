@@ -2,30 +2,36 @@
     /**
      * Renders one file as a small removable box
      *
-     * Expects:
      * @param int $id           current index of the file (in given context)
      * @param string $path      path to the file's current location
      * @param string $value     file's original name
      */
+    $id = $id ?? '@id@';
+    $path = $path ?? '@path@';
+    $value = $value ?? '@value@';
+    $imageURL = $imageURL ?? '@imageURL@';
 ?>
 
-<div class="item" id="file-<?= $id ?? "template"?>" data-value="<?= $path ?? '' ?>">
+<div class="item" id="file<?= $id ?>">
+
     <div class="item__header">
-        <image class="img-fluid rounded edit-mr"
-        style="width: 6rem; height: 6rem; object-fit: scale-down"
-        src="<?= App\Libraries\Resource::pathToFileURL($path ?? '') ?>"
-        alt="No image">
+
+        <image class="item__thumbnail"
+            src="<?= $imageURL ?>"
+            alt="File image">
+
         <div class="item__controls">
-            <button class="item__delete" type="button" <?php if (isset($id)) echo "onclick=\"removeFile('file-$id')\"" ?>>
-                &#10005
+            <button class="item__delete" type="button" onclick="removeFile('file<?= $id ?>')">
+                &#10005;
             </button>
         </div>
+
     </div>
-    <input name="files[<?= $path ?? '' ?>]"
-            type="text"
-            class="form__input"
-            style="width: 100%"
-            value="<?= $value ?? '' ?>"
-            readonly
-            required>
+
+    <input name="files[<?= $path ?>]"
+        type="text"
+        class="form__input"
+        value="<?= $value ?>"
+        readonly
+        required>
 </div>

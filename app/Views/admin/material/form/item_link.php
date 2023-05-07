@@ -1,14 +1,24 @@
-<div class="form__group form__group--horizontal" id="link-<?= $id ?? "template"?>" <?php if (isset($hidden) === false || $hidden === true) echo 'hidden'?>>
+<?php
+    /**
+     * Renders one file as a small removable box
+     *
+     * @param int $id      current index of the file (in given context)
+     * @param string $path path to the file's current location
+     */
+    $id = $id ?? '@id@';
+    $path = $path ?? '@path@';
+?>
+
+<div class="form__group form__group--horizontal" id="link<?= $id ?>">
     <input name="links[]"
-           type="url"
-           class="form__input"
-           pattern="https://.*"
-           placeholder="https://example.com"
-           value="<?= $value ?? 'TEMPLATE' ?>"
-           <?php if (isset($readonly) === false || $readonly === true) echo 'readonly' ?>
-           <?php if (isset($hidden) === false || $hidden === true) echo 'disabled' ?>
-           required>
-    <button class="form__input" type="button" <?php if (isset($id)) echo "onclick=\"removeLink('link-$id')\"" ?>>
-        &#10005
+        type="url"
+        class="form__input"
+        pattern="https://.*"
+        placeholder="https://example.com"
+        value="<?= $path ?>"
+        readonly
+        required>
+    <button class="form__input" type="button" onclick="removeLink('link<?= $id ?>')" ?>>
+        &#10005;
     </button>
 </div>

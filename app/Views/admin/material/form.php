@@ -1,3 +1,25 @@
+<?php
+    /**
+     * View for a material editor. This is not, as opposed to the other
+     * forms, not a modal, but a separate view.
+     *
+     * @param ?\App\Entities\Material $material material to be edited or null
+     * @param array $errors                     error messages
+     */
+    use \App\Entities\Cast\StatusCast;
+    use \App\Entities\Material;
+    use \App\Entities\Resource;
+
+    $path = 'admin/material/form';
+
+    $errors = $errors ?? [];
+    $material = isset($material) && is_a($material, Material::class)
+        ? $material
+        : new Material();
+
+    helper('form');
+?>
+
 <?= $this->extend('layouts/form') ?>
 
 <?= $this->section('header') ?>
@@ -23,36 +45,21 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-
-<?php helper('form') ?>
-
-<?php
-    $properties = isset($_POST['properties']) ? $_POST['properties'] : null;
-    $thumbnail = isset($_POST['thumbnail']) ? $_POST['thumbnail'] : null;
-
-    $control = ['class' => 'form-control'];
-    $label = ['class' => 'form-label'];
-
-    $path = 'admin/material/form'
-?>
-
 <div class="page">
     <form class="form" method="post" method="post" action="<?= url_to('Admin\MaterialEditor::save') ?>" enctype="multipart/form-data">
 
         <!-- title -->
         <div class="form__group form__group--centered form__group--separated">
             <h1 class="form__title">Material editor</h1>
-            <?= $this->include('errors/all') ?>
+            <?= $this->include('errors/all', ['errors' => $errors]) ?>
         </div>
 
         <!-- thumbnail, basic data -->
         <fieldset class="form__group form__group--horizontal">
 
             <div class="form__group">
-                <label for="thumbnail" class="form__label form__label--small">
-                    Thumbnail (click to edit)
-                </label>
-                <?= view("{$path}/input_thumbnail", ['thumbnail' => $thumbnail]) ?>
+                <label for="thumbnail" class="form__label form__label--small">Thumbnail (click to edit)</label>
+                <?= view("{$path}/input_thumbnail", ['thumbnail' => $material->getThumbnail() ])?>
             </div>
 
             <div class="form__group form__group--major">
@@ -62,36 +69,38 @@
                     type="text"
                     name="title"
                     placeholder="Enter title"
-                    value="<?= set_value('title') ?>"
+                    value="<?= $material->title ?>"
                     required>
                 <!-- status -->
                 <label for="status" class="form__label">Status</label>
-                <?= form_dropdown(['id' => 'status', 'name' => 'status'],
-                    \App\Entities\Cast\StatusCast::VALID_VALUES,
-                    set_value('status'),
-                    ['class' => 'form__input']) ?>
+                <?= form_dropdown(
+                    ['id' => 'status', 'name' => 'status'],
+                    StatusCast::VALID_VALUES,
+                    $material->status ?? StatusCast::VALID_VALUES[0]
+                ) ?>
             </div>
+
         </fieldset>
 
         <fieldset class="form__group">
             <label for="properties" class="form__label">Tags</label>
-            <?= view("{$path}/input_property", ['used' => $properties, 'available' => $available_properties]) ?>
+            <?= view("{$path}/input_property", ['properties' => $material->properties ?? []]) ?>
 
             <label for="tiny" class="form__label">Content</label>
-            <textarea id="tiny" name="content" cols="60" rows="20"><?= set_value('content', '', false) ?></textarea>
+            <textarea id="tiny" name="content" cols="60" rows="20"><?= $material->content ?></textarea>
 
             <label for="links" class="form__label">Links to relevant sites</label>
-            <?= view("{$path}/input_link", ['label' => $label, 'links' => set_value('links', [], false)]) ?>
+            <?= view("{$path}/input_link", ['links' => $material->getLinks() ]) ?>
 
             <label for="files" class="form__label">Attached files</label>
-            <?= view("{$path}/input_file", ['label' => $label, 'files' => set_value('files', [], false)]) ?>
+            <?= view("{$path}/input_file", ['files' => $material->getFiles() ]) ?>
 
             <label for="relations" class="form__label">Related materials</label>
-            <?= view("{$path}/input_relation", ['label' => $label, 'available' => $available_relations, 'relations' => set_value('relations', [], false)]) ?>
+            <?= view("{$path}/input_relation", ['relations' => $material->related ]) ?>
         </fieldset>
 
         <!-- hidden attributes (for editing) -->
-        <?= form_hidden('id', set_value('id')) ?>
+        <?= form_hidden('id', isset($material->id) && $material->id !== 0 ? $material->id : '') ?>
         <?= form_hidden('history', set_value('history', 0, false) + 1) ?>
 
         <div id="unused-files" hidden>
@@ -116,7 +125,7 @@
         let newInput = document.createElement('input');
         newInput.setAttribute('name', 'unused_files[]');
         newInput.setAttribute('type', 'hidden');
-        newInput.setAttribute('value', filepath.replace('<?= base_url() ?>', '').replace('<?= base_url() ?>\\', ''));
+        newInput.setAttribute('value', filepath.replace(/^<?= base_url() ?>\\{0,1}/, ''));
 
         unused.appendChild(newInput);
     }
