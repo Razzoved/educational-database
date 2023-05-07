@@ -63,7 +63,7 @@ class Authentication extends BaseController
             ]);
         }
 
-        $token = sha1(uniqid((string) mt_rand(), true));
+        $token = hash('sha256', uniqid((string) mt_rand(), true));
 
         $msg = \Config\Services::email();
         $msg->setFrom('materials@academicintegrity.eu', 'Academic Integrity');
@@ -109,7 +109,7 @@ class Authentication extends BaseController
 
         // verify against session
         $reset = session()->get("reset[{$id}]");
-        if (!$reset || !$this->request->getPost('token') !== $reset) {
+        if (!isset($reset) || $this->request->getPost('token') !== $reset) {
             return $this->view('user_reset', [
                 'errors' => array('Invalid token!')
             ]);
