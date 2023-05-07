@@ -7,9 +7,9 @@
     $id = $id ?? '@id@';
 
     /**
-     * @var string $title Value of the property
+     * @var string $value Value of the property
      */
-    $title = $title ?? '@title@';
+    $value = $value ?? '@value@';
 
     /**
      * @var string $tag Value of property's parent (must be "" if you want it to be empty)
@@ -23,17 +23,15 @@
 
     /**
      * @var string $description Description of the property.
-     *
-     * Must be "" if you want it to be empty.
      */
     $description = isset($description)
         ? ($description === "" ? "" : "data-tooltip='{$description}'")
-        : '@description@';
+        : '';
 ?>
 
-<div id="<?= $id ?>" <?= $description ?>class="item">
+<div id="<?= $id ?>" <?= $description ?> class="item">
     <div class="item__header">
-        <h2 class="item__title" data-value="value"><?= $title ?></h2>
+        <h2 class="item__title" data-value="value"><?= $value ?></h2>
         <div class="item__controls">
             <button class="item__edit" type="button" onclick="propertyOpen(<?= $id ?>)">
                 Edit

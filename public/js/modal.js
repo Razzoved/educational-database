@@ -96,17 +96,17 @@ const modalSetError = (modal, message) => {
 
 }
 
-const modalHandleResult = (template, existing) => {
-    if (template === undefined) {
+const modalHandleResult = (element, existing) => {
+    if (element === undefined) {
         if (!existing) {
             throw new Error('Cannot remove nonexistent element');
         }
         existing.remove();
     } else {
         if (existing) {
-            existing.replaceWith(template);
+            existing.replaceWith(element);
         } else {
-            items.insertAdjacentElement('afterbegin', template);
+            items.insertAdjacentElement('afterbegin', element);
         }
     }
 }

@@ -48,8 +48,8 @@ class Property extends ResponseController
         $property = new EntitiesProperty($this->request->getPost());
         $rules = [
             'id'          => 'permit_empty|is_natural',
-            'tag'         => "required|is_natural|property_tag",
-            'value'       => "required|string|property_unique_value",
+            'tag'         => "required|is_natural|property_tag[]",
+            'value'       => "required|string|property_unique_value[]",
             'description' => "permit_empty|string",
             'priority'    => "required|integer|greater_than_equal_to[-25]|less_than_equal_to[100]",
         ];

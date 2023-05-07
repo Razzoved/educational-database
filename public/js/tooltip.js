@@ -19,15 +19,15 @@ window.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    tooltips.forEach((t) => {
-        t.addEventListener('mouseenter', (event) => {
-            console.debug('show', t.getAttribute('data-tooltip'));
-            tooltip.querySelector('.tooltip__text').innerHTML = t.getAttribute('data-tooltip');
+    const tooltipAddListener = (element) => {
+        element.addEventListener('mouseenter', (event) => {
+            tooltip.querySelector('.tooltip__text').innerHTML = element.getAttribute('data-tooltip');
             tooltip.classList.replace('tooltip--inactive', 'tooltip--active');
         });
-        t.addEventListener('mouseleave', (event) => {
-            console.debug('hide', t.getAttribute('data-tooltip'));
+        element.addEventListener('mouseleave', (event) => {
             tooltip.classList.replace('tooltip--active', 'tooltip--inactive');
         });
-    });
+    }
+
+    tooltips.forEach(t => tooltipAddListener(t));
 });

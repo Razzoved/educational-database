@@ -31,7 +31,7 @@
             } else foreach($properties as $property) {
                 echo view('admin/property/item', [
                     'id'          => $property->id,
-                    'title'       => $property->value,
+                    'value'       => $property->value,
                     'tag'         => $property->category ?? "",
                     'usage'       => $property->usage,
                     'description' => $property->description ?? "",
