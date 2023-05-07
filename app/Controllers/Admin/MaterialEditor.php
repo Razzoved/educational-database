@@ -71,9 +71,31 @@ class MaterialEditor extends ResponseController
     public function save()
     {
         $material = new EntitiesMaterial($this->request->getPost());
+        $this->transformData($material);
+
+        $rules = [
+            'id'           => 'permit_empty|is_natural',
+            'title'        => 'required|string|min_length[1]',
+            'status'       => 'required|valid_status',
+            'content'      => 'permit_empty|string',
+            'properties'   => 'permit_empty|valid_properties',
+            'files'        => 'permit_empty|valid_files',
+            'links'        => 'permit_empty|valid_links',
+            'relations'    => 'permit_empty|valid_related',
+            // disallow following properties
+            'related'      => 'exact_length[0]',
+            'views'        => 'exact_length[0]',
+            'rating'       => 'exact_length[0]',
+            'rating_count' => 'exact_length[0]',
+            'updated_at'   => 'exact_length[0]',
+            'resources'    => 'exact_length[0]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->index($material, $this->validator->getErrors());
+        }
 
         try {
-            $this->transformData($material);
             $this->materials->saveMaterial($material);
             $this->deleteRemovedFiles($material);
             $this->moveTemporaryFiles($material);
@@ -140,11 +162,7 @@ class MaterialEditor extends ResponseController
 
     private function toResources(EntitiesMaterial &$material, string $type) : void
     {
-        $items = $this->request->getPost($type);
-        if ($items && !is_array($items)) {
-            throw new BadPostException('Resources: ' . $type . ' must be an array or null.');
-        }
-        foreach ($items as $tmpPath => $path) {
+        foreach ($this->request->getPost($type)  ?? [] as $tmpPath => $path) {
             switch ($type) {
                 case 'file':
                 case 'thumbnail':
@@ -156,10 +174,7 @@ class MaterialEditor extends ResponseController
                 default:
                     throw new BadPostException('Resource type: ' . $type . ' not supported');
             }
-            if (!$tmpPath && !$path) continue;
-            if (isset($material->resources[$tmpPath])) {
-                throw new BadPostException('Resource: ' . esc($tmpPath) . ' already added');
-            }
+            if (!$tmpPath && !$path || isset($material->resources[$tmpPath])) continue;
             $material->resources[$tmpPath] = new EntitiesResource([
                 'parentId' => $material->id,
                 'type'     => $type,
@@ -173,10 +188,9 @@ class MaterialEditor extends ResponseController
     {
         $result = [];
         foreach ($this->request->getPost('properties') ?? [] as $id) {
-            if (isset($result[$id])) {
-                throw new BadPostException('Property: ' . $id . ' already added');
+            if (is_numeric($id)) {
+                $result[] = $this->properties->get($id);
             }
-            $result[$id] = new EntitiesProperty(['id' => $id]);
         }
         return $result;
     }
@@ -185,13 +199,9 @@ class MaterialEditor extends ResponseController
     {
         $result = [];
         foreach ($this->request->getPost('relations') ?? [] as $id) {
-            if ($identifier === $id) {
-                throw new BadPostException('Cannot have relation with itself.');
+            if (is_numeric($id) && $identifier !== $id) {
+                $result[] = $this->materials->allowCallbacks(false)->get($id);
             }
-            if (isset($result[$id])) {
-                throw new BadPostException('Relation: ' . $id . ' already added');
-            }
-            $result[$id] = new EntitiesMaterial(['id' => $id]);
         }
         return $result;
     }

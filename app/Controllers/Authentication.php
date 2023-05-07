@@ -6,19 +6,9 @@ use App\Models\UserModel;
 
 class Authentication extends BaseController
 {
-    protected array $settings = [
-        'email' => [
-            'rules'  => 'required|valid_email|user_email',
-            'errors' => [
-                'user_email' => 'Invalid email.'
-            ],
-        ],
-        'password' => [
-            'rules'  => 'required|user_password[{email}]',
-            'errors' => [
-                'user_password' => 'Invalid password.'
-            ],
-        ],
+    protected array $rules = [
+        'email'    => 'required|string|user_email',
+        'password' => 'required|string|user_password[{email}]',
     ];
 
     public function index() : string
@@ -28,13 +18,13 @@ class Authentication extends BaseController
 
     public function login()
     {
-        if (!$this->validate($this->settings)) {
+        if (!$this->validate($this->rules)) {
             return $this->view('user_login', ['errors' => $this->validator->getErrors()]);
         }
 
         $user = model(UserModel::class)->getEmail($this->request->getPost('email') ?? "");
+        unset($user->password);
 
-        $user->password = null;
         session()->set([
             'user' => $user,
             'isLoggedIn' => true,

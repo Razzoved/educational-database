@@ -45,8 +45,9 @@ class User extends ResponseController
         $user = new EntitiesUser($this->request->getPost());
 
         $rules = [
-            'name'  => 'required|min_length[4]|max_length[50]|user_name_update[id]',
-            'email' => 'required|min_length[4]|max_length[320]|valid_email|user_email_update[id]',
+            'id'    => 'permit_empty|is_natural',
+            'name'  => 'required|string|min_length[2]|max_length[50]',
+            'email' => 'required|string|min_length[4]|max_length[320]|valid_email|user_unique_email',
         ];
         if (!$user->id || $this->request->getPost('changePassword') == true) {
             $rules['password'] = 'required|min_length[6]|max_length[50]';

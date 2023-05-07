@@ -86,14 +86,25 @@ class Material extends BaseController
      */
     public function rate(int $id) : Response
     {
-        $value = (int) $this->request->getPost('value');
-        if (!$value) {
-            return $this->response->setStatusCode(Response::HTTP_BAD_REQUEST, 'No value was given!');
+        $rules = [
+            'value' => 'required|is_natural|less_than_equal_to[5]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setStatusCode(
+                Response::HTTP_BAD_REQUEST,
+                $this->validator->getErrors()[0],
+            );
         }
 
+        $value = (int) $this->request->getPost('value');
         $material = $this->materials->find($id);
+
         if (!$material) {
-            return $this->response->setStatusCode(Response::HTTP_NOT_FOUND, 'Material not found!');
+            return $this->response->setStatusCode(
+                Response::HTTP_NOT_FOUND,
+                'Material not found!'
+            );
         }
 
         if (session('id') === null) {

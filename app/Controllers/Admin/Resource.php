@@ -81,11 +81,10 @@ class Resource extends ResponseController
         try {
             ResourceLib::assign((int) $materialId, $resource);
         } catch (Exception $e) {
-            // return $this->response->setStatusCode(
-            //     Response::HTTP_INTERNAL_SERVER_ERROR,
-            //     'Could not assign resource, try again later!'
-            // );
-            throw $e;
+            return $this->response->setStatusCode(
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                $e->getMessage()
+            );
         }
 
         return $this->response->setJSON($resource);
