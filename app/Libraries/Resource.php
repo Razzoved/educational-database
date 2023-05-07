@@ -66,9 +66,9 @@ class Resource
         helper('form');
 
         $date = date('Ymd', time());
-        $dirPath = TEMP_PATH . $date;
+        $prefix = TEMP_PREFIX . $date;
 
-        if (!is_dir($dirPath) && !mkdir($dirPath, 0777, true)) {
+        if (!is_dir(ROOTPATH . $prefix) && !mkdir(ROOTPATH . $prefix, 0777, true)) {
             throw FileException::forExpectedDirectory('store: failed creation of directory');
         }
 
@@ -83,9 +83,7 @@ class Resource
         $resource->path = $name;
         $resource->type = 'file';
 
-        self::moveFile($resource, $dirPath);
-
-        $resource->tmp_path = TEMP_PREFIX . $date . UNIX_SEPARATOR . $resource->tmp_path;
+        self::moveFile($resource, $prefix);
 
         return $resource;
     }
@@ -116,7 +114,7 @@ class Resource
                 if (!is_dir(SAVE_PATH . $materialId) && !mkdir(SAVE_PATH . $materialId)) {
                     throw FileException::forExpectedDirectory('assign: ' . $materialId);
                 }
-                self::moveFile($resource, SAVE_PATH . $materialId);
+                self::moveFile($resource, SAVE_PREFIX . $materialId);
                 break;
             default:
                 break;
@@ -150,11 +148,11 @@ class Resource
         }
 
         // create directory if it does not exist
-        if (!is_dir(UNUSED_PATH) && !mkdir(UNUSED_PATH)) {
+        if (!is_dir(TEMP_PATH . UNUSED) && !mkdir(TEMP_PATH . UNUSED)) {
             throw FileException::forExpectedDirectory('unassign: ' . UNUSED);
         }
 
-        self::moveFile($resource, UNUSED_PATH);
+        self::moveFile($resource, TEMP_PREFIX . UNUSED);
     }
 
     /**
@@ -334,17 +332,17 @@ class Resource
      * - resource tmpPath - if present uses path as final name
      * - if both missing throws error
      *
-     * Target of the operation is the dirPath.
+     * Target of the operation is the ROOTPATH + $prefix.
      * Automatically converts all paths to current enviroment.
      *
      * WARN: unclean function, changes resource tmp_path and path.
      *
      * @param EntitiesResource $resource to be moved
-     * @param string $dirPath            where to move
+     * @param string $prefix             where to move
      *
      * @throws FileException when file cannot be moved
      */
-    private static function moveFile(EntitiesResource &$resource, string $dirPath) : void
+    private static function moveFile(EntitiesResource &$resource, string $prefix) : void
     {
         helper('file');
 
@@ -361,23 +359,26 @@ class Resource
 
         $consumer = $resource->isAsset() ? 'copy' : 'move';
 
+        $dirPath = ROOTPATH . $prefix;
         if (DIRECTORY_SEPARATOR === '\\') {
             $dirPath = self::windowsPath($dirPath);
             $resource->path = self::windowsPath($resource->path);
             $resource->tmp_path = self::windowsPath($resource->tmp_path);
         }
-
         $path = ROOTPATH . $resource->tmp_path;
-        $file = new File($path, true);
 
-        $result = self::$consumer($dirPath, $resource->path, $consumer === 'move' ? $file : $path);
+        $result = self::$consumer(
+            $dirPath,
+            $resource->path,
+            $consumer === 'move' ? new File($path, true) : $path
+        );
 
         if (!file_exists($path)) {
             self::deleteSource($path);
         }
 
         $resource->path = $result;
-        $resource->tmp_path = $dirPath . $result;
+        $resource->tmp_path = $prefix . UNIX_SEPARATOR . $result;
     }
 
     private static function move(string $dirPath, string $destName, File $source) : string
