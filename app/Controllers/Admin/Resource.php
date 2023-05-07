@@ -36,17 +36,23 @@ class Resource extends ResponseController
 
     public function upload() : Response
     {
+        $file = $this->request->getFile('file');
         $type = self::resolveType($this->request->getPost('fileType'));
 
-        if ($type === 'thumbnail' && !$this->validate(['file' => 'is_image[file]'])) {
+        $rules = ['file' => 'uploaded[file]'];
+        if ($type === 'thumbnail') {
+            $rules['file'] .= '|is_image[file]';
+        }
+
+        if (!$this->validate($rules)) {
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
-                'File is not an image'
+                current($this->validator->getErrors())
             );
         }
 
         try {
-            $resource = ResourceLib::store($this->request->getFile('file'));
+            $resource = ResourceLib::store($file);
         } catch (Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,

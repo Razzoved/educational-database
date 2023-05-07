@@ -1,66 +1,40 @@
 <?php
     /**
-     * Partial view that generates thumbnail input in form.
-     * It requires jQuery & dynamics javascript file to be loaded.
+     * Partial view that serves as an uploader and presenter
+     * for materials' thumbnail images.
      *
-     * Expects:
-     * @param files files that already exist
+     * @param App\Entities\Resource $thumbnail current thumbnail
      */
-
-    $IMG_REGEX = '/.*\.(?:jpg|jpeg|tiff|gif|png|bmp)$/';
-    $THUMBNAIL = \App\Libraries\Resource::pathToURL($thumbnail);
+    $rootPath = $thumbnail->getRootPath();
 ?>
-<div style="align-items: center">
+<div clas="form__group">
 
     <!-- thumbnail view -->
     <image id="thumbnail"
-        class="img-fluid rounded edit-mr"
-        style="width: 12rem; height: 12rem; object-fit: scale-down"
-        src="<?= $THUMBNAIL ?>"
+        class="form__logo"
+        style="width: 12rem; height: 12rem; object-fit: cover"
+        src="<?= \App\Libraries\Resource::pathToURL($rootPath) ?>"
         alt="No image"
         onclick="document.getElementById('thumbnail-uploader').click()">
     </image>
-    <input id="thumbnail-path" type="hidden" name="thumbnail" value="<?= $thumbnail ?>">
+
+    <input id="thumbnail-path" type="hidden" name="thumbnail" value="<?= $rootPath ?>">
 
     <!-- file uploader -->
-    <input id="thumbnail-uploader" name="thumbnail-uploader" type="file" onchange="uploadThumbnail()" hidden>
+    <input type="file"
+        title='Upload thumbnail'
+        id="thumbnail-uploader"
+        name="thumbnail-uploader"
+        accept="image/*"
+        onchange="uploadThumbnail()"
+        hidden>
 
 </div>
 
 <script>
-    function uploadThumbnail()
-    {
-        let formData = new FormData();
+    const fileSelector = document.getElementById('thumbnail-uploader');
 
-        let fileSelector = document.getElementById('thumbnail-uploader');
-        let file = fileSelector.files[0];
-
-        fileSelector.value = '';
-
-        if (file === undefined || !file['name'].match(<?= $IMG_REGEX ?>)) {
-            showError("Thumbnail must be an image!\n\n" + file['name']);
-            return;
-        }
-
-        formData.append("file", file)
-
-        $.ajax({
-            url: '<?= url_to("Admin\Resource::uploadImage") ?>',
-            headers: {'X-Requested-With': 'XMLHttpRequest'},
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(file) {
-                newThumbnail(JSON.parse(file));
-                console.log('success:', file);
-            },
-            error: (jqHXR) => showError(jqHXR)
-        });
-    }
-
-    function newThumbnail(filepath)
-    {
+    const newThumbnail = (filepath) => {
         if (filepath === undefined) {
             console.error('File does not exist');
             return;
@@ -75,5 +49,29 @@
 
         image.src = '<?= base_url() ?>' + filepath;
         path.value = filepath;
+    }
+
+    const uploadThumbnail = () => {
+        const formData = new FormData();
+        const file = fileSelector.files[0];
+
+        formData.append("file", file);
+        formData.append('fileType', 'thumbnail');
+
+        fileSelector.value = '';
+
+        if (file === undefined) {
+            return console.debug('thumbnail undefined')
+        }
+
+        fetch('<?= url_to("Admin\Resource::upload") ?>', { method: 'POST', body: formData })
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                return response.json();
+            })
+            .then(response => newThumbnail(response.tmp_path))
+            .catch(error => showError(error));
     }
 </script>
