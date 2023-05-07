@@ -1,5 +1,5 @@
 <?php if (isset($errors) && !empty($errors)) : ?>
-    <div class="alert alert-warning rounded text-start">
-        <p><?= $errors[array_key_first($errors)] ?></p>
+    <div style="padding: 1rem">
+        <p style="color: red"><?= $errors[array_key_first($errors)] ?></p>
     </div>
 <?php endif; ?>

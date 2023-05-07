@@ -3,13 +3,14 @@
      * View for reseting passwords.
      */
     helper('form');
+    $errors = $errors ?? [];
 ?>
 
 <?= $this->extend('layouts/form') ?>
 
 <?= $this->section('content') ?>
     <div class="page page--centered page--dark page--w30">
-        <form class="form" method="post" action="<?= url_to('Admin\Authentication::submitReset')?>">
+        <form class="form" method="post" action="<?= url_to('Authentication::resetSubmit')?>">
 
             <!-- logo with errors -->
             <div class="form__group form__group--centered">
@@ -28,7 +29,7 @@
                 required>
 
             <!-- user inputs -->
-            <fieldset id="password-changer" class="form__group" hidden>
+            <fieldset id="password-changer" class="form__group">
 
                 <label class="form__label" for="password">New password</label>
                 <input class="form__input"

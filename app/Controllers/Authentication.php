@@ -29,7 +29,7 @@ class Authentication extends BaseController
             'user' => $user,
             'isLoggedIn' => true,
         ]);
-        session()->remove('reset');
+        session()->remove('reset[${user->id}]');
 
         return previous_url() === url_to('Authentication::login')
             ? redirect()->to(url_to('Admin\Dashboard::index'))
@@ -57,7 +57,7 @@ class Authentication extends BaseController
         unset($user->password);
 
         if (!$user) {
-            $this->request->setGlobal('post', $email);
+            $this->request->setGlobal('post', ['email' => $email]);
             return $this->view('user_login', [
                 'errors' => array('No user exists with this email address!')
             ]);
@@ -66,29 +66,29 @@ class Authentication extends BaseController
         $token = sha1(uniqid((string) mt_rand(), true));
 
         $msg = \Config\Services::email();
+        $msg->setFrom('materials@academicintegrity.eu', 'Academic Integrity');
         $msg->setTo($email);
-        $msg->setSubject('RESET PASSWORD for ' . base_url());
-        $msg->setMessage("
-            Hello {$user->name}!
-
-            --------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            | TOKEN | {$token}
-            --------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-            This token will work until another email is sent or your session runs out.
-        ");
+        $msg->setSubject("Password reset");
+        $msg->setMessage(
+            "Hello {$user->name}!{$msg->newline}" .
+            "{$msg->newline}" .
+            "--------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -{$msg->newline}" .
+            "| TOKEN | {$token}{$msg->newline}" .
+            "--------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -{$msg->newline}" .
+            "{$msg->newline}" .
+            "This token will work until another email is sent or your session runs out."
+        );
         $msg->send();
 
-        if (!session()->has('reset')) {
-            session()->set('reset', []);
-        }
-        session()->push('reset', [ $user->id => $token ]);
+        session()->set("reset[{$user->id}]", $token);
 
-        return $this->view('user_reset', [ 'id' => $user->id ]);
+        $this->request->setGlobal('post', ['id' => $user->id]);
+        return $this->view('user_reset');
     }
 
     /**
-     *
+     * Tries to submit the password change. Runs various checks
+     * before changing the password.
      */
     public function resetSubmit()
     {
@@ -108,8 +108,8 @@ class Authentication extends BaseController
         $id = $this->request->getPost('id');
 
         // verify against session
-        $reset = session()->get('reset');
-        if (!isset($reset[$id]) || $reset[$id] !== $this->request->getPost('token')) {
+        $reset = session()->get("reset[{$id}]");
+        if (!$reset || !$this->request->getPost('token') !== $reset) {
             return $this->view('user_reset', [
                 'errors' => array('Invalid token!')
             ]);
@@ -120,8 +120,7 @@ class Authentication extends BaseController
             model(UserModel::class)->update($id, [
                 'user_password' => $this->request->getPost('password'),
             ]);
-            unset($reset[$id]);
-            session()->set('reset', $reset);
+            session()->remove("reset[{$id}]");
         } catch (\Exception $e) {
             return $this->view('user_reset', [
                 'errors' => array('Could not update password')

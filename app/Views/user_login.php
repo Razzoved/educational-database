@@ -4,7 +4,8 @@
      *
      * @
      */
-    helper('form') ?> <!-- set_value function -->
+    helper('form');
+    $errors = $errors ?? [];
 ?>
 
 <?= $this->extend('layouts/form') ?>
@@ -42,8 +43,8 @@
             </fieldset>
 
             <!-- actions -->
-            <button class="form__input tooltip" data-tooltip="Fill the email field before resetting!" type="button" onclick="redirectToReset()">Forgot password</button>
             <button class="form__submit" type="submit">Sign in</button>
+            <button class="form__cancel" type="button" onclick="redirectToReset()">Forgot password</button>
         </form>
     </div>
 <?= $this->endSection() ?>
@@ -51,8 +52,12 @@
 <?= $this->section('scripts') ?>
 <script type="text/javascript">
     const redirectToReset = () => {
-        const url = '<?= url_to('Authentication::reset', '@email@') ?>';
         const email = document.getElementById('email');
+        if (!email.value.match(/[^@]+@[^@]+\.[^@\.]+/)) {
+            console.debug('Invalid email address: ' + email);
+            return alert('Please enter a valid email');
+        }
+        const url = '<?= url_to('Authentication::reset', '@email@') ?>';
         window.location.href = url.replace('@email@', email.value);
     }
 </script>
