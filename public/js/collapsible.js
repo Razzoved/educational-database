@@ -1,26 +1,23 @@
-const toggleCollapsible = (element) => {
-    let parent = element.closest('.collapsible');
+const toggleCollapsible = (element, classItem = 'collapsible--collapsed') => {
+    const parent = element.closest('.collapsible');
     if (!parent) {
         console.error('Group is invalid, no collapsible parent found.', element);
-        return;
+        return false;
     }
-    parent.classList.toggle('collapsible--collapsed');
+    parent.classList.toggle(classItem);
+    return true;
 }
 
 const toggleOverflow = (element) => {
-    let parent = element.closest('.collapsible');
-    if (!parent) {
-        console.error('Group is invalid, no collapsible parent found.', element);
-        return;
+    if (toggleCollapsible(element, 'collapsible--no-overflow')) {
+        element.innerHTML = element.innerHTML.indexOf("more") !== -1
+            ? element.innerHTML.replace('more', 'less')
+            : element.innerHTML.replace('less', 'more');
     }
-    element.innerHTML = element.innerHTML.indexOf("more") !== -1
-        ? element.innerHTML.replace('more', 'less')
-        : element.innerHTML.replace('less', 'more');
-    parent.classList.toggle('collapsible--no-overflow');
 }
 
 const toggleGroup = (element) => {
-    let parent = element.closest('.page__group');
+    const parent = element.closest('.page__group');
     if (!parent) {
         console.error('Group is invalid, no group parent found.', element);
         return;
@@ -48,56 +45,61 @@ const appendFilter = (form, name, value) => {
 }
 
 const appendFilters = (form) => {
-    const filters = document.querySelectorAll('.collapsible__toggle-group:checked, .filter__checkbox:checked');
-    filters.forEach(filter => {
-        const isGroup = filter.classList.contains('collapsible__toggle-group');
-        let parent = isGroup
-            ? filter.closest('.collapsible')
-            : filter;
-        while ((parent = parent.parentElement?.closest('.collapsible'))) {
-            if (parent.querySelector(':scope > .collapsible__header .collapsible__toggle-group:checked')) {
-                return;
-            }
-        }
-        if (isGroup) {
-            filter.closest('.collapsible')?.querySelectorAll('.filter__checkbox')?.forEach(f => {
-                appendFilter(form, 'group', f.value);
-            });
-        }
-        appendFilter(form, 'filter', filter.value);
-    });
+    // save filters to local storage to save query space (GET is limited)
+    const toReapply = Array.from(document.querySelectorAll('.collapsible *:checked')).map(item => item.id);
+    window.localStorage.setItem('reapply-page', window.location.pathname);
+    window.localStorage.setItem('reapply-filters', JSON.stringify(toReapply));
+
+    // hierarchical filtering
+    Array.from(document.querySelectorAll('.collapsible--selected'))
+        .filter(item => item.parentElement?.closest('.collapsible--selected') === null)
+        .forEach(item => {
+            const current = item.querySelector(':scope > .collapsible__header .collapsible__toggle-group');
+            const name = `${current.name}[${current.value}]`;
+            if (current.value != 0) appendFilter(form, name, current.value);
+            const children = item.querySelectorAll(':scope > .collapsible__content .collapsible__toggle-group');
+            Array.from(children).forEach(child => appendFilter(form, name, child.value));
+        });
+
+    // filtering of tags where no collapsible is selected
+    Array.from(document.querySelectorAll('.filter__checkbox:checked'))
+        .filter(item => item.closest('.collapsible--selected') === null)
+        .forEach(item => appendFilter(form, item.name, item.value));
 }
 
+/**
+ * Loads applied filters either from the state data or from the localStorage.
+ * State is always preffered if possible.
+ */
 document.addEventListener("DOMContentLoaded", () => {
-    /**
-     * Recursively goes through last post and fills all filters
-     * into the elements.
-     *
-     * @param {string} key full name for the form (appends last key)
-     * @param {string} value string OR an array to be searched
-     */
-    const reapplyFilter = (key, value) => {
-        var elem = document.querySelector(`input[name='${key}'][value='${value}']`);
-        if (!elem) {
-            console.debug(`Filter not found: filter_${value}!`)
-            return;
-        }
-        switch (elem.type) {
-            case 'checkbox': elem.checked = true; break;
-            case 'text': elem.value = value; break;
-            default: break;
+    const reapplyFilter = (id) => {
+        const element = document.getElementById(id);
+        element.checked = true;
+        if (element.classList.contains('collapsible__toggle-group')) {
+            toggleCollapsible(element, 'collapsible--selected');
         }
     }
 
-    const params = new URL(window.location).searchParams;
+    const reapplyFromStorage = () => {
+        const pathname = window.localStorage.getItem('reapply-page');
+        const filters = window.localStorage.getItem('reapply-filters');
 
-
-    params.forEach((val, key) => {
-        if (val && !(
-            key === 'sort' ||
-            key === 'sortDir'
-        )) {
-            reapplyFilter(key, val)
+        if (pathname && pathname === window.location.pathname && filters) {
+            const parsedFilters = JSON.parse(filters);
+            window.history.replaceState({
+                ...window.history.state,
+                filters: parsedFilters
+            }, '');
+            parsedFilters.forEach(id => reapplyFilter(id));
         }
-    });
+
+        window.localStorage.removeItem('reapply-page');
+        window.localStorage.removeItem('reapply-filters');
+    }
+
+    if (window.history.state !== null && 'filters' in window.history.state) {
+        window.history.state.filters.forEach(id => reapplyFilter(id));
+    } else {
+        reapplyFromStorage();
+    }
 });
