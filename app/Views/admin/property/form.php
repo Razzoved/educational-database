@@ -57,7 +57,7 @@
                     <textarea class="form__input"
                         id="description"
                         name="description"
-                        maxlength="255"
+                        rows="2"
                         placeholder="Enter description..."><?= $description ?></textarea>
 
                     <div class="form__group form__group--horizontal slider">
