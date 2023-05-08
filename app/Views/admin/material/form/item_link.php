@@ -1,6 +1,6 @@
 <?php
     /**
-     * Renders one file as a small removable box
+     * Renders one link as a removable element.
      *
      * @param int $id      current index of the file (in given context)
      * @param string $path path to the file's current location
@@ -18,7 +18,7 @@
         value="<?= $path ?>"
         readonly
         required>
-    <button class="form__input" type="button" onclick="removeLink('link<?= $id ?>')" ?>>
+    <button class="form__button" type="button" onclick="removeLink('link<?= $id ?>')" ?>
         &#10005;
     </button>
 </div>

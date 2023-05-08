@@ -16,7 +16,7 @@
 
     <div class="item__header">
 
-        <image class="item__thumbnail"
+        <image class="item__logo"
             src="<?= $imageURL ?>"
             alt="File image">
 
@@ -28,9 +28,9 @@
 
     </div>
 
-    <input name="files[<?= $path ?>]"
-        type="text"
-        class="form__input"
+    <input type="text"
+        class="item__title item__title--stripped"
+        name="files[<?= $path ?>]"
         value="<?= $value ?>"
         readonly
         required>

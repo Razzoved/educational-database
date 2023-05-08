@@ -60,6 +60,7 @@ class Resource extends ResponseController
             );
         }
 
+        $resource->imageURL = ResourceLib::pathToFileURL($resource->tmp_path);
         return $this->response->setJSON($resource);
     }
 

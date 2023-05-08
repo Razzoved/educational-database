@@ -32,46 +32,26 @@
 </div>
 
 <script>
-    const fileSelector = document.getElementById('thumbnail-uploader');
+    <?php include_once(FCPATH . 'js/file.js'); ?>
 
-    const newThumbnail = (filepath) => {
-        if (filepath === undefined) {
-            console.error('File does not exist');
-            return;
+    const thumbnailImg      = document.getElementById("thumbnail");
+    const thumbnailPath     = document.getElementById("thumbnail-path");
+    const thumbnailSelector = document.getElementById('thumbnail-uploader');
+
+    const newThumbnail = (resource) => {
+        if (resource === undefined) {
+            return console.error('File does not exist');
         }
-
-        let image = document.getElementById("thumbnail");
-        let path = document.getElementById("thumbnail-path");
-
-        if (typeof addToUnused === 'function' && path.value !== undefined && path.value !== '') {
-            addToUnused(path.value);
+        if (typeof addToUnused === 'function' && thumbnailPath.value !== '') {
+            addToUnused(thumbnailPath.value);
         }
-
-        image.src = '<?= base_url() ?>' + filepath;
-        path.value = filepath;
+        thumbnailImg.src = '<?= base_url() ?>' + resource.tmp_path;
+        thumbnailPath.value = resource.tmp_path;
     }
 
-    const uploadThumbnail = () => {
-        const formData = new FormData();
-        const file = fileSelector.files[0];
-
-        formData.append("file", file);
-        formData.append('fileType', 'thumbnail');
-
-        fileSelector.value = '';
-
-        if (file === undefined) {
-            return console.debug('thumbnail undefined')
-        }
-
-        fetch('<?= url_to("Admin\Resource::upload") ?>', { method: 'POST', body: formData })
-            .then(response => {
-                if (!response.ok) {
-                    throw Error(response.statusText);
-                }
-                return response.json();
-            })
-            .then(response => newThumbnail(response.tmp_path))
-            .catch(error => showError(error));
-    }
+    const uploadThumbnail = () => upload(newThumbnail, {
+        url: '<?= url_to("Admin\Resource::upload") ?>',
+        selector: thumbnailSelector,
+        fileType: 'thumbnail'
+    });
 </script>

@@ -194,7 +194,7 @@ class Resource
             $splitPath = explode('.', $rootPath);
             $fileType = end($splitPath);
 
-            if (isset(self::EXT_IMAGE[$fileType])) {
+            if (in_array($fileType, self::EXT_IMAGE)) {
                 return base_url($rootPath);
             }
 
