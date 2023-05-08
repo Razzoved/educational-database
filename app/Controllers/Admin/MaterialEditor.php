@@ -79,16 +79,16 @@ class MaterialEditor extends ResponseController
             'status'       => 'required|valid_status',
             'content'      => 'permit_empty|string',
             'properties'   => 'permit_empty|valid_properties',
-            'files'        => 'permit_empty|valid_files',
-            'links'        => 'permit_empty|valid_links',
-            'relations'    => 'permit_empty|valid_related',
+            'file'         => 'permit_empty|valid_files',
+            'link'         => 'permit_empty|valid_links',
+            'relation'     => 'permit_empty|valid_related',
             // disallow following properties
-            'related'      => 'exact_length[0]',
-            'views'        => 'exact_length[0]',
-            'rating'       => 'exact_length[0]',
-            'rating_count' => 'exact_length[0]',
-            'updated_at'   => 'exact_length[0]',
-            'resources'    => 'exact_length[0]',
+            'related'      => 'permit_empty|null_only',
+            'views'        => 'permit_empty|null_only',
+            'rating'       => 'permit_empty|null_only',
+            'rating_count' => 'permit_empty|null_only',
+            'updated_at'   => 'permit_empty|null_only',
+            'resources'    => 'permit_empty|null_only',
         ];
 
         if (!$this->validate($rules)) {

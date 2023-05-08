@@ -173,11 +173,16 @@ class Rules
         if (!is_array($relations)) {
             return false;
         }
-        foreach ($relations as $r) {
-            if (!is_numeric($r) || (is_numeric($r) && $r <= 0)) {
+        foreach ($relations as $id => $title) {
+            if (!is_numeric($id) || (is_numeric($id) && $id <= 0)) {
                 return false;
             }
         }
         return true;
+    }
+
+    public function null_only($input) : bool
+    {
+        return !isset($input) || $input === null;
     }
 }
