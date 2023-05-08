@@ -113,7 +113,7 @@
             }
 
             // move toggle to right
-            .navbar__item:has(.navbar__toggle) {
+            .navbar__item--toggle {
                 display: initial;
                 margin-left: auto;
             }

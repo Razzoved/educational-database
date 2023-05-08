@@ -18,7 +18,7 @@
     background-color: $clr-light-semi-transparent;
     box-shadow: 0.2rem 0.2rem 1rem 0rem #00a8a89c;
 
-    &:has(&__sidebar) {
+    &--has-sidebar {
         grid-template:
             "a a" auto
             "b c" 1fr / minmax(15rem, 0.3fr) 1fr;
@@ -95,7 +95,7 @@
         & {
             padding: 2rem 1rem;
         }
-        &:has(&__sidebar) {
+        &--has-sidebar {
             grid-template:
                 "a" auto
                 "b" auto

@@ -114,11 +114,11 @@
         background-color: unset;
     }
 
-    & > &__header:has(&__toggle-group:checked) {
-        & + .collapsible__content {
+    &--selected {
+        & > .collapsible__content {
             display: none;
         }
-        & .collapsible__toggle > i {
+        & > .collapsible__header .collapsible__toggle > i {
             transform: rotateZ(0deg);
         }
     }
@@ -162,12 +162,13 @@
             background-color: unset;
         }
     }
-    &:has(&__checkbox) &__label {
+
+    &__checkbox + &__label {
         padding-left: 1rem;
     }
 
-    &:not(:hover):has(&__checkbox:not(:checked)) &__label {
-        opacity: 0.8;
+    &:not(:hover) &__checkbox:not(:checked) + &__label {
+        opacity: 0.75;
     }
     &:hover {
         background-color: $clr-light-semi-transparent;
