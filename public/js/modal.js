@@ -1,8 +1,5 @@
 String.prototype.fill = function(data = undefined) {
     let result = this;
-    if (data) {
-        console.debug('Data to fill: ', data);
-    }
     for (var k in data) {
         result = result.replaceAll(`@${k.toLowerCase()}@`, data[k]);
     }
