@@ -9,10 +9,31 @@
 <body>
     <?= $this->include('navigation_bar') ?>
 
+    <?php
+        $pageClass = array('page');
+        if (
+            (isset($filters) && !empty($filters)) ||
+            (isset($hasSidebar) && $hasSidebar === true)
+        ) {
+            $pageClass[] = 'page--has-sidebar';
+            $hasSidebar = true;
+        } else {
+            $hasSidebar = false;
+        }
+        $pageClass[] = 'page';
+        $pageClass = implode(' ', array_reverse($pageClass));
+    ?>
+
     <main id="top" class="container">
-        <div class="page<?= isset($filters) && !empty($filters) ? ' page--has-sidebar' : '' ?>">
+        <div class="<?= $pageClass ?>">
             <?php if (isset($title)) echo ('<h1 class="page__title">' . $title . '</h1>') ?>
-            <?= $this->renderSection('sidebar') ?>
+
+            <?php if ($hasSidebar) : ?>
+                <div class="page__sidebar">
+                    <?= $this->renderSection('sidebar') ?>
+                </div>
+            <?php endif; ?>
+
             <div class="page__content">
                 <?= $this->renderSection('content') ?>
             </div>

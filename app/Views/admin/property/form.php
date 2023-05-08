@@ -134,7 +134,7 @@
         }
 
         var fetchProperties = () => {
-            fetch('<?= url_to('Admin\Property::getAll') ?>')
+            fetch('<?= url_to('Admin\Property::getAvailable') ?>')
                 .then(response => response.json())
                 .then(response => response.map(r => {
                     const option = document.createElement('option');

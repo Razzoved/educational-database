@@ -8,9 +8,8 @@
     $id = $id ?? '@id@';
     $path = $path ?? '@path@';
 ?>
-
 <div class="form__group form__group--horizontal-flex" id="link<?= $id ?>">
-    <input name="links[]"
+    <input name="link[]"
         type="url"
         class="form__input"
         pattern="https://.*"
@@ -18,7 +17,7 @@
         value="<?= $path ?>"
         readonly
         required>
-    <button class="form__button" type="button" onclick="removeLink('link<?= $id ?>')" ?>
+    <button class="form__button form__button--red" type="button" onclick="removeLink('link<?= $id ?>')" ?>
         &#10005;
     </button>
 </div>

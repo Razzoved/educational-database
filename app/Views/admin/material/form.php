@@ -49,22 +49,19 @@
 
     <div class="page__content">
 
-        <form class="form" method="post" method="post" action="<?= url_to('Admin\MaterialEditor::save') ?>" enctype="multipart/form-data">
+        <form class="form form--big-gaps" method="post" method="post" action="<?= url_to('Admin\MaterialEditor::save') ?>" enctype="multipart/form-data">
 
-            <!-- title -->
-            <div class="form__group form__group--centered">
-                <?= $this->include('errors/all', ['errors' => $errors]) ?>
-            </div>
+            <?= $this->include('errors/all', ['errors' => $errors]) ?>
 
             <!-- thumbnail, basic data -->
-            <fieldset class="form__group form__group--horizontal">
+            <div class="form__group form__group--horizontal">
 
-                <div class="form__group">
+                <fieldset class="form__group">
                     <label for="thumbnail" class="form__label form__label--small">Thumbnail (click to edit)</label>
                     <?= view("{$path}/input_thumbnail", ['thumbnail' => $material->getThumbnail() ])?>
-                </div>
+                </fieldset>
 
-                <div class="form__group form__group--major">
+                <fieldset class="form__group form__group--major">
                     <!-- title -->
                     <label for="title" class="form__label">Title</label>
                     <input class="form__input"
@@ -80,26 +77,29 @@
                         StatusCast::VALID_VALUES,
                         $material->status ?? StatusCast::VALID_VALUES[0]
                     ) ?>
-                </div>
+                </fieldset>
 
-            </fieldset>
+            </div>
 
             <!-- form group attachments -->
             <fieldset class="form__group">
-                <div class="form__group">
-                    <label for="tiny" class="form__label">Content</label>
-                    <textarea id="tiny" name="content" cols="60" rows="20"><?= $material->content ?></textarea>
-                </div>
+                <label for="tiny" class="form__label">Content</label>
+                <textarea id="tiny" name="content" cols="60" rows="20"><?= $material->content ?></textarea>
+            </fieldset>
 
-                <div class="form__group">
-                    <label for="links" class="form__label">Links to relevant sites</label>
-                    <?= view("{$path}/input_link", ['links' => $material->getLinks() ]) ?>
-                </div>
+            <fieldset class="form__group">
+                <label for="links" class="form__label">Links to relevant sites</label>
+                <?= view("{$path}/input_link", ['links' => $material->getLinks() ]) ?>
+            </fieldset>
 
-                <div class="form__group">
-                    <label for="files" class="form__label">Attached files</label>
-                    <?= view("{$path}/input_file", ['files' => $material->getFiles() ]) ?>
-                </div>
+            <fieldset class="form__group">
+                <label for="files" class="form__label">Attached files</label>
+                <?= view("{$path}/input_file", ['files' => $material->getFiles() ]) ?>
+            </fieldset>
+
+            <fieldset class="form__group">
+                <label for="relations" class="form__label">Related materials</label>
+                <?= view("{$path}/input_relation", ['relations' => $material->related ]) ?>
             </fieldset>
 
             <!-- hidden attributes (for editing) -->

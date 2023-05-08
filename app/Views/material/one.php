@@ -6,18 +6,15 @@
      * @param App\Entities\Material $material   material which material to render
      * @param ?App\Entities\Rating  $rating     rating from the current user
      */
-    $hasSidebar = true;
     $rating = $rating->rating_value ?? 0;
 ?>
 
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('sidebar') ?>
-<?php if (isset($material->properties) && !empty($material->properties)) {
-    echo '<div class="page__sidebar">';
-    echo view('property/filter_button', ['properties' => $material->properties]);
-    echo '</div>';
-} ?>
+<?php if (isset($material->properties) && !empty($material->properties)) : ?>
+    <?= view('property/filter_button', ['properties' => $material->properties]) ?>
+<?php endif; ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>

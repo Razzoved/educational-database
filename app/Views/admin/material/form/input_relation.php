@@ -13,103 +13,73 @@
 <div class="form__group">
 
     <!-- relation uploader -->
-    <div class="form__group form__group--horizontal">
+    <div class="form__group form__group--horizontal-flex">
         <input type="text"
             id="relation-uploader"
             list="relation-options"
             class="form__input"
             placeholder="No material selected"
-            onblur="verifyRelation()">
-        <button class="form__input" type="button" onclick="newRelation()">Add</button>
+            title="Links materials together (relation will be visible in both)!"
+            onblur="uniqueRelation()">
+        <button class="form__button" type="button" onclick="newRelation()">Add</button>
     </div>
 
     <datalist id="relation-options">
-        <?php foreach ($available as $id => $title) : ?>
-            <option value='<?= esc($title) ?>' data-value='<?= $id ?>'>
-        <?php endforeach; ?>
     </datalist>
 
-    <!-- hidden template for js copying -->
-    <?= view('admin/material/relation_template', ['id' => null, 'value' => null, 'hidden' => true, 'readonly' => true]) ?>
-
     <div class="form__group" id="relation-group">
-    <?php
-        foreach ($relations as $id => $title) {
-            echo view('admin/material/relation_template', ['id' => $id, 'value' => $title, 'hidden' => false, 'readonly' => true]);
-        }
-    ?>
+        <?php foreach ($relations as $relation) {
+            echo view('admin/material/form/item_relation', [
+                'id'    => $relation->id,
+                'title' => $relation->title,
+                'url'   => url_to('Material::get', $relation->id),
+            ]);
+        } ?>
     </div>
 </div>
 
 <script>
-    function newRelation()
-    {
-        let uploader = document.getElementById('relation-uploader');
-        let container = document.getElementById('relation-group');
+    const relationUploader = document.getElementById('relation-uploader');
+    const relationGroup = document.getElementById('relation-group');
 
-        if (!verifyRelation() || !verifyRelationDuplicates()) {
-            uploader.classList.add('border-danger');
-            return;
+    const uniqueRelation = () => {
+        // check for duplicates
+        const relations = relationGroup.querySelectorAll('input[name^="relation"]');
+        for (var key in relations) {
+            if (relationUploader.value === relations[key].value) {
+                return relationUploader.setInvalid(true);
+            }
         }
-
-        let option = document.getElementById('relation-options').querySelector(`option[value="${escapeQuotes(uploader.value)}"]`);
-        let relation = createRelation(
-            `relation-${parseInt(container.lastElementChild?.id.replace(/^\D+/g, '') ?? '0') + 1}`,
-            uploader.value,
-            option?.dataset.value
-        );
-        container.appendChild(relation);
-        uploader.value = "";
+        return relationUploader.setInvalid(false) && relationUploader.value !== "";
     }
 
-    function createRelation(id, value, idValue) {
-        let newDiv = document.getElementById("relation-template").cloneNode(true);
-        let input = newDiv.querySelector('input');
-        let a = newDiv.querySelector('a');
-        let button = newDiv.querySelector('button');
-
-        if (input === undefined || button === undefined || a === undefined) console.warn("invalid relation template: undefined")
-        if (value === undefined) console.warn("invalid value");
-        if (idValue === undefined) console.warn("invalid idValue");
-
-        input.disabled = null;
-        input.required = true;
-        input.setAttribute('value', value);
-        input.setAttribute('name', input.name.replace(/[0-9]/, idValue));
-
-        button.onclick = () => removeById(id);
-
-        a.href = '<?= url_to('Material::get', $idValue) ?>'
-        a.innerHTML = value;
-
-        newDiv.id = id;
-        newDiv.hidden = false;
-
-        return newDiv;
-    }
-
-    function verifyRelation()
-    {
-        let uploader = document.getElementById('relation-uploader');
-        let option = document.getElementById('relation-options').querySelector(`option[value="${escapeQuotes(uploader.value)}"]`);
-        if (option === null && uploader.value !== "") {
-            uploader.classList.add('border-danger');
-            return false;
+    const newRelation = () => {
+        const option = relationUploader.verifyOption();
+        if (!uniqueRelation() || !option) {
+            relationUploader.focus();
+            return relationUploader.setInvalid(true);
         }
-        uploader.classList.remove('border-danger');
-        return uploader.value !== "";
+        // create a new relatiom
+        const template = `<?= view('admin/material/form/item_relation') ?>`.fill({
+            id: option.getAttribute('data-id'),
+            title: option.value,
+            url: '<?= url_to('Material::get', 0) ?>'.replace(/0$/, option.getAttribute('data-id')),
+        });
+        relationUploader.value = "";
+        // add to document
+        relationGroup.insertAdjacentHTML('beforeend', template);
     }
 
-    function verifyRelationDuplicates()
-    {
-        let uploader = document.getElementById('relation-uploader');
-        let duplicate = document.getElementById('relation-group').querySelector('input[value="' + escapeQuotes(uploader.value) + '"]');
-        if (duplicate !== null) uploader.value = '';
-        return duplicate === null;
-    }
-
-    function escapeQuotes(string)
-    {
-        return string.replaceAll('"', '\\"');
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('<?= url_to('Admin\Material::getAvailable') ?>')
+            .then(response => response.json())
+            .then(response => response.map(r => {
+                const option = document.createElement('option');
+                option.value = r.title;
+                option.setAttribute('data-id', r.id);
+                return option;
+            }))
+            .then(response => relationUploader.list.replaceChildren(...response))
+            .catch(error => console.log('Error fetching relations', error));
+    });
 </script>

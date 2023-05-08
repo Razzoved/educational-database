@@ -82,7 +82,7 @@ class Resource extends Entity
 
     private function getPrefix()
     {
-        return $this->isAssigned()
+        return $this->isAssigned() && !$this->isLink()
             ? SAVE_PREFIX . $this->parentId . UNIX_SEPARATOR
             : '';
     }

@@ -57,6 +57,7 @@ $routes->group('/admin', function($routes) {
         $routes->get('', 'Admin\Material::index');
         $routes->post('', 'Admin\MaterialEditor::save');
         $routes->get('new', 'Admin\MaterialEditor::index');
+        $routes->get('available', 'Admin\Material::getAvailable');
         $routes->get('(:num)', 'Admin\MaterialEditor::get/$1');
         $routes->delete('(:num)', 'Admin\MaterialEditor::delete/$1');
     });
@@ -64,7 +65,7 @@ $routes->group('/admin', function($routes) {
     $routes->group('tag', function($routes) {
         $routes->get('', 'Admin\Property::index');
         $routes->post('', 'Admin\Property::save');
-        $routes->get('all', 'Admin\Property::getAll');
+        $routes->get('available', 'Admin\Property::getAvailable');
         $routes->get('(:num)', 'Admin\Property::get/$1');
         $routes->delete('(:num)', 'Admin\Property::delete/$1');
     });
@@ -73,7 +74,7 @@ $routes->group('/admin', function($routes) {
         $routes->get('', 'Admin\Resource::index');
         $routes->post('', 'Admin\Resource::assign');
         $routes->post('upload', 'Admin\Resource::upload');
-        $routes->delete('all', 'Admin\Resource::deleteUnusedAll');
+        $routes->delete('unused', 'Admin\Resource::deleteUnusedAll');
         $routes->delete('(:num)', 'Admin\Resource::delete/$1');
         $routes->delete('(:any)', 'Admin\Resource::deleteUnused/$1');
     });

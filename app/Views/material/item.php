@@ -7,7 +7,6 @@
     $url = url_to('Material::get', $material->id);
     $content = strip_tags($material->content);
 ?>
-
 <div class="card" onclick="window.location.href='<?= $url ?>'">
     <div class="card__thumbnail">
         <img src="<?= $material->getThumbnail()->getURL() ?>"

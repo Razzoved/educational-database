@@ -23,8 +23,11 @@
     </div>
 
     <div class="form__group" id="link-group">
-        <?php foreach ($links as $key => $url) {
-            echo view('admin/material/item_link', ['id' => $key, 'path' => $url]);
+        <?php foreach ($links as $link) {
+            echo view('admin/material/form/item_link', [
+                'id' => $link->id,
+                'path' => $link->getURL()
+            ]);
         } ?>
     </div>
 </div>

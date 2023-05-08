@@ -71,6 +71,7 @@ class Material extends BaseController
             'title'      => $material->title,
             'material'   => $material,
             'rating'     => $this->ratings->getRating($material->id, session('id') ?? ''),
+            'hasSidebar' => true,
         ]);
     }
 

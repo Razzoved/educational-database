@@ -12,7 +12,7 @@
     <!-- thumbnail view -->
     <image id="thumbnail"
         class="form__logo"
-        style="width: 12rem; height: 12rem; object-fit: cover"
+        style="width: 15rem; height: 15rem; object-fit: cover"
         src="<?= \App\Libraries\Resource::pathToURL($rootPath) ?>"
         alt="No image"
         onclick="document.getElementById('thumbnail-uploader').click()">

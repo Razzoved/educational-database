@@ -1,7 +1,7 @@
 <?php if (isset($errors) && !empty($errors)) : ?>
-    <ul class="alert alert-warning rounded text-start">
+    <ul style="padding: 1rem">
     <?php foreach ($errors as $error) : ?>
-        <li><?= $error ?></li>
+        <li style="color: red"><?= $error ?></li>
     <?php endforeach; ?>
     </ul>
 <?php endif; ?>

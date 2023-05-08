@@ -11,7 +11,6 @@
     $value = $value ?? '@value@';
     $imageURL = $imageURL ?? '@imageURL@';
 ?>
-
 <div class="item" id="file<?= $id ?>">
 
     <div class="item__header">
@@ -31,7 +30,7 @@
 
     <input type="text"
         class="item__title item__title--stripped"
-        name="files[<?= $path ?>]"
+        name="file[<?= $path ?>]"
         value="<?= $value ?>"
         readonly
         required>

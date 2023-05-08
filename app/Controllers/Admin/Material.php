@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\Material as ControllersMaterial;
+use CodeIgniter\HTTP\Response;
 
 class Material extends ControllersMaterial
 {
@@ -17,5 +18,15 @@ class Material extends ControllersMaterial
             'pager'      => $this->materials->pager,
             'activePage' => 'materials',
         ]);
+    }
+
+    public function getAvailable() : Response
+    {
+        try {
+            $materials = $this->materials->allowCallbacks(false)->getArray(['sort' => 'published_at']);
+            return $this->response->setJSON($materials);
+        } catch (\Exception $e) {
+            return $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, 'Could not get available materials');
+        }
     }
 }

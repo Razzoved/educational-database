@@ -13,11 +13,9 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('sidebar') ?>
-<?php if (isset($filters) && !empty($filters)) {
-    echo '<div class="page__sidebar">';
-    echo view('property/filter_checkbox', ['properties' => $filters]);
-    echo '</div>';
-} ?>
+<?php if (isset($filters) && !empty($filters)) : ?>
+    <?= view('property/filter_checkbox', ['properties' => $filters]) ?>
+<?php endif; ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>

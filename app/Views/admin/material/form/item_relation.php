@@ -1,21 +1,21 @@
 <?php
     /**
-     * Renders one file as a small removable box
+     * Renders one relation as a removable item.
      *
-     * @param int $id      current index of the file (in given context)
-     * @param string $path path to the file's current location
+     * @param int $id       id of the related material
+     * @param string $title title of the related material
      */
     $id = $id ?? '@id@';
+    $title = $title ?? '@title@';
     $url = $url ?? '@url@';
-    $path = $path ?? '@path@';
 ?>
-<div id="relation<?= $id ?>">
+<div class="form__group form__group--horizontal-flex" id="relation<?= $id ?>">
     <input type="hidden"
-        name="relations[<?= $id ?>]"
-        value="<?= esc($path) ?>"
+        name="relation[<?= $id ?>]"
+        value="<?= esc($title) ?>"
         required>
-    <a target="_blank" href="<?= $url ?>"><?= $path ?></a>
-    <button type="button" onclick="removeById('relation<?= $id ?>')">
+    <a class="form__input" target="_blank" href="<?= $url ?>"><?= $title ?></a>
+    <button class="form__button form__button--red" type="button" onclick="this.parentElement.remove()" ?>
         &#10005;
     </button>
 </div>
