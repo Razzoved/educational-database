@@ -17,6 +17,7 @@
     <div class="item__header">
 
         <image class="item__logo"
+            style="border-radius: 100%"
             src="<?= $imageURL ?>"
             alt="File image">
 
