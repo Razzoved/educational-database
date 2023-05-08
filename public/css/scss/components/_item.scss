@@ -97,6 +97,11 @@
         @media screen and (max-width: $sm) {
             font-size: 1.2rem;
         }
+        &--stripped {
+            font-size: 1rem;
+            border: unset;
+            background-color: unset;
+        }
     }
 
     & &__text {
@@ -116,6 +121,10 @@
 
 .item:nth-child(even) {
     background-color: $clr-gray-transparent;
+}
+
+.page--dark .item {
+    background-color: $clr-light;
 }
 
 .item.private {

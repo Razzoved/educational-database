@@ -12,6 +12,8 @@
 *::before,
 *::after {
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
@@ -90,6 +92,11 @@ input[type='checkbox']:checked {
 input:read-only {
     color: $clr-text;
     background-color: $clr-gray-transparent;
+}
+
+textarea {
+    flex: unset;
+    resize: none;
 }
 
 .create {
