@@ -1,32 +1,26 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="page">
-    <h1 class="page__title"><?= $title ?></h1>
-
-    <div class="page__content">
-        <div class="page__controls">
-            <?= view('search_bar', ['action' => url_to('Admin\User::index'), 'options' => $options]) ?>
-            <?= view('sort_bar', ['sorters' => ['Name', 'Email'], 'create' => 'userOpen()']); ?>
-        </div>
-
-        <div class="table" id="items">
-        <?php
-            if ($users === []) {
-                echo $this->include('none');
-            } else foreach($users as $user) {
-                echo view('admin/user/item', [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                ]);
-            }
-        ?>
-        </div>
-
-        <?= $pager->links('default', 'full') ?>
-    </div>
+<div class="page__controls">
+    <?= view('search_bar', ['action' => url_to('Admin\User::index'), 'options' => $options]) ?>
+    <?= view('sort_bar', ['sorters' => ['Name', 'Email'], 'create' => 'userOpen()']); ?>
 </div>
+
+<div class="table" id="items">
+<?php
+    if ($users === []) {
+        echo $this->include('none');
+    } else foreach($users as $user) {
+        echo view('admin/user/item', [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+    }
+?>
+</div>
+
+<?= $pager->links('default', 'full') ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>

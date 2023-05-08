@@ -10,7 +10,7 @@
     <?= $this->include('navigation_bar') ?>
 
     <main id="top" class="container">
-        <div class="page">
+        <div class="page<?= isset($filters) && !empty($filters) ? ' page--has-sidebar' : '' ?>">
             <?php if (isset($title)) echo ('<h1 class="page__title">' . $title . '</h1>') ?>
             <?= $this->renderSection('sidebar') ?>
             <div class="page__content">

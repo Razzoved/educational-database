@@ -10,39 +10,33 @@
 
 <?= $this->extend('layouts/admin') ?>
 
+<?= $this->section('sidebar') ?>
+<?= view('property/filter_checkbox', ['properties' => $filters]) ?>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-<div class="page">
-    <h1 class="page__title"><?= $title ?></h1>
-
-    <div class="page__sidebar">
-        <?= view('property/filter_checkbox', ['properties' => $filters]) ?>
-    </div>
-
-    <div class="page__content">
-        <div class="page__controls">
-            <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
-            <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value', 'Priority', 'Usage'], 'create' => 'propertyOpen()']) ?>
-        </div>
-
-        <div class="table" id="items">
-        <?php
-            if ($properties === []) {
-                echo $this->include('none');
-            } else foreach($properties as $property) {
-                echo view('admin/property/item', [
-                    'id'          => $property->id,
-                    'value'       => $property->value,
-                    'tag'         => $property->category ?? "",
-                    'usage'       => $property->usage,
-                    'description' => $property->description ?? "",
-                ]);
-            }
-            ?>
-        </div>
-
-        <?= $pager->links('default', 'full') ?>
-    </div>
+<div class="page__controls">
+    <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
+    <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value', 'Priority', 'Usage'], 'create' => 'propertyOpen()']) ?>
 </div>
+
+<div class="table" id="items">
+<?php
+    if ($properties === []) {
+        echo $this->include('none');
+    } else foreach($properties as $property) {
+        echo view('admin/property/item', [
+            'id'          => $property->id,
+            'value'       => $property->value,
+            'tag'         => $property->category ?? "",
+            'usage'       => $property->usage,
+            'description' => $property->description ?? "",
+        ]);
+    }
+    ?>
+</div>
+
+<?= $pager->links('default', 'full') ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('modals') ?>

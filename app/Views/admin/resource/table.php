@@ -11,31 +11,24 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="page">
-    <h1 class="page__title"><?= $title ?></h1>
+<?php if (!empty($resources)) : ?>
+<div class="page__controls">
+    <button type="button" onclick="deleteOpenAll('<?= url_to('Admin\Resource::deleteUnusedAll') ?>')">Delete all</button>
+</div>
+<?php endif; ?>
 
-    <div class="page__content">
-
-        <?php if (!empty($resources)) : ?>
-        <div class="page__controls">
-            <button type="button" onclick="deleteOpenAll('<?= url_to('Admin\Resource::deleteUnusedAll') ?>')">Delete all</button>
-        </div>
-        <?php endif; ?>
-
-        <div class="table" id="items">
-        <?php
-            if ($resources === []) {
-                echo $this->include('none');
-            } else foreach($resources as $resource) {
-                echo view('admin/resource/item', [
-                    'id'   => $resource->path,
-                    'path' => \App\Libraries\Resource::pathToFileURL($resource->getRootPath()),
-                    'name' => basename($resource->path),
-                ]);
-            }
-        ?>
-        </div>
-    </div>
+<div class="table" id="items">
+<?php
+    if ($resources === []) {
+        echo $this->include('none');
+    } else foreach($resources as $resource) {
+        echo view('admin/resource/item', [
+            'id'   => $resource->path,
+            'path' => \App\Libraries\Resource::pathToFileURL($resource->getRootPath()),
+            'name' => basename($resource->path),
+        ]);
+    }
+?>
 </div>
 <?= $this->endSection() ?>
 

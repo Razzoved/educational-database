@@ -46,7 +46,7 @@
                     <?= session('isLoggedIn') ? 'To administration' : 'Login' ?>
                 </a>
             </li>
-            <li class="navbar__item">
+            <li class="navbar__item navbar__item--toggle">
                 <a class="navbar__toggle" href="javascript:void(0);" onclick="navbar_toggle()">
                     <i class="fa fa-bars"></i>
                 </a>

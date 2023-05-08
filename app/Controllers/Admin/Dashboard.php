@@ -27,14 +27,16 @@ class Dashboard extends BaseController
     public function index() : string
     {
         $data = [
-            'meta_title'        => 'Administration - dashboard',
-            'activePage'        => 'dashboard',
-            'viewsHistory'      => $this->views->getDailyTotals(),
-            'materials'         => $this->views->getTopMaterials(self::COUNT_TOP, "", 30),
-            'materialsTotal'    => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], self::COUNT_TOP),
-            'editors'           => $this->materials->getBlame(),
-            'recentPublished'   => $this->materials->getArray(['sort' => 'published_at', 'sortDir' => 'DESC'], self::COUNT_RECENT),
-            'recentUpdated'     => $this->materials->getArray(['sort' => 'updated_at', 'sortDir' => 'DESC'], self::COUNT_RECENT),
+            'meta_title'      => 'Administration - dashboard',
+            'activePage'      => 'dashboard',
+            'viewsHistory'    => $this->views->getDailyTotals(),
+            'materials'       => $this->views->getTopMaterials(self::COUNT_TOP, "", 30),
+            'materialsTotal'  => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], self::COUNT_TOP),
+            'editors'         => $this->materials->getBlame(),
+            'recentPublished' => $this->materials->getArray(['sort' => 'published_at', 'sortDir' => 'DESC'], self::COUNT_RECENT),
+            'recentUpdated'   => $this->materials->getArray(['sort' => 'updated_at', 'sortDir' => 'DESC'], self::COUNT_RECENT),
+            'pageClass'       => ['dashboard'],
+            'hasSidebar'      => true
         ];
 
         $data['viewsTotal'] = array_reduce(

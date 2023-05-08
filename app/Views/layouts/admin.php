@@ -14,8 +14,40 @@
     <?= $this->include('admin/navigation_bar') ?>
 
     <main id="top" class="container">
-        <?= $this->renderSection('content') ?>
-        <?= $this->renderSection('modals') ?>
+        <?php
+            $pageClass = $pageClass ?? [];
+            if (!is_array($pageClass)) {
+                $pageClass = array($pageClass);
+            }
+            if (
+                (isset($filters) && !empty($filters)) ||
+                (isset($hasSidebar) && $hasSidebar === true)
+            ) {
+                $pageClass[] = 'page--has-sidebar';
+                $hasSidebar = true;
+            } else {
+                $hasSidebar = false;
+            }
+            $pageClass[] = 'page';
+            $pageClass = implode(' ', array_reverse($pageClass));
+        ?>
+
+        <div class="<?= $pageClass ?>">
+            <?php if (isset($title)) : ?>
+                <h1 class="page__title"><?= $title ?></h1>
+            <?php endif; ?>
+
+            <?php if ($hasSidebar) : ?>
+                <div class="page__sidebar">
+                    <?= $this->renderSection('sidebar') ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="page__content">
+                <?= $this->renderSection('content') ?>
+            </div>
+        </div>
+        <?= $this->renderSection('modal') ?>
     </main>
 
     <?= $this->include('tooltip') ?>
