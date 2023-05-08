@@ -25,6 +25,7 @@
             name="group"
             value="<?= $property->id ?>"
             title="Use all from group"
+            onchange="toggleCollapsible(this, 'collapsible--selected')"
         />
 
         <button class="collapsible__toggle" type="button" onclick="toggleCollapsible(this)">

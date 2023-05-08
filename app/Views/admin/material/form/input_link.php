@@ -12,7 +12,7 @@
 <div class="form__group">
 
     <!-- file uploader -->
-    <div class="form__group form__group--horizontal form__group--centered">
+    <div class="form__group form__group--horizontal-flex">
         <input id="link-uploader"
             type="url"
             class="form__input"

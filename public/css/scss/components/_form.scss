@@ -26,6 +26,10 @@
         &--horizontal {
             align-items: center;
             flex-direction: row;
+            justify-content: space-between;
+        }
+        &--horizontal-flex {
+            @extend .form__group--horizontal;
             justify-content: flex-start;
         }
         &--separated {
@@ -80,7 +84,7 @@
         }
     }
 
-    &__group--horizontal &__input {
+    &__group--horizontal-flex &__input {
         flex: 1 1 0;
     }
 

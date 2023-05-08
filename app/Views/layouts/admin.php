@@ -47,7 +47,7 @@
                 <?= $this->renderSection('content') ?>
             </div>
         </div>
-        <?= $this->renderSection('modal') ?>
+        <?= $this->renderSection('modals') ?>
     </main>
 
     <?= $this->include('tooltip') ?>

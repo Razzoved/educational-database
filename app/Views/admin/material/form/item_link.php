@@ -9,7 +9,7 @@
     $path = $path ?? '@path@';
 ?>
 
-<div class="form__group form__group--horizontal" id="link<?= $id ?>">
+<div class="form__group form__group--horizontal-flex" id="link<?= $id ?>">
     <input name="links[]"
         type="url"
         class="form__input"

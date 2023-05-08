@@ -13,7 +13,7 @@
     <button class="form__button form__button--large" type="button" onclick="document.getElementById('file-uploader').click()">Add</button>
     <input id="file-uploader" type="file" onchange="uploadFile()" hidden>
 
-    <div class="form__group form__group--horizontal" id="file-group">
+    <div class="form__group form__group--horizontal-flex" id="file-group">
     <?php foreach ($files as $key => $resource) {
         $rootPath = $resource->getRootPath();
         echo view('admin/material/form/item_file', [

@@ -31,9 +31,9 @@
         <fieldset class="filter" <?= $tooltip ?>>
             <input class="filter__checkbox"
                 type="checkbox"
+                id="filter_<?= $property->id ?>"
                 name="filter"
-                value="<?= $property->id ?>"
-                id="filter_<?= $property->id ?>">
+                value="<?= $property->id ?>">
             </input>
             <label class="filter__label" for="filter_<?= $property->id ?>">
                 <?= esc($property->value) ?>
