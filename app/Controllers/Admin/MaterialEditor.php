@@ -25,6 +25,25 @@ use Psr\Log\LoggerInterface;
  */
 class MaterialEditor extends ResponseController
 {
+    private const RULES = [
+        'id'           => 'permit_empty|is_natural',
+        'thumbnail'    => 'required|string|valid_image',
+        'title'        => 'required|string|min_length[1]',
+        'status'       => 'required|valid_status',
+        'content'      => 'permit_empty|string',
+        'properties'   => 'permit_empty|valid_properties',
+        'file'         => 'permit_empty|valid_files',
+        'link'         => 'permit_empty|valid_links',
+        'relation'     => 'permit_empty|valid_related',
+        // disallow following properties
+        'related'      => 'permit_empty|null_only',
+        'views'        => 'permit_empty|null_only',
+        'rating'       => 'permit_empty|null_only',
+        'rating_count' => 'permit_empty|null_only',
+        'updated_at'   => 'permit_empty|null_only',
+        'resources'    => 'permit_empty|null_only',
+    ];
+
     private MaterialModel $materials;
     private ResourceModel $resources;
     private PropertyModel $properties;
@@ -73,25 +92,7 @@ class MaterialEditor extends ResponseController
         $material = new EntitiesMaterial($this->request->getPost());
         $this->transformData($material);
 
-        $rules = [
-            'id'           => 'permit_empty|is_natural',
-            'title'        => 'required|string|min_length[1]',
-            'status'       => 'required|valid_status',
-            'content'      => 'permit_empty|string',
-            'properties'   => 'permit_empty|valid_properties',
-            'file'         => 'permit_empty|valid_files',
-            'link'         => 'permit_empty|valid_links',
-            'relation'     => 'permit_empty|valid_related',
-            // disallow following properties
-            'related'      => 'permit_empty|null_only',
-            'views'        => 'permit_empty|null_only',
-            'rating'       => 'permit_empty|null_only',
-            'rating_count' => 'permit_empty|null_only',
-            'updated_at'   => 'permit_empty|null_only',
-            'resources'    => 'permit_empty|null_only',
-        ];
-
-        if (!$this->validate($rules)) {
+        if (!$this->validate(self::RULES)) {
             return $this->index($material, $this->validator->getErrors());
         }
 
@@ -101,7 +102,7 @@ class MaterialEditor extends ResponseController
             $this->moveTemporaryFiles($material);
         } catch (BadPostException $e) {
             return $this->index(
-                new EntitiesMaterial($this->request->getPost()),
+                $material,
                 array($e->getMessage())
             );
         } catch (FileException $e) {
