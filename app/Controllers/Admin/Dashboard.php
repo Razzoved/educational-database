@@ -26,6 +26,8 @@ class Dashboard extends BaseController
 
     public function index() : string
     {
+        $this->cachePage(60);
+
         $data = [
             'meta_title'      => 'Administration - Dashboard',
             'viewsHistory'    => $this->views->getDailyTotals(),

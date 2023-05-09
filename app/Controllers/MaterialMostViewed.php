@@ -8,6 +8,8 @@ class MaterialMostViewed extends Material
 {
     public function index() : string
     {
+        $this->cachePage(60);
+
         $materials = model(ViewsModel::class)->getTopMaterials(30, $this->request->getGet('search') ?? "");
 
         return $this->view('material/all', [
