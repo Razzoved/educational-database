@@ -94,7 +94,7 @@ class Property extends ResponseController
         return $this->response->setJSON($property);
     }
 
-    public function getAll() : Response
+    public function getAvailable() : Response
     {
         $properties = $this->properties->getArray(['sort' => 'priority']);
 

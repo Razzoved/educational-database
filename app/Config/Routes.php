@@ -60,7 +60,7 @@ $routes->group('admin', function($routes) {
         $routes->get('', 'Admin\Material::index');
         $routes->post('', 'Admin\MaterialEditor::save');
         $routes->get('new', 'Admin\MaterialEditor::index');
-        $routes->get('available', 'Admin\Material::getAvailable');
+        $routes->get('all', 'Admin\Material::getAvailable');
         $routes->get('(:num)', 'Admin\MaterialEditor::get/$1');
         $routes->delete('(:num)', 'Admin\MaterialEditor::delete/$1');
     });
@@ -68,7 +68,7 @@ $routes->group('admin', function($routes) {
     $routes->group('tag', function($routes) {
         $routes->get('', 'Admin\Property::index');
         $routes->post('', 'Admin\Property::save');
-        $routes->get('available', 'Admin\Property::getAvailable');
+        $routes->get('all', 'Admin\Property::getAvailable');
         $routes->get('(:num)', 'Admin\Property::get/$1');
         $routes->delete('(:num)', 'Admin\Property::delete/$1');
     });
