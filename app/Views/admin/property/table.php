@@ -28,7 +28,7 @@
         echo view('admin/property/item', [
             'id'          => $property->id,
             'value'       => $property->value,
-            'tag'         => $property->category ?? "",
+            'category'    => $property->category ?? "",
             'usage'       => $property->usage,
             'description' => $property->description ?? "",
         ]);

@@ -12,9 +12,9 @@
     $value = $value ?? '@value@';
 
     /**
-     * @var string $tag Value of property's parent (must be "" if you want it to be empty)
+     * @var string $category Value of property's parent (must be "" if you want it to be empty)
      */
-    $tag = $tag ?? '@tag@';
+    $category = $category ?? '@category@';
 
     /**
      * @var int $usage Number of times the property has been used
@@ -45,8 +45,8 @@
         <p class="item__text" data-value="id">
             <small>ID:</small><br><?= $id ?>
         </p>
-        <p class="item__text" data-value="tag">
-            <?= $tag ?>
+        <p class="item__text" data-value="category">
+            <?= $category ?>
         </p>
         <p class="item__text" data-value="usage">
             <small>Usage:</small><br><?= $usage ?>
