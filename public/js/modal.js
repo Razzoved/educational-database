@@ -1,3 +1,9 @@
+if (!secureFetch) {
+    console.error('AJAX calls will fail, no FETCH.js provided!');
+} else {
+    console.debug('Loaded modal.js');
+}
+
 HTMLElement.prototype.reapplyScripts = function() {
     scripts = Array.from(this.querySelectorAll('script')).forEach((e) => {
         const script = document.createElement('script');
@@ -71,10 +77,7 @@ const modalSetError = (modal, message) => {
 
 const modalHandleResult = (element, existing) => {
     if (element === undefined) {
-        if (!existing) {
-            throw new Error('Cannot remove nonexistent element');
-        }
-        existing.remove();
+        existing?.remove();
     } else {
         if (existing) {
             existing.replaceWith(element);

@@ -65,6 +65,7 @@ class Resource extends ResponseController
 
     public function assign() : Response
     {
+        $tmpPath = $this->request->getPost('tmp_path');
         $materialId = $this->request->getPost('target');
 
         if (!$materialId || !is_numeric($materialId)) {
@@ -93,7 +94,7 @@ class Resource extends ResponseController
             );
         }
 
-        return $this->response->setJSON($resource);
+        return $this->response->setJSON(['id' => $tmpPath]);
     }
 
     public function delete(int $id) : Response
