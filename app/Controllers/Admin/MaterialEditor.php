@@ -163,7 +163,11 @@ class MaterialEditor extends ResponseController
 
     private function toResources(EntitiesMaterial &$material, string $type) : void
     {
-        foreach ($this->request->getPost($type)  ?? [] as $tmpPath => $path) {
+        $items = $this->request->getPost($type) ?? [];
+        $items = is_array($items) ? $items : [$items];
+
+        $resources = $material->resources;
+        foreach ($items as $tmpPath => $path) {
             switch ($type) {
                 case 'file':
                 case 'thumbnail':
@@ -175,14 +179,15 @@ class MaterialEditor extends ResponseController
                 default:
                     throw new BadPostException('Resource type: ' . $type . ' not supported');
             }
-            if (!$tmpPath && !$path || isset($material->resources[$tmpPath])) continue;
-            $material->resources[$tmpPath] = new EntitiesResource([
+            if (!$tmpPath && !$path || isset($resources[$tmpPath])) continue;
+            $resources[$tmpPath] = new EntitiesResource([
                 'parentId' => $material->id,
                 'type'     => $type,
                 'path'     => $path,
                 'tmp_path' => $tmpPath,
             ]);
         }
+        $material->resources = $resources;
     }
 
     private function toProperties() : array
