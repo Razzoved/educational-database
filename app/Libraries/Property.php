@@ -20,11 +20,13 @@ class Property
         $and = $request->getGetPost('filter');
         $or = $request->getGetPost('group');
 
+        // echo '<pre>' . print_r($or, true) . '</pre>';
+
         if ($and) {
             $filters['and'] = is_array($and) ? $and : array($and);
         }
         if ($or) {
-            $filters['or'] = is_array($or) ? $or : array($or);
+            $filters['or'] = $or;
         }
 
         return $filters;

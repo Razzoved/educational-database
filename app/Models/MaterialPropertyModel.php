@@ -85,32 +85,19 @@ class MaterialPropertyModel extends Model
      *
      * @param array $filters selected filters grouped by tags
      */
-    public function getCompiledFilter(array $filters) : string
+    public function getCompiledFilter(array $filters)
     {
-        $requiredTags = 0;
+        $materials = array_map(
+            function ($material) {
+                return $material->id;
+            },
+            model(MaterialModel::class)->allowCallbacks(false)->findAll()
+        );
 
-        // build basic query from two tables
-        $builder = $this->builder()
-                        ->select("$this->table.material_id")
-                        ->join('properties', "$this->table.property_id = properties.property_id");
+        $this->filterOr($materials, $filters['or'] ?? []);
+        $this->filterAnd($materials, $filters['and'] ?? []);
 
-        // if any filters are active, apply them
-        if ($filters !== []) {
-            foreach ($filters as $k => $v) {
-                $v = array_keys($v);
-                $requiredTags += count($v);
-                $builder->orGroupStart()
-                        ->where('properties.property_tag', $k)
-                        ->whereIn('properties.property_id', $v)
-                        ->groupEnd();
-            }
-        }
-
-        // check if it has all require tags
-        $builder->groupBy("$this->table.material_id")
-                ->having('COUNT(*) >=', $requiredTags);
-
-        return $builder->getCompiledSelect();
+        return empty($materials) ? [0] : $materials;
     }
 
     /**
@@ -167,5 +154,35 @@ class MaterialPropertyModel extends Model
 
         return count($source->children) > 0
             || in_array($source->id, $valid);
+    }
+
+    protected function filterOr(array &$filtered, array $groups) : void
+    {
+        foreach ($groups as $ids) {
+            $m = array_column(
+                $this->select('material_id')
+                    ->join('properties', 'property_id')
+                    ->whereIn('property_id', $ids)
+                    ->orWhereIn('property_tag', $ids)
+                    ->findAll(),
+                'material_id'
+            );
+            $filtered = array_intersect($filtered, $m);
+        }
+    }
+
+    protected function filterAnd(array &$filtered, array $ids) : void
+    {
+        foreach ($ids as $id) {
+            $m = array_column(
+                $this->select('material_id')
+                    ->join('properties', 'property_id')
+                    ->where('property_id', $id)
+                    ->orWhere('property_tag', $id)
+                    ->findAll(),
+                'material_id'
+            );
+            $filtered = array_intersect($filtered, $m);
+        }
     }
 }

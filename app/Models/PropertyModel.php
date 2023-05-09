@@ -220,17 +220,24 @@ class PropertyModel extends Model
         return $this;
     }
 
+    /**
+     * Does OR on all filters, aimed at admin table for tags.
+     */
     protected function setupFilters(array $filters)
     {
-        // can be used to filter by different field
-        $identifier = $filters['id'] ?? 'property_tag';
-        $identifier = "{$this->table}.{$identifier}";
-
-        if (isset($filters['and']) && $filters['and'] !== []) {
-            $this->whereIn($identifier, $filters['and']);
+        foreach ($filters['or'] ?? [] as $ids) {
+            if (is_array($ids)) {
+                $this->orGroupStart();
+                $this->orWhereIn("{$this->table}.property_id", $ids);
+                $this->orWhereIn("{$this->table}.property_tag", $ids);
+                $this->groupEnd();
+            }
         }
-        if (isset($filters['or']) && $filters['or'] !== []) {
-            $this->orWhereIn($identifier, $filters['or']);
+        if (isset($filters['and']) && is_array($filters['and'])) {
+            $this->orGroupStart();
+            $this->orWhereIn("{$this->table}.property_id", $filters['and']);
+            $this->orWhereIn("{$this->table}.property_tag", $filters['and']);
+            $this->groupEnd();
         }
         return $this;
     }
@@ -284,6 +291,10 @@ class PropertyModel extends Model
             $item = Cache::get($id, 'property');
             $this->_revalidateCache($item);
             unset($id);
+        }
+        if (isset($data['data']['property_tag'])) {
+            $item = Cache::get($data['data']['property_tag'], 'property');
+            $this->_revalidateCache($item);
         }
         return $data;
     }

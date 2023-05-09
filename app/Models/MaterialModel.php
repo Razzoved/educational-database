@@ -108,7 +108,7 @@ class MaterialModel extends Model
         if ($material->status !== StatusCast::PUBLIC) {
             $material->published_at = null;
         } else if (!$m || $m->status !== StatusCast::PUBLIC) {
-            $material->published_at = $this->setDate();
+            $material->published_at = $material->updated_at;
         }
 
         $this->db->transStart();
@@ -183,7 +183,7 @@ class MaterialModel extends Model
     {
         if ($filters !== []) {
             $filter = model(MaterialPropertyModel::class)->getCompiledFilter($filters);
-            $this->join("($filter) f", "material_id");
+            $this->whereIn('material_id', $filter);
         }
         return $this;
     }
