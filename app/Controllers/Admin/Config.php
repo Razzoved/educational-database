@@ -21,6 +21,14 @@ class Config extends BaseController
         'about_url'     => 'required|valid_url_strict',
     ];
 
+    protected const IMAGE_PREFIX = ROOTPATH . ASSET_PREFIX;
+    protected const IMAGE =  'configured_image';
+
+    protected const DEFAULT_IMAGE = [
+        'id'    => 'default_image',
+        'value' => ASSET_PREFIX . 'default_image.png',
+    ];
+
     protected $config;
     protected $materials;
 
@@ -45,11 +53,10 @@ class Config extends BaseController
         $type = $this->request->getPost('type');
         $value = $this->request->getFile('value') ?? $this->request->getPost('value');
 
-        if (!$type || !$value || !isset(self::RULES[$type])) {
-            echo var_dump($type, $value);
+        if (!$type || !isset(self::RULES[$type])) {
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
-                'Invalid post data!'
+                'Invalid data given as a request!'
             );
         }
         if (!$this->validate([ 'value' => self::RULES[$type] ])) {
@@ -59,20 +66,19 @@ class Config extends BaseController
             );
         }
 
-        if ($type === 'default_image') {
-            $value = self::uploadDefaultImage((object) $value);
-        }
         $config = new EntitiesConfig([
             'id' => $type,
-            'value' => $value,
+            'value' => $type === 'default_image'
+                ? self::uploadDefaultImage((object) $value)
+                : $value
         ]);
 
         try {
-            $this->config->update($type, $config);
+            $this->config->update($config->id, $config);
         } catch (\Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
-                "Saving {$type} of value: <strong>[{$value}]</strong> failed!"
+                "Saving {$config->id} of value: <strong>[{$config->value}]</strong> failed!"
             );
         }
 
@@ -81,15 +87,12 @@ class Config extends BaseController
 
     public function resetImage() : Response
     {
-        $defaultImage = new EntitiesConfig([
-            'id'    => 'default_image',
-            'value' => ASSET_PREFIX . 'default_image.png',
-        ]);
+        $default = new EntitiesConfig(self::DEFAULT_IMAGE);
 
         try {
-            $this->config->update('default_image', $defaultImage);
-            if (file_exists(ROOTPATH . ASSET_PREFIX . 'configured_image')) {
-                unlink(ROOTPATH . ASSET_PREFIX . 'configured_image');
+            $this->config->update($default->id, $default);
+            if (file_exists(self::IMAGE_PREFIX . self::IMAGE)) {
+                unlink(self::IMAGE_PREFIX . self::IMAGE);
             }
         } catch (\Exception $e) {
             return $this->response->setStatusCode(
@@ -98,7 +101,7 @@ class Config extends BaseController
             );
         };
 
-        return $this->response->setJSON($defaultImage);
+        return $this->response->setJSON($default);
     }
 
     private static function uploadDefaultImage(UploadedFile $uploadedFile) : string
@@ -106,7 +109,7 @@ class Config extends BaseController
         $path = WRITEPATH .'uploads' . UNIX_SEPARATOR . $uploadedFile->store();
 
         $file = new File($path, true);
-        $file = $file->move(ROOTPATH . ASSET_PREFIX, 'configured_file', true);
+        $file = $file->move(self::IMAGE_PREFIX, self::IMAGE, true);
 
         return ASSET_PREFIX . $file->getBasename();
     }
