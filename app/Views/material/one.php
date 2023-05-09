@@ -89,6 +89,8 @@
 
 <?= $this->section('scripts') ?>
 <script type="text/javascript">
+    const ERROR_MODAL = `<?= view('errors/modal', []) ?>`;
+
     <?php include_once(FCPATH . 'js/fetch.js'); ?>
 
     const ratings = document.querySelector('.rating');

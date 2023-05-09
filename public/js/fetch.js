@@ -1,4 +1,4 @@
-if (!TOKEN) {
+if (typeof TOKEN === 'undefined') {
     console.error('AJAX calls will fail, no TOKEN provided!');
 } else {
     console.debug('Loaded fetch.js');
@@ -54,7 +54,11 @@ const secureFetch = (token => {
  * @param {Error} error gets data here
  */
 const showError = (error) => {
-    const errorTemplate = `<?= view('errors/modal') ?>`.fill({
+    if (typeof ERROR_MODAL === 'undefined') {
+        console.debug('Error modal is not defined, showError only alerts!');
+        return alert(error.message);
+    }
+    const errorTemplate = ERROR_MODAL.fill({
         title: error.statusCode ?? 'Ooops',
         message: error.message
     });

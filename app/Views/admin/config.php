@@ -73,6 +73,8 @@
 
 <?= $this->section('scripts') ?>
 <script>
+    const ERROR_MODAL = `<?= view('errors/modal', []) ?>`;
+
     <?php include_once(FCPATH . 'js/fetch.js'); ?>
 
     const replaceImage = (config) => {

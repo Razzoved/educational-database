@@ -123,6 +123,8 @@
 <?= $this->section('scripts') ?>
 
 <script type='text/javascript'>
+    const ERROR_MODAL = `<?= view('errors/modal', []) ?>`;
+
     HTMLInputElement.prototype.setInvalid = function(invalid = true) {
         if (!invalid) {
             this.classList.remove('form__input--invalid');

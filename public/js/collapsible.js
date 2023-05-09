@@ -25,15 +25,22 @@ const toggleGroup = (element) => {
     parent.classList.toggle('page__group--show');
 }
 
-const resetFilters = () => {
-    document.querySelectorAll('.filter__checkbox').forEach(e => e.checked=false);
-    document.querySelectorAll('.search__bar').forEach(e => e.value='');
+const saveFilters = () => {
+    // save filters to local storage to save query space (GET is limited)
+    const toReapply = Array.from(document.querySelectorAll('.collapsible *:checked')).map(item => item.id);
+    window.localStorage.setItem('reapply-page', window.location.pathname);
+    window.localStorage.setItem('reapply-filters', JSON.stringify(toReapply));
+}
 
+const resetFilters = () => {
+    document.querySelectorAll('.filter__checkbox, .collapsible__toggle-group').forEach(e => e.checked=false);
+    document.querySelectorAll('.search__bar').forEach(e => e.value='');
     if (typeof submitSearch === "function") {
         submitSearch();
     } else {
         console.warn('All filters were reset, but autorefresh not applied.')
     }
+    saveFilters();
 }
 
 const appendFilter = (form, name, value) => {
@@ -45,10 +52,7 @@ const appendFilter = (form, name, value) => {
 }
 
 const appendFilters = (form) => {
-    // save filters to local storage to save query space (GET is limited)
-    const toReapply = Array.from(document.querySelectorAll('.collapsible *:checked')).map(item => item.id);
-    window.localStorage.setItem('reapply-page', window.location.pathname);
-    window.localStorage.setItem('reapply-filters', JSON.stringify(toReapply));
+    saveFilters();
 
     // hierarchical filtering
     Array.from(document.querySelectorAll('.collapsible--selected'))
