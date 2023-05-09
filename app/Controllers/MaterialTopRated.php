@@ -13,7 +13,6 @@ class MaterialTopRated extends Material
             'options'    => $this->getOptions(),
             'materials'  => $this->getMaterials(),
             'pager'      => $this->materials->pager,
-            'activePage' => 'top-rated',
         ]);
     }
 

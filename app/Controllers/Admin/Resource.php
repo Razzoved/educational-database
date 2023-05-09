@@ -22,11 +22,10 @@ class Resource extends ResponseController
         }
 
         return $this->view('resource/table', [
-            'meta_title' => 'Administration - unused files',
+            'meta_title' => 'Administration - Files',
             'title'      => 'Unused files',
             'resources'  => ResourceLib::getUnused(),
             'targets'    => $targets,
-            'activePage' => 'files',
         ]);
     }
 

@@ -29,13 +29,12 @@ class Property extends ResponseController
         $this->getCategories($filters);
 
         return $this->view('property/table', [
-            'meta_title' => 'Administration - tags',
+            'meta_title' => 'Administration - Tags',
             'title'      => 'Tags',
             'properties' => $this->getProperties(ADMIN_PAGE_SIZE),
             'options'    => $this->getOptions(),
             'filters'    => array($filters),
             'pager'      => $this->properties->pager,
-            'activePage' => 'tags',
         ]);
     }
 

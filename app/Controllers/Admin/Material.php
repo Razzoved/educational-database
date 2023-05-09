@@ -16,7 +16,6 @@ class Material extends ControllersMaterial
             'filters'    => $this->materialProperties->getUsed(),
             'materials'  => $this->getMaterials(ADMIN_PAGE_SIZE),
             'pager'      => $this->materials->pager,
-            'activePage' => 'materials',
         ]);
     }
 

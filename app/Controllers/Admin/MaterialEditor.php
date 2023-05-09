@@ -41,7 +41,7 @@ class MaterialEditor extends ResponseController
     public function index(EntitiesMaterial $material = new EntitiesMaterial(), array $errors = []) : string
     {
         return $this->view('material/form', [
-            'meta_title'           => "Administration - material editor",
+            'meta_title'           => "Administration - Material",
             'material'             => $material,
             'errors'               => $errors,
             'available_properties' => $this->properties->where('property_tag', 0)->getArray(),

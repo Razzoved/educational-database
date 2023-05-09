@@ -17,7 +17,6 @@ class MaterialMostViewed extends Material
             'options'    => array_map(function($m) { return $m->title; }, $materials),
             'materials'  => $materials,
             'pager'      => null,
-            'activePage' => 'most-viewed',
         ]);
     }
 }

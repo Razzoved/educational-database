@@ -32,7 +32,6 @@ class User extends ResponseController
             'options'    => $this->getOptions(),
             'users'      => $this->getUsers(ADMIN_PAGE_SIZE),
             'pager'      => $this->users->pager,
-            'activePage' => 'users',
         ]);
     }
 

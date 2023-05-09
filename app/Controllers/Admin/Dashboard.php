@@ -27,8 +27,7 @@ class Dashboard extends BaseController
     public function index() : string
     {
         $data = [
-            'meta_title'      => 'Administration - dashboard',
-            'activePage'      => 'dashboard',
+            'meta_title'      => 'Administration - Dashboard',
             'viewsHistory'    => $this->views->getDailyTotals(),
             'materials'       => $this->views->getTopMaterials(self::COUNT_TOP, "", 30),
             'materialsTotal'  => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], self::COUNT_TOP),
