@@ -32,7 +32,7 @@
 </div>
 
 <script>
-    <?php include_once(FCPATH . 'js/file.js'); ?>
+    <?php include_once(FCPATH . 'js/fetch.js'); ?>
 
     const thumbnailImg      = document.getElementById("thumbnail");
     const thumbnailPath     = document.getElementById("thumbnail-path");

@@ -17,9 +17,11 @@
 <nav class="navbar">
     <div class="navbar__container">
         <img class="navbar__logo"
+            id="link-home"
             src="<?= base_url('public/assets/enai-logo-transparent.png') ?>"
             alt="ENAI logo"
-            onclick="window.location.href='<?= $homeURL ?>'">
+            href="<?= $homeURL ?>"
+            onclick="window.location.href=this.getAttribute('href')">
         <ul class="navbar__list">
             <li class="navbar__item<?= $dash ?>">
                 <a class="navbar__button" href="<?= url_to('Admin\Dashboard::index') ?>")?>

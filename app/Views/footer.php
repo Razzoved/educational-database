@@ -35,7 +35,7 @@
     <?php $aboutURL = model(ConfigModel::class)->find('about_url') ?>
     <?php if ($aboutURL) : ?>
         <section class="footer__small-area">
-            <a href="<?= $aboutURL->value ?>" style="color: white">
+            <a id="link-about" href="<?= $aboutURL->value ?>" style="color: white">
                 About
             </a>
         </section>

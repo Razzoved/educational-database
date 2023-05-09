@@ -28,7 +28,7 @@
 </div>
 
 <script>
-    <?php include_once(FCPATH . 'js/file.js'); ?>
+    <?php include_once(FCPATH . 'js/fetch.js'); ?>
 
     const fileSelector = document.getElementById('file-uploader');
     const fileGroup = document.getElementById('file-group');

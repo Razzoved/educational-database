@@ -86,6 +86,14 @@
     }
 }
 
+.page {
+    gap: 0;
+    &__content {
+        display: flex;
+        flex-flow: column nowrap;
+    }
+}
+
 @media screen and (min-width: $md-l) {
     .page--has-sidebar {
         grid-template:

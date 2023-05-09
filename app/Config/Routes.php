@@ -47,11 +47,14 @@ $routes->group('/', function($routes) {
     $routes->add('logout', 'Authentication::logout');
 });
 
-$routes->group('/admin', function($routes) {
+$routes->group('admin', function($routes) {
     $routes->addRedirect('', 'admin/dashboard');
     $routes->add('dashboard', 'Admin\Dashboard::index');
     $routes->add('migration', 'Admin\Migration::index');
     $routes->add('rollback', 'Admin\Migration::back');
+    $routes->get('config', 'Admin\Config::index');
+    $routes->post('config', 'Admin\Config::save');
+    $routes->add('config/image', 'Admin\Config::resetImage');
 
     $routes->group('material', function($routes) {
         $routes->get('', 'Admin\Material::index');

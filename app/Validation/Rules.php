@@ -4,6 +4,7 @@ namespace App\Validation;
 
 use App\Entities\Cast\StatusCast;
 use App\Entities\Property;
+use CodeIgniter\Files\File;
 use CodeIgniter\Validation\FormatRules;
 
 /**
@@ -161,6 +162,21 @@ class Rules
                     ' is not a valid file!';
                 return false;
             }
+        }
+        return true;
+    }
+
+    /**
+     * Check if given path is a valid relative path to an image.
+     */
+    public function valid_image(string $imagePath) : bool
+    {
+        $file = new File(ROOTPATH . $imagePath);
+        if (!isset($imagePath) || !$file->getRealPath()) {
+            return false;
+        }
+        if (mb_strpos($file->getMimeType(), 'image/') === false) {
+            return false;
         }
         return true;
     }

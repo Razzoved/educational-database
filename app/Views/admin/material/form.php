@@ -150,13 +150,6 @@
             window.history.back();
         }
     }
-
-    const showError = (error) => {
-        const errorTemplate = `<?= view('errors/modal') ?>`
-            .replace('@title@', error.statusCode ?? 'Ooops')
-            .replace('@message@', error.message);
-        document.body.insertAdjacentHTML('beforeend', errorTemplate);
-    }
 </script>
 
 <?= $this->endSection() ?>
