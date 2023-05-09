@@ -53,7 +53,7 @@ class MaterialPropertyModel extends Model
     {
         return model(PropertyModel::class)
             ->join($this->table, 'property_id')
-            ->where('material_id', $materialId)
+            ->where('material_id', $materialId, null, '')
             ->getArray();
     }
 

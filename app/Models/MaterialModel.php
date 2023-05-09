@@ -111,6 +111,7 @@ class MaterialModel extends Model
             $material->published_at = $material->updated_at;
         }
 
+        $this->db->transException(true);
         $this->db->transStart();
 
         if ($m) {

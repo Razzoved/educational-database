@@ -111,9 +111,10 @@ class PropertyModel extends Model
      */
     public function delete($id = null, bool $purge = false)
     {
+        $this->db->transException(true);
         $this->db->transStart();
 
-        $item = $this->get((int) $id, ['usage' => !$purge]);
+        $item = $this->get((int) $id);
 
         if (!$item || (!$purge && $item->usage > 0)) {
             throw new ValidationException(
