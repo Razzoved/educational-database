@@ -1,27 +1,61 @@
+if (!TOKEN) {
+    console.error('AJAX calls will fail, no TOKEN provided!');
+} else {
+    console.debug('Loaded fetch.js');
+}
+
+/**
+ * Shows an error inside of a modal. Uses templating
+ * and text replacement to fill the error message.
+ *
+ * NOTE: 'String.prototype.fill' has to be defined
+ *
+ * @param {Error} error gets data here
+ */
 const showError = (error) => {
-    const errorTemplate = `<?= view('errors/modal') ?>`
-        .replace('@title@', error.statusCode ?? 'Ooops')
-        .replace('@message@', error.message);
+    const errorTemplate = `<?= view('errors/modal') ?>`.fill({
+        title: error.statusCode ?? 'Ooops',
+        message: error.message
+    });
     document.body.insertAdjacentHTML('beforeend', errorTemplate);
 }
 
-const upload = (callback, props) => {
-    if (callback === undefined || props === undefined) {
-        return console.debug('Upload: missing parameters');
-    }
-    if (props.selector.files[0] === undefined) {
-        return console.debug(`${props.fileType} undefined`)
-    }
+/**
+ * FetchAPI extension that supports the CSRF protection. To provide
+ * better user experience, it also broadcasts the CSRF token across
+ * the user's opened documents (otherwise submissions from one page
+ * would prevent all submissions from other pages).
+ *
+ * @param {string} url        Where to send the request to.
+ * @param {object} options    What to pass to the fetch request.
+ * @param {function} callback What to do with the result.
+ *
+ * @return {void} Does not return anything, use callback instead.
+ */
+const secure_fetch = (token => {
+    const CSRF_HEADER = 'X-CSRF-TOKEN';
 
-    const formData = new FormData();
+    const channel = new BroadcastChannel('csrf-protection');
+    channel.addEventListener('message', (e) => {
+        token = e.data;
+    });
 
-    formData.append(props.fileKey ?? "file", props.selector.files[0]);
-    formData.append(props.fileTypeKey ?? 'fileType', props.fileType);
-
-    props.selector.value = '';
-
-    fetch(props.url, { method: props.method ?? 'POST', body: formData })
-        .then(response => {
+    return (url, options, callback) => {
+        const secureOptions = {
+            ...options,
+            headers: {
+                ...(options.headers ? options.headers : {}),
+                [CSRF_HEADER]: token,
+                "X-Requested-With": "XMLHttpRequest",
+            }
+        }
+        fetch(url, secureOptions).then(response => {
+            if (response.headers.get(CSRF_HEADER)) {
+                token = response.headers.get(CSRF_HEADER);
+                channel.postMessage(token);
+            } else {
+                console.debug('Undefined token! last: ', token);
+            }
             if (!response.ok) {
                 throw Error(response.statusText);
             }
@@ -29,30 +63,31 @@ const upload = (callback, props) => {
         })
         .then(response => callback(response))
         .catch(error => showError(error));
-}
+    };
+})(TOKEN);
 
-const uploadURL = (callback, element, whereTo) => {
-    if (callback === undefined || element === undefined || whereTo === undefined) {
-        return console.debug('UploadURL: missing parameters');
+/**
+ * FetchAPI extension to simplify call to upload a file.
+ *
+ * @param {string} url        Where to send the request to.
+ * @param {object} props      What to create formData from, should include selector.
+ * @param {function} callback What to do with the result.
+ *
+ * @return {void} Does not return anything, use callback instead.
+ */
+const upload = (url, props, callback) => {
+    if (url === undefined || callback === undefined || props === undefined) {
+        return console.debug('Upload: missing parameters');
     }
-    if (element.value === "" || !element.value.match('^' + element.pattern)) {
-        return console.debug('Invalid url');
+    if (props.selector.files[0] === undefined) {
+        return console.debug(`${props.fileType} undefined`)
     }
 
-    body = new FormData();
-    body.append('type', element.name);
-    body.append('value', element.value);
+    const formData = new FormData();
+    formData.append(props.fileKey ?? "file", props.selector.files[0]);
+    formData.append(props.fileTypeKey ?? 'fileType', props.fileType);
 
-    fetch(whereTo, { method: 'POST', body })
-        .then(response => {
-            if (!response.ok) {
-                throw Error(response.statusText)
-            }
-            return response.json();
-        })
-        .then(response => {
-            element.value = response.value;
-            callback(response);
-        })
-        .catch(error => showError(error));
+    props.selector.value = '';
+
+    secure_fetch(url, { method: props.method ?? 'POST', body: formData }, callback);
 }
