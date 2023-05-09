@@ -39,7 +39,7 @@ const resetFilters = () => {
 const appendFilter = (form, name, value) => {
     const item = document.createElement('input');
     item.setAttribute('type', 'hidden');
-    item.setAttribute('name', name);
+    item.setAttribute('name', name + '[]');
     item.setAttribute('value', value);
     form.appendChild(item);
 }

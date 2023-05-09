@@ -19,14 +19,16 @@
 
     <div class="collapsible__header">
 
-        <input class="collapsible__toggle-group"
-            type="checkbox"
-            id="filter_<?= $property->id ?>"
-            name="group"
-            value="<?= $property->id ?>"
-            title="Use all from group"
-            onchange="toggleCollapsible(this, 'collapsible--selected')"
-        />
+        <?php if ($type !== 'button') : ?>
+            <input class="collapsible__toggle-group"
+                type="checkbox"
+                id="filter_<?= $property->id ?>"
+                name="group"
+                value="<?= $property->id ?>"
+                title="Use all from group"
+                onchange="toggleCollapsible(this, 'collapsible--selected')"
+            />
+        <?php endif; ?>
 
         <button class="collapsible__toggle" type="button" onclick="toggleCollapsible(this)">
             <i class="fa-solid fa-caret-right"></i>
@@ -38,8 +40,19 @@
     <div class="collapsible__content">
 
         <ul class="collapsible__items">
-            <?php $index = 0 ?>
-            <?php foreach ($property->children as $item) : ?>
+            <?php
+                $index = 0;
+                $children = $property->children;
+                if ($type === 'button') {
+                    array_unshift($children, new App\Entities\Property([
+                        'id' => $property->id,
+                        'tag' => $property->tag,
+                        'value' => $property->value,
+                    ]));
+                }
+            ?>
+
+            <?php foreach ($children as $item) : ?>
                 <?= view('property/collapsible_item', [
                     'isOverflow' => $index++ >= $maxIndex,
                     'property' => $item,
@@ -48,7 +61,7 @@
             <?php endforeach; ?>
         </ul>
 
-        <?php if ($childCount >= $maxIndex) : ?>
+        <?php if (sizeof($children) > $maxIndex) : ?>
             <button class="collapsible__toggle-overflow" type="button" onclick="toggleOverflow(this)">Show more</button>
         <?php endif; ?>
 

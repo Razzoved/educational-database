@@ -23,7 +23,7 @@
             <input type="hidden"
                 name="filter"
                 value="<?= $property->id ?>">
-            <button class="filter__label" type="submit"><?= esc($property->value) ?></button>
+            <button class="filter__label" style="text-align: start" type="submit"><?= esc($property->value) ?></button>
         </form>
 
     <?php else : ?>

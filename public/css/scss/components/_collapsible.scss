@@ -142,6 +142,10 @@
     &--no-overflow > &__content > &__items > &__item--overflow {
         display: none;
     }
+
+    & &:not(&--collapsed):not(&--selected) &__content {
+        border-bottom: $clr-dark-transparent 1px solid;
+    }
 }
 
 .filter {
