@@ -10,6 +10,6 @@
         Reset filters
     </button>
     <?php foreach ($properties as $property) : ?>
-        <?= view('property/collapsible', ['property' => $property, 'type' => 'checkbox']) ?>
+        <?= view('property/collapsible', ['property' => $property, 'type' => 'checkbox', 'isFirstLevel' => true]) ?>
     <?php endforeach; ?>
 </div>

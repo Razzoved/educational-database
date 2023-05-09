@@ -10,7 +10,7 @@
      */
     $childCount = sizeof($property->children);
     $maxIndex = $maxIndex ?? 4;
-    $isFirstLevel = $property->tag == 0;
+    $isFirstLevel = $isFirstLevel ?? false;
 ?>
 
 <?php if ($childCount > 0) : ?>
@@ -56,7 +56,8 @@
                 <?= view('property/collapsible_item', [
                     'isOverflow' => $index++ >= $maxIndex,
                     'property' => $item,
-                    'type' => $type
+                    'type' => $type,
+                    'isFirstLevel' => false,
                 ]) ?>
             <?php endforeach; ?>
         </ul>
