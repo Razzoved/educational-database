@@ -13,8 +13,9 @@
 <?= $this->section('content') ?>
     <div class="page page--centered page--dark page--w30">
         <form class="form" method="post" action="<?= url_to('Authentication::login') ?>" autocomplete="on">
+            <?= csrf_field() ?>
 
-        <!-- logo with errors -->
+            <!-- logo with errors -->
             <div class="form__group form__group--centered">
                 <img class="form__logo" src="<?= base_url('public/assets/enai-logo-transparent.png') ?>" alt="ENAI logo">
                 <?= $this->include('errors/one', ['errors' => $errors]) ?>

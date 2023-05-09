@@ -15,6 +15,7 @@
 
         <div class="modal__body">
             <form class="form" data-method="DELETE">
+                <?= csrf_field() ?>
                 <p id="delete-message">
                     Warning: This action is irreversible!<br>
                     Are you sure you want to delete <?= $itemType ?? 'item' ?> with id: <strong>[]</strong>?
@@ -31,6 +32,7 @@
     </div>
 
     <script type="text/javascript">
+        <?php include_once(FCPATH . 'js/fetch.js'); ?>
         <?php include_once(FCPATH . 'js/modal.js'); ?>
 
         const deleteModal = document.getElementById("modal-delete");

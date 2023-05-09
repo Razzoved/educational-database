@@ -91,6 +91,7 @@
 
     </div>
     <script type="text/javascript">
+        <?php include_once(FCPATH . 'js/fetch.js'); ?>
         <?php include_once(FCPATH . 'js/modal.js') ?>
 
         var propertyModal = document.getElementById('modal');
@@ -133,20 +134,17 @@
             sliderInput.value = slider.value;
         }
 
-        var fetchProperties = () => {
-            fetch('<?= url_to('Admin\Property::getAvailable') ?>')
-                .then(response => response.json())
-                .then(response => response.map(r => {
-                    const option = document.createElement('option');
-                    option.value = r.value;
-                    option.setAttribute('data-tag', r.id);
-                    return option;
-                }))
-                .then(response => categoryOptions.replaceChildren(...response))
-                .then(() => updateTag())
-                .catch(error => console.log('Error fetching categories'));
-        }
+        secureFetch('<?= url_to('Admin\Property::getAvailable') ?>')
+            .then(response => response.json())
+            .then(response => response.map(r => {
+                const option = document.createElement('option');
+                option.value = r.value;
+                option.setAttribute('data-tag', r.id);
+                return option;
+            }))
+            .then(response => categoryOptions.replaceChildren(...response))
+            .then(() => updateTag())
+            .catch(error => console.log('Error fetching categories'));
 
-        fetchProperties();
     </script>
 </div>

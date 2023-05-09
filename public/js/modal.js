@@ -24,13 +24,13 @@ const modalClose = function(event = null, modalId = 'modal')
  * Sends a request to the server for a modal to be opened.
  * Shows the result if response is HTTP_OK.
  *
- * @param {string} target   address to send request to
+ * @param {string} url      address to send request to
  * @param {string} template html in form of string, contains placeholders
  */
-const modalOpen = async (target, template) => {
+const modalOpen = async (url, template) => {
     try {
-        if (target) {
-            const response = await fetch(target);
+        if (url) {
+            const response = await secureFetch(url, {});
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
@@ -96,7 +96,7 @@ const modalSubmit = async (shouldDelete = false, modalId = 'modal') => {
             throw new Error('Items or templates not found');
         }
 
-        const response = await fetch(form.action, {
+        const response = await secureFetch(form.action, {
             method: form.getAttribute('data-method') ?? form.method,
             body: new FormData(form),
         }).then(response => {

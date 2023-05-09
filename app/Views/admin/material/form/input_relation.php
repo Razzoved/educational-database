@@ -39,6 +39,8 @@
 </div>
 
 <script>
+    <?php include_once(FCPATH . 'js/fetch.js'); ?>
+
     const relationUploader = document.getElementById('relation-uploader');
     const relationGroup = document.getElementById('relation-group');
 
@@ -71,7 +73,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        fetch('<?= url_to('Admin\Material::getAvailable') ?>')
+        secureFetch('<?= url_to('Admin\Material::getAvailable') ?>')
             .then(response => response.json())
             .then(response => response.map(r => {
                 const option = document.createElement('option');

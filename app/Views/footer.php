@@ -36,13 +36,13 @@
     <?php if ($aboutURL) : ?>
         <section class="footer__small-area">
             <a id="link-about" href="<?= $aboutURL->value ?>" style="color: white">
-                About
+                <u style="color: gray">About</u>
             </a>
         </section>
     <?php endif; ?>
 
     <!-- Copyright -->
     <section class="footer__small-area">
-        <p class="footer__text">© 2023 ENAI. All rights reserved</p>
+        <p class="footer__text">©<?= getenv('COPYRIGHT', true) ?></p>
     </section>
 </footer>

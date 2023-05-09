@@ -38,6 +38,7 @@
 
 <?= $this->section('scripts') ?>
 <script type="text/javascript">
+    <?php include_once(FCPATH . 'js/fetch.js'); ?>
     <?php include_once(FCPATH . 'js/modal.js') ?>
 
     const itemTemplate = `<?= json_encode(view('admin/resource/item')) ?>`;

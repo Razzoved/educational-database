@@ -60,6 +60,10 @@
         grid-area: c;
     }
 
+    &--centered &__content {
+        grid-area: unset;
+    }
+
     &__toggler {
         display: none;
     }

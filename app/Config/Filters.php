@@ -23,6 +23,8 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         'authGuard'     => \App\Filters\AuthGuard::class,
         'checkAuth'     => \App\Filters\CheckAuth::class,
+        'throttle'      => \App\Filters\Throttle::class,
+        'ajax'          => \App\Filters\Ajax::class,
     ];
 
     /**
@@ -31,12 +33,12 @@ class Filters extends BaseConfig
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
+            'honeypot',
+            'csrf',
+            'invalidchars',
         ],
         'after' => [
-            'toolbar',
+            // 'toolbar',
             // 'honeypot',
             // 'secureheaders',
         ],
@@ -53,7 +55,9 @@ class Filters extends BaseConfig
      * permits any HTTP method to access a controller. Accessing the controller
      * with a method you don’t expect could bypass the filter.
      */
-    public array $methods = [];
+    public array $methods = [
+        'post'  => ['throttle'],
+    ];
 
     /**
      * List of filter aliases that should run on any
@@ -63,6 +67,7 @@ class Filters extends BaseConfig
      * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
      */
     public array $filters = [
-        // 'authGuard' => ['before' => ['admin*', 'js*', 'assets*']]
+        'checkAuth' => ['before' => ['login*', 'reset']],
+        'authGuard' => ['before' => ['admin*', 'js*', 'assets*']],
     ];
 }

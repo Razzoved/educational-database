@@ -51,6 +51,7 @@
     </div>
 
     <script type="text/javascript">
+        <?php include_once(FCPATH . 'js/fetch.js'); ?>
         <?php include_once(FCPATH . 'js/modal.js') ?>
 
         var resourceModal = document.getElementById('modal');

@@ -88,6 +88,7 @@
     </div>
 
     <script type="text/javascript">
+        <?php include_once(FCPATH . 'js/fetch.js'); ?>
         <?php include_once(FCPATH . 'js/modal.js') ?>
 
         var passwordGroup = document.getElementById('password-changer');

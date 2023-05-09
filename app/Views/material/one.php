@@ -11,6 +11,10 @@
 
 <?= $this->extend('layouts/main') ?>
 
+<?= $this->section('header') ?>
+<link rel="stylesheet" href="<?= base_url('public/css/modal.css') ?>">
+<?= $this->endSection() ?>
+
 <?= $this->section('sidebar') ?>
 <?php if (isset($material->properties) && !empty($material->properties)) : ?>
     <?= view('property/filter_button', ['properties' => $material->properties]) ?>
@@ -85,31 +89,23 @@
 
 <?= $this->section('scripts') ?>
 <script type="text/javascript">
+    <?php include_once(FCPATH . 'js/fetch.js'); ?>
+
     const ratings = document.querySelector('.rating');
 
     /**
      * This function handles user interaction with the rating system
      * @param {int}     rating      value the user wants to rate the post with
      */
-    const ratingRate = async (rating) => {
-        const response = await fetch('<?= url_to('Material::rate', $material->id) ?>', {
-            method: 'POST',
-            body: new URLSearchParams({'value': rating})
-        });
-
-        if (!response.ok) {
-            console.error(`error: ${response.statusText}`);
-            alert(`Could not rate material: ${response.statusText}`);
-            return;
+    const ratingRate = async (rating) => processedFetch(
+        '<?= url_to('Material::rate', $material->id) ?>',
+        { method: 'POST', body: new URLSearchParams({ 'value': rating })},
+        (response) => {
+            ratingReloadClass(response.average, 'active');
+            ratingReloadClass(response.user, 'own');
+            ratings.querySelector('.rating__count-value').innerHTML = response.count + 'x';
         }
-
-        const data = await response.json();
-        console.debug(data);
-
-        ratingReloadClass(data.average, 'active');
-        ratingReloadClass(data.user, 'own');
-        ratings.querySelector('.rating__count-value').innerHTML = data.count + 'x';
-    }
+    );
 
     /**
      * Goes through ratings group. If element is of 'i' tag:

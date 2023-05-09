@@ -5,6 +5,47 @@ if (!TOKEN) {
 }
 
 /**
+ * FetchAPI extension that supports the CSRF protection. To provide
+ * better user experience, it also broadcasts the CSRF token across
+ * the user's opened documents (otherwise submissions from one page
+ * would prevent all submissions from other pages).
+ *
+ * @param {string} url        Where to send the request to.
+ * @param {object} options    What to pass to the fetch request.
+ *
+ * @return {Response} returns the result of the fetch request.
+ */
+const secureFetch = (token => {
+    const CSRF_HEADER = 'X-CSRF-TOKEN';
+
+    const channel = new BroadcastChannel('csrf-protection');
+    channel.addEventListener('message', (e) => {
+        token = e.data;
+    });
+
+    return async (url, options = {}) => {
+        const secureOptions = {
+            ...options,
+            headers: {
+                ...(options.headers ? options.headers : {}),
+                [CSRF_HEADER]: token,
+                "X-Requested-With": "XMLHttpRequest",
+            }
+        }
+        const response = await fetch(url, secureOptions).then(response => {
+            if (response.headers.get(CSRF_HEADER)) {
+                token = response.headers.get(CSRF_HEADER);
+                channel.postMessage(token);
+            } else {
+                console.debug('Undefined token! last: ', token);
+            }
+            return response;
+        });
+        return response;
+    };
+})(TOKEN);
+
+/**
  * Shows an error inside of a modal. Uses templating
  * and text replacement to fill the error message.
  *
@@ -21,50 +62,26 @@ const showError = (error) => {
 }
 
 /**
- * FetchAPI extension that supports the CSRF protection. To provide
- * better user experience, it also broadcasts the CSRF token across
- * the user's opened documents (otherwise submissions from one page
- * would prevent all submissions from other pages).
+ * Wrapper for secureFetch, instead of returning a response object,
+ * processes the response and returns nothing.
  *
  * @param {string} url        Where to send the request to.
  * @param {object} options    What to pass to the fetch request.
- * @param {function} callback What to do with the result.
+ * @param {function} callback The callback to process the response with.
  *
- * @return {void} Does not return anything, use callback instead.
+ * @return {void} nothing, uses callback instead
  */
-const secure_fetch = (token => {
-    const CSRF_HEADER = 'X-CSRF-TOKEN';
-
-    const channel = new BroadcastChannel('csrf-protection');
-    channel.addEventListener('message', (e) => {
-        token = e.data;
-    });
-
-    return (url, options, callback) => {
-        const secureOptions = {
-            ...options,
-            headers: {
-                ...(options.headers ? options.headers : {}),
-                [CSRF_HEADER]: token,
-                "X-Requested-With": "XMLHttpRequest",
-            }
-        }
-        fetch(url, secureOptions).then(response => {
-            if (response.headers.get(CSRF_HEADER)) {
-                token = response.headers.get(CSRF_HEADER);
-                channel.postMessage(token);
-            } else {
-                console.debug('Undefined token! last: ', token);
-            }
+const processedFetch = (url, options, callback) => {
+    secureFetch(url, options)
+        .then(response => {
             if (!response.ok) {
-                throw Error(response.statusText);
+                throw new Error(response.statusText);
             }
             return response.json();
         })
         .then(response => callback(response))
         .catch(error => showError(error));
-    };
-})(TOKEN);
+}
 
 /**
  * FetchAPI extension to simplify call to upload a file.
@@ -89,5 +106,5 @@ const upload = (url, props, callback) => {
 
     props.selector.value = '';
 
-    secure_fetch(url, { method: props.method ?? 'POST', body: formData }, callback);
+    processedFetch(url, { method: props.method ?? 'POST', body: formData }, callback);
 }

@@ -88,9 +88,20 @@
 
 .page {
     gap: 0;
+
     &__content {
         display: flex;
         flex-flow: column nowrap;
+    }
+
+    &__controls {
+        gap: 0.2rem;
+    }
+
+    &__button {
+        border: unset;
+        border-radius: 0;
+        background-color: $clr-dark;
     }
 }
 

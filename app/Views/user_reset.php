@@ -11,6 +11,7 @@
 <?= $this->section('content') ?>
     <div class="page page--centered page--dark page--w30">
         <form class="form" method="post" action="<?= url_to('Authentication::resetSubmit')?>">
+            <?= csrf_field() ?>
 
             <!-- logo with errors -->
             <div class="form__group form__group--centered">

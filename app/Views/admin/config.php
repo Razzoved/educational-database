@@ -9,6 +9,7 @@
 <?= $this->section('content') ?>
     <div class="page page--centered page--dark">
         <form class="form" method="post" action="<?= url_to('Admin\Config::save') ?>" autocomplete="off">
+            <?= csrf_field() ?>
 
             <!-- DEFAULT IMAGE -->
             <div class="form__group form__group--centered">
@@ -74,37 +75,57 @@
 <script>
     <?php include_once(FCPATH . 'js/fetch.js'); ?>
 
-    const relaceImage = (config) => {
+    const replaceImage = (config) => {
         if (config === undefined) {
             return console.error('Config does not exist');
         }
         document.getElementById('image').src = '<?= base_url() ?>' + config.value + "?t=" + new Date().getTime();
     }
 
-    const updateImage = (selector) => upload(relaceImage, {
-        url: '<?= url_to("Admin\Config::save") ?>',
-        fileKey: 'value',
-        fileTypeKey: 'type',
-        selector: selector,
-        fileType: 'default_image',
-    });
+    const updateImage = (selector) => upload(
+        '<?= url_to("Admin\Config::save") ?>',
+        {
+            fileTypeKey: 'type',
+            fileType: 'default_image',
+            fileKey: 'value',
+            selector: selector,
+        },
+        replaceImage
+    );
 
-    const resetImage = () => upload(relaceImage, {
-        url: '<?= url_to("Admin\Config::resetImage") ?>',
-        fileKey: '',
-        selector: { files: [''] },
-    });
+    const resetImage = () => upload(
+        '<?= url_to("Admin\Config::resetImage") ?>',
+        {
+            fileKey: '',
+            selector: { files: [''] },
+        },
+        replaceImage,
+    );
 
-    const updateHome = (element) => uploadURL(
+    const updateHome = (element) => updateURL(element,
         (response) => document.getElementById('link-home')?.setAttribute('href', response.value),
-        element,
-        '<?= url_to('Admin\Config::save') ?>'
     );
 
-    const updateAbout = (element) => uploadURL(
+    const updateAbout = (element) => updateURL(element,
         (response) => document.getElementById('link-about')?.setAttribute('href', response.value),
-        element,
-        '<?= url_to('Admin\Config::save') ?>'
     );
+
+    const updateURL = (element, callback) => {
+        if (element === undefined || callback === undefined) {
+            return console.debug('UploadURL: missing parameters');
+        }
+        if (element.value === "" || !element.value.match('^' + element.pattern)) {
+            return console.debug('Invalid url');
+        }
+
+        body = new FormData();
+        body.append('type', element.name);
+        body.append('value', element.value);
+
+        processedFetch('<?= url_to('Admin\Config::save') ?>', { method: 'POST', body }, response => {
+            element.value = response.value;
+            callback(response);
+        });
+    }
 </script>
 <?= $this->endSection() ?>

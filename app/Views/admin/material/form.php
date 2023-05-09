@@ -50,6 +50,7 @@
     <div class="page__content">
 
         <form class="form form--big-gaps" method="post" method="post" action="<?= url_to('Admin\MaterialEditor::save') ?>" enctype="multipart/form-data">
+            <?= csrf_field() ?>
 
             <?= $this->include('errors/all', ['errors' => $errors]) ?>
 
