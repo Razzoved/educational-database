@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Entities\Property as EntitiesProperty;
+use App\Libraries\Property as PropertyLib;
 use App\Models\PropertyModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
@@ -24,16 +25,15 @@ class Property extends ResponseController
 
     public function index() : string
     {
-        $filters = $this->properties->getTree();
-        $filters->value = 'Categories';
-        $this->getCategories($filters);
+        $categories = new EntitiesProperty(['value' => 'Categories']);
+        $categories->children = PropertyLib::getCategories();
 
         return $this->view('property/table', [
             'meta_title' => 'Administration - Tags',
             'title'      => 'Tags',
             'properties' => $this->getProperties(ADMIN_PAGE_SIZE),
             'options'    => $this->getOptions(),
-            'filters'    => array($filters),
+            'filters'    => array($categories),
             'pager'      => $this->properties->pager,
         ]);
     }
@@ -141,18 +141,5 @@ class Property extends ResponseController
             ],
             $perPage
         );
-    }
-
-    protected function getCategories(EntitiesProperty &$source) : void
-    {
-        $children = $source->children;
-        foreach ($children as $k => $child) {
-            if (empty($child->children)) {
-                unset($children[$k]);
-            } else {
-                $this->getCategories($child);
-            }
-        }
-        $source->__set('children', $children);
     }
 }

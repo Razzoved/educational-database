@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
-use App\Entities\Property;
+use App\Libraries\Property as PropertyLib;
 use CodeIgniter\Model;
 
 /**
@@ -22,11 +22,6 @@ class MaterialPropertyModel extends Model
         'property_id'
     ];
     protected $useAutoIncrement = true;
-    // protected $allowCallbacks = true;
-    // protected $afterFind = [
-    //     'getProperty'
-    // ];
-    // protected $returnType = Property::class;
 
     /** ----------------------------------------------------------------------
      *                           PUBLIC METHODS
@@ -34,19 +29,12 @@ class MaterialPropertyModel extends Model
 
     public function get(int $materialId) : array
     {
-        $properties = model(PropertyModel::class)->getTree();
-
         $this->select('property_id')
              ->groupBy('property_id')
              ->having('COUNT(material_id) > 0')
              ->where('material_id', $materialId);
 
-        $this->recursiveFilter(
-            $properties,
-            array_column($this->findAll(), 'property_id')
-        );
-
-        return $properties->children;
+        return PropertyLib::getFiltered(array_column($this->findAll(), 'property_id'));
     }
 
     public function getArray(int $materialId) : array
@@ -59,8 +47,6 @@ class MaterialPropertyModel extends Model
 
     public function getUsed() : array
     {
-        $properties = model(PropertyModel::class)->getTree();
-
         $this->select('property_id')
              ->groupBy('property_id')
              ->having('COUNT(material_id) >', 0);
@@ -70,12 +56,7 @@ class MaterialPropertyModel extends Model
                  ->where('material_status', StatusCast::PUBLIC);
         }
 
-        $this->recursiveFilter(
-            $properties,
-            array_column($this->findAll(), 'property_id')
-        );
-
-        return $properties->children;
+        return PropertyLib::getFiltered(array_column($this->findAll(), 'property_id'));
     }
 
     /**
@@ -140,21 +121,6 @@ class MaterialPropertyModel extends Model
     /** ----------------------------------------------------------------------
      *                              HELPERS
      *  ------------------------------------------------------------------- */
-
-    protected function recursiveFilter(Property &$source, array $valid) : bool
-    {
-        $children = $source->children;
-        foreach ($children as $k => $child) {
-            if (!$this->recursiveFilter($child, $valid)) {
-                unset($children[$k]);
-            }
-        }
-
-        $source->__set('children', $children);
-
-        return count($source->children) > 0
-            || in_array($source->id, $valid);
-    }
 
     protected function filterOr(array &$filtered, array $groups) : void
     {

@@ -6,10 +6,12 @@ use App\Entities\Material as EntitiesMaterial;
 use App\Entities\Property as EntitiesProperty;
 use App\Entities\Resource as EntitiesResource;
 use App\Exceptions\BadPostException;
+use App\Libraries\Property as PropertyLib;
 use App\Libraries\Resource as ResourceLib;
 use App\Models\MaterialModel;
 use App\Models\PropertyModel;
 use App\Models\ResourceModel;
+use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\Files\Exceptions\FileException;
 use CodeIgniter\HTTP\RequestInterface;
@@ -90,7 +92,13 @@ class MaterialEditor extends ResponseController
     public function save()
     {
         $material = new EntitiesMaterial($this->request->getPost());
-        $this->transformData($material);
+
+        try {
+            $this->transformData($material);
+        } catch (\Exception $e) {
+            Services::logger()->error('MaterialEditor: saving unrecoverable', $this->request->getPost() ?? []);
+            throw $e;
+        }
 
         if (!$this->validate(self::RULES)) {
             return $this->index($material, $this->validator->getErrors());
@@ -192,13 +200,10 @@ class MaterialEditor extends ResponseController
 
     private function toProperties() : array
     {
-        $result = [];
-        foreach ($this->request->getPost('properties') ?? [] as $id) {
-            if (is_numeric($id)) {
-                $result[] = $this->properties->get($id);
-            }
-        }
-        return $result;
+        $valid = $this->request->getPost('properties') ?? [];
+        $valid = is_array($valid) ? $valid : array($valid);
+
+        return PropertyLib::getFiltered($valid);
     }
 
     private function toRelations(int $identifier) : array
