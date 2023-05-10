@@ -67,6 +67,9 @@ class Resource extends Entity
 
     public function getURL() : string
     {
+        if ($this->isLink()) {
+            return $this->path;
+        }
         return base_url($this->getPrefix() . ($this->isTemporary()
             ? $this->tmpPath
             : $this->path
@@ -78,7 +81,8 @@ class Resource extends Entity
         if ($this->isLink()) {
             throw new \Exception('Links are not children of root!');
         }
-        return $this->getPrefix() . $this->path;    }
+        return $this->getPrefix() . $this->path;
+    }
 
     private function getPrefix()
     {
