@@ -5,8 +5,8 @@
 
     /* hook to single position */
     position: fixed;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 0.5rem;
+    right: 0.5rem;
     z-index: 99;
 
     /* style */
@@ -38,5 +38,17 @@
     &:hover > i,
     &:hover > span {
         color: $clr-focus;
+    }
+
+    @media screen and (max-width: $xs) {
+        & {
+            padding: 0.7rem;
+        }
+        & > i {
+            font-size: 1.2rem;
+        }
+        & > span {
+            font-size: 1rem;
+        }
     }
 }

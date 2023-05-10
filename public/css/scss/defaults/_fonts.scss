@@ -8,62 +8,65 @@ This file contains default settings for all text elements.
 
 * {
     font-family: 'Noto Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: initial;
     font-weight: normal;
     color: #222222;
     text-decoration: none;
 }
 
 h1 {
-    font-size: 3rem;
-    @media screen and (max-width: $xs) {
-        font-size: 1.6rem;
-    }
-    @media screen and (max-width: $sm) {
-        font-size: 2.2rem;
-    }
+    font-size: 2.6rem;
+    font-weight: bolder;
     @media screen and (max-width: $md) {
         font-size: 2.4rem;
+    }
+    @media screen and (max-width: $sm) {
+        font-size: 2rem;
+    }
+    @media screen and (max-width: $xs) {
+        font-size: 1.8rem;
     }
 }
 
 h2 {
-    font-size: 2rem;
-    @media screen and (max-width: $xs) {
-        font-size: 1.3rem;
-    }
+    font-size: 1.5rem;
+    font-weight: bold;
     @media screen and (max-width: $sm) {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
+    }
+    @media screen and (max-width: $xs) {
+        font-size: 1.25rem;
     }
 }
 
 h3 {
-    font-size: 1.6rem;
-    @media screen and (max-width: $xs) {
+    font-size: 1.35rem;
+    @media screen and (max-width: $sm) {
         font-size: 1.25rem;
     }
-    @media screen and (max-width: $sm) {
-        font-size: 1.3rem;
+    @media screen and (max-width: $xs) {
+        font-size: 1.15rem;
     }
 }
 
 h4 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     @media screen and (max-width: $xs) {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
 }
 
-h5 {
-    font-size: 1.2rem;
-}
-
-h6 {
-    font-size: 1.1rem;
+h5, h6 {
+    font-size: 1rem;
 }
 
 p, pre, a, i, span {
     font-size: 1rem;
+    @media screen and (max-width: $sm) {
+        font-size: 0.95rem;
+    }
+    @media screen and (max-width: $xs) {
+        font-size: 0.9rem;
+    }
 }
 
 u {
