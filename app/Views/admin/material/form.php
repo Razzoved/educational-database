@@ -76,8 +76,10 @@
                     <?= form_dropdown(
                         ['id' => 'status', 'name' => 'status', 'class' => 'form__select'],
                         StatusCast::VALID_VALUES,
-                        $material->status ?? StatusCast::VALID_VALUES[0]
+                        StatusCast::getIndex($material->status ?? 0)
                     ) ?>
+
+                    <script type="text/javascript">console.log('<?= $material->status ?>')</script>
                 </fieldset>
 
             </div>
