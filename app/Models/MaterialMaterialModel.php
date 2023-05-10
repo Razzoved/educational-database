@@ -32,13 +32,20 @@ class MaterialMaterialModel extends Model
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
+    /**
+     * Returns all relations as an array of Material objects.
+     * Each such material has an additional property loaded
+     * under the key 'relation_id'.
+     *
+     * @param int $id The id of the material to find relations to.
+     */
     public function getRelated(int $id) : array
     {
-        $left = $this->select($this->allowedFields[0] . ' as material_id')
+        $left = $this->select($this->allowedFields[0] . ' as material_id, ' . $this->primaryKey . ' as relation_id')
                     ->where($this->allowedFields[1], $id)
                     ->where($this->allowedFields[0] . ' !=', $id)
                     ->findAll();
-        $right = $this->select($this->allowedFields[1] . ' as material_id')
+        $right = $this->select($this->allowedFields[1] . ' as material_id, ' . $this->primaryKey . ' as relation_id')
                     ->where($this->allowedFields[0], $id)
                     ->where($this->allowedFields[1] . ' !=', $id)
                     ->findAll();
@@ -53,38 +60,32 @@ class MaterialMaterialModel extends Model
      */
     public function saveMaterial(Material $material) : bool
     {
-        $relations = [];
-        foreach ($this->getRelated($material->id) as $r) {
-            $relations[] = $r->id;
-        }
-
-        $toDelete = array_filter($relations, function($r) use ($material) {
-            return $r && !in_array($r, $material->related);
-        });
-
-        $toCreate = array_filter($material->related, function($r) use ($relations) {
-            return $r && !in_array($r, $relations);
-        });
+        $relations = $this->allowCallbacks(false)->getRelated($material->id);
 
         $this->db->transStart();
-        foreach ($toDelete as $id) {
-            $this->orGroupStart()
-                    ->where($this->allowedFields[0], $material->id)
-                    ->where($this->allowedFields[1], $id)
-                ->groupEnd()
-                ->orGroupStart()
-                    ->where($this->allowedFields[0], $id)
-                    ->where($this->allowedFields[1], $material->id)
-                ->groupEnd()
-                ->delete();
-        }
 
-        foreach ($toCreate as $id) {
+        $newRelations = $material->related ?? [];
+        array_walk($newRelations, function ($r) use ($material, $relations) {
+            foreach ($relations as $k => $rel) {
+                if ($r->id === $rel->id) {
+                    unset($relations[$k]);
+                    break;
+                }
+            }
             $this->insert([
                 $this->allowedFields[0] => $material->id,
-                $this->allowedFields[1] => $id,
+                $this->allowedFields[1] => $r->id,
             ]);
+        });
+
+        // echo '<pre>';
+        // echo var_dump('RELATIONS: ', $relations);
+        // echo '</pre>';
+
+        foreach ($relations as $rel) {
+            $this->delete($rel->relation_id);
         }
+
         $this->db->transComplete();
 
         return $this->db->transStatus();

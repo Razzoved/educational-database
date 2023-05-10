@@ -89,30 +89,35 @@ class MaterialPropertyModel extends Model
      */
     public function saveMaterial(Material $material) : bool
     {
-        $oldProperties = $this->getArray($material->id);
-
-        $toDelete = array_filter($oldProperties, function($p) use ($material) {
-            return $p && !in_array($p, $material->properties);
-        });
-
-        $toCreate = array_filter($material->properties, function($p) use ($oldProperties) {
-            return $p && !in_array($p, $oldProperties);
-        });
-
         $this->db->transStart();
-        foreach ($toDelete as $p) {
-            $this
-               ->where('material_id', $material->id)
-               ->where('property_id', $p->id)
-               ->delete();
+
+        $old = $this->select('id, property_id')
+            ->where('material_id', $material->id)
+            ->findAll();
+
+        foreach ($material->children ?? [] as $root) {
+            PropertyLib::treeForEach($root, function ($p) use ($material, $old) {
+                foreach ($old as $k => $oldObject) {
+                    if ($p->id === $oldObject['property_id']) {
+                        unset($old[$k]);
+                        return;
+                    }
+                }
+                $this->insert([
+                    'material_id' => $material->id,
+                    'property_id' => $p->id,
+                ]);
+            });
         }
 
-        foreach ($toCreate as $p) {
-            $this->insert([
-                'material_id' => $material->id,
-                'property_id' => $p->id,
-            ]);
+        // echo '<pre>';
+        // echo var_dump('PROPERTIES', $old);
+        // echo '</pre>';
+
+        foreach ($old as $oldObject) {
+            $this->delete($oldObject['id']);
         }
+
         $this->db->transComplete();
 
         return $this->db->transStatus();
