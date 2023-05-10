@@ -10,5 +10,6 @@ return [
     'property_tag'          => 'Circular dependency detected at TAG!',
     'valid_links'           => 'Invalid links!',
     'valid_files'           => 'Invalid files!',
+    'valid_image'           => 'Invalid image!',
     'valid_related'         => 'Invalid relations!',
 ];
