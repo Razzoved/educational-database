@@ -75,10 +75,10 @@ class Resource extends Entity
 
     public function getRootPath() : string
     {
-        return $this->isLink()
-            ? throw new \Exception('Links are not children of root!')
-            : $this->getPrefix() . $this->path;
-    }
+        if ($this->isLink()) {
+            throw new \Exception('Links are not children of root!');
+        }
+        return $this->getPrefix() . $this->path;    }
 
     private function getPrefix()
     {
