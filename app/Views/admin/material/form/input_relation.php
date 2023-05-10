@@ -57,10 +57,15 @@
 
     const newRelation = () => {
         const option = relationUploader.verifyOption();
-        if (!uniqueRelation() || !option) {
+
+        // check for self
+        const id = document.querySelector('input[name="id"]');
+
+        if (!uniqueRelation() || !option || (id && option.getAttribute('data-id') === id.value)) {
             relationUploader.focus();
             return relationUploader.setInvalid(true);
         }
+
         // create a new relatiom
         const template = `<?= view('admin/material/form/item_relation') ?>`.fill({
             id: option.getAttribute('data-id'),
@@ -68,7 +73,6 @@
             url: '<?= url_to('Material::get', 0) ?>'.replace(/0$/, option.getAttribute('data-id')),
         });
         relationUploader.value = "";
-        // add to document
         relationGroup.insertAdjacentHTML('beforeend', template);
     }
 

@@ -62,11 +62,9 @@ class MaterialEditor extends ResponseController
     public function index(EntitiesMaterial $material = new EntitiesMaterial(), array $errors = []) : string
     {
         return $this->view('material/form', [
-            'meta_title'           => "Administration - Material",
-            'material'             => $material,
-            'errors'               => $errors,
-            'available_properties' => $this->properties->where('property_tag', 0)->getArray(),
-            'available_relations'  => $this->materials->allowCallbacks(false)->where('material_id !=', $material->id)->getArray(),
+            'meta_title' => "Administration - Material",
+            'material'   => $material,
+            'errors'     => $errors,
         ]);
     }
 
@@ -123,7 +121,7 @@ class MaterialEditor extends ResponseController
             } else if (!empty($this->properties->errors())) {
                 $errors = $this->properties->errors();
             } else {
-                $errors = array('Unknown error occurred, try again later!');
+                $errors = array($e->getMessage());
             }
             return $this->index($material, $errors);
         }
@@ -139,7 +137,9 @@ class MaterialEditor extends ResponseController
     {
         return $this->doDelete(
             $id,
-            $this->materials->get,
+            function ($id) {
+                return $this->materials->get($id);
+            },
             function ($e) {
                 $this->deleteResources($e);
                 $this->materials->delete($e->id);
@@ -169,6 +169,38 @@ class MaterialEditor extends ResponseController
         return $material;
     }
 
+    private function toResource($path, $tmpPath, $type)
+    {
+        switch ($type) {
+            case 'thumbnail':
+                $tmpPath = $path;
+                if ($path !== EntitiesResource::getDefaultImage()->path) {
+                    $path = substr(basename($path), 0, strlen('thumbnail_')) === 'thumbnail_'
+                        ? basename($path)
+                        : 'thumbnail_';
+                }
+                break;
+            case 'file':
+                $path = basename($path);
+                break;
+            case 'link':
+                $tmpPath = $path;
+                break;
+            default:
+                throw new BadPostException('Resource type: ' . $type . ' not supported');
+        }
+
+        if (!$tmpPath && !$path) {
+            return null;
+        };
+
+        return new EntitiesResource([
+            'type'     => $type,
+            'path'     => $path,
+            'tmp_path' => $tmpPath,
+        ]);
+    }
+
     private function toResources(EntitiesMaterial &$material, string $type) : void
     {
         $items = $this->request->getPost($type) ?? [];
@@ -176,24 +208,10 @@ class MaterialEditor extends ResponseController
 
         $resources = $material->resources;
         foreach ($items as $tmpPath => $path) {
-            switch ($type) {
-                case 'file':
-                case 'thumbnail':
-                    $path = basename($path);
-                    break;
-                case 'link':
-                    $tmpPath = $path;
-                    break;
-                default:
-                    throw new BadPostException('Resource type: ' . $type . ' not supported');
+            $resource = $this->toResource($path, $tmpPath, $type);
+            if ($resource) {
+                $resources[] = $resource;
             }
-            if (!$tmpPath && !$path || isset($resources[$tmpPath])) continue;
-            $resources[$tmpPath] = new EntitiesResource([
-                'parentId' => $material->id,
-                'type'     => $type,
-                'path'     => $path,
-                'tmp_path' => $tmpPath,
-            ]);
         }
         $material->resources = $resources;
     }
@@ -230,8 +248,9 @@ class MaterialEditor extends ResponseController
         foreach ($material->resources as $r) {
             $found = $this->resources->getByPath(
                 $material->id,
-                basename($r->path)
+                $r->path
             );
+
             if ($found === null) {
                 ResourceLib::assign($material->id, $r);
             }

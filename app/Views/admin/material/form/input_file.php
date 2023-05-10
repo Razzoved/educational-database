@@ -55,11 +55,14 @@
         fileGroup.insertAdjacentHTML('beforeend', template);
     }
 
-    const uploadFile = () => uniqueFile() && upload(newFile, {
-        url: '<?= url_to("Admin\Resource::upload") ?>',
-        selector: fileSelector,
-        fileType: 'file'
-    });
+    const uploadFile = () => uniqueFile() && upload(
+        '<?= url_to("Admin\Resource::upload") ?>',
+        {
+            selector: fileSelector,
+            fileType: 'file'
+        },
+        newFile
+    );
 
     const removeFile = (id) => {
         let element = document.getElementById(id);

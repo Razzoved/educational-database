@@ -7,7 +7,6 @@ use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Files\Exceptions\FileException;
 use CodeIgniter\Files\File;
 use CodeIgniter\HTTP\Files\UploadedFile;
-use CodeIgniter\HTTP\Response;
 use Exception;
 
 /**
@@ -63,7 +62,7 @@ class Resource
      */
     public static function store(UploadedFile $file) : EntitiesResource
     {
-        helper('form');
+        helper('security');
 
         $date = date('Ymd', time());
         $prefix = TEMP_PREFIX . $date;
@@ -76,11 +75,9 @@ class Resource
             throw FileException::forExpectedFile('store: invalid or moved file');
         }
 
-        $name = $file->getClientName();
-
         $resource = new EntitiesResource();
         $resource->tmp_path = 'writable/uploads/' . $file->store();
-        $resource->path = $name;
+        $resource->path = urlencode(sanitize_filename($file->getClientName()));
         $resource->type = 'file';
 
         self::moveFile($resource, $prefix);
@@ -101,7 +98,7 @@ class Resource
         helper('file');
 
         if ($resource->isAssigned()) {
-            throw new Exception("EntitiesResource is already assigned to {$materialId}!");
+            throw new Exception("assign: {$resource->path} already assigned to {$materialId}!");
         }
 
         switch ($resource->type) {
@@ -111,11 +108,13 @@ class Resource
                     self::unassign($old[0]);
                 }
             case 'file':
+                if ($resource->isAsset()) {
+                    break;
+                }
                 if (!is_dir(SAVE_PATH . $materialId) && !mkdir(SAVE_PATH . $materialId)) {
                     throw FileException::forExpectedDirectory('assign: ' . $materialId);
                 }
                 self::moveFile($resource, SAVE_PREFIX . $materialId);
-                break;
             default:
                 break;
         }
@@ -283,9 +282,11 @@ class Resource
         try {
             model(ResourceModel::class)->save($resource->toRawArray());
         } catch (Exception $e) {
-            $file = new File(ROOTPATH . $resource->getRootPath());
-            if ($file->getRealPath()) {
-                $file->move(ROOTPATH . $resource->tmp_path);
+            if ($resource->type === 'file' || $resource->type === 'thumbnail') {
+                $file = new File(ROOTPATH . $resource->getRootPath());
+                if ($file->getRealPath()) {
+                    $file->move(ROOTPATH . $resource->tmp_path);
+                }
             }
             throw $e;
         }
@@ -303,9 +304,9 @@ class Resource
     {
         helper('filesystem');
 
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $path = self::windowsPath($path);
-        }
+        // if (DIRECTORY_SEPARATOR === '\\') {
+        //     $path = self::windowsPath($path);
+        // }
 
         $path = dirname($path);
 
@@ -357,21 +358,21 @@ class Resource
             $resource->path = basename($resource->path);
         }
 
-        $consumer = $resource->isAsset() ? 'copy' : 'move';
-
-        $dirPath = ROOTPATH . $prefix;
-        if (DIRECTORY_SEPARATOR === '\\') {
-            $dirPath = self::windowsPath($dirPath);
-            $resource->path = self::windowsPath($resource->path);
-            $resource->tmp_path = self::windowsPath($resource->tmp_path);
-        }
+        $dirPath = ROOTPATH . $prefix . UNIX_SEPARATOR;
         $path = ROOTPATH . $resource->tmp_path;
+
+        $consumer = $resource->isAsset() ? 'copy' : 'move';
 
         $result = self::$consumer(
             $dirPath,
             $resource->path,
             $consumer === 'move' ? new File($path, true) : $path
         );
+
+        if (!file_exists($dirPath . $result)) {
+            // self::deleteSource($dirPath . $result);
+            throw FileException::forUnableToMove($resource->tmp_path, $prefix . $resource->path);
+        }
 
         if (!file_exists($path)) {
             self::deleteSource($path);

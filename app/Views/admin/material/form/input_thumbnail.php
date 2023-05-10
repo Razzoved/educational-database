@@ -15,7 +15,8 @@
         style="width: 15rem; height: 15rem; object-fit: cover"
         src="<?= \App\Libraries\Resource::pathToURL($rootPath) ?>"
         alt="No image"
-        onclick="document.getElementById('thumbnail-uploader').click()">
+        onclick="document.getElementById('thumbnail-uploader').click()"
+        title="Image is cropped and resized to 512x512; provide an image with 1:1 aspect ratio if possible!">
     </image>
 
     <input id="thumbnail-path" type="hidden" name="thumbnail" value="<?= $rootPath ?>">
@@ -49,9 +50,12 @@
         thumbnailPath.value = resource.tmp_path;
     }
 
-    const uploadThumbnail = () => upload(newThumbnail, {
-        url: '<?= url_to("Admin\Resource::upload") ?>',
-        selector: thumbnailSelector,
-        fileType: 'thumbnail'
-    });
+    const uploadThumbnail = () => upload(
+        '<?= url_to("Admin\Resource::upload") ?>',
+        {
+            selector: thumbnailSelector,
+            fileType: 'thumbnail'
+        },
+        newThumbnail,
+    );
 </script>

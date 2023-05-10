@@ -35,6 +35,8 @@ class Resource extends ResponseController
 
     public function upload() : Response
     {
+        helper('security');
+
         $file = $this->request->getFile('file');
         $type = self::resolveType($this->request->getPost('fileType'));
 
@@ -52,10 +54,14 @@ class Resource extends ResponseController
 
         try {
             $resource = ResourceLib::store($file);
+            \Config\Services::image()
+                ->withFile(ROOTPATH . $resource->tmp_path)
+                ->fit(512, 512, 'center')
+                ->save(ROOTPATH . $resource->tmp_path);
         } catch (Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
-                'File could not be uploaded!'
+                'File could not be uploaded; ' . $e->getMessage()
             );
         }
 

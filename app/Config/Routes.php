@@ -59,6 +59,7 @@ $routes->group('admin', function($routes) {
         $routes->get('', 'Admin\Material::index');
         $routes->post('', 'Admin\MaterialEditor::save');
         $routes->get('new', 'Admin\MaterialEditor::index');
+        $routes->get('(:num)', 'Admin\MaterialEditor::get/$1');
     });
 
     $routes->get('tag', 'Admin\Property::index');
@@ -74,7 +75,6 @@ $routes->group('admin', function($routes) {
 
         $routes->group('material', function($routes) {
             $routes->get('all', 'Admin\Material::getAvailable');
-            $routes->get('(:num)', 'Admin\MaterialEditor::get/$1');
             $routes->delete('(:num)', 'Admin\MaterialEditor::delete/$1');
         });
 
