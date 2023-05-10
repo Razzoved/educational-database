@@ -25,6 +25,8 @@ class Property extends ResponseController
 
     public function index() : string
     {
+        $this->setSort('priority');
+
         $categories = new EntitiesProperty(['value' => 'Categories']);
         $categories->children = PropertyLib::getCategories();
 

@@ -24,7 +24,7 @@ class User extends ResponseController
 
     public function index(): string
     {
-        $_GET['sort'] = $this->request->getGetPost('sort') ?? self::DEFAULT_SORT;
+        $this->setSort('name');
 
         return $this->view('user/table', [
             'meta_title' => 'Administration - Users',

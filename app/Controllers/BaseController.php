@@ -75,4 +75,12 @@ abstract class BaseController extends Controller
         }
         return view($path, $data, array_merge($options, ['saveData' => true]));
     }
+
+    protected function setSort(string $sort)
+    {
+        $get = $this->request->getGet();
+        $get['sort'] = $this->request->getGet('sort') ?? $sort;
+        $this->request->setGlobal('get', $get);
+        $_GET = $get;
+    }
 }

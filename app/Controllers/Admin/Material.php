@@ -9,6 +9,8 @@ class Material extends ControllersMaterial
 {
     public function index() : string
     {
+        $this->setSort('updated_at');
+
         return $this->view('material/table', [
             'meta_title' => 'Administration - Materials',
             'title'      => 'Materials',
