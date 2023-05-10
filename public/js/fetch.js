@@ -4,6 +4,12 @@ if (typeof TOKEN === 'undefined') {
     console.debug('Loaded fetch.js');
 }
 
+if (typeof CSRF_TOKEN_NAME === 'undefined') {
+    console.debug('Fetch.js: Token name is undefined; page forms may not function after first ajax POST request!');
+}
+
+var CSRF_TOKEN_NAME = (typeof CSRF_TOKEN_NAME === 'undefined') ? 'csrf_token_name' : CSRF_TOKEN_NAME;
+
 /**
  * FetchAPI extension that supports the CSRF protection. To provide
  * better user experience, it also broadcasts the CSRF token across
@@ -21,6 +27,9 @@ const secureFetch = (token => {
     const channel = new BroadcastChannel('csrf-protection');
     channel.addEventListener('message', (e) => {
         token = e.data;
+        document.querySelectorAll(`input[name=${CSRF_TOKEN_NAME}`).forEach(input => {
+            input.value = token;
+        });
     });
 
     return async (url, options = {}) => {
@@ -35,6 +44,9 @@ const secureFetch = (token => {
         const response = await fetch(url, secureOptions).then(response => {
             if (response.headers.get(CSRF_HEADER)) {
                 token = response.headers.get(CSRF_HEADER);
+                document.querySelectorAll(`input[name=${CSRF_TOKEN_NAME}`).forEach(input => {
+                    input.value = token;
+                });
                 channel.postMessage(token);
             } else {
                 console.debug('Undefined token! last: ', token);
