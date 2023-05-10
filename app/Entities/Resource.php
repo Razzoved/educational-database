@@ -60,7 +60,6 @@ class Resource extends Entity
     {
         return !(
             $this->parentId <= 0 ||
-            $this->isAsset() ||
             $this->isTemporary()
         );
     }
@@ -86,7 +85,7 @@ class Resource extends Entity
 
     private function getPrefix()
     {
-        return $this->isAssigned() && !$this->isLink()
+        return $this->isAssigned() && !$this->isAsset() && !$this->isLink()
             ? SAVE_PREFIX . $this->parentId . UNIX_SEPARATOR
             : '';
     }

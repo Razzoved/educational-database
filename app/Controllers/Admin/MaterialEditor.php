@@ -106,24 +106,8 @@ class MaterialEditor extends ResponseController
             $this->materials->saveMaterial($material);
             $this->deleteRemovedFiles($material);
             $this->moveTemporaryFiles($material);
-        } catch (BadPostException $e) {
-            return $this->index(
-                $material,
-                array($e->getMessage())
-            );
-        } catch (FileException $e) {
-            return $this->index($material, array($e->getMessage()));
         } catch (Exception $e) {
-            if (!empty($this->materials->errors())) {
-                $errors = $this->materials->errors();
-            } else if (!empty($this->resources->errors())) {
-                $errors = $this->resources->errors();
-            } else if (!empty($this->properties->errors())) {
-                $errors = $this->properties->errors();
-            } else {
-                $errors = array($e->getMessage());
-            }
-            return $this->index($material, $errors);
+            return $this->index($material, $this->getException($e));
         }
 
         return redirect()->to(url_to('Admin\Material::index'));
@@ -169,38 +153,6 @@ class MaterialEditor extends ResponseController
         return $material;
     }
 
-    private function toResource($path, $tmpPath, $type)
-    {
-        switch ($type) {
-            case 'thumbnail':
-                $tmpPath = $path;
-                if ($path !== EntitiesResource::getDefaultImage()->path) {
-                    $path = substr(basename($path), 0, strlen('thumbnail_')) === 'thumbnail_'
-                        ? basename($path)
-                        : 'thumbnail_';
-                }
-                break;
-            case 'file':
-                $path = basename($path);
-                break;
-            case 'link':
-                $tmpPath = $path;
-                break;
-            default:
-                throw new BadPostException('Resource type: ' . $type . ' not supported');
-        }
-
-        if (!$tmpPath && !$path) {
-            return null;
-        };
-
-        return new EntitiesResource([
-            'type'     => $type,
-            'path'     => $path,
-            'tmp_path' => $tmpPath,
-        ]);
-    }
-
     private function toResources(EntitiesMaterial &$material, string $type) : void
     {
         $items = $this->request->getPost($type) ?? [];
@@ -208,7 +160,7 @@ class MaterialEditor extends ResponseController
 
         $resources = $material->resources;
         foreach ($items as $tmpPath => $path) {
-            $resource = $this->toResource($path, $tmpPath, $type);
+            $resource = ResourceLib::toResource($path, (string) $tmpPath, $type);
             if ($resource) {
                 $resources[] = $resource;
             }
@@ -227,12 +179,24 @@ class MaterialEditor extends ResponseController
     private function toRelations(int $identifier) : array
     {
         $result = [];
-        foreach ($this->request->getPost('relations') ?? [] as $id) {
+        foreach ($this->request->getPost('relation') ?? [] as $id => $unused) {
             if (is_numeric($id) && $identifier !== $id) {
                 $result[] = $this->materials->allowCallbacks(false)->get($id);
             }
         }
         return $result;
+    }
+
+    private function getException(Exception $e)
+    {
+        if (!empty($this->materials->errors())) {
+            return $this->materials->errors();
+        } else if (!empty($this->resources->errors())) {
+            return $this->resources->errors();
+        } else if (!empty($this->properties->errors())) {
+            return $this->properties->errors();
+        }
+        return array($e->getMessage());
     }
 
     /**
@@ -268,15 +232,9 @@ class MaterialEditor extends ResponseController
     private function deleteRemovedFiles(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($this->request->getPost('unused_files') ?? [] as $path) {
-            $path = substr($path, 0, 4) === 'http'
-                || substr($path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX
-                || substr($path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX
-                ? $path
-                : basename($path);
-            $resource = $this->resources->getByPath($material->id, $path);
-            ResourceLib::unassign(
-                $resource ?? new EntitiesResource(['path' => $path, 'tmp_path' => $path])
-            );
+            $resource = ResourceLib::toResource($path, null, 'file');
+            $existing = $this->resources->getByPath($material->id, $resource->path);
+            ResourceLib::unassign($existing ?? $resource);
         }
         return $this;
     }

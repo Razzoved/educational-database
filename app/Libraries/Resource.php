@@ -53,6 +53,32 @@ class Resource
     ];
 
     /**
+     * Creates a new resource from given path, optional tmpPath and type.
+     *
+     * @param ?string $path    Path to use for base location.
+     * @param ?string $tmpPath Path to use for current location.
+     * @param ?string $type    Type of resource to create.
+     *
+     * @return ?EntitiesResource If at least one of either path or tmpPath is provided.
+     */
+    public static function toResource(?string $path, ?string $tmpPath, ?string $type) : ?EntitiesResource
+    {
+        $tmpPath = $type === 'file' ? $tmpPath : $path;
+
+        $resource = new EntitiesResource([
+            'type'     => $type,
+            'path'     => $path,
+            'tmp_path' => $tmpPath,
+        ]);
+
+        if (!$resource->isAsset() && !$resource->isLink()) {
+            $resource->path = basename($path);
+        }
+
+        return ($resource->tmp_path || $resource->path) ? $resource : null;
+    }
+
+    /**
      * Stores the file while updating its data so it can be used
      * elsewhere later.
      *
@@ -103,9 +129,8 @@ class Resource
 
         switch ($resource->type) {
             case 'thumbnail':
-                $old = model(ResourceModel::class)->getThumbnail($materialId);
-                if (sizeof($old) > 0) {
-                    self::unassign($old[0]);
+                foreach (model(ResourceModel::class)->getThumbnail($materialId) as $old) {
+                    self::unassign($old);
                 }
             case 'file':
                 if ($resource->isAsset()) {
@@ -304,10 +329,6 @@ class Resource
     {
         helper('filesystem');
 
-        // if (DIRECTORY_SEPARATOR === '\\') {
-        //     $path = self::windowsPath($path);
-        // }
-
         $path = dirname($path);
 
         if (!is_dir($path)) {
@@ -334,7 +355,6 @@ class Resource
      * - if both missing throws error
      *
      * Target of the operation is the ROOTPATH + $prefix.
-     * Automatically converts all paths to current enviroment.
      *
      * WARN: unclean function, changes resource tmp_path and path.
      *
@@ -370,7 +390,7 @@ class Resource
         );
 
         if (!file_exists($dirPath . $result)) {
-            // self::deleteSource($dirPath . $result);
+            self::deleteSource($dirPath . $result);
             throw FileException::forUnableToMove($resource->tmp_path, $prefix . $resource->path);
         }
 
@@ -397,14 +417,5 @@ class Resource
             throw FileException::forUnableToMove($source, $dirPath . $destName, 'Could not copy file');
         }
         return $destName;
-    }
-
-    private static function windowsPath(string $path) : string
-    {
-        return str_replace(
-            UNIX_SEPARATOR,
-            WINDOWS_SEPARATOR,
-            $path
-        );
     }
 }

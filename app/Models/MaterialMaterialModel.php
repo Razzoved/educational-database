@@ -34,22 +34,44 @@ class MaterialMaterialModel extends Model
 
     /**
      * Returns all relations as an array of Material objects.
-     * Each such material has an additional property loaded
-     * under the key 'relation_id'.
+     * Each material has a thumbnail and data loaded.
      *
      * @param int $id The id of the material to find relations to.
      */
     public function getRelated(int $id) : array
     {
-        $left = $this->select($this->allowedFields[0] . ' as material_id, ' . $this->primaryKey . ' as relation_id')
-                    ->where($this->allowedFields[1], $id)
-                    ->where($this->allowedFields[0] . ' !=', $id)
-                    ->findAll();
-        $right = $this->select($this->allowedFields[1] . ' as material_id, ' . $this->primaryKey . ' as relation_id')
-                    ->where($this->allowedFields[0], $id)
-                    ->where($this->allowedFields[1] . ' !=', $id)
-                    ->findAll();
-        return array_merge($left, $right);
+        return array_merge(
+            $this->select($this->allowedFields[0] . ' as material_id')
+                ->where($this->allowedFields[1], $id)
+                ->findAll(),
+            $this->select($this->allowedFields[1] . ' as material_id')
+                ->where($this->allowedFields[0], $id)
+                ->findAll(),
+        );
+    }
+
+    /**
+     * Returns all relations as an array of standart objects.
+     * Keys:
+     * - material_id
+     * - $this->primaryKey (id)
+     *
+     * @param int $id The id of the material to find relations to.
+     */
+    public function getRelatedAsObject(int $id) : array
+    {
+        return array_merge(
+            $this->builder()
+                ->select("{$this->primaryKey}, {$this->allowedFields[1]} as material_id")
+                ->where($this->allowedFields[0], $id)
+                ->get()
+                ->getResultObject(),
+            $this->builder()
+                ->select("{$this->primaryKey}, {$this->allowedFields[0]} as material_id")
+                ->where($this->allowedFields[1], $id)
+                ->get()
+                ->getResultObject(),
+        );
     }
 
     /**
@@ -60,16 +82,16 @@ class MaterialMaterialModel extends Model
      */
     public function saveMaterial(Material $material) : bool
     {
-        $relations = $this->allowCallbacks(false)->getRelated($material->id);
+        $relations = $this->getRelatedAsObject($material->id);
 
         $this->db->transStart();
 
         $newRelations = $material->related ?? [];
         array_walk($newRelations, function ($r) use ($material, $relations) {
             foreach ($relations as $k => $rel) {
-                if ($r->id === $rel->id) {
+                if ($r->id === $rel->material_id) {
                     unset($relations[$k]);
-                    break;
+                    return;
                 }
             }
             $this->insert([
@@ -78,12 +100,8 @@ class MaterialMaterialModel extends Model
             ]);
         });
 
-        // echo '<pre>';
-        // echo var_dump('RELATIONS: ', $relations);
-        // echo '</pre>';
-
         foreach ($relations as $rel) {
-            $this->delete($rel->relation_id);
+            $this->delete($rel->id);
         }
 
         $this->db->transComplete();

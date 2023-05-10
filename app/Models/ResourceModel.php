@@ -36,10 +36,9 @@ class ResourceModel extends Model
 
     public function getThumbnail(int $materialId) : array
     {
-        $thumbnail = $this->where('material_id', $materialId)
+        return $this->where('material_id', $materialId)
                     ->where('resource_type', 'thumbnail')
-                    ->first();
-        return $thumbnail ? array($thumbnail) : array();
+                    ->findAll();
     }
 
     public function getByPath(int $materialId, string $path) : ?Resource
