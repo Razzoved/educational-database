@@ -43,6 +43,6 @@
 
     <!-- Copyright -->
     <section class="footer__small-area">
-        <p class="footer__text">©<?= getenv('COPYRIGHT', true) ?></p>
+        <p class="footer__text">©<?= $_SERVER['COPYRIGHT'] ?? 'Sample copyright text' ?></p>
     </section>
 </footer>
