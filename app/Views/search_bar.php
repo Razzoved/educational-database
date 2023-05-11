@@ -6,14 +6,11 @@
 
 <script type="text/javascript">
     let lastSuggest = params.get('search') ?? "";
-
-    const searchForm = document.querySelector('#search');
     const searchBar = document.querySelector('#search .search__bar');
-    const searchSubmit = document.querySelector('#search .search__submit');
-    const suggestionsList = document.querySelector('#search .search__suggestions');
-    const filtersInput = document.querySelectorAll('.filter');
+    searchBar.value = lastSuggest;
 
     const submitSearch = () => {
+        const searchForm = document.querySelector('#search');
         if (searchForm === undefined) {
             return console.error('Cannot find search form. Searching cannot be done!');
         }
@@ -27,7 +24,7 @@
     searchBar.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            searchSubmit.click();
+            document.querySelector('#search .search__submit').click();
         }
     });
 
@@ -71,6 +68,8 @@
     }
 
     const suggest = () => {
+        const suggestionsList = document.querySelector('#search .search__suggestions');
+
         if (searchBar === undefined || suggestionsList === undefined) {
             console.error("Missing searchBar or suggestionsList, suggestion cannot be shown!");
             return;

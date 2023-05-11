@@ -26,10 +26,10 @@ const toggleGroup = (element) => {
 }
 
 const saveFilters = () => {
-    // save filters to local storage to save query space (GET is limited)
+    // save filters to session storage to save query space (GET is limited)
     const toReapply = Array.from(document.querySelectorAll('.collapsible *:checked')).map(item => item.id);
-    window.localStorage.setItem('reapply-page', window.location.pathname);
-    window.localStorage.setItem('reapply-filters', JSON.stringify(toReapply));
+    window.sessionStorage.setItem('reapply-page', window.location.pathname);
+    window.sessionStorage.setItem('reapply-filters', JSON.stringify(toReapply));
 }
 
 const resetFilters = () => {
@@ -72,7 +72,7 @@ const appendFilters = (form) => {
 }
 
 /**
- * Loads applied filters either from the state data or from the localStorage.
+ * Loads applied filters either from the state data or from the sessionStorage.
  * State is always preffered if possible.
  */
 document.addEventListener("DOMContentLoaded", () => {
@@ -85,8 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const reapplyFromStorage = () => {
-        const pathname = window.localStorage.getItem('reapply-page');
-        const filters = window.localStorage.getItem('reapply-filters');
+        const pathname = window.sessionStorage.getItem('reapply-page');
+        const filters = window.sessionStorage.getItem('reapply-filters');
 
         if (pathname && pathname === window.location.pathname && filters) {
             const parsedFilters = JSON.parse(filters);
@@ -97,8 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
             parsedFilters.forEach(id => reapplyFilter(id));
         }
 
-        window.localStorage.removeItem('reapply-page');
-        window.localStorage.removeItem('reapply-filters');
+        window.sessionStorage.removeItem('reapply-page');
+        window.sessionStorage.removeItem('reapply-filters');
     }
 
     if (window.history.state !== null && 'filters' in window.history.state) {
