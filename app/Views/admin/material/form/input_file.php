@@ -1,7 +1,6 @@
 <?php
     /**
      * Partial view that generates file input in form.
-     * It requires jQuery & dynamics javascript file to be loaded.
      *
      * Expects:
      * @param array $files An array of Resource objects

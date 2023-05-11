@@ -84,25 +84,35 @@
 
             </div>
 
-            <!-- form group attachments -->
+            <!-- tags selector -->
+            <fieldset class="form__group">
+                <label for="properties" class="form__label">Tags</label>
+                <?= view("{$path}/input_property", [
+                    'properties' => $material->properties ?? [],
+                    'available'  => $availableProperties ?? [],
+                ]) ?>
+            </fieldset>
+
+            <!-- content editor provided externally -->
             <fieldset class="form__group">
                 <label for="tiny" class="form__label">Content</label>
                 <textarea id="tiny" name="content" cols="60" rows="20"><?= $material->content ?></textarea>
             </fieldset>
 
+            <!-- form group attachments -->
             <fieldset class="form__group">
                 <label for="links" class="form__label">Links to relevant sites</label>
-                <?= view("{$path}/input_link", ['links' => $material->getLinks() ]) ?>
+                <?= view("{$path}/input_link", ['links' => $material->getLinks()]) ?>
             </fieldset>
 
             <fieldset class="form__group">
                 <label for="files" class="form__label">Attached files</label>
-                <?= view("{$path}/input_file", ['files' => $material->getFiles() ]) ?>
+                <?= view("{$path}/input_file", ['files' => $material->getFiles()]) ?>
             </fieldset>
 
             <fieldset class="form__group">
                 <label for="relations" class="form__label">Related materials</label>
-                <?= view("{$path}/input_relation", ['relations' => $material->related ]) ?>
+                <?= view("{$path}/input_relation", ['relations' => $material->related]) ?>
             </fieldset>
 
             <!-- hidden attributes (for editing) -->

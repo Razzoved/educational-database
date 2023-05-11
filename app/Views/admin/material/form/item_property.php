@@ -8,8 +8,15 @@
     $id = $id ?? '@id@';
     $value = $value ?? '@value@';
 ?>
-<div class="property" id="<?= $id ?>">
-    <input type="hidden" name="properties[]" value='<?= $id ?>'>
+<div class="property" id="property<?= $id ?>" onclick="propertyToggle(this)">
+    <input type="hidden" name="property[]" value='<?= $id ?>'>
     <p class="property__value"><?= $value ?></p>
-    <button class="property__delete">&#10005;</button>
+
+    <!-- <div class="property__header"> -->
+        <!-- <button class="property__delete">&#10005;</button> -->
+    <!-- </div> -->
+
+    <div class="property__children">
+        <!-- filled by js -->
+    </div>
 </div>

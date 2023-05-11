@@ -62,9 +62,17 @@ class MaterialEditor extends ResponseController
     public function index(EntitiesMaterial $material = new EntitiesMaterial(), array $errors = []) : string
     {
         return $this->view('material/form', [
-            'meta_title' => "Administration - Material",
-            'material'   => $material,
-            'errors'     => $errors,
+            'meta_title'          => "Administration - Material",
+            'material'            => $material,
+            'errors'              => $errors,
+            'availableProperties' => PropertyLib::treeMap($this->properties->getTree(), function ($p) {
+                return [
+                    'id'       => $p->id,
+                    'tag'      => $p->tag,
+                    'value'    => $p->value,
+                    'children' => $p->children,
+                ];
+            })
         ]);
     }
 

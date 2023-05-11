@@ -98,7 +98,12 @@ class Rules
     {
         $id = $data['id'];
 
-        if (!isset($id) || !is_numeric($id)) {
+        if (!isset($id) || is_null($id) || $id === "" || $tag === 0) {
+            return true;
+        }
+
+        if (!is_numeric($id)) {
+            $error = 'Invalid id; id is not a number!';
             return false;
         }
 

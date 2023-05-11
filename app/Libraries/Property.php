@@ -33,6 +33,17 @@ class Property
         return $filters;
     }
 
+    public static function treeMap(EntitiesProperty $root, callable $mapper)
+    {
+        $children = $root->children;
+        foreach ($children as $k => $child) {
+            $children[$k] = self::treeMap($child, $mapper);
+        }
+        $root->children = $children;
+
+        return $mapper($root);
+    }
+
     public static function treeForEach(EntitiesProperty $root, callable $callback)
     {
         $callback($root);

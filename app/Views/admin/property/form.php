@@ -84,7 +84,7 @@
 
         <div class="modal__footer">
             <div class="modal__button-group">
-                <button type="submit" class="modal__button modal__button--submit" onclick="validate() && modalSubmit()"><?= $submit ?></button>
+                <button type="submit" class="modal__button modal__button--submit" onclick="validate() && <?= $onSubmit ?? 'modalSubmit()'?>"><?= $submit ?></button>
                 <button type="button" class="modal__button modal__button--cancel" onclick="modalClose()">Cancel</button>
             </div>
         </div>
