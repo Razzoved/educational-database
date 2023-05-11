@@ -1,0 +1,95 @@
+@import '../defaults/variables';
+
+.property {
+    gap: .5rem;
+    overflow: hidden;
+
+    display: flex;
+    flex-flow: column nowrap;
+
+    &--unlocked {
+        display: grid;
+        grid-template:
+            "active" 1fr
+            "inactive" 0;
+    }
+
+    &--non-empty {
+        flex: 1 1 100%;
+    }
+
+    &--non-empty:not(&__item--active) > &__children {
+        border-top: $clr-dark-transparent 1px solid;
+        padding-top: .5rem;
+        margin-top: .5rem;
+    }
+
+    &__value {
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    &__children {
+        display: flex;
+        flex-flow: row wrap;
+        gap: .2rem;
+        align-items: flex-start;
+        overflow: hidden;
+    }
+
+    &__item {
+        position: relative;
+        display: none;
+        margin: .0rem 0rem;
+        padding: .4rem .8rem;
+        border: $clr-dark-transparent 1px solid;
+        border-radius: 1rem;
+        background-color: rgba(0, 0, 0, 0.041);
+    }
+
+    &__item > &__children {
+        height: auto !important;
+    }
+
+    & > &__item {
+        grid-area: inactive;
+    }
+
+    & > &__item--current {
+        grid-area: active;
+    }
+
+    &--unlocked &__item {
+        background-color: rgba(255, 0, 0, 0.288)
+    }
+
+    &--unlocked &__item--active {
+        background-color: rgba(0, 128, 0, 0.199);
+    }
+
+    &--unlocked &__item--shown {
+        background-color: rgba(35, 111, 250, 0.068);
+    }
+
+    &__item--active,
+    &__item--shown,
+    &--unlocked &__item {
+        display: flex;
+        flex-flow: column wrap;
+    }
+
+    &__item--active:is(&--non-empty) {
+        flex-basis: 0;
+        &::after {
+            content: "ALL";
+            position: absolute;
+            right: 1rem;
+            top: auto;
+        }
+    }
+
+    &__item--active > &__children {
+        height: 0 !important;
+    }
+}

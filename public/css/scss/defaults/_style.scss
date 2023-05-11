@@ -63,6 +63,13 @@ button, a.button {
         background-color: $clr-focus-bg;
         border-color: $clr-focus;
     }
+
+    &:disabled {
+        cursor: default;
+        border: unset;
+        color: $clr-dark;
+        background-color: $clr-light;
+    }
 }
 
 input {

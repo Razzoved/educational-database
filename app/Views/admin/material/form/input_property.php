@@ -10,35 +10,44 @@
 ?>
 <div class="form__group form__group--horizontal-flex">
     <button type="button" class="form__button form__button--large" onclick="propertyLockUnlock()">Change</button>
+    <button id="property-prev" type="button" class="form__button" onclick="propertyPrev(this)" hidden disabled>Previous</button>
+    <button id="property-next" type="button" class="form__button" onclick="propertyNext(this)" hidden disabled>Next</button>
     <button type="button" class="form__button form__button--large" onclick="propertyCreate()">Create</button>
 </div>
 
-<div class="properties properties--unlocked" id="property0">
+<div class="property" id="property0">
 </div>
 
 <script>
     <?php include_once(FCPATH . 'js/fetch.js'); ?>
     <?php include_once(FCPATH . 'js/modal.js') ?>
+    <?php include_once(FCPATH . 'js/property.js') ?>
 
     const propertyRoot = document.getElementById('property0');
+
+    /* PROPERTY APPENDING */
 
     const propertyBuild = (tree => {
         const template = `<?= view('admin/material/form/item_property') ?>`;
 
-        const getParent = (property) => {
-            return property.tag == 0
+        const addToParent = (property) => {
+            let parent = property.tag == 0
                 ? propertyRoot
-                : document.getElementById(`property${property.tag}`).querySelector(':scope > .property__children');
+                : document.getElementById(`property${property.tag}`);
+
+            if (parent !== propertyRoot) {
+                parent.classList.add('property--non-empty');
+                parent = parent.querySelector(':scope > .property__children');
+            }
+            const element = template.html(property);
+            parent.insertAdjacentElement('beforeend', element);
+            return element;
         }
 
         const build = (property) => {
-            const parent = getParent(property);
-            const element = template.html(property);
-            parent.insertAdjacentElement('beforeend', element);
-
+            const element = addToParent(property);
             const input = element.querySelector(':scope > input');
             input.disabled = true;
-
             if (property.children.length > 0) {
                 property.children.forEach(p => build(p));
             }
@@ -46,15 +55,15 @@
 
         if (tree.children.length > 0) {
             tree.children.forEach(c => build(c));
+            propertyRoot.firstElementChild.classList.add('property__item--current');
         }
 
         return (property) => {
-            const parent = getParent(property);
-            const element = template.html(property);
-            parent.insertAdjacentElement('beforeend', template.html(property));
-            element.classList.add('property--active');
+            propertyToggle(addToParent(property));
         }
     })(<?= json_encode($available) ?>);
+
+    /* PROPERTY CREATION SECTION */
 
     const formTemplate = `<?= json_encode(view(
         'admin/property/form',
@@ -92,23 +101,6 @@
             modalClose(null);
         } catch (error) {
             modalSetError(modal, error.message);
-        }
-    }
-
-    const propertyLockUnlock = () => propertyRoot.classList.toggle('properties--unlocked');
-
-    const propertyToggle = (element) => {
-        if (propertyRoot.classList.contains('properties--unlocked')) {
-            console.log('TEST: clicked');
-
-            const input = element.querySelector(':scope > input');
-            input.disabled = !input.disabled;
-            element.classList.toggle('property--active');
-
-            Array.from(element.querySelectorAll(':scope > .property__children > .property')).forEach(p => {
-                console.log('clicked', p);
-                p.click();
-            })
         }
     }
 </script>
