@@ -7,8 +7,9 @@
      */
     $id = $id ?? '@id@';
     $value = $value ?? '@value@';
+    $description = $description ?? '@description@';
 ?>
-<div class="property__item" id="property<?= $id ?>">
+<div class="property__item" id="property<?= $id ?>" title="<?= $description ?>">
     <input class="property__input" type="hidden" name="property[]" value='<?= $id ?>'>
     <p class="property__value"><?= $value ?></p>
     <div class="property__children"></div>

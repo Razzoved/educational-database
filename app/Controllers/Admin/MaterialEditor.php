@@ -13,7 +13,6 @@ use App\Models\PropertyModel;
 use App\Models\ResourceModel;
 use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use CodeIgniter\Files\Exceptions\FileException;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
@@ -59,18 +58,19 @@ class MaterialEditor extends ResponseController
         $this->properties = model(PropertyModel::class, true, $this->materials->db);
     }
 
-    public function index(EntitiesMaterial $material = new EntitiesMaterial(), array $errors = []) : string
+    public function index(?EntitiesMaterial $material = null, array $errors = []) : string
     {
         return $this->view('material/form', [
             'meta_title'          => "Administration - Material",
-            'material'            => $material,
+            'material'            => $material ?? new EntitiesMaterial(),
             'errors'              => $errors,
             'availableProperties' => PropertyLib::treeMap($this->properties->getTree(), function ($p) {
                 return [
-                    'id'       => $p->id,
-                    'tag'      => $p->tag,
-                    'value'    => $p->value,
-                    'children' => $p->children,
+                    'id'          => $p->id,
+                    'tag'         => $p->tag,
+                    'value'       => $p->value,
+                    'children'    => $p->children,
+                    'description' => $p->description,
                 ];
             })
         ]);
@@ -169,6 +169,9 @@ class MaterialEditor extends ResponseController
         $resources = $material->resources;
         foreach ($items as $tmpPath => $path) {
             $resource = ResourceLib::toResource($path, (string) $tmpPath, $type);
+            if ($resource && !$resource->isTemporary() && !$resource->isLink()) {
+                $resource->parentId = $material->id;
+            }
             if ($resource) {
                 $resources[] = $resource;
             }
@@ -178,9 +181,8 @@ class MaterialEditor extends ResponseController
 
     private function toProperties() : array
     {
-        $valid = $this->request->getPost('properties') ?? [];
+        $valid = $this->request->getPost('property') ?? [];
         $valid = is_array($valid) ? $valid : array($valid);
-
         return PropertyLib::getFiltered($valid);
     }
 

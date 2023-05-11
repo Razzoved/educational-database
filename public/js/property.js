@@ -96,9 +96,13 @@ const propertySetDown = (element, callback) => {
 document.getElementById('property0').addEventListener('click', (event) => {
     event.stopPropagation();
 
-    if (event.target.classList.contains('property__children')) return;
-    const target = event.target.closest('.property__item');
+    if (event.target.classList.contains('property__children') || (
+        event.isTrusted && !document.getElementById('property0').classList.contains('property--unlocked')
+    )) {
+        return;
+    }
 
+    const target = event.target.closest('.property__item');
     const isActive = propertyToggle(target);
     if (isActive) {
         propertyShowUp(target);

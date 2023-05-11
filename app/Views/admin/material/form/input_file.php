@@ -45,11 +45,12 @@
             return console.error('File does not exist');
         }
 
-        const template = `<?= view('admin/material/form/item_file') ?>`
-            .replace(/@id@/g, crypto.randomUUID())
-            .replace('@path@', resource.tmp_path)
-            .replace('@value@', resource.path)
-            .replace('@imageURL@', resource.imageURL ?? '<?= \App\Entities\Resource::getDefaultImage()->getURL() ?>');
+        const template = `<?= view('admin/material/form/item_file') ?>`.fill({
+            id: crypto.randomUUID(),
+            path: resource.tmp_path,
+            value: resource.path,
+            imageURL: resource.imageURL ?? '<?= \App\Entities\Resource::getDefaultImage()->getURL() ?>'
+        })
 
         fileGroup.insertAdjacentHTML('beforeend', template);
     }

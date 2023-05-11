@@ -23,9 +23,9 @@
     </div>
 
     <div class="form__group" id="link-group">
-        <?php foreach ($links as $link) {
+        <?php foreach ($links as $key => $link) {
             echo view('admin/material/form/item_link', [
-                'id' => $link->id,
+                'id' => $key,
                 'path' => $link->getURL()
             ]);
         } ?>

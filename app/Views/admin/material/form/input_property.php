@@ -27,7 +27,7 @@
 
     /* PROPERTY APPENDING */
 
-    const propertyBuild = (tree => {
+    const propertyBuild = ((tree, used) => {
         const template = `<?= view('admin/material/form/item_property') ?>`;
 
         const addToParent = (property) => {
@@ -46,23 +46,40 @@
 
         const build = (property) => {
             const element = addToParent(property);
-            const input = element.querySelector(':scope > input');
-            input.disabled = true;
+            element.input().setAttribute('disabled', '');
             if (property.children.length > 0) {
                 property.children.forEach(p => build(p));
             }
         }
 
+        const enable = (property) => {
+            const element = propertyRoot.querySelector(`#property${property.id}`);
+            const children = element.querySelector(':scope > .property__children');
+            if (children.childElementCount === property.children.length) {
+                element?.click();
+                return;
+            }
+            if (property.children.length > 0) {
+                property.children.forEach(p => enable(p));
+                return;
+            }
+            element?.click();
+        }
+
         if (tree.children.length > 0) {
-            tree.children.forEach(c => build(c));
+            tree.children.forEach(p => build(p));
             propertyRoot.firstElementChild.classList.add('property__item--current');
+        }
+
+        if (used.length > 0) {
+            used.forEach(p => enable(p));
         }
 
         return (property) => {
             const element = addToParent(property);
             element.click();
         }
-    })(<?= json_encode($available) ?>);
+    })(<?= json_encode($available) ?>, <?= json_encode($properties) ?>);
 
     /* PROPERTY CREATION SECTION */
 

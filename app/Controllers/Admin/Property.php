@@ -99,7 +99,6 @@ class Property extends ResponseController
     public function getAvailable() : Response
     {
         $properties = $this->properties->getArray(['sort' => 'priority']);
-
         if (empty($properties)) {
             $this->response->setStatusCode(Response::HTTP_NO_CONTENT);
         }

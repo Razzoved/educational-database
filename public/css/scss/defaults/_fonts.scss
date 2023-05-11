@@ -78,7 +78,13 @@ a {
 }
 
 small {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+    @media screen and (max-width: $sm) {
+        font-size: 0.75rem;
+    }
+    @media screen and (max-width: $xs) {
+        font-size: 0.7rem;
+    }
 }
 
 strong {

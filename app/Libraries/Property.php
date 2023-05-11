@@ -62,7 +62,6 @@ class Property
      */
     public static function getFiltered(array $ids) : array
     {
-
         $tree = model(PropertyModel::class)->getTree();
         self::filterByIds($tree, $ids);
         return $tree->children;
@@ -89,8 +88,7 @@ class Property
                 unset($children[$k]);
             }
         }
-
-        $source->__set('children', $children);
+        $source->children = array_values($children);
 
         return count($source->children) > 0
             || in_array($source->id, $valid);
@@ -106,6 +104,6 @@ class Property
                 self::filterCategories($child);
             }
         }
-        $source->__set('children', $children);
+        $source->children = array_values($children);
     }
 }

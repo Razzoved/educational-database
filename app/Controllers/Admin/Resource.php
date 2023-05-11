@@ -54,10 +54,12 @@ class Resource extends ResponseController
 
         try {
             $resource = ResourceLib::store($file);
-            \Config\Services::image()
-                ->withFile(ROOTPATH . $resource->tmp_path)
-                ->fit(512, 512, 'center')
-                ->save(ROOTPATH . $resource->tmp_path);
+            if ($type === 'thumbnail') {
+                \Config\Services::image()
+                    ->withFile(ROOTPATH . $resource->tmp_path)
+                    ->fit(512, 512, 'center')
+                    ->save(ROOTPATH . $resource->tmp_path);
+            }
         } catch (Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,

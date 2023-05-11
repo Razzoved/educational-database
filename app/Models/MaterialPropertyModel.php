@@ -95,8 +95,11 @@ class MaterialPropertyModel extends Model
             ->where('material_id', $material->id)
             ->findAll();
 
-        foreach ($material->children ?? [] as $root) {
+        foreach ($material->properties ?? [] as $root) {
             PropertyLib::treeForEach($root, function ($p) use ($material, $old) {
+                if (!empty($p->children)) {
+                    return;
+                }
                 foreach ($old as $k => $oldObject) {
                     if ($p->id === $oldObject['property_id']) {
                         unset($old[$k]);
@@ -109,10 +112,6 @@ class MaterialPropertyModel extends Model
                 ]);
             });
         }
-
-        // echo '<pre>';
-        // echo var_dump('PROPERTIES', $old);
-        // echo '</pre>';
 
         foreach ($old as $oldObject) {
             $this->delete($oldObject['id']);

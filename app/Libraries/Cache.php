@@ -18,15 +18,15 @@ class Cache
      *
      * @return mixed Cached data or newly searched data.
      */
-    public static function check(callable $callback, $key, string $prefix = "", ?int $ttl = null) : mixed
+    public static function check(callable $callback, $key, string $prefix = "", ?int $ttl = null)
     {
-        $data = Cache::get($key, $prefix);
+        $data = self::get($key, $prefix);
         if (is_null($data)) {
             $data = $callback();
             if (!is_null($ttl)) {
-                Cache::save($data, $key, $prefix, $ttl);
+                self::save($data, $key, $prefix, $ttl);
             } else {
-                Cache::save($data, $key, $prefix);
+                self::save($data, $key, $prefix);
             }
         }
         return $data;
@@ -43,7 +43,7 @@ class Cache
     public static function delete($key, string $prefix = "") : bool
     {
         $cache = Services::cache();
-        return $cache->delete(Cache::handlePrefix($key, $prefix));
+        return $cache->delete(self::handlePrefix($key, $prefix));
     }
 
     /**
@@ -61,7 +61,7 @@ class Cache
     {
         $cache = Services::cache();
 
-        $key = Cache::handlePrefix($key, $prefix);
+        $key = self::handlePrefix($key, $prefix);
         if ($cache->get($key) !== null) {
             return false;
         }
@@ -75,12 +75,12 @@ class Cache
      * @param string|int $key    Required parameter, that should, in combination with prefix be unique.
      * @param string $prefix     Optional prefix for the key.
      *
-     * @return mixed Succes or failure
+     * @return array|bool|float|int|object|string|null Succes or failure
      */
-    public static function get($key, string $prefix = "") : mixed
+    public static function get($key, string $prefix = "")
     {
         $cache = Services::cache();
-        return $cache->get(Cache::handlePrefix($key, $prefix));
+        return $cache->get(self::handlePrefix($key, $prefix));
     }
 
     private static function handlePrefix($key, string $prefix) : string
