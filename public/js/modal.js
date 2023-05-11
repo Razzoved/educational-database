@@ -13,6 +13,13 @@ HTMLElement.prototype.reapplyScripts = function() {
     });
 }
 
+/**
+ * Closes the modal window. If modalId is different from defaut,
+ * only hides it.
+ *
+ * @param {Event} event    null or event with target
+ * @param {string} modalId id of modal to close
+ */
 const modalClose = function(event = null, modalId = 'modal')
 {
     const modal = document.getElementById(modalId);
