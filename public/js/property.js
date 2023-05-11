@@ -5,10 +5,19 @@ HTMLDivElement.prototype.input = function() {
 }
 
 const propertyLockUnlock = () => {
+    const root = document.getElementById('property0');
+
+    // refresh buttons
+    func = root.classList.contains('property--unlocked')
+        ? (e, x) => e.setAttribute(x, '')
+        : (e, x) => e.removeAttribute(x);
+
     const prev = document.getElementById('property-prev');
     const next = document.getElementById('property-next');
-    prev.removeAttribute('hidden');
-    next.removeAttribute('hidden');
+
+    func(prev, 'hidden');
+    func(next, 'hidden');
+
     const current = propertyRoot.querySelector('.property__item--current');
     if (current && current.previousElementSibling ) {
         prev.removeAttribute('disabled');
@@ -16,99 +25,97 @@ const propertyLockUnlock = () => {
     if (current && current.nextElementSibling) {
         next.removeAttribute('disabled');
     }
-    propertyRoot.classList.toggle('property--unlocked')
+
+    // unlock
+    root.classList.toggle('property--unlocked')
+    document.getElementById('property-toggle').innerText = root.classList.contains('property--unlocked')
+        ? 'Show all'
+        : 'Edit'
 };
 
 const propertyToggle = (element) => {
     element.classList.toggle('property__item--active');
-    return element.classList.contains('property__item--active');
-    // Array.from(element.querySelectorAll(':scope > .property__children > .property__item')).forEach(p => {
-    //     propertyToggle(null, p, state);
-    // })
-}
-
-const propertyShow = (element) => {
-    const scope = ':scope > .property__children >';
-    element = element.parentElement?.closest('.property__item');
-    while (element) {
-        if (!element.classList.contains('property__item--active')) {
-            element.classList.add('property__item--shown');
-        }
-        element = element.parentElement?.closest('.property__item');
+    const isOn = element.classList.contains('property__item--active');
+    if (isOn) {
+        element.input().removeAttribute('disabled');
+    } else {
+        element.input().setAttribute('disabled', '');
     }
-}
-
-const propertyHide = (element) => {
-    element = element.parentElement?.closest('.property__item');
-    while (element) {
-        const keepActive = element.querySelector(`${propertyScope} .property__item--active, ${propertyScope} .property__item--shown`) !== null;
-        if (!keepActive) {
-            element.classList.remove('property__item--active');
-        }
-        element = element.parentElement?.closest('.property__item');
-    }
+    return isOn;
 }
 
 const propertyPrev = (btn) => {
-    const current = document.getElementById('property0').querySelector('.property__item--current');
+    let current = document.getElementById('property0').querySelector('.property__item--current');
+
+    document.getElementById('property-next')?.removeAttribute('disabled');
+
+    current.classList.remove('property__item--current');
+    current = current.previousElementSibling;
+    current.classList.add('property__item--current');
+
     if (!current.previousElementSibling) {
         btn.setAttribute('disabled', '');
-    } else {
-        btn.removeAttribute('disabled');
-        current.classList.remove('property__item--current');
-        current.previousElementSibling.classList.add('property__item--current');
     }
 }
 
 const propertyNext = (btn) => {
-    const current = document.getElementById('property0').querySelector('.property__item--current');
+    let current = document.getElementById('property0').querySelector('.property__item--current');
+    document.getElementById('property-prev')?.removeAttribute('disabled');
+
+    current.classList.remove('property__item--current');
+    current = current.nextElementSibling;
+    current.classList.add('property__item--current');
+
     if (!current.nextElementSibling) {
         btn.setAttribute('disabled', '');
-    } else {
-        btn.removeAttribute('disabled');
-        current.classList.remove('property__item--current');
-        current.nextElementSibling.classList.add('property__item--current');
     }
 }
 
 const propertyShowUp = (element) => {
-
-}
-
-const propertyHideUp = (element) => {
-    while (element !== null) {
-        if (element.classList.contains('property__item--active')) return;
-        if (element.querySelector(
-            `${propertyScope} property__item--shown, ` +
-            `${propertyScope} property__item--active`
-        )) {
-            element.classList.remove('property__item--shown');
-        }
-        element = element.parentElement?.closest('.property__item');
+    while ((element = element.closest(`.property__item:not(#${element.id})`))) {
+        element.classList.add('property__item--shown');
     }
 }
 
-const propertyHideDown = (element) => {
-    Array.from(element.querySelectorAll(
-        `.property__item--shown, ` +
-        `.property__item--active`
-    )).forEach(e => {
-        e.classList.remove('property__item--shown', 'property__item--active');
-        e.input().setAttribute('disabled', '');
-    });
+const propertyHideUp = (element) => {
+    while ((element = element.closest(`.property__item:not(#${element.id})`))) {
+        if (element.classList.contains('property__item--active')) return;
+        if (!element.querySelector(
+            `${propertyScope} .property__item--shown, ` +
+            `${propertyScope} .property__item--active`
+        )) {
+            element.classList.remove('property__item--shown');
+        }
+    }
+}
+
+const propertySetDown = (element, callback) => {
+    Array.from(element.querySelectorAll(`.property__item--active`)).forEach(e => callback(e));
 }
 
 document.getElementById('property0').addEventListener('click', (event) => {
     event.stopPropagation();
 
+    if (event.target.classList.contains('property__children')) return;
     const target = event.target.closest('.property__item');
-    console.log(target);
 
     const isActive = propertyToggle(target);
     if (isActive) {
-        propertyShowUp(target.parentElement);
+        propertyShowUp(target);
+        propertySetDown(target, (e) => e.input().setAttribute('disabled', ''));
     } else {
-        propertyHideUp(target.parentElement);
-        propertyHideDown(target);
+        propertyHideUp(target);
+        propertySetDown(target, (e) => e.input().removeAttribute('disabled'));
     }
+});
+
+document.querySelector('form').addEventListener('submit', (event) => {
+    const root = document.getElementById('property0');
+
+    // select all properties from top level categories (categories are not to be added)
+    Array.from(root.querySelectorAll(':scope > .property__item--active')).forEach(category => {
+        category.input().setAttribute('disabled', '');
+        Array.from(category.querySelectorAll(`${propertyScope} .property__item`))
+            .forEach(tag => tag.input().removeAttribute('disabled'));
+    });
 });

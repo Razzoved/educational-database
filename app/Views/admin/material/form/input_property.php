@@ -9,7 +9,7 @@
     helper('form');
 ?>
 <div class="form__group form__group--horizontal-flex">
-    <button type="button" class="form__button form__button--large" onclick="propertyLockUnlock()">Change</button>
+    <button id="property-toggle" type="button" class="form__button form__button--large" onclick="propertyLockUnlock()">Change</button>
     <button id="property-prev" type="button" class="form__button" onclick="propertyPrev(this)" hidden disabled>Previous</button>
     <button id="property-next" type="button" class="form__button" onclick="propertyNext(this)" hidden disabled>Next</button>
     <button type="button" class="form__button form__button--large" onclick="propertyCreate()">Create</button>
@@ -59,7 +59,8 @@
         }
 
         return (property) => {
-            propertyToggle(addToParent(property));
+            const element = addToParent(property);
+            element.click();
         }
     })(<?= json_encode($available) ?>);
 

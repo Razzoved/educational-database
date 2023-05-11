@@ -3,7 +3,6 @@
 .property {
     gap: .5rem;
     overflow: hidden;
-
     display: flex;
     flex-flow: column nowrap;
 
@@ -14,38 +13,55 @@
             "inactive" 0;
     }
 
-    &--non-empty {
-        flex: 1 1 100%;
-    }
-
-    &--non-empty:not(&__item--active) > &__children {
-        border-top: $clr-dark-transparent 1px solid;
-        padding-top: .5rem;
-        margin-top: .5rem;
-    }
-
     &__value {
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
     }
 
+    &--unlocked &__value {
+        cursor: pointer;
+    }
+
     &__children {
         display: flex;
         flex-flow: row wrap;
-        gap: .2rem;
         align-items: flex-start;
+        gap: .3rem .2rem;
         overflow: hidden;
     }
 
     &__item {
         position: relative;
+        // sizing
+        flex: 1 1 0;
+        min-width: fit-content;
+        max-width: 100%;
+        // style
         display: none;
-        margin: .0rem 0rem;
-        padding: .4rem .8rem;
-        border: $clr-dark-transparent 1px solid;
+        text-align: center;
+        padding: .4rem;
+        // border: $clr-dark-transparent 1px solid;
         border-radius: 1rem;
-        background-color: rgba(0, 0, 0, 0.041);
+        background-color: rgba(172, 172, 172, 0.3);
+    }
+
+    &--non-empty {
+        flex: 1 1 100%;
+    }
+
+    &--non-empty:not(&__item--active) {
+        margin: 0.5rem;
+    }
+
+    & > &--non-empty:not(&__item--active) {
+        margin: 0;
+    }
+
+    &--non-empty:not(&__item--active) > .property__children {
+        border-top: $clr-dark-transparent 1px solid;
+        padding-top: .5rem;
+        margin-top: .5rem;
     }
 
     &__item > &__children {
@@ -61,35 +77,40 @@
     }
 
     &--unlocked &__item {
-        background-color: rgba(255, 0, 0, 0.288)
-    }
-
-    &--unlocked &__item--active {
-        background-color: rgba(0, 128, 0, 0.199);
+        background-color: rgba(156, 35, 35, 0.192)
     }
 
     &--unlocked &__item--shown {
-        background-color: rgba(35, 111, 250, 0.068);
+        background-color: rgba(79, 123, 204, 0.123);
     }
+
+    &--unlocked &__item--active {
+        background-color: rgba(106, 199, 106, 0.753);
+    }
+
 
     &__item--active,
     &__item--shown,
     &--unlocked &__item {
-        display: flex;
-        flex-flow: column wrap;
+        display: block;
     }
 
     &__item--active:is(&--non-empty) {
-        flex-basis: 0;
-        &::after {
-            content: "ALL";
-            position: absolute;
-            right: 1rem;
-            top: auto;
-        }
+        flex-basis: fit-content;
+        box-shadow: inset .2rem .1rem $clr-dark-transparent;
     }
 
     &__item--active > &__children {
-        height: 0 !important;
+        max-height: 0 !important;
+    }
+}
+
+#property-prev:not(:disabled),
+#property-next:not(:disabled) {
+    color: $clr-light;
+    background-color: $clr-dark-semi-transparent;
+    &:hover {
+        color: $clr-focus;
+        background-color: $clr-focus-bg;
     }
 }
