@@ -47,14 +47,14 @@
         overflow-x: hidden;
         overflow-y: auto;
         // colorize
-        background-color: $clr-light-semi-transparent;
-        border: $clr-dark-transparent 2px dashed;
-        border-radius: $border-radius-lg;
-        box-shadow: 0.1rem 0.1rem 0.6rem 0rem $clr-dark-transparent;
+        background-color: $clr-dark;
+        border-bottom-left-radius: $border-radius-lg;
+        border-bottom-right-radius: $border-radius-lg;
+        box-shadow: 0 0 .5rem .1rem $clr-dark-transparent;
     }
 
     //&__bar:focus ~ &__suggestions {
-    &__bar ~ &__suggestions {
+    &__bar:focus ~ &__suggestions {
         display: block;
         pointer-events: auto;
         &:empty {
@@ -64,16 +64,16 @@
 
     &__suggestion {
         cursor: pointer;
-        z-index: 3;
+        z-index: 5;
         // limit text to one line
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         // style
         padding: 0.5rem 1rem;
-        color: $clr-text-small;
+        color: $clr-light-transparent;
         &:nth-child(even) {
-            color: $clr-text;
+            color: $clr-light-semi-transparent;
             background-color: $clr-gray-transparent;
         }
         &:hover {

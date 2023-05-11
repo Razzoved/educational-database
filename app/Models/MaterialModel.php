@@ -134,12 +134,14 @@ class MaterialModel extends Model
 
     protected function setupQuery(array $data = []) : MaterialModel
     {
+        if (isset($data['callbacks'])) {
+            $this->allowCallbacks($data['callbacks'] === true);
+        }
         return $this
             ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
             ->setupFilters($data['filters'] ?? [])
             ->setupSearch($data['search'] ?? "")
-            ->setupShow(session()->has('isLoggedIn') && session('isLoggedIn') === true)
-            ->allowCallbacks(!isset($data['callbacks']) || $data['callbacks'] === true);
+            ->setupShow(session()->has('isLoggedIn') && session('isLoggedIn') === true);
     }
 
     protected function setupSort(string $sort, string $sortDir)

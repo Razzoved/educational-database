@@ -5,7 +5,7 @@
 </form>
 
 <script type="text/javascript">
-    let lastSuggest = params && params.has('search') ? params.get('search') : "";
+    let lastSuggest = params.get('search') ?? "";
 
     const searchForm = document.querySelector('#search');
     const searchBar = document.querySelector('#search .search__bar');
@@ -38,7 +38,7 @@
     }
 
     // Load all available suggestions
-    const suggestions = <?= json_encode($options ?? []) ?>;
+    const suggestions = <?= json_encode($options) ?>;
     suggestions.forEach(function(value, index, target) {
         target[index] = {
             filter: stripAccents(value),
@@ -92,7 +92,6 @@
             let item = document.createElement('li');
             item.classList = "search__suggestion";
             item.innerHTML = suggestion;
-            item.setAttribute('onclick', "useSuggestion(this)");
             suggestionsList.appendChild(item);
         });
     }
@@ -103,4 +102,11 @@
         searchBar.value = suggestionElement.textContent;
         submitSearch();
     }
+
+    window.addEventListener("pointerdown", event => {
+        if (event.target && event.target.classList.contains("search__suggestion")) {
+            event.preventDefault();
+            useSuggestion(event.target);
+        }
+    });
 </script>
