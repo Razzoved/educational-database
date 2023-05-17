@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
+use App\Libraries\Cache;
 use App\Libraries\Property as PropertyLib;
 use CodeIgniter\Model;
 
@@ -22,6 +23,14 @@ class MaterialPropertyModel extends Model
         'property_id'
     ];
     protected $useAutoIncrement = true;
+
+    protected $allowCallbacks = true;
+    protected $afterInsert = [
+        'revalidatePropertyCache',
+    ];
+    protected $afterDelete = [
+        'revalidatePropertyCache',
+    ];
 
     /** ----------------------------------------------------------------------
      *                           PUBLIC METHODS
@@ -121,6 +130,21 @@ class MaterialPropertyModel extends Model
 
         return $this->db->transStatus();
     }
+
+    /** ----------------------------------------------------------------------
+     *                              CALLBACKS
+     *  ------------------------------------------------------------------- */
+
+    protected function revalidatePropertyCache(array $data)
+    {
+        if (isset($data['data']['property_id'])) {
+            model(ProperyModel::class)->revalidateCache([
+                'id' => 'property_id',
+            ]);
+        }
+        return $data;
+    }
+
 
     /** ----------------------------------------------------------------------
      *                              HELPERS

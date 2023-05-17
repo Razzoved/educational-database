@@ -38,6 +38,9 @@ class PropertyModel extends Model
     protected $afterFind = [
         'saveCache',
     ];
+    protected $afterInsert = [
+        'revalidateCache',
+    ];
     protected $afterUpdate = [
         'revalidateCache',
     ];
@@ -283,20 +286,27 @@ class PropertyModel extends Model
         return $data;
     }
 
-    protected function revalidateCache(array $data)
+    public function revalidateCache(array $data)
     {
         if (!isset($data['id'])) {
             return;
         }
-        foreach ($data['id'] as $id) {
+
+        $ids = is_array($data['id'])
+            ? $data['id']
+            : array($data['id']);
+
+        foreach ($ids as $id) {
             $item = Cache::get($id, 'property');
             $this->_revalidateCache($item);
             unset($id);
         }
+
         if (isset($data['data']['property_tag'])) {
             $item = Cache::get($data['data']['property_tag'], 'property');
             $this->_revalidateCache($item);
         }
+
         return $data;
     }
 
