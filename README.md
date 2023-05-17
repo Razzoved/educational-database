@@ -48,6 +48,33 @@ to your `app` folder. The affected files can be copied or merged from
 Copy `env` to `.env` and tailor for your app, specifically the baseURL
 and any database settings.
 
+
+## Configuration of CI4
+Development was done using XAMPP and its Apache and MySQL server.\
+Because of that there was a need to modify the default 'httpd.conf' file:
+
+1) add extension
+```
+extesion=intl
+```
+
+2) add module
+```
+LoadModule rewrite_module modules/mod_rewrite.so
+```
+
+2) add httdocs directory ruleset
+```
+#
+# CodeIgniter requirement
+#
+<Directory "/opt/lamp/apache2/htdocs">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+```
+
 ## Important Change with index.php
 
 `index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
