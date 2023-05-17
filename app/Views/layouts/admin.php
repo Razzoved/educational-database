@@ -55,7 +55,6 @@
     <?= $this->include('footer') ?>
 
     <?= $this->renderSection('scripts') ?>
-    <script type="text/javascript" src="<?= base_url('public/js/tabular.js') ?>"></script>
 </body>
 
 </html>
