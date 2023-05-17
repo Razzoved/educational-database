@@ -10,8 +10,8 @@
 ?>
 <div class="form__group form__group--horizontal-flex">
     <button id="property-toggle" type="button" class="form__button form__button--large" onclick="propertyLockUnlock()">Change</button>
-    <button id="property-prev" type="button" class="form__button" onclick="propertyPrev(this)" hidden disabled>Previous</button>
-    <button id="property-next" type="button" class="form__button" onclick="propertyNext(this)" hidden disabled>Next</button>
+    <button id="property-prev" type="button" class="form__button" onclick="propertyPrev()" hidden disabled>Previous</button>
+    <button id="property-next" type="button" class="form__button" onclick="propertyNext()" hidden disabled>Next</button>
     <button type="button" class="form__button form__button--large" onclick="propertyCreate()">Create</button>
 </div>
 
@@ -23,9 +23,8 @@
     <?php include_once(FCPATH . 'js/modal.js') ?>
     <?php include_once(FCPATH . 'js/property.js') ?>
 
-    const propertyRoot = document.getElementById('property0');
-
     /* PROPERTY APPENDING */
+    // requires propertyRoot to be defined by property.js
 
     const propertyBuild = ((tree, used) => {
         const template = `<?= view('admin/material/form/item_property') ?>`;
@@ -35,12 +34,17 @@
                 ? propertyRoot
                 : document.getElementById(`property${property.tag}`);
 
+            const element = parent.insertAdjacentElement('beforeend', template.html(property));
+
             if (parent !== propertyRoot) {
                 parent.classList.add('property--non-empty');
                 parent = parent.querySelector(':scope > .property__children');
+            } else if (!parent.querySelector(':scope > .property__item--current')) {
+                element.classList.add('property__item--current');
             }
-            const element = template.html(property);
-            parent.insertAdjacentElement('beforeend', element);
+
+            console.log(element);
+
             return element;
         }
 
@@ -77,6 +81,7 @@
 
         return (property) => {
             const element = addToParent(property);
+            propertyReloadControls();
             element.click();
         }
     })(<?= json_encode($available) ?>, <?= json_encode($properties) ?>);

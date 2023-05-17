@@ -138,7 +138,7 @@ class MaterialPropertyModel extends Model
     protected function revalidatePropertyCache(array $data)
     {
         if (isset($data['data']['property_id'])) {
-            model(ProperyModel::class)->revalidateCache([
+            model(PropertyModel::class)->revalidateCache([
                 'id' => 'property_id',
             ]);
         }

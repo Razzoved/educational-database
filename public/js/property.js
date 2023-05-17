@@ -1,22 +1,13 @@
+const propertyRoot = document.getElementById('property0');
 const propertyScope = ':scope > .property__children >';
 
 HTMLDivElement.prototype.input = function() {
     return this.querySelector(':scope > .property__input');
 }
 
-const propertyLockUnlock = () => {
-    const root = document.getElementById('property0');
-
-    // refresh buttons
-    func = root.classList.contains('property--unlocked')
-        ? (e, x) => e.setAttribute(x, '')
-        : (e, x) => e.removeAttribute(x);
-
+const propertyReloadControls = () => {
     const prev = document.getElementById('property-prev');
     const next = document.getElementById('property-next');
-
-    func(prev, 'hidden');
-    func(next, 'hidden');
 
     const current = propertyRoot.querySelector('.property__item--current');
     if (current && current.previousElementSibling ) {
@@ -25,12 +16,26 @@ const propertyLockUnlock = () => {
     if (current && current.nextElementSibling) {
         next.removeAttribute('disabled');
     }
+}
 
-    // unlock
-    root.classList.toggle('property--unlocked')
-    document.getElementById('property-toggle').innerText = root.classList.contains('property--unlocked')
-        ? 'Show all'
+const propertyLockUnlock = () => {
+
+    // refresh buttons
+    func = propertyRoot.classList.contains('property--unlocked')
+    ? (e, x) => e.setAttribute(x, '')
+        : (e, x) => e.removeAttribute(x);
+
+    const prev = document.getElementById('property-prev');
+    const next = document.getElementById('property-next');
+
+    func(prev, 'hidden');
+    func(next, 'hidden');
+
+    propertyRoot.classList.toggle('property--unlocked')
+    document.getElementById('property-toggle').innerText = propertyRoot.classList.contains('property--unlocked')
+        ? 'Disable editing'
         : 'Edit'
+    propertyReloadControls();
 };
 
 const propertyToggle = (element) => {
@@ -44,8 +49,8 @@ const propertyToggle = (element) => {
     return isOn;
 }
 
-const propertyPrev = (btn) => {
-    let current = document.getElementById('property0').querySelector('.property__item--current');
+const propertyPrev = () => {
+    let current = propertyRoot.querySelector('.property__item--current');
 
     document.getElementById('property-next')?.removeAttribute('disabled');
 
@@ -53,22 +58,18 @@ const propertyPrev = (btn) => {
     current = current.previousElementSibling;
     current.classList.add('property__item--current');
 
-    if (!current.previousElementSibling) {
-        btn.setAttribute('disabled', '');
-    }
+    propertyReloadControls();
 }
 
-const propertyNext = (btn) => {
-    let current = document.getElementById('property0').querySelector('.property__item--current');
+const propertyNext = () => {
+    let current = propertyRoot.querySelector('.property__item--current');
     document.getElementById('property-prev')?.removeAttribute('disabled');
 
     current.classList.remove('property__item--current');
     current = current.nextElementSibling;
     current.classList.add('property__item--current');
 
-    if (!current.nextElementSibling) {
-        btn.setAttribute('disabled', '');
-    }
+    propertyReloadControls();
 }
 
 const propertyShowUp = (element) => {
@@ -93,19 +94,18 @@ const propertySetDown = (element, callback) => {
     Array.from(element.querySelectorAll(`.property__item--active`)).forEach(e => callback(e));
 }
 
-document.getElementById('property0').addEventListener('click', (event) => {
+propertyRoot.addEventListener('click', (event) => {
     event.stopPropagation();
 
-    const userClickUnlocked = event.isTrusted
-        && !document.getElementById('property0').classList.contains('property--unlocked');
-
-    if (event.target.classList.contains('property__children') || userClickUnlocked) {
+    // check for valid target or user click when locked
+    if (event.target.classList.contains('property__children') || (
+        event.isTrusted && !propertyRoot.classList.contains('property--unlocked')
+    )) {
         return;
     }
 
     const target = event.target.closest('.property__item');
-
-    if (target.parentElement.id === 'property0' && !target.querySelector(':scope .property__item')) {
+    if (target.parentElement === propertyRoot && !target.querySelector(':scope .property__item')) {
         console.debug('cannot select category', target.id);
         return;
     }
@@ -121,10 +121,8 @@ document.getElementById('property0').addEventListener('click', (event) => {
 });
 
 document.querySelector('form').addEventListener('submit', (event) => {
-    const root = document.getElementById('property0');
-
     // select all properties from top level categories (categories are not to be added)
-    Array.from(root.querySelectorAll(':scope > .property__item--active')).forEach(category => {
+    Array.from(propertyRoot.querySelectorAll(':scope > .property__item--active')).forEach(category => {
         const children = Array.from(category.querySelectorAll(`${propertyScope} .property__item`));
         category.input().setAttribute('disabled', '');
         children.forEach(tag => tag.input().removeAttribute('disabled'));

@@ -1,7 +1,7 @@
 String.prototype.fill = function(data = undefined) {
     let result = this;
     for (var k in data) {
-        result = result.replaceAll(`@${k.toLowerCase()}@`, data[k]);
+        result = result.replaceAll(`@${k}@`, data[k]);
     }
     return result;
 }
