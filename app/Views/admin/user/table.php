@@ -7,17 +7,14 @@
 </div>
 
 <div class="table" id="items">
-<?php
-    if ($users === []) {
-        echo $this->include('none');
-    } else foreach($users as $user) {
+    <?= $this->include('none') ?>
+    <?php foreach($users as $user) {
         echo view('admin/user/item', [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
         ]);
-    }
-?>
+    } ?>
 </div>
 
 <?= $pager->links('default', 'full') ?>

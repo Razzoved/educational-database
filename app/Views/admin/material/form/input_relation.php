@@ -86,6 +86,6 @@
                 return option;
             }))
             .then(response => relationUploader.list.replaceChildren(...response))
-            .catch(error => console.log('Error fetching relations', error));
+            .catch(error => console.log('No relations fetched'));
     });
 </script>

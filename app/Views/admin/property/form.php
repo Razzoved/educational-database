@@ -144,7 +144,7 @@
             }))
             .then(response => categoryOptions.replaceChildren(...response))
             .then(() => updateTag())
-            .catch(error => console.log('Error fetching categories'));
+            .catch(error => console.log('No categories fetched'));
 
     </script>
 </div>

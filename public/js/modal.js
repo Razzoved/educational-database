@@ -85,11 +85,13 @@ const modalSetError = (modal, message) => {
 const modalHandleResult = (element, existing) => {
     if (element === undefined) {
         existing?.remove();
+        document.dispatchEvent(new Event('delete-item'));
     } else {
         if (existing) {
             existing.replaceWith(element);
         } else {
             items.insertAdjacentElement('afterbegin', element);
+            document.dispatchEvent(new Event('append-item'));
         }
     }
 }

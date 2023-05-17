@@ -23,9 +23,8 @@
     <?= view('search_bar', ['options' => $options]) ?>
 </div>
 <div id="items">
-    <?php if (empty($materials)) {
-        echo $this->include('none');
-    } else foreach($materials as $material) {
+    <?= $this->include('none') ?>
+    <?php foreach($materials as $material) {
         echo view('material/item', ['material' => $material]);
     } ?>
 </div>

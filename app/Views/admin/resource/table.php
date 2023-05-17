@@ -18,17 +18,14 @@
 <?php endif; ?>
 
 <div class="table" id="items">
-<?php
-    if ($resources === []) {
-        echo $this->include('none');
-    } else foreach($resources as $resource) {
+    <?= $this->include('none') ?>
+    <?php foreach($resources as $resource) {
         echo view('admin/resource/item', [
             'id'   => $resource->path,
             'path' => \App\Libraries\Resource::pathToFileURL($resource->getRootPath()),
             'name' => basename($resource->path),
         ]);
-    }
-?>
+    } ?>
 </div>
 <?= $this->endSection() ?>
 

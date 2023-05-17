@@ -21,10 +21,8 @@
 </div>
 
 <div class="table" id="items">
-<?php
-    if ($properties === []) {
-        echo $this->include('none');
-    } else foreach($properties as $property) {
+    <?= $this->include('none') ?>
+    <?php foreach($properties as $property) {
         echo view('admin/property/item', [
             'id'          => $property->id,
             'value'       => $property->value,
@@ -32,8 +30,7 @@
             'usage'       => $property->usage,
             'description' => $property->description ?? "",
         ]);
-    }
-    ?>
+    } ?>
 </div>
 
 <?= $pager->links('default', 'full') ?>
