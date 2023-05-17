@@ -13,7 +13,7 @@
 
         <?php if ($pager->hasPreviousPage()) : ?>
             <li class="pagination__item">
-                <a class="pagination__button" href='<?= $pager->getPrevious() ?>' aria-label="<?= lang('Pager.previous') ?>">
+                <a class="pagination__button" href='<?= $pager->getPreviousPage() ?>' aria-label="<?= lang('Pager.previous') ?>">
                     <span class="pagination__text" aria-hidden="true">&larr;</span>
                 </a>
             </li>
