@@ -67,6 +67,7 @@ class User extends ResponseController
             unset($user->password);
             unset($user->confirmPassword);
         } catch (Exception $e) {
+            $this->logger->error($e->getMessage(), $user->toArray() ?? []);
             return $this->toResponse(
                 $user,
                 ['database' => 'Saving failed, try again later!'],

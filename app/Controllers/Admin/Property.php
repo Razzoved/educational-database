@@ -73,7 +73,7 @@ class Property extends ResponseController
             $property = $this->properties->get($property->id);
             unset($property->children); // can be commented to get children
         } catch (Exception $e) {
-            $this->logger->error($e->getMessage(), $property ?? []);
+            $this->logger->error($e->getMessage(), $property->toArray() ?? []);
             return $this->toResponse(
                 $property,
                 ['error' => 'Could not save property, try again later!'],
@@ -98,11 +98,12 @@ class Property extends ResponseController
 
     public function getAvailable() : Response
     {
-        $properties = $this->properties->getArray(['sort' => 'priority']);
-        if (empty($properties)) {
-            $this->response->setStatusCode(Response::HTTP_NO_CONTENT);
+        try {
+            $properties = $this->properties->getArray(['sort' => 'priority']);
+            return $this->response->setJSON($properties);
+        } catch (\Exception $e) {
+            return $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, 'Could not get available materials');
         }
-        return $this->response->setJSON($properties);
     }
 
     public function delete(int $id) : Response

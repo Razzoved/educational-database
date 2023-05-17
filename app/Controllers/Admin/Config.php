@@ -76,6 +76,7 @@ class Config extends BaseController
         try {
             $this->config->update($config->id, $config);
         } catch (\Exception $e) {
+            $this->logger->error($e->getMessage(), $config->toArray() ?? []);
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
                 "Saving {$config->id} of value: <strong>[{$config->value}]</strong> failed!"

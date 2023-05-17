@@ -115,6 +115,7 @@ class MaterialEditor extends ResponseController
             $this->deleteRemovedFiles($material);
             $this->moveTemporaryFiles($material);
         } catch (Exception $e) {
+            $this->logger->error('Material editor:', $material->toArray() ?? []);
             return $this->index($material, $this->getException($e));
         }
 
