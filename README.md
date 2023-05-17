@@ -1,4 +1,24 @@
-# CodeIgniter 4 Application Starter
+# Interactive database of educational materials
+
+This is an open-source web application provided under an MIT license.
+It uses CodeIgniter as its backend framework, and was created as a bachelor's thesis on FI MUNI.
+
+Be aware that the application was custom created for use by ENAI, and as such its themed after it.
+You can see it on: 'https://academicintegrity.eu/materials/'.
+
+To use the application, simply download one of the provided versions and
+edit the 'env' file to fit your database and server environment:
+
+1. edit the base url - use whatever address you want it to live on.
+    WARNING: if you don't want to create virtual hosts, the application's
+    folder must have the same name as the last part of the url
+    (ex. 'hello/from/the/other-side - server must have path hello/from/the/
+    and the folder must be named other-side)
+
+2. change database credentials
+3. change enviroment (before going public - 'production', else 'development')
+
+If you encounter any issues, follow the instructions on CodeIgniter's website.
 
 ## What is CodeIgniter?
 
