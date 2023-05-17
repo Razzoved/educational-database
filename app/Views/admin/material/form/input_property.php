@@ -34,8 +34,7 @@
                 ? propertyRoot
                 : document.getElementById(`property${property.tag}`);
 
-            const element = parent.insertAdjacentElement('beforeend', template.html(property));
-
+            const element = template.html(property);
             if (parent !== propertyRoot) {
                 parent.classList.add('property--non-empty');
                 parent = parent.querySelector(':scope > .property__children');
@@ -43,9 +42,7 @@
                 element.classList.add('property__item--current');
             }
 
-            console.log(element);
-
-            return element;
+            return parent.insertAdjacentElement('beforeend', element);
         }
 
         const build = (property) => {

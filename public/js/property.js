@@ -12,17 +12,20 @@ const propertyReloadControls = () => {
     const current = propertyRoot.querySelector('.property__item--current');
     if (current && current.previousElementSibling ) {
         prev.removeAttribute('disabled');
+    } else {
+        prev.disabled = true;
     }
     if (current && current.nextElementSibling) {
         next.removeAttribute('disabled');
+    } else {
+        next.disabled = true;
     }
 }
 
 const propertyLockUnlock = () => {
-
     // refresh buttons
     func = propertyRoot.classList.contains('property--unlocked')
-    ? (e, x) => e.setAttribute(x, '')
+        ? (e, x) => e.setAttribute(x, '')
         : (e, x) => e.removeAttribute(x);
 
     const prev = document.getElementById('property-prev');
@@ -54,22 +57,24 @@ const propertyPrev = () => {
 
     document.getElementById('property-next')?.removeAttribute('disabled');
 
-    current.classList.remove('property__item--current');
-    current = current.previousElementSibling;
-    current.classList.add('property__item--current');
-
-    propertyReloadControls();
+    if (current.previousElementSibling) {
+        current.classList.remove('property__item--current');
+        current = current.previousElementSibling;
+        current.classList.add('property__item--current');
+        propertyReloadControls();
+    }
 }
 
 const propertyNext = () => {
     let current = propertyRoot.querySelector('.property__item--current');
     document.getElementById('property-prev')?.removeAttribute('disabled');
 
-    current.classList.remove('property__item--current');
-    current = current.nextElementSibling;
-    current.classList.add('property__item--current');
-
-    propertyReloadControls();
+    if (current.nextElementSibling) {
+        current.classList.remove('property__item--current');
+        current = current.nextElementSibling;
+        current.classList.add('property__item--current');
+        propertyReloadControls();
+    }
 }
 
 const propertyShowUp = (element) => {
