@@ -96,13 +96,20 @@ const propertySetDown = (element, callback) => {
 document.getElementById('property0').addEventListener('click', (event) => {
     event.stopPropagation();
 
-    if (event.target.classList.contains('property__children') || (
-        event.isTrusted && !document.getElementById('property0').classList.contains('property--unlocked')
-    )) {
+    const userClickUnlocked = event.isTrusted
+        && !document.getElementById('property0').classList.contains('property--unlocked');
+
+    if (event.target.classList.contains('property__children') || userClickUnlocked) {
         return;
     }
 
     const target = event.target.closest('.property__item');
+
+    if (target.parentElement.id === 'property0' && !target.querySelector(':scope .property__item')) {
+        console.debug('cannot select category', target.id);
+        return;
+    }
+
     const isActive = propertyToggle(target);
     if (isActive) {
         propertyShowUp(target);
@@ -118,8 +125,8 @@ document.querySelector('form').addEventListener('submit', (event) => {
 
     // select all properties from top level categories (categories are not to be added)
     Array.from(root.querySelectorAll(':scope > .property__item--active')).forEach(category => {
+        const children = Array.from(category.querySelectorAll(`${propertyScope} .property__item`));
         category.input().setAttribute('disabled', '');
-        Array.from(category.querySelectorAll(`${propertyScope} .property__item`))
-            .forEach(tag => tag.input().removeAttribute('disabled'));
+        children.forEach(tag => tag.input().removeAttribute('disabled'));
     });
 });

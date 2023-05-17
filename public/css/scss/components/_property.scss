@@ -101,6 +101,23 @@
     &__item--active > &__children {
         max-height: 0 !important;
     }
+
+    & > :not(&--non-empty) {
+        position: relative;
+        &:hover::before {
+            content: 'Empty categories cannot be selected!';
+            position: absolute;
+            width: 100%;
+            left: 50%;
+            top: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            color: $clr-light;
+            background-color: rgb(201, 58, 58);
+            font-weight: bolder;
+            padding: inherit;
+            border-radius: inherit;
+        }
+    }
 }
 
 #property-prev:not(:disabled),

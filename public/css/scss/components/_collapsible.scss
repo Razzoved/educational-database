@@ -27,7 +27,7 @@
         &:hover {
             background-color: $clr-focus-bg;
         }
-        &:hover * {
+        &:hover :not(&--search) {
             color: $clr-focus;
             background-color: unset;
         }
