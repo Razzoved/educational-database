@@ -15,7 +15,7 @@
 
 <?php if ($childCount > 0) : ?>
 
-<div class="collapsible collapsible--no-overflow<?= !$isFirstLevel ? ' collapsible--collapsed' : '' ?>">
+<div class="collapsible collapsible--no-overflow<?= (!$isFirstLevel && $type !== 'button' ) ? ' collapsible--collapsed' : '' ?>">
 
     <div class="collapsible__header">
 
@@ -28,6 +28,16 @@
                 title="Use all from group"
                 onchange="toggleCollapsible(this, 'collapsible--selected')"
             />
+        <?php else : ?>
+            <button class="collapsible__header--search" type="button" onclick="searchCategory(this.closest('.collapsible'))">
+                <input type="hidden"
+                    id="filter_<?= $property->id ?>"
+                    name="group"
+                    value="<?= $property->id?>"
+                    data-action="<?= url_to('Material::index') ?>"
+                />
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
         <?php endif; ?>
 
         <button class="collapsible__toggle" type="button" onclick="toggleCollapsible(this)">
@@ -40,19 +50,8 @@
     <div class="collapsible__content">
 
         <ul class="collapsible__items">
-            <?php
-                $index = 0;
-                $children = $property->children;
-                if ($type === 'button') {
-                    array_unshift($children, new App\Entities\Property([
-                        'id' => $property->id,
-                        'tag' => $property->tag,
-                        'value' => $property->value,
-                    ]));
-                }
-            ?>
-
-            <?php foreach ($children as $item) : ?>
+            <?php $index = 0; ?>
+            <?php foreach ($property->children as $item) : ?>
                 <?= view('property/collapsible_item', [
                     'isOverflow' => $index++ >= $maxIndex,
                     'property' => $item,
@@ -62,7 +61,7 @@
             <?php endforeach; ?>
         </ul>
 
-        <?php if (sizeof($children) > $maxIndex) : ?>
+        <?php if (sizeof($property->children) > $maxIndex) : ?>
             <button class="collapsible__toggle-overflow" type="button" onclick="toggleOverflow(this)">Show more</button>
         <?php endif; ?>
 

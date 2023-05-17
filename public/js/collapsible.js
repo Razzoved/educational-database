@@ -51,6 +51,29 @@ const appendFilter = (form, name, value) => {
     form.appendChild(item);
 }
 
+const searchCategory = (categoryElement) => {
+    const toSearch = Array.from(categoryElement.querySelectorAll('input[name="group"]'));
+    const category = toSearch[0];
+
+    const form = document.createElement('form');
+    form.action = category.getAttribute('data-action');
+    form.method = 'GET';
+
+    toSearch.forEach(item => {
+        const name = `${item.name}[${category.value}]`;
+        appendFilter(form, name, item.value);
+    });
+
+    window.sessionStorage.setItem('reapply-filters', JSON.stringify([category.id]));
+    document.body.appendChild(form).submit();
+}
+
+const searchFilter = (form) => {
+    const filter = form.querySelector('input');
+    window.sessionStorage.setItem('reapply-filters', JSON.stringify([filter.id]));
+    form.submit();
+}
+
 const appendFilters = (form) => {
     saveFilters();
 
@@ -88,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const pathname = window.sessionStorage.getItem('reapply-page');
         const filters = window.sessionStorage.getItem('reapply-filters');
 
-        if (pathname && pathname === window.location.pathname && filters) {
+        if ((!pathname || pathname === window.location.pathname) && filters) {
             const parsedFilters = JSON.parse(filters);
             window.history.replaceState({
                 ...window.history.state,

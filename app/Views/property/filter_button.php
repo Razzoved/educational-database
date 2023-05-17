@@ -4,8 +4,6 @@
         Toggle tags
     </button>
     <?php foreach ($properties as $property) : ?>
-        <?php if (isset($property->children) && !empty($property->children)) : ?>
-            <?= view('property/collapsible', ['property' => $property, 'type' => 'button', 'isFirstLevel' => true]) ?>
-        <?php endif; ?>
+        <?= view('property/collapsible', ['property' => $property, 'type' => 'button', 'isFirstLevel' => true]) ?>
     <?php endforeach; ?>
 </div>

@@ -21,9 +21,10 @@
 
         <form class="filter" method="get" action='<?= url_to('Material::index') ?>'>
             <input type="hidden"
+                id="filter_<?= $property->id ?>"
                 name="filter"
                 value="<?= $property->id ?>">
-            <button class="filter__label" style="text-align: start" type="submit"><?= esc($property->value) ?></button>
+            <button class="filter__label" style="text-align: start" type="button" onclick="searchFilter(this.closest('.filter'))"><?= esc($property->value) ?></button>
         </form>
 
     <?php else : ?>
