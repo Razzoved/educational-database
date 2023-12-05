@@ -1,0 +1,29 @@
+parameters:
+  tmpDir: build/phpstan
+  level: 6
+  paths:
+    - src
+    - tests
+  bootstrapFiles:
+    - vendor/codeigniter4/codeigniter4/system/Test/bootstrap.php
+  parallel:
+    processTimeout: 300.0
+  dynamicConstantNames:
+    - ENVIRONMENT
+  scanDirectories:
+    - vendor/codeigniter4/codeigniter4/app/Config
+    - vendor/codeigniter4/codeigniter4/system
+  scanFiles:
+    - vendor/codeigniter4/codeigniter4/app/Config/Constants.php
+    - vendor/codeigniter4/codeigniter4/system/bootstrap.php
+  polluteScopeWithLoopInitialAssignments: false
+  polluteScopeWithAlwaysIterableForeach: false
+  checkAlwaysTrueCheckTypeFunctionCall: true
+  checkAlwaysTrueInstanceof: true
+  checkAlwaysTrueStrictComparison: true
+  checkExplicitMixedMissingReturn: true
+  checkFunctionNameCase: true
+  checkMissingClosureNativeReturnTypehintRule: true
+  checkMissingIterableValueType: false
+  reportMaybesInMethodSignatures: true
+  reportStaticMethodSignatures: true

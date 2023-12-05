@@ -1,0 +1,71 @@
+{
+    "name": "liaison/revision",
+    "type": "library",
+    "description": "Seamless software updates library for CodeIgniter4 projects.",
+    "keywords": [
+        "software",
+        "updates",
+        "revision",
+        "codeigniter4"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Paul E. Balandan, CPA",
+            "email": "paulbalandan@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "ext-intl": "*",
+        "sebastian/diff": "^4.0",
+        "symfony/filesystem": "^5.1",
+        "symfony/process": "^5.1"
+    },
+    "require-dev": {
+        "ext-tokenizer": "*",
+        "codeigniter4/codeigniter4": "4.x-dev",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "nexusphp/cs-config": "^3.2",
+        "nexusphp/tachycardia": "^1.3",
+        "phpstan/phpstan": "^0.12",
+        "phpunit/phpunit": "^9.5"
+    },
+    "suggest": {
+        "ext-dom": "For using the XmlLogHandler."
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "1.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Liaison\\Revision\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Liaison\\Revision\\Tests\\": "tests/src/",
+            "Tests\\Support\\": "tests/_support/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/codeigniter4/codeigniter4",
+            "canonical": true
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "support": {
+        "issues": "https://github.com/paulbalandan/liaison-revision/issues",
+        "source": "https://github.com/paulbalandan/liaison-revision"
+    }
+}
