@@ -98,20 +98,19 @@ define('EVENT_PRIORITY_HIGH', 10);
  *
  * @author Jan Martinek
  */
-define('WINDOWS_SEPARATOR', '\\');
-define('UNIX_SEPARATOR', '/');
+defined('WINDOWS_SEPARATOR') || define('WINDOWS_SEPARATOR', '\\');
+defined('UNIX_SEPARATOR')    || define('UNIX_SEPARATOR', '/');
 
-define('PERM', 'uploads' . UNIX_SEPARATOR);
-define('TEMP', 'temp' . UNIX_SEPARATOR);
-define('UNUSED', 'unused' . UNIX_SEPARATOR);
+defined('ASSET_PREFIX') || define('ASSET_PREFIX', 'public' . UNIX_SEPARATOR . 'assets' . UNIX_SEPARATOR);
 
-define('ASSET_PREFIX', 'public' . UNIX_SEPARATOR . 'assets' . UNIX_SEPARATOR);
-define('SAVE_PREFIX', 'public' . UNIX_SEPARATOR . PERM);
-define('TEMP_PREFIX', 'public' . UNIX_SEPARATOR . TEMP);
+defined('SAVE_PREFIX') || define('SAVE_PREFIX', 'public' . UNIX_SEPARATOR . 'uploads' . UNIX_SEPARATOR);
+defined('SAVE_PATH')   || define('SAVE_PATH', ROOTPATH . SAVE_PREFIX);
 
-define('SAVE_PATH', ROOTPATH . SAVE_PREFIX);
-define('TEMP_PATH', ROOTPATH . TEMP_PREFIX);
+defined('TEMP')        || define('TEMP', 'temp' . UNIX_SEPARATOR);
+defined('TEMP_PREFIX') || define('TEMP_PREFIX', 'public' . UNIX_SEPARATOR . TEMP);
+defined('TEMP_PATH')   || define('TEMP_PATH', ROOTPATH . TEMP_PREFIX);
 
-define('UNUSED_PATH', TEMP_PATH . UNUSED);
+defined('UNUSED')      || define('UNUSED', 'unused' . UNIX_SEPARATOR);
+defined('UNUSED_PATH') || define('UNUSED_PATH', TEMP_PATH . UNUSED);
 
-define('ADMIN_PAGE_SIZE', 15);
+defined('ADMIN_PAGE_SIZE') || define('ADMIN_PAGE_SIZE', 15);

@@ -2,9 +2,8 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
+use App\Controllers\ExtendedController;
 use App\Entities\Config as EntitiesConfig;
-use App\Entities\Material as EntitiesMaterial;
 use App\Models\ConfigModel;
 use CodeIgniter\Files\File;
 use CodeIgniter\HTTP\Files\UploadedFile;
@@ -13,7 +12,7 @@ use CodeIgniter\HTTP\Response;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class Config extends BaseController
+class Config extends ExtendedController
 {
     protected const RULES = [
         'default_image' => 'is_image[value]',

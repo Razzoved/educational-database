@@ -10,9 +10,9 @@
 
 body {
     height: 100%;
-    background: $main-bg-color);
+    background: var(--main-bg-color);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-    color: $main-text-color);
+    color: var(--main-text-color);
     font-weight: 300;
     margin: 0;
     padding: 0;
@@ -21,7 +21,7 @@ h1 {
     font-weight: lighter;
     letter-spacing: 0.8;
     font-size: 3rem;
-    color: $dark-text-color);
+    color: var(--dark-text-color);
     margin: 0;
 }
 h1.headline {
@@ -40,8 +40,8 @@ p.lead {
     padding: 1rem;
 }
 .header {
-    background: $light-bg-color);
-    color: $dark-text-color);
+    background: var(--light-bg-color);
+    color: var(--dark-text-color);
 }
 .header .container {
     padding: 1rem 1.75rem 1.75rem 1.75rem;
@@ -56,7 +56,7 @@ p.lead {
     line-height: 2.5;
 }
 .header a {
-    color: $brand-primary-color);
+    color: var(--brand-primary-color);
     margin-left: 2rem;
     display: none;
     text-decoration: none;
@@ -66,8 +66,8 @@ p.lead {
 }
 
 .footer {
-    background: $dark-bg-color);
-    color: $light-text-color);
+    background: var(--dark-bg-color);
+    color: var(--light-text-color);
 }
 .footer .container {
     border-top: 1px solid #e7e7e7;
@@ -77,7 +77,7 @@ p.lead {
 
 .source {
     background: #343434;
-    color: $light-text-color);
+    color: var(--light-text-color);
     padding: 0.5em 1em;
     border-radius: 5px;
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -93,8 +93,8 @@ p.lead {
 }
 .source .line .highlight {
     display: block;
-    background: $dark-text-color);
-    color: $light-text-color);
+    background: var(--dark-text-color);
+    color: var(--light-text-color);
 }
 .source span.highlight .number {
     color: #fff;
@@ -115,8 +115,8 @@ p.lead {
     padding: 0rem 1rem;
     line-height: 2.7;
     text-decoration: none;
-    color: $dark-text-color);
-    background: $light-bg-color);
+    color: var(--dark-text-color);
+    background: var(--light-bg-color);
     border: 1px solid rgba(0,0,0,0.15);
     border-bottom: 0;
     border-top-left-radius: 5px;
@@ -124,15 +124,15 @@ p.lead {
     display: inline-block;
 }
 .tabs a:hover {
-    background: $light-bg-color);
+    background: var(--light-bg-color);
     border-color: rgba(0,0,0,0.15);
 }
 .tabs a.active {
-    background: $main-bg-color);
-    color: $main-text-color);
+    background: var(--main-bg-color);
+    color: var(--main-text-color);
 }
 .tab-content {
-    background: $main-bg-color);
+    background: var(--main-bg-color);
     border: 1px solid rgba(0,0,0,0.15);
 }
 .content {
@@ -186,7 +186,7 @@ td pre {
     font-weight: bold;
 }
 .trace td {
-    background: $light-bg-color);
+    background: var(--light-bg-color);
     padding: 0 1rem;
 }
 .trace td pre {

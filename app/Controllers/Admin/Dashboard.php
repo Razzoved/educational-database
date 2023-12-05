@@ -2,13 +2,13 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
+use App\Controllers\ExtendedController;
 use App\Entities\Material as EntitiesMaterial;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class Dashboard extends BaseController
+class Dashboard extends ExtendedController
 {
     protected const COUNT_TOP = 10;
     protected const COUNT_RECENT = 10;

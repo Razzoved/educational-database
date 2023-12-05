@@ -14,7 +14,7 @@ use CodeIgniter\HTTP\Response;
 use Exception;
 use Psr\Log\LoggerInterface;
 
-class Material extends BaseController
+class Material extends ExtendedController
 {
     protected MaterialModel $materials;
     protected MaterialPropertyModel $materialProperties;

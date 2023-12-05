@@ -2,13 +2,13 @@
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\BaseController;
+use App\Controllers\ExtendedController;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\Validation\Exceptions\ValidationException;
 use Exception;
 
-class ResponseController extends BaseController
+class ResponseController extends ExtendedController
 {
     protected function doDelete(int $id, callable $find, callable $delete, string $entityName = 'entity'): Response
     {
