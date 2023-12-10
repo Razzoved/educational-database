@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
@@ -37,7 +39,7 @@ class Config extends ExtendedController
         $this->config = model(ConfigModel::class);
     }
 
-    public function index() : string
+    public function index(): string
     {
         return $this->view('config', [
             'meta_title'   => 'Administration - Config',
@@ -47,10 +49,9 @@ class Config extends ExtendedController
         ]);
     }
 
-    public function save() : Response
+    public function save(): Response
     {
         $type = $this->request->getPost('type');
-        $value = $this->request->getFile('value') ?? $this->request->getPost('value');
 
         if (!$type || !isset(self::RULES[$type])) {
             return $this->response->setStatusCode(
@@ -58,18 +59,19 @@ class Config extends ExtendedController
                 'Invalid data given as a request!'
             );
         }
-        if (!$this->validate([ 'value' => self::RULES[$type] ])) {
+        if (!$this->validate(['value' => self::RULES[$type]])) {
             return $this->response->setStatusCode(
                 Response::HTTP_BAD_REQUEST,
                 $this->validator->getError((string) $type)
             );
         }
 
+        $data = $this->validator->getValidated();
         $config = new EntitiesConfig([
             'id' => $type,
             'value' => $type === 'default_image'
-                ? self::uploadDefaultImage((object) $value)
-                : $value
+                ? self::uploadDefaultImage((object) $data['value'])
+                : $data['value']
         ]);
 
         try {
@@ -85,7 +87,7 @@ class Config extends ExtendedController
         return $this->response->setJSON($config);
     }
 
-    public function resetImage() : Response
+    public function resetImage(): Response
     {
         $default = new EntitiesConfig(self::DEFAULT_IMAGE);
 
@@ -104,9 +106,9 @@ class Config extends ExtendedController
         return $this->response->setJSON($default);
     }
 
-    private static function uploadDefaultImage(UploadedFile $uploadedFile) : string
+    private static function uploadDefaultImage(UploadedFile $uploadedFile): string
     {
-        $path = WRITEPATH .'uploads' . UNIX_SEPARATOR . $uploadedFile->store();
+        $path = WRITEPATH . 'uploads' . UNIX_SEPARATOR . $uploadedFile->store();
 
         $file = new File($path, true);
         $file = $file->move(self::IMAGE_PREFIX, self::IMAGE, true);
