@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers;
 
@@ -11,7 +13,7 @@ class Authentication extends ExtendedController
         'password' => 'required|string|user_password[{email}]',
     ];
 
-    public function index() : string
+    public function index(): string
     {
         return $this->view('user_login');
     }
@@ -22,14 +24,14 @@ class Authentication extends ExtendedController
             return $this->view('user_login', ['errors' => $this->validator->getErrors()]);
         }
 
-        $user = model(UserModel::class)->getEmail($this->request->getPost('email') ?? "");
+        $user = model(UserModel::class)->getEmail($this->validator->getValidated()['email'] ?? "");
         unset($user->password);
 
         session()->set([
             'user' => $user,
             'isLoggedIn' => true,
         ]);
-        session()->remove('reset[${user->id}]');
+        session()->remove("reset[{$user->id}]");
 
         return previous_url() === url_to('Authentication::login')
             ? redirect()->to(url_to('Admin\Dashboard::index'))
@@ -51,7 +53,7 @@ class Authentication extends ExtendedController
      *
      * @param string $email The email address to send token to.
      */
-    public function reset(string $email) : string
+    public function reset(string $email): string
     {
         $user = model(UserModel::class)->getEmail($email);
         unset($user->password);
@@ -71,12 +73,12 @@ class Authentication extends ExtendedController
         $msg->setSubject("Password reset");
         $msg->setMessage(
             "Hello {$user->name}!{$msg->newline}" .
-            "{$msg->newline}" .
-            "--------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -{$msg->newline}" .
-            "| TOKEN | {$token}{$msg->newline}" .
-            "--------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -{$msg->newline}" .
-            "{$msg->newline}" .
-            "This token will work until another email is sent or your session runs out."
+                "{$msg->newline}" .
+                "--------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -{$msg->newline}" .
+                "| TOKEN | {$token}{$msg->newline}" .
+                "--------- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -{$msg->newline}" .
+                "{$msg->newline}" .
+                "This token will work until another email is sent or your session runs out."
         );
         $msg->send();
 
@@ -105,11 +107,12 @@ class Authentication extends ExtendedController
             ]);
         }
 
-        $id = $this->request->getPost('id');
+        $data = $this->validator->getValidated();
+        $id = $data['id'];
 
         // verify against session
         $reset = session()->get("reset[{$id}]");
-        if (!isset($reset) || $this->request->getPost('token') !== $reset) {
+        if (!isset($reset) || $data['token'] !== $reset) {
             return $this->view('user_reset', [
                 'errors' => array('Invalid token!')
             ]);
@@ -118,7 +121,7 @@ class Authentication extends ExtendedController
         // save data and clear session
         try {
             model(UserModel::class)->update($id, [
-                'user_password' => $this->request->getPost('password'),
+                'user_password' => $data['password'],
             ]);
             session()->remove("reset[{$id}]");
         } catch (\Exception $e) {
