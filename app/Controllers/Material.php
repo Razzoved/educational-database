@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers;
 
@@ -20,7 +22,7 @@ class Material extends ExtendedController
     protected MaterialPropertyModel $materialProperties;
     protected RatingsModel $ratings;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) : void
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger): void
     {
         parent::initController($request, $response, $logger);
 
@@ -33,7 +35,7 @@ class Material extends ExtendedController
      * Returns a view of a given page. If the page number is greater than
      * total number of pages, it returns the last page.
      */
-    public function index() : string
+    public function index(): string
     {
         $data = [
             'meta_title' => 'Materials',
@@ -53,7 +55,7 @@ class Material extends ExtendedController
      *
      * @param int $page number of the page (0 <= $page < number of pages)
      */
-    public function get(int $id) : string
+    public function get(int $id): string
     {
         $material = $this->materials->get($id);
         if (!$material)
@@ -85,7 +87,7 @@ class Material extends ExtendedController
      * @uses $_POST['id'] id of material to rate
      * @uses $_POST['value'] value of rating to set for the user
      */
-    public function rate(int $id) : Response
+    public function rate(int $id): Response
     {
         $rules = [
             'value' => 'required|is_natural|less_than_equal_to[5]'
@@ -98,7 +100,8 @@ class Material extends ExtendedController
             );
         }
 
-        $value = (int) $this->request->getPost('value');
+        $data = $this->validator->getValidated();
+        $value = (int) $data['value'];
         $material = $this->materials->find($id);
 
         if (!$material) {
@@ -139,15 +142,17 @@ class Material extends ExtendedController
      *                               HELPERS
      *  ------------------------------------------------------------------- */
 
-    protected function getOptions() : array
+    protected function getOptions(): array
     {
         return array_map(
-            function ($mat) { return $mat->title; },
+            function ($mat) {
+                return $mat->title;
+            },
             $this->materials->getArray(['sort' => 'published_at', 'callbacks' => false]),
         );
     }
 
-    protected function getMaterials(int $perPage = 10) : array
+    protected function getMaterials(int $perPage = 10): array
     {
         return $this->materials->getPage(
             (int) $this->request->getGetPost('page') ?? 1,
