@@ -1,9 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Validation;
 
-use App\Entities\Cast\StatusCast;
-use App\Entities\Property;
+use App\Models as Models;
+use App\Entities as Entities;
+use App\Entities\Cast as Casts;
 use CodeIgniter\Files\File;
 use CodeIgniter\Validation\FormatRules;
 
@@ -15,20 +18,20 @@ use CodeIgniter\Validation\FormatRules;
 class Rules
 {
     /**
-     * Checks if user's email is unique within the database. Takes into consideration
-     * the possibility of it being the email of the user, which evaluates to true.
+     * Checks if user's email is unique within the database. A unique email for this purpose
+     * is an email that either:
+     *  - does not exist in database yet
+     *  - exists exactly once and the 'id' matches
      *
      * @param string $email  The user's email.
-     * @param array $data    The data of the request
+     * @param ?string $id    The user's id.
      */
-    public function user_unique_email(string $email, $ignored, array $data): bool
+    public function user_unique_email(string $email, ?string $id): bool
     {
-        $id = $data['id'];
-
-        $users = model(UserModel::class)->where('user_email', $email)->findAll(2);
-        $count = sizeof($users);
-
-        return $count === 0 || ($count === 1 && is_numeric($id) && $users[0]->id === (int) $id);
+        $model = model(Models\UserModel::class);
+        return (is_numeric($id))
+            ? $model->find($id)->email === $email
+            : empty($model->where('user_email', $email)->findAll(2));
     }
 
     /**
@@ -36,7 +39,7 @@ class Rules
      */
     public function user_email(string $email): bool
     {
-        return model(UserModel::class)->where('user_email', $email)->first() !== null;
+        return model(Models\UserModel::class)->where('user_email', $email)->first() !== null;
     }
 
     /**
@@ -44,16 +47,16 @@ class Rules
      */
     public function user_password(string $password, string $email): bool
     {
-        $user = model(UserModel::class)->where('user_email', $email)->first();
+        $user = model(Models\UserModel::class)->where('user_email', $email)->first();
         return $user && password_verify($password, $user->password);
     }
 
     /**
      * Checks if the value is a valid StatusCast value.
      */
-    public function valid_status(string $status) : bool
+    public function valid_status(string $status): bool
     {
-        return StatusCast::isValid($status) || StatusCast::isValidIndex($status);
+        return Casts\StatusCast::isValid($status) || Casts\StatusCast::isValidIndex($status);
     }
 
     /**
@@ -64,21 +67,21 @@ class Rules
      * @param array $data    The data of the request
      * @param ?string $error Pointer to error message
      */
-    public function property_unique_value(string $value, $ignored, array $data, ?string &$error = null) : bool
+    public function property_unique_value(string $value, $ignored, array $data, ?string &$error = null): bool
     {
         $id = $data['id'] ?? null;
         $tag = $data['tag'] ?? null;
 
         if ($value === "") {
-            $error = lang('Validation.property_unique_value') . ' value is required!';
+            $error = sprintf('%s\nValue: %s', lang('Validation.property_unique_value'), lang('Errors.empty_string'));
             return false;
         }
         if (!is_numeric($tag)) {
-            $error = lang('Validation.property_unique_value') . ' tag is not numeric!';
+            $error = sprintf('%s\nTag: %s', lang('Validation.property_unique_value'), lang('Errors.not_a_number'));
             return false;
         }
 
-        $properties = model(PropertyModel::class)
+        $properties = model(Models\PropertyModel::class)
             ->where('property_tag', (int) $tag)
             ->where('property_value', $value)
             ->findAll(2);
@@ -94,7 +97,7 @@ class Rules
      * @param array $data    The data of the request
      * @param ?string $error Pointer to error message
      */
-    public function property_tag(int $tag, $ignored, array $data, ?string &$error = null) : bool
+    public function property_tag(int $tag, $ignored, array $data, ?string &$error = null): bool
     {
         $id = $data['id'];
 
@@ -103,13 +106,18 @@ class Rules
         }
 
         if (!is_numeric($id)) {
-            $error = 'Invalid id; id is not a number!';
+            $error = sprintf(
+                '%s\n%s: %s',
+                lang('Validation.property_tag'),
+                lang('Errors.invalid_id'),
+                lang('Errors.not_a_number')
+            );
             return false;
         }
 
         return !self::checkCyclic(
             $tag,
-            model(PropertyModel::class)->getTreeRecursive(new Property(['id' => $id])),
+            model(Models\PropertyModel::class)->getTreeRecursive(new Entities\Property(['id' => $id])),
             $error,
             lang('Validation.property_tag')
         );
@@ -118,7 +126,7 @@ class Rules
     /**
      * Helper method, checks if $id does not exists in the subtree of property.
      */
-    private static function checkCyclic(int $id, Property $property, ?string &$error = null, string $prefix = '') : bool
+    private static function checkCyclic(int $id, Entities\Property $property, ?string &$error = null, string $prefix = ''): bool
     {
         if ($property->id === $id) {
             $error = "{$prefix}<br>[{$property->value}]";
@@ -132,9 +140,9 @@ class Rules
     }
 
     /**
-     * Checks if link are a valid array of urls.
+     * Checks if the given value is an array of urls.
      */
-    public function valid_links($links) : bool
+    public function valid_links($links): bool
     {
         if (!is_array($links)) {
             return false;
@@ -149,22 +157,25 @@ class Rules
     }
 
     /**
-     * Check if files are a valid array of 'rootPath' => 'filename'
+     * Check if the given value is an array of 'rootPath' => 'filename' values
      */
-    public function valid_files($files, ?string &$error = null) : bool
+    public function valid_files($files, ?string &$error = null): bool
     {
         if (!is_array($files)) {
             return false;
         }
         foreach ($files as $tmpPath => $value) {
             if ($value == "") {
-                $error = lang('Validation.valid_files') . ' invalid FILENAME!';
+                $error = sprintf('%s\n%s', lang('Validation.valid_files'), lang('Errors.empty_string'));
                 return false;
             }
             if (!file_exists(ROOTPATH . $tmpPath)) {
-                $error = lang('Validation.valid_files') .
-                    '<strong>[' . $tmpPath . ']</strong>' .
-                    ' is not a valid file!';
+                $error = sprintf(
+                    '%s\n%s -> <strong>%s</strong>',
+                    lang('Validation.valid_files'),
+                    lang('Errors.not_found'),
+                    $tmpPath
+                );
                 return false;
             }
         }
@@ -174,7 +185,7 @@ class Rules
     /**
      * Check if given path is a valid relative path to an image.
      */
-    public function valid_image(string $imagePath) : bool
+    public function valid_image(string $imagePath): bool
     {
         $file = new File(ROOTPATH . $imagePath);
         if (!isset($imagePath) || !$file->getRealPath()) {
@@ -189,7 +200,7 @@ class Rules
     /**
      * Checks if all items of array are numbers.
      */
-    public function valid_related($relations) : bool
+    public function valid_related($relations): bool
     {
         if (!is_array($relations)) {
             return false;
@@ -202,7 +213,7 @@ class Rules
         return true;
     }
 
-    public function null_only($input) : bool
+    public function null_only($input): bool
     {
         return !isset($input) || $input === null;
     }
