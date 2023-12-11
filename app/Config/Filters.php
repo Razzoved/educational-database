@@ -25,6 +25,10 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
+        'authGuard'     => \App\Filters\AuthGuard::class,
+        'checkAuth'     => \App\Filters\CheckAuth::class,
+        'throttle'      => \App\Filters\Throttle::class,
+        'ajax'          => \App\Filters\Ajax::class,
     ];
 
     /**
