@@ -10,14 +10,12 @@ use CodeIgniter\Database\Seeder;
 
 class Initialize extends Seeder
 {
+    /**
+     * Database must already be created for this command to work,
+     * you can use 'php spark db:create <name>'
+     */
     public function run()
     {
-        $dbPrefix = $this->db->getPrefix();
-        $dbName = $this->db->getDatabase() == '' ? 'materials' : $this->db->getDatabase();
-
-        // create db if it does not exist yet
-        $this->forge->createDatabase($dbName, true);
-
         // create all tables, order is set because of dependencies
         $this->_config();
         $this->_users();
@@ -270,7 +268,7 @@ class Initialize extends Seeder
     {
         $name = model(M\UserModel::class)->builder()->getTable();
         $this->forge->addField([
-            'user_id' => $this->id(false),
+            'user_id' => $this->id(false, true),
         ]);
         $this->forge->addForeignKey('user_id', $name, 'id', 'CASCADE', 'SET NULL');
     }
