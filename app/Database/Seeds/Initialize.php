@@ -70,6 +70,8 @@ class Initialize extends Seeder
     private function _material_material()
     {
         // TODO: consider changing this to a different model
+        // INFO: new model prepared for future updates
+        //       see https://app.quickdatabasediagrams.com/#/d/bkkApv
         $name = model(M\MaterialMaterialModel::class)->builder()->getTable();
         $matName = model(M\MaterialModel::class)->builder()->getTable();
         $this->forge->addField([
