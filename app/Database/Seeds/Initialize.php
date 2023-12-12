@@ -206,8 +206,6 @@ class Initialize extends Seeder
             'value' => [
                 'type'       => 'INT',
                 'constraint' => 10,
-                'null'       => true,
-                'default'    => null,
             ],
         ]);
         $this->material_id();
