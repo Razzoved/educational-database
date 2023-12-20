@@ -1,13 +1,14 @@
 <?php
-    /**
-     * Template for a single material page.
-     *
-     * Expects:
-     * @param array $filters
-     * @param array $options
-     * @param array $materials
-     * @param mixed $pager
-     */
+
+/**
+ * Template for a single material page.
+ *
+ * Expects:
+ * @param array $filters
+ * @param array $options
+ * @param array $materials
+ * @param mixed $pager
+ */
 ?>
 
 <?= $this->extend('layouts/main') ?>
@@ -24,7 +25,7 @@
 </div>
 <div id="items">
     <?= $this->include('none') ?>
-    <?php foreach($materials as $material) {
+    <?php foreach ($materials as $material) {
         echo view('material/item', ['material' => $material]);
     } ?>
 </div>

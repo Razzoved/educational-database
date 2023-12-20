@@ -1,12 +1,13 @@
 <?php
-    /**
-     * Partial view that generates property form selections.
-     * It requires property_selector javascript file to be loaded.
-     *
-     * @param array $available  properties that are available at load time
-     * @param array $properties properties already loaded into the material
-     */
-    helper('form');
+
+/**
+ * Partial view that generates property form selections.
+ * It requires property_selector javascript file to be loaded.
+ *
+ * @param array $available  properties that are available at load time
+ * @param array $properties properties already loaded into the material
+ */
+helper('form');
 ?>
 <div class="form__group form__group--horizontal-flex">
     <button id="property-toggle" type="button" class="form__button form__button--large" onclick="propertyLockUnlock()">Change</button>
@@ -30,9 +31,9 @@
         const template = `<?= view('admin/material/form/item_property') ?>`;
 
         const addToParent = (property) => {
-            let parent = property.tag == 0
-                ? propertyRoot
-                : document.getElementById(`property${property.tag}`);
+            let parent = property.tag == 0 ?
+                propertyRoot :
+                document.getElementById(`property${property.tag}`);
 
             const element = template.html(property);
             if (parent !== propertyRoot) {
@@ -86,9 +87,9 @@
     /* PROPERTY CREATION SECTION */
 
     const formTemplate = `<?= json_encode(view(
-        'admin/property/form',
-        ['title' => null, 'submit' => null, 'onSubmit' => 'propertySubmit(this)']
-    )) ?>`;
+                                'admin/property/form',
+                                ['title' => null, 'submit' => null, 'onSubmit' => 'propertySubmit(this)']
+                            )) ?>`;
 
     const propertyCreate = () => {
         const template = formTemplate.fill({

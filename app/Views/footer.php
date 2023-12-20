@@ -32,7 +32,7 @@
         </a>
     </section>
 
-    <?php $aboutURL = model(ConfigModel::class)->find('about_url') ?>
+    <?php $aboutURL = model(\App\Models\ConfigModel::class)->find('about_url') ?>
     <?php if ($aboutURL) : ?>
         <section class="footer__small-area">
             <a id="link-about" href="<?= $aboutURL->value ?>" style="color: white">

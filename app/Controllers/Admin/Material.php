@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
@@ -7,7 +9,7 @@ use CodeIgniter\HTTP\Response;
 
 class Material extends ControllersMaterial
 {
-    public function index() : string
+    public function index(): string
     {
         $this->setSort('updated_at');
 
@@ -21,7 +23,7 @@ class Material extends ControllersMaterial
         ]);
     }
 
-    public function getAvailable() : Response
+    public function getAvailable(): Response
     {
         try {
             $materials = $this->materials->allowCallbacks(false)->getArray(['sort' => 'published_at']);

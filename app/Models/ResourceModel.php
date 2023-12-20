@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -26,25 +28,25 @@ class ResourceModel extends Model
 
     protected $returnType = Resource::class;
 
-    public function getResources(int $materialId) : array
+    public function getResources(int $materialId): array
     {
         return $this->where('material_id', $materialId)
-                    ->orderBy('resource_type')
-                    ->orderBy('resource_path')
-                    ->findAll();
+            ->orderBy('resource_type')
+            ->orderBy('resource_path')
+            ->findAll();
     }
 
-    public function getThumbnail(int $materialId) : array
+    public function getThumbnail(int $materialId): array
     {
         return $this->where('material_id', $materialId)
-                    ->where('resource_type', 'thumbnail')
-                    ->findAll();
+            ->where('resource_type', 'thumbnail')
+            ->findAll();
     }
 
-    public function getByPath(int $materialId, string $path) : ?Resource
+    public function getByPath(int $materialId, string $path): ?Resource
     {
         return $this->where('material_id', $materialId)
-                    ->where('resource_path', $path)
-                    ->first();
+            ->where('resource_path', $path)
+            ->first();
     }
 }

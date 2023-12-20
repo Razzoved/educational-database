@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -36,17 +38,17 @@ class MaterialPropertyModel extends Model
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
-    public function get(int $materialId) : array
+    public function get(int $materialId): array
     {
         $this->select('property_id')
-             ->groupBy('property_id')
-             ->having('COUNT(material_id) > 0')
-             ->where('material_id', $materialId);
+            ->groupBy('property_id')
+            ->having('COUNT(material_id) > 0')
+            ->where('material_id', $materialId);
 
         return PropertyLib::getFiltered(array_column($this->findAll(), 'property_id'));
     }
 
-    public function getArray(int $materialId) : array
+    public function getArray(int $materialId): array
     {
         return model(PropertyModel::class)
             ->join($this->table, 'property_id')
@@ -54,15 +56,15 @@ class MaterialPropertyModel extends Model
             ->getArray();
     }
 
-    public function getUsed() : array
+    public function getUsed(): array
     {
         $this->select('property_id')
-             ->groupBy('property_id')
-             ->having('COUNT(material_id) >', 0);
+            ->groupBy('property_id')
+            ->having('COUNT(material_id) >', 0);
 
         if (!session('isLoggedIn')) {
             $this->join('materials', 'material_id')
-                 ->where('material_status', StatusCast::PUBLIC);
+                ->where('material_status', StatusCast::PUBLIC);
         }
 
         return PropertyLib::getFiltered(array_column($this->findAll(), 'property_id'));
@@ -96,7 +98,7 @@ class MaterialPropertyModel extends Model
      *
      * @param material $material material to insert/delete with
      */
-    public function saveMaterial(Material $material) : bool
+    public function saveMaterial(Material $material): bool
     {
         $this->db->transStart();
 
@@ -150,7 +152,7 @@ class MaterialPropertyModel extends Model
      *                              HELPERS
      *  ------------------------------------------------------------------- */
 
-    protected function filterOr(array &$filtered, array $groups) : void
+    protected function filterOr(array &$filtered, array $groups): void
     {
         foreach ($groups as $ids) {
             $m = array_column(
@@ -165,7 +167,7 @@ class MaterialPropertyModel extends Model
         }
     }
 
-    protected function filterAnd(array &$filtered, array $ids) : void
+    protected function filterAnd(array &$filtered, array $ids): void
     {
         foreach ($ids as $id) {
             $m = array_column(

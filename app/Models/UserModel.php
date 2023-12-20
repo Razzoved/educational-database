@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -32,41 +34,41 @@ class UserModel extends Model
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
-    public function get(int $id, array $data = []) : ?User
+    public function get(int $id, array $data = []): ?User
     {
         return $this->setupQuery($data)->find($id);
     }
 
-    public function getArray(array $data = [], int $limit = 0) : array
+    public function getArray(array $data = [], int $limit = 0): array
     {
         return $this->setupQuery($data)->findAll($limit);
     }
 
-    public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
+    public function getPage(int $page = 1, array $data = [], int $perPage = 20): array
     {
         return $this->setupQuery($data)->paginate($perPage, 'default', $page);
     }
 
-    public function getEmail(string $email) : ?User
+    public function getEmail(string $email): ?User
     {
         if ($email === "") {
             return null;
         }
         return $this->where('user_email', $email)
-                    ->first();
+            ->first();
     }
 
-    public function deleteEmail(string $email) : void
+    public function deleteEmail(string $email): void
     {
         $this->builder()
-             ->delete(['user_email' => $email]);
+            ->delete(['user_email' => $email]);
     }
 
     /** ----------------------------------------------------------------------
      *                        UNIFIED QUERY SETUP
      *  ------------------------------------------------------------------- */
 
-    protected function setupQuery(array $data = []) : UserModel
+    protected function setupQuery(array $data = []): UserModel
     {
         return $this
             ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
@@ -122,14 +124,14 @@ class UserModel extends Model
             return $this;
         }
         return $this->orLike('user_name', $search, 'both', true, true)
-                    ->orLike('user_email', $search, 'both', true, true);
+            ->orLike('user_email', $search, 'both', true, true);
     }
 
     /** ----------------------------------------------------------------------
      *                              CALLBACKS
      *  ------------------------------------------------------------------- */
 
-    protected function hashPassword(array $data) : array
+    protected function hashPassword(array $data): array
     {
         if (!isset($data['data']['user_password'])) {
             return $data;
@@ -146,7 +148,7 @@ class UserModel extends Model
         return $data;
     }
 
-    protected function hidePassword(array $data) : array
+    protected function hidePassword(array $data): array
     {
         if (!isset($data['data'])) {
             return $data;

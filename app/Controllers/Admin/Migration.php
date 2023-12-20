@@ -66,7 +66,9 @@ class Migration extends Controller
             $newHistory = array($newHistory);
         }
 
-        $difference = array_udiff($newHistory, $oldHistory, function($a, $b) { return $a->id - $b->id;});
+        $difference = array_udiff($newHistory, $oldHistory, function ($a, $b) {
+            return $a->id - $b->id;
+        });
         if ($difference === []) {
             echo '<h2>No changes were made, history:</h2>';
             $difference = $newHistory;

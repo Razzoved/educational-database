@@ -1,16 +1,16 @@
 <div class="sort">
     <?php
-        foreach ($sorters as $sorter) {
-            echo '<button class="sort__button" type="button" onclick="toggleSort(this)" value="' . strtolower(str_replace(' ', '_', esc($sorter))) . '">';
-            echo '<i class="sort__icon fa-solid fa-caret-up"></i>';
-            echo esc($sorter);
-            echo '</button>';
-        }
-        if (isset($create)) {
-            echo '<button class="sort__button create" type="button" onclick="';
-            echo $create;
-            echo '">&#65291</button>';
-        }
+    foreach ($sorters as $sorter) {
+        echo '<button class="sort__button" type="button" onclick="toggleSort(this)" value="' . strtolower(str_replace(' ', '_', esc($sorter))) . '">';
+        echo '<i class="sort__icon fa-solid fa-caret-up"></i>';
+        echo esc($sorter);
+        echo '</button>';
+    }
+    if (isset($create)) {
+        echo '<button class="sort__button create" type="button" onclick="';
+        echo $create;
+        echo '">&#65291</button>';
+    }
     ?>
 </div>
 

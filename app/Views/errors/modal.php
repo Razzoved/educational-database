@@ -1,11 +1,12 @@
 <?php
-    /** Intended primarily for use by controllers.
-     *
-     * @param string $title
-     * @param string $message
-     */
-    $title = $title ?? "@title@";
-    $message = $message ?? "@message@";
+
+/** Intended primarily for use by controllers.
+ *
+ * @param string $title
+ * @param string $message
+ */
+$title = $title ?? "@title@";
+$message = $message ?? "@message@";
 ?>
 
 <div class="modal modal--visible" tabindex="-1" id="error-modal">
@@ -18,7 +19,8 @@
         </div>
 
         <div class="modal__body">
-            <p id="error-message" style="color: red">Error: <?= $message ?><p>
+            <p id="error-message" style="color: red">Error: <?= $message ?>
+            <p>
         </div>
 
         <div class="modal__footer">

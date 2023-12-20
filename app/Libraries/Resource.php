@@ -1,8 +1,11 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Libraries;
 
 use App\Entities\Resource as EntitiesResource;
+use App\Models\ResourceModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Files\Exceptions\FileException;
 use CodeIgniter\Files\File;
@@ -61,7 +64,7 @@ class Resource
      *
      * @return ?EntitiesResource If at least one of either path or tmpPath is provided.
      */
-    public static function toResource(?string $path, ?string $tmpPath, ?string $type) : ?EntitiesResource
+    public static function toResource(?string $path, ?string $tmpPath, ?string $type): ?EntitiesResource
     {
         $tmpPath = $type === 'file' ? $tmpPath : $path;
 
@@ -86,7 +89,7 @@ class Resource
      * @throws FileException     if storing fails
      * @return EntitiesResource  resource with all necessary information loaded
      */
-    public static function store(UploadedFile $file) : EntitiesResource
+    public static function store(UploadedFile $file): EntitiesResource
     {
         helper('security');
 
@@ -119,7 +122,7 @@ class Resource
      * @param int $materialId               assign to this material
      * @param EntitiesResource $resource    what to operate on
      */
-    public static function assign(int $materialId, EntitiesResource $resource) : void
+    public static function assign(int $materialId, EntitiesResource $resource): void
     {
         helper('file');
 
@@ -158,7 +161,7 @@ class Resource
      * @throws DatabaseException if deletion fails in db
      * @throws FileException     if unassigning fails
      */
-    public static function unassign(EntitiesResource $resource) : void
+    public static function unassign(EntitiesResource $resource): void
     {
         helper('file');
 
@@ -187,7 +190,7 @@ class Resource
      * @throws DatabasedException if resource is assigned and cannot be deleted
      * @throws FileException      if resource cannot be deleted
      */
-    public static function delete(EntitiesResource $resource) : void
+    public static function delete(EntitiesResource $resource): void
     {
         if (self::dbDelete($resource)) {
             return;
@@ -202,7 +205,7 @@ class Resource
         self::deleteSource($path);
     }
 
-    public static function pathToURL(?string $rootPath) : string
+    public static function pathToURL(?string $rootPath): string
     {
         if ($rootPath && file_exists(ROOTPATH . $rootPath)) {
             $path = $rootPath;
@@ -212,7 +215,7 @@ class Resource
         return base_url($path);
     }
 
-    public static function pathToFileURL(?string $rootPath) : string
+    public static function pathToFileURL(?string $rootPath): string
     {
         if ($rootPath) {
             $splitPath = explode('.', $rootPath);
@@ -236,7 +239,7 @@ class Resource
      *
      * @return array Collection of EntitiesResource entity objects
      */
-    public static function getUnused() : array
+    public static function getUnused(): array
     {
         helper('filesystem');
 
@@ -250,7 +253,7 @@ class Resource
         return $result;
     }
 
-    private static function getUnusedRecursive(array &$target, array $source, string $path) : void
+    private static function getUnusedRecursive(array &$target, array $source, string $path): void
     {
         foreach ($source as $key => $value) {
             $newPath = rtrim($path, WINDOWS_SEPARATOR . UNIX_SEPARATOR);
@@ -279,7 +282,7 @@ class Resource
      * @throws DatabaseException if deletion fails
      * @return bool              true if the deletion should end
      */
-    private static function dbDelete(EntitiesResource $resource) : bool
+    private static function dbDelete(EntitiesResource $resource): bool
     {
         if ($resource->isAssigned()) {
             model(ResourceModel::class)->delete($resource->id);
@@ -300,7 +303,7 @@ class Resource
      *
      * @throws Exception in case of db failure
      */
-    private static function dbSafeSave(EntitiesResource $resource) : void
+    private static function dbSafeSave(EntitiesResource $resource): void
     {
         helper('file');
 
@@ -325,7 +328,7 @@ class Resource
      *
      * @throws FileException whenever the directory could be deleted, but failed to do so
      */
-    private static function deleteSource(string $path) : void
+    private static function deleteSource(string $path): void
     {
         helper('filesystem');
 
@@ -363,7 +366,7 @@ class Resource
      *
      * @throws FileException when file cannot be moved
      */
-    private static function moveFile(EntitiesResource &$resource, string $prefix) : void
+    private static function moveFile(EntitiesResource &$resource, string $prefix): void
     {
         helper('file');
 
@@ -402,12 +405,12 @@ class Resource
         $resource->tmp_path = $prefix . UNIX_SEPARATOR . $result;
     }
 
-    private static function move(string $dirPath, string $destName, File $source) : string
+    private static function move(string $dirPath, string $destName, File $source): string
     {
         return $source->move($dirPath, $destName)->getBasename();
     }
 
-    private static function copy(string $dirPath, string $destName, string $source) : string
+    private static function copy(string $dirPath, string $destName, string $source): string
     {
         try {
             if (!copy($source, $dirPath . $destName)) {

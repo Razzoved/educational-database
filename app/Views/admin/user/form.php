@@ -1,18 +1,19 @@
 <?php
-    /**
-     * MODAL: User editor.
-     *
-     * @param int $id       id of the user, OPTIONAL
-     * @param string $name  name of the user, OPTIONAL
-     * @param string $email email of the user, OPTIONAL
-     */
 
-    $title = $title ?? '@title@';
-    $submit = $submit ?? '@submit@';
+/**
+ * MODAL: User editor.
+ *
+ * @param int $id       id of the user, OPTIONAL
+ * @param string $name  name of the user, OPTIONAL
+ * @param string $email email of the user, OPTIONAL
+ */
 
-    $id = $id ?? "@id@";
-    $name = $name ?? "@name@";
-    $email = $email ?? "@email@";
+$title = $title ?? '@title@';
+$submit = $submit ?? '@submit@';
+
+$id = $id ?? "@id@";
+$name = $name ?? "@name@";
+$email = $email ?? "@email@";
 ?>
 
 <div class="modal" id="modal">
@@ -25,54 +26,27 @@
         </div>
 
         <div class="modal__body">
-            <form class="form" method="post" action="<?= url_to('Admin\User::save')?>">
+            <form class="form" method="post" action="<?= url_to('Admin\User::save') ?>">
                 <input type="hidden" id="id" name="id" value="<?= $id ?>">
 
                 <label class="form__label" for="name">Username</label>
-                <input class="form__input"
-                    type="text"
-                    id="name"
-                    name="name"
-                    value="<?= $name ?>"
-                    placeholder="Enter username"
-                    autocomplete="username">
+                <input class="form__input" type="text" id="name" name="name" value="<?= $name ?>" placeholder="Enter username" autocomplete="username">
 
                 <label class="form__label" for="email">Email</label>
-                <input class="form__input"
-                    type="email"
-                    id="email"
-                    name="email"
-                    value="<?= $email ?>"
-                    placeholder="name@example.com"
-                    autocomplete="email">
+                <input class="form__input" type="email" id="email" name="email" value="<?= $email ?>" placeholder="name@example.com" autocomplete="email">
 
                 <div class="form__group form__group--horizontal">
                     <label class="form__label" for="changePassword">Change passsword</label>
-                    <input class="form__input"
-                        type="checkbox"
-                        id="changePassword"
-                        name="changePassword"
-                        onchange="togglePassword(event)"
-                        value=true>
+                    <input class="form__input" type="checkbox" id="changePassword" name="changePassword" onchange="togglePassword(event)" value=true>
                 </div>
 
                 <fieldset id="password-changer" class="form__group" hidden>
 
                     <label class="form__label" for="password">Password</label>
-                    <input class="form__input"
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="**********"
-                        autocomplete="new-password">
+                    <input class="form__input" type="password" id="password" name="password" placeholder="**********" autocomplete="new-password">
 
                     <label class="form__label" for="confirmPassword">Confirm password</label>
-                    <input class="form__input"
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        placeholder="**********"
-                        autocomplete="new-password">
+                    <input class="form__input" type="password" id="confirmPassword" name="confirmPassword" placeholder="**********" autocomplete="new-password">
 
                 </fieldset>
             </form>

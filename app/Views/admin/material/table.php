@@ -18,14 +18,15 @@
             'Published at',
             'Updated at',
         ],
-        'create' => "window.location.href='" . url_to('Admin\MaterialEditor::index') . "'"]) ?>
+        'create' => "window.location.href='" . url_to('Admin\MaterialEditor::index') . "'"
+    ]) ?>
 </div>
 
 <div class="table" id="items">
-<?php
+    <?php
     if ($materials === []) {
         echo $this->include('none');
-    } else foreach($materials as $material) {
+    } else foreach ($materials as $material) {
         echo view('admin/material/item', ['material' => $material]);
     }
     ?>

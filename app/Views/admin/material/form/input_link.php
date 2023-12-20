@@ -1,24 +1,20 @@
 <?php
-    /**
-     * Partial view that generates link input form.
-     * It requires dynamics javascript files to be loaded.
-     * Bootstrap should be loaded too.
-     *
-     * Expects:
-     * @param array $links An array of links
-     */
+
+/**
+ * Partial view that generates link input form.
+ * It requires dynamics javascript files to be loaded.
+ * Bootstrap should be loaded too.
+ *
+ * Expects:
+ * @param array $links An array of links
+ */
 ?>
 
 <div class="form__group">
 
     <!-- file uploader -->
     <div class="form__group form__group--horizontal-flex">
-        <input id="link-uploader"
-            type="url"
-            class="form__input"
-            pattern="(http|https)://.*"
-            placeholder="https://example.com"
-            onblur="uniqueLink()">
+        <input id="link-uploader" type="url" class="form__input" pattern="(http|https)://.*" placeholder="https://example.com" onblur="uniqueLink()">
         <button class="form__button" type="button" onclick="newLink()">Add</button>
     </div>
 

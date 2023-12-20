@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -38,7 +40,7 @@ class ViewsModel extends Model
      * Gets an array of total views from past 'x' days.
      * The array is filled with zeroes on empty days.
      */
-    public function getDailyTotals(int $days = 30) : array
+    public function getDailyTotals(int $days = 30): array
     {
         $views = $this->select('created_at')
             ->selectSum('material_views')
@@ -68,11 +70,11 @@ class ViewsModel extends Model
      * @param int $n maximum number of materials to return
      * @param int $days number of days to look back
      */
-    public function getTopMaterials(int $n = 1, string $search = "", int $days = 30) : array
+    public function getTopMaterials(int $n = 1, string $search = "", int $days = 30): array
     {
         $select = 'material_id, material_status, material_title, ' .
-        'material_blame, material_content, material_rating, ' .
-        'material_rating_count, published_at, updated_at';
+            'material_blame, material_content, material_rating, ' .
+            'material_rating_count, published_at, updated_at';
 
         $views = model(MaterialModel::class)
             ->select($select)
@@ -96,11 +98,11 @@ class ViewsModel extends Model
      *
      * @param Material $material entity we want to increment views of
      */
-    public function increment(Material &$material) : void
+    public function increment(Material &$material): void
     {
         $last = $this->where('material_id', $material->id)
-                     ->orderBy('created_at', 'DESC')
-                     ->first();
+            ->orderBy('created_at', 'DESC')
+            ->first();
         try {
             if (!$last || $last->created_at !== $this->date()) {
                 $this->insert(['material_id' => $material->id, 'material_views' => 1]);

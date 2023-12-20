@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -65,22 +67,22 @@ class MaterialModel extends Model
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
-    public function get(int $id, array $data = []) : ?Material
+    public function get(int $id, array $data = []): ?Material
     {
         return $this->setupQuery($data)->find($id);
     }
 
-    public function getArray(array $data = [], int $limit = 0) : array
+    public function getArray(array $data = [], int $limit = 0): array
     {
         return $this->setupQuery($data)->findAll($limit);
     }
 
-    public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
+    public function getPage(int $page = 1, array $data = [], int $perPage = 20): array
     {
         return $this->setupQuery($data)->paginate($perPage, 'default', $page);
     }
 
-    public function getBlame() : array
+    public function getBlame(): array
     {
         return model(UserModel::class)
             ->join($this->table, 'material_blame=user_id')
@@ -91,7 +93,7 @@ class MaterialModel extends Model
             ->findAll();
     }
 
-    public function saveMaterial(Material $material) : int
+    public function saveMaterial(Material $material): int
     {
         if (!$material) {
             throw new \InvalidArgumentException('Cannot save "null" material');
@@ -132,7 +134,7 @@ class MaterialModel extends Model
      *                        UNIFIED QUERY SETUP
      *  ------------------------------------------------------------------- */
 
-    protected function setupQuery(array $data = []) : MaterialModel
+    protected function setupQuery(array $data = []): MaterialModel
     {
         if (isset($data['callbacks'])) {
             $this->allowCallbacks($data['callbacks'] === true);

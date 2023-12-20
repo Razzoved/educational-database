@@ -1,9 +1,10 @@
 <?php
-    /**
-     * MODAL: confirmation for delete.
-     *
-     * @param string $itemType type of item to be deleted (material/...)
-     */
+
+/**
+ * MODAL: confirmation for delete.
+ *
+ * @param string $itemType type of item to be deleted (material/...)
+ */
 ?>
 <div class="modal" id="modal-delete">
 
@@ -72,4 +73,4 @@
 
         window.addEventListener("click", (event) => event.target === deleteModal && deleteClose());
     </script>
-</form>
+    </form>

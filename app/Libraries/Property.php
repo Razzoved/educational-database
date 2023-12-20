@@ -1,8 +1,11 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Libraries;
 
 use App\Entities\Property as EntitiesProperty;
+use App\Models\PropertyModel;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 
@@ -14,7 +17,7 @@ class Property
      *
      * @param CLIRequest|IncomingRequest $request handle to controllers request
      */
-    public static function getFilters($request) : array
+    public static function getFilters($request): array
     {
         $filters = [];
 
@@ -60,7 +63,7 @@ class Property
      *
      * @return array
      */
-    public static function getFiltered(array $ids) : array
+    public static function getFiltered(array $ids): array
     {
         $tree = model(PropertyModel::class)->getTree();
         self::filterByIds($tree, $ids);
@@ -73,14 +76,14 @@ class Property
      *
      * @return array
      */
-    public static function getCategories() : array
+    public static function getCategories(): array
     {
         $tree = model(PropertyModel::class)->getTree();
         self::filterCategories($tree);
         return $tree->children;
     }
 
-    public static function filterByIds(EntitiesProperty &$source, array $valid) : bool
+    public static function filterByIds(EntitiesProperty &$source, array $valid): bool
     {
         $children = $source->children;
         foreach ($children as $k => $child) {
@@ -94,7 +97,7 @@ class Property
             || in_array($source->id, $valid);
     }
 
-    public static function filterCategories(EntitiesProperty &$source) : void
+    public static function filterCategories(EntitiesProperty &$source): void
     {
         $children = $source->children;
         foreach ($children as $k => $child) {

@@ -1,32 +1,32 @@
 <?php
-    /* TEMPLATE: shows a single property as a row in administration panel. */
+/* TEMPLATE: shows a single property as a row in administration panel. */
 
-    /**
-     * @var int $id id of the property
-     */
-    $id = $id ?? '@id@';
+/**
+ * @var int $id id of the property
+ */
+$id = $id ?? '@id@';
 
-    /**
-     * @var string $value Value of the property
-     */
-    $value = $value ?? '@value@';
+/**
+ * @var string $value Value of the property
+ */
+$value = $value ?? '@value@';
 
-    /**
-     * @var string $category Value of property's parent (must be "" if you want it to be empty)
-     */
-    $category = $category ?? '@category@';
+/**
+ * @var string $category Value of property's parent (must be "" if you want it to be empty)
+ */
+$category = $category ?? '@category@';
 
-    /**
-     * @var int $usage Number of times the property has been used
-     */
-    $usage = $usage ?? '@usage@';
+/**
+ * @var int $usage Number of times the property has been used
+ */
+$usage = $usage ?? '@usage@';
 
-    /**
-     * @var string $description Description of the property.
-     */
-    $description = isset($description)
-        ? ($description === "" ? "" : "data-tooltip='{$description}'")
-        : '';
+/**
+ * @var string $description Description of the property.
+ */
+$description = isset($description)
+    ? ($description === "" ? "" : "data-tooltip='{$description}'")
+    : '';
 ?>
 
 <div id="<?= $id ?>" <?= $description ?> class="item">

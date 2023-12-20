@@ -38,8 +38,7 @@ class Revision extends BaseRevision
      *
      * @var string[]
      */
-    public $ignoreDirs = [
-    ];
+    public $ignoreDirs = [];
 
     /**
      * Specific files to ignore updating.

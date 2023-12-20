@@ -1,25 +1,26 @@
 <?php
-    /**
-     * Administration panel for managing unused resources.
-     *
-     * @var string $title    Page header, required.
-     * @var array $resources collection of App\Entities\Resource objects
-     * @var array $targets   collection of App\Entities\Material objects
-     */
+
+/**
+ * Administration panel for managing unused resources.
+ *
+ * @var string $title    Page header, required.
+ * @var array $resources collection of App\Entities\Resource objects
+ * @var array $targets   collection of App\Entities\Material objects
+ */
 ?>
 
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
 <?php if (!empty($resources)) : ?>
-<div class="page__controls">
-    <button type="button" onclick="deleteOpenAll('<?= url_to('Admin\Resource::deleteUnusedAll') ?>')">Delete all</button>
-</div>
+    <div class="page__controls">
+        <button type="button" onclick="deleteOpenAll('<?= url_to('Admin\Resource::deleteUnusedAll') ?>')">Delete all</button>
+    </div>
 <?php endif; ?>
 
 <div class="table" id="items">
     <?= $this->include('none') ?>
-    <?php foreach($resources as $resource) {
+    <?php foreach ($resources as $resource) {
         echo view('admin/resource/item', [
             'id'   => $resource->path,
             'path' => \App\Libraries\Resource::pathToFileURL($resource->getRootPath()),
@@ -47,7 +48,9 @@
         if (!tmpPath) {
             console.error('Resource path must be provided');
         } else {
-            modalOpen(undefined, formTemplate.fill({ tmp_path: tmpPath }));
+            modalOpen(undefined, formTemplate.fill({
+                tmp_path: tmpPath
+            }));
         }
     }
 </script>

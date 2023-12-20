@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Libraries;
 
@@ -40,7 +42,7 @@ class Cache
      *
      * @return bool Succes or failure
      */
-    public static function delete($key, string $prefix = "") : bool
+    public static function delete($key, string $prefix = ""): bool
     {
         $cache = Services::cache();
         return $cache->delete(self::handlePrefix($key, $prefix));
@@ -57,7 +59,7 @@ class Cache
      *
      * @return bool Succes or failure
      */
-    public static function save($value, $key, string $prefix = "", int $ttl = 600) : bool
+    public static function save($value, $key, string $prefix = "", int $ttl = 600): bool
     {
         $cache = Services::cache();
 
@@ -83,7 +85,7 @@ class Cache
         return $cache->get(self::handlePrefix($key, $prefix));
     }
 
-    private static function handlePrefix($key, string $prefix) : string
+    private static function handlePrefix($key, string $prefix): string
     {
         $key = (string) $key;
         return $prefix === "" ? $key : ($prefix . '_' . $key);

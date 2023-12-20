@@ -1,45 +1,46 @@
 <?php
-    /**
-     * View for a material editor. This is not, as opposed to the other
-     * forms, not a modal, but a separate view.
-     *
-     * @param ?\App\Entities\Material $material material to be edited or null
-     * @param array $errors                     error messages
-     */
-    use \App\Entities\Cast\StatusCast;
-    use \App\Entities\Material;
-    use \App\Entities\Resource;
 
-    $path = 'admin/material/form';
+/**
+ * View for a material editor. This is not, as opposed to the other
+ * forms, not a modal, but a separate view.
+ *
+ * @param ?\App\Entities\Material $material material to be edited or null
+ * @param array $errors                     error messages
+ */
 
-    $errors = $errors ?? [];
-    $material = isset($material) && is_a($material, Material::class)
-        ? $material
-        : new Material();
+use \App\Entities\Cast\StatusCast;
+use \App\Entities\Material;
+use \App\Entities\Resource;
 
-    helper('form');
+$path = 'admin/material/form';
+
+$errors = $errors ?? [];
+$material = isset($material) && is_a($material, Material::class)
+    ? $material
+    : new Material();
+
+helper('form');
 ?>
 
 <?= $this->extend('layouts/form') ?>
 
 <?= $this->section('header') ?>
-    <!-- TinyMCE -->
-    <script src="https://cdn.tiny.cloud/1/69ihqfomziifwjc1jznu6ynf4vn7l4zgj6f4a4zxc1blk1p2/tinymce/6/tinymce.min.js"
-            referrerpolicy="origin">
-    </script>
-    <script>
-        tinymce.init({
-            selector: 'textarea#tiny',
-            plugins: [
-            'advlist','autolink',
-            'lists','link','image','charmap','preview','anchor','searchreplace','visualblocks',
-            'fullscreen','insertdatetime','media','table','help','wordcount'
-            ],
-            toolbar: 'undo redo | a11ycheck casechange blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify |' +
+<!-- TinyMCE -->
+<script src="https://cdn.tiny.cloud/1/69ihqfomziifwjc1jznu6ynf4vn7l4zgj6f4a4zxc1blk1p2/tinymce/6/tinymce.min.js" referrerpolicy="origin">
+</script>
+<script>
+    tinymce.init({
+        selector: 'textarea#tiny',
+        plugins: [
+            'advlist', 'autolink',
+            'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks',
+            'fullscreen', 'insertdatetime', 'media', 'table', 'help', 'wordcount'
+        ],
+        toolbar: 'undo redo | a11ycheck casechange blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify |' +
             'bullist numlist checklist outdent indent | removeformat | code table help',
-        })
-    </script>
-    <!-- end of TinyMCE -->
+    })
+</script>
+<!-- end of TinyMCE -->
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -59,18 +60,13 @@
 
                 <fieldset class="form__group">
                     <label for="thumbnail" class="form__label form__label--small">Thumbnail (click to edit)</label>
-                    <?= view("{$path}/input_thumbnail", ['thumbnail' => $material->getThumbnail() ])?>
+                    <?= view("{$path}/input_thumbnail", ['thumbnail' => $material->getThumbnail()]) ?>
                 </fieldset>
 
                 <fieldset class="form__group form__group--major">
                     <!-- title -->
                     <label for="title" class="form__label">Title</label>
-                    <input class="form__input"
-                        type="text"
-                        name="title"
-                        placeholder="Enter title"
-                        value="<?= $material->title ?>"
-                        required>
+                    <input class="form__input" type="text" name="title" placeholder="Enter title" value="<?= $material->title ?>" required>
                     <!-- status -->
                     <label for="status" class="form__label">Status</label>
                     <?= form_dropdown(
@@ -79,7 +75,9 @@
                         StatusCast::getIndex($material->status ?? 0)
                     ) ?>
 
-                    <script type="text/javascript">console.log('<?= $material->status ?>')</script>
+                    <script type="text/javascript">
+                        console.log('<?= $material->status ?>')
+                    </script>
                 </fieldset>
 
             </div>

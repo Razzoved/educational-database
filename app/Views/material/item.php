@@ -1,16 +1,16 @@
 <?php
-    /**
-     * Single material displayed as a responsive card.
-     *
-     * @param \App\Entities\Material $material required
-     */
-    $url = url_to('Material::get', $material->id);
-    $content = strip_tags($material->content);
+
+/**
+ * Single material displayed as a responsive card.
+ *
+ * @param \App\Entities\Material $material required
+ */
+$url = url_to('Material::get', $material->id);
+$content = strip_tags($material->content);
 ?>
 <div class="card" onclick="window.location.href='<?= $url ?>'">
     <div class="card__thumbnail">
-        <img src="<?= $material->getThumbnail()->getURL() ?>"
-             alt="Material thumbnail">
+        <img src="<?= $material->getThumbnail()->getURL() ?>" alt="Material thumbnail">
     </div>
     <div class="card__body">
         <div class="card__header">

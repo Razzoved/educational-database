@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -38,7 +40,7 @@ class MaterialMaterialModel extends Model
      *
      * @param int $id The id of the material to find relations to.
      */
-    public function getRelated(int $id) : array
+    public function getRelated(int $id): array
     {
         return array_merge(
             $this->select($this->allowedFields[0] . ' as material_id')
@@ -58,7 +60,7 @@ class MaterialMaterialModel extends Model
      *
      * @param int $id The id of the material to find relations to.
      */
-    public function getRelatedAsObject(int $id) : array
+    public function getRelatedAsObject(int $id): array
     {
         return array_merge(
             $this->builder()
@@ -80,7 +82,7 @@ class MaterialMaterialModel extends Model
      *
      * @param Material $material material to insert/delete with
      */
-    public function saveMaterial(Material $material) : bool
+    public function saveMaterial(Material $material): bool
     {
         $relations = $this->getRelatedAsObject($material->id);
 

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
@@ -58,7 +60,7 @@ class MaterialEditor extends ResponseController
         $this->properties = model(PropertyModel::class, true, $this->materials->db);
     }
 
-    public function index(?EntitiesMaterial $material = null, array $errors = []) : string
+    public function index(?EntitiesMaterial $material = null, array $errors = []): string
     {
         return $this->view('material/form', [
             'meta_title'          => "Administration - Material",
@@ -76,7 +78,7 @@ class MaterialEditor extends ResponseController
         ]);
     }
 
-    public function get(int $id) : string
+    public function get(int $id): string
     {
         $material = $this->materials->get($id);
         if (!$material) {
@@ -126,7 +128,7 @@ class MaterialEditor extends ResponseController
      *                           AJAX HANDLERS
      *  ------------------------------------------------------------------- */
 
-    public function delete(int $id) : ResponseInterface
+    public function delete(int $id): ResponseInterface
     {
         return $this->doDelete(
             $id,
@@ -151,7 +153,7 @@ class MaterialEditor extends ResponseController
       * @return EntitiesMaterial resulting object, subdata may be only partial
       * @throws BadPostException if the post data is invalid
       */
-    private function transformData(EntitiesMaterial $material) : EntitiesMaterial
+    private function transformData(EntitiesMaterial $material): EntitiesMaterial
     {
         $material->related = $this->toRelations($material->id);
         $material->properties = $this->toProperties();
@@ -162,7 +164,7 @@ class MaterialEditor extends ResponseController
         return $material;
     }
 
-    private function toResources(EntitiesMaterial &$material, string $type) : void
+    private function toResources(EntitiesMaterial &$material, string $type): void
     {
         $items = $this->request->getPost($type) ?? [];
         $items = is_array($items) ? $items : [$items];
@@ -180,14 +182,14 @@ class MaterialEditor extends ResponseController
         $material->resources = $resources;
     }
 
-    private function toProperties() : array
+    private function toProperties(): array
     {
         $valid = $this->request->getPost('property') ?? [];
         $valid = is_array($valid) ? $valid : array($valid);
         return PropertyLib::getFiltered($valid);
     }
 
-    private function toRelations(int $identifier) : array
+    private function toRelations(int $identifier): array
     {
         $result = [];
         foreach ($this->request->getPost('relation') ?? [] as $id => $unused) {
@@ -218,7 +220,7 @@ class MaterialEditor extends ResponseController
      * @param EntitiesMaterial $material material whose resources to move
      * @return self to enable method chaining
     */
-    private function moveTemporaryFiles(EntitiesMaterial $material) : MaterialEditor
+    private function moveTemporaryFiles(EntitiesMaterial $material): MaterialEditor
     {
         foreach ($material->resources as $r) {
             $found = $this->resources->getByPath(
@@ -240,7 +242,7 @@ class MaterialEditor extends ResponseController
      * @param EntitiesMaterial $material material whose resources to remove
      * @return self to enable method chaining
      */
-    private function deleteRemovedFiles(EntitiesMaterial $material) : MaterialEditor
+    private function deleteRemovedFiles(EntitiesMaterial $material): MaterialEditor
     {
         foreach ($this->request->getPost('unused_files') ?? [] as $path) {
             $resource = ResourceLib::toResource($path, null, 'file');
@@ -257,7 +259,7 @@ class MaterialEditor extends ResponseController
      * @param EntitiesMaterial $material material whose resources to remove
      * @return self to enable method chaining
      */
-    private function deleteResources(EntitiesMaterial $material) : MaterialEditor
+    private function deleteResources(EntitiesMaterial $material): MaterialEditor
     {
         foreach ($material->resources as $resource) {
             ResourceLib::delete($resource);

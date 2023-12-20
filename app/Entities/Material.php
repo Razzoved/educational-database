@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Entities;
 
@@ -53,7 +55,7 @@ class Material extends Entity
         'rating_count' => 'material_rating_count',
     ];
 
-    public function getGroupedProperties() : array
+    public function getGroupedProperties(): array
     {
         $result = array();
         foreach ($this->properties as $p) {
@@ -62,17 +64,17 @@ class Material extends Entity
         return $result;
     }
 
-    public function publishedToDate() : string
+    public function publishedToDate(): string
     {
         return $this->published_at ? date_format($this->published_at, "d.m.Y") : "NOT PUBLISHED";
     }
 
-    public function updatedToDate() : string
+    public function updatedToDate(): string
     {
         return $this->updated_at ? date_format($this->updated_at, "d.m.Y") : "ORIGINAL";
     }
 
-    public function sinceLastUpdate() : string
+    public function sinceLastUpdate(): string
     {
         if (is_null($this->updated_at)) {
             return 'No updates';
@@ -81,18 +83,18 @@ class Material extends Entity
         $diff = $this->updated_at->diff(new DateTime('now'));
 
         if (($t = $diff->format("%m")) > 0)
-          $time_ago = $t . ' month' . ($t > 1 ? 's' : '');
+            $time_ago = $t . ' month' . ($t > 1 ? 's' : '');
         else if (($t = $diff->format("%d")) > 0)
-          $time_ago = $t . ' day' . ($t > 1 ? 's' : '');
+            $time_ago = $t . ' day' . ($t > 1 ? 's' : '');
         else if (($t = $diff->format("%H")) > 0)
-          $time_ago = $t . ' hour' . ($t > 1 ? 's' : '');
+            $time_ago = $t . ' hour' . ($t > 1 ? 's' : '');
         else
-          $time_ago = 'minute' . ($t > 1 ? 's' : '');
+            $time_ago = 'minute' . ($t > 1 ? 's' : '');
 
         return $time_ago . ' ago (' . $this->updated_at->format('M j, Y') . ')';
     }
 
-    public function getThumbnail() : Resource
+    public function getThumbnail(): Resource
     {
         foreach ($this->resources as $r) {
             if ($r->type === 'thumbnail') {
@@ -102,25 +104,33 @@ class Material extends Entity
         return Resource::getDefaultImage();
     }
 
-    public function getLinks() : array
+    public function getLinks(): array
     {
         $links =  $this->resourcesFilter(
-            function ($type) { return $type == 'link'; },
-            function ($item) { return $item; }
+            function ($type) {
+                return $type == 'link';
+            },
+            function ($item) {
+                return $item;
+            }
         );
         return $links;
     }
 
-    public function getFiles() : array
+    public function getFiles(): array
     {
         $files = $this->resourcesFilter(
-            function ($type) { return $type != 'link' && $type != 'thumbnail'; },
-            function ($item) { return $item; }
+            function ($type) {
+                return $type != 'link' && $type != 'thumbnail';
+            },
+            function ($item) {
+                return $item;
+            }
         );
         return $files;
     }
 
-    private function resourcesFilter(callable $inclusionDecider, callable $converter) : array
+    private function resourcesFilter(callable $inclusionDecider, callable $converter): array
     {
         $result = array();
         foreach ($this->resources as $r) {

@@ -1,10 +1,11 @@
 <?php
-    /**
-     * Renders a graphical rating display.
-     *
-     * @param \App\Entities\Material $material required
-     * @param boolean $twoLines optional parameter, if true then stars are on line one, others on two
-     */
+
+/**
+ * Renders a graphical rating display.
+ *
+ * @param \App\Entities\Material $material required
+ * @param boolean $twoLines optional parameter, if true then stars are on line one, others on two
+ */
 ?>
 <div class="rating<?= isset($twoLines) && $twoLines ? ' rating--two-lines' : '' ?>">
     <div class="rating__stars">

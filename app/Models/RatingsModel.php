@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -30,7 +32,7 @@ class RatingsModel extends Model
      *
      * @return ?int New rating value on success, old rating value on failure
      */
-    public function setRating(int $materialId, string $userId, ?int $value) : ?int
+    public function setRating(int $materialId, string $userId, ?int $value): ?int
     {
         $old = $this->getRating($materialId, $userId);
         try {
@@ -48,14 +50,14 @@ class RatingsModel extends Model
         }
     }
 
-    public function getRating(int $materialId, string $userId) : ?Rating
+    public function getRating(int $materialId, string $userId): ?Rating
     {
         return $this->where('material_id', $materialId)
-                    ->where('rating_uid', $userId)
-                    ->first();
+            ->where('rating_uid', $userId)
+            ->first();
     }
 
-    public function getRatingAvg(int $materialId) : float
+    public function getRatingAvg(int $materialId): float
     {
         return $this->select('material_id')
             ->selectAvg('rating_value')
@@ -66,7 +68,7 @@ class RatingsModel extends Model
             ->rating_value ?? 0;
     }
 
-    public function getRatingCount(int $materialId) : int
+    public function getRatingCount(int $materialId): int
     {
         return $this->select('material_id')
             ->selectCount('rating_value', 'count')

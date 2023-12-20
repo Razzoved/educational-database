@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -54,7 +56,7 @@ class PropertyModel extends Model
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
-    public function find($id = null) : ?Property
+    public function find($id = null): ?Property
     {
         // reduces the number of callback calls
         return $id == 0
@@ -62,38 +64,38 @@ class PropertyModel extends Model
             : parent::find($id);
     }
 
-    public function get(int $id, array $data = []) : ?Property
+    public function get(int $id, array $data = []): ?Property
     {
         return $this->setupQuery($data, $id)->find($id);
     }
 
-    public function getArray(array $data = [], int $limit = 0) : array
+    public function getArray(array $data = [], int $limit = 0): array
     {
         return $this->setupQuery($data)->findAll($limit);
     }
 
-    public function getPage(int $page = 1, array $data = [], int $perPage = 20) : array
+    public function getPage(int $page = 1, array $data = [], int $perPage = 20): array
     {
         return $this->setupQuery($data)->paginate($perPage, 'default', $page);
     }
 
-    public function getUnique(string $column = "value") : array
+    public function getUnique(string $column = "value"): array
     {
         $column = 'property_' . $column;
         if (!in_array($column, $this->allowedFields)) {
             return [];
         }
         return $this->select($column)
-                    ->orderBy($column)
-                    ->distinct()
-                    ->findAll();
+            ->orderBy($column)
+            ->distinct()
+            ->findAll();
     }
 
-    public function getTree() : Property
+    public function getTree(): Property
     {
         $root = new Property(['value' => 'Categories']);
         $root->children = Cache::check(
-            function() {
+            function () {
                 $categories = [];
                 foreach ($this->where('property_tag', 0)->getArray() as $category) {
                     $categories[] = $this->getTreeRecursive($category);
@@ -122,7 +124,7 @@ class PropertyModel extends Model
         if (!$item || (!$purge && $item->usage > 0)) {
             throw new ValidationException(
                 "Cannot delete property: <strong>{$item->value}</strong>. " .
-                "It is used by <strong>{$item->usage}</strong> materials."
+                    "It is used by <strong>{$item->usage}</strong> materials."
             );
         }
 
@@ -130,7 +132,7 @@ class PropertyModel extends Model
         if (!$purge && !empty($item->children)) {
             throw new ValidationException(
                 "Cannot delete property: <strong>{$item->value}</strong>. " .
-                "It contains nested tags."
+                    "It contains nested tags."
             );
         }
 
@@ -148,7 +150,7 @@ class PropertyModel extends Model
      *                        UNIFIED QUERY SETUP
      *  ------------------------------------------------------------------- */
 
-    protected function setupQuery(array $data = [], ?int $id = null) : PropertyModel
+    protected function setupQuery(array $data = [], ?int $id = null): PropertyModel
     {
         if (isset($data['callbacks'])) {
             $this->allowCallbacks($data['callbacks'] === true);
@@ -175,8 +177,8 @@ class PropertyModel extends Model
         $usageQuery = $usageQuery->getCompiledSelect();
 
         $this->select("{$this->table}.*, {$usage}.usage as usage, {$category}.property_value as category")
-             ->join("{$this->table} as {$category}", "{$this->table}.property_tag = {$category}.property_id", 'left')
-             ->join("({$usageQuery}) as {$usage}", "{$this->table}.property_id = {$usage}.property_id", 'left');
+            ->join("{$this->table} as {$category}", "{$this->table}.property_tag = {$category}.property_id", 'left')
+            ->join("({$usageQuery}) as {$usage}", "{$this->table}.property_id = {$usage}.property_id", 'left');
 
         $sort = $data['sort'] ?? false;
         $sortDir = isset($data['sortDir']) && strtoupper($data['sortDir']) === 'ASC' ? 'ASC' : 'DESC';
@@ -252,7 +254,7 @@ class PropertyModel extends Model
             return $this;
         }
         return $this->orLike("property_value", $search, 'both', true, true, self::CAT_ALIAS)
-                    ->orLike("property_value", $search, 'both', true, true);
+            ->orLike("property_value", $search, 'both', true, true);
     }
 
     /** ----------------------------------------------------------------------
@@ -323,7 +325,7 @@ class PropertyModel extends Model
      *                              HELPERS
      *  ------------------------------------------------------------------- */
 
-    public function getTreeRecursive(Property $property) : Property
+    public function getTreeRecursive(Property $property): Property
     {
         return Cache::check(
             function () use ($property) {
@@ -339,7 +341,7 @@ class PropertyModel extends Model
         );
     }
 
-    public function where(string $field, $value = null, $escape = null, $prefix = null) : PropertyModel
+    public function where(string $field, $value = null, $escape = null, $prefix = null): PropertyModel
     {
         $prefix = $prefix ?? $this->table;
         if ($prefix !== '') {
@@ -348,7 +350,7 @@ class PropertyModel extends Model
         return parent::where($prefix . $field, $value, $escape);
     }
 
-    public function orLike(string $field, string $match = '', string $side = 'both', $escape = null, $insensitiveSearch = false, $prefix = null) : PropertyModel
+    public function orLike(string $field, string $match = '', string $side = 'both', $escape = null, $insensitiveSearch = false, $prefix = null): PropertyModel
     {
         $prefix = $prefix ?? "{$this->db->prefixTable($this->table)}";
         if ($prefix !== '') {
@@ -357,7 +359,7 @@ class PropertyModel extends Model
         return parent::orLike($prefix . $field, $match, $side, $escape, $insensitiveSearch);
     }
 
-    public function orderBy(string $field, string $direction = '', $escape = null, $prefix = null) : PropertyModel
+    public function orderBy(string $field, string $direction = '', $escape = null, $prefix = null): PropertyModel
     {
         $prefix = $prefix ?? $this->table;
         if ($prefix !== '') {

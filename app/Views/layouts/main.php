@@ -11,18 +11,18 @@
     <?= $this->include('navigation_bar') ?>
 
     <?php
-        $pageClass = array('page');
-        if (
-            (isset($filters) && !empty($filters)) ||
-            (isset($hasSidebar) && $hasSidebar === true)
-        ) {
-            $pageClass[] = 'page--has-sidebar';
-            $hasSidebar = true;
-        } else {
-            $hasSidebar = false;
-        }
-        $pageClass[] = 'page';
-        $pageClass = implode(' ', array_reverse($pageClass));
+    $pageClass = array('page');
+    if (
+        (isset($filters) && !empty($filters)) ||
+        (isset($hasSidebar) && $hasSidebar === true)
+    ) {
+        $pageClass[] = 'page--has-sidebar';
+        $hasSidebar = true;
+    } else {
+        $hasSidebar = false;
+    }
+    $pageClass[] = 'page';
+    $pageClass = implode(' ', array_reverse($pageClass));
     ?>
 
     <main id="top" class="container">

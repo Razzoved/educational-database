@@ -1,26 +1,21 @@
 <?php
-    /**
-     * Partial view that generates relation input form.
-     * It requires dynamics javascript files to be loaded.
-     * Bootstrap should be loaded too.
-     *
-     * Expects:
-     * @param available all available materials in form of (id => title) pairs
-     * @param relations relations to other materials that already exist
-     */
+
+/**
+ * Partial view that generates relation input form.
+ * It requires dynamics javascript files to be loaded.
+ * Bootstrap should be loaded too.
+ *
+ * Expects:
+ * @param available all available materials in form of (id => title) pairs
+ * @param relations relations to other materials that already exist
+ */
 ?>
 
 <div class="form__group">
 
     <!-- relation uploader -->
     <div class="form__group form__group--horizontal-flex">
-        <input type="text"
-            id="relation-uploader"
-            list="relation-options"
-            class="form__input"
-            placeholder="No material selected"
-            title="Links materials together (relation will be visible in both)!"
-            onblur="uniqueRelation()">
+        <input type="text" id="relation-uploader" list="relation-options" class="form__input" placeholder="No material selected" title="Links materials together (relation will be visible in both)!" onblur="uniqueRelation()">
         <button class="form__button" type="button" onclick="newRelation()">Add</button>
     </div>
 

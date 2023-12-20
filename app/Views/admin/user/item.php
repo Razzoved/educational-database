@@ -1,20 +1,20 @@
 <?php
-    /* TEMPLATE: shows a single user as a row in administration panel. */
+/* TEMPLATE: shows a single user as a row in administration panel. */
 
-    /**
-     * @var int $id id of the user
-     */
-    $id = $id ?? '@id@';
+/**
+ * @var int $id id of the user
+ */
+$id = $id ?? '@id@';
 
-    /**
-     * @var string $name name of the user
-     */
-    $name = $name ?? '@name@';
+/**
+ * @var string $name name of the user
+ */
+$name = $name ?? '@name@';
 
-    /**
-     * @var string $email email address of the user
-     */
-    $email = $email ?? '@email@';
+/**
+ * @var string $email email address of the user
+ */
+$email = $email ?? '@email@';
 ?>
 
 <div id="<?= $id ?>" class="item">

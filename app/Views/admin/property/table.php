@@ -1,11 +1,12 @@
 <?php
-    /**
-     * Administration panel for managing properties (tags and categories).
-     *
-     * @var string $title    Page header, required.
-     * @var array $resources collection of App\Entities\Resource objects
-     * @var array $targets   collection of App\Entities\Material objects
-     */
+
+/**
+ * Administration panel for managing properties (tags and categories).
+ *
+ * @var string $title    Page header, required.
+ * @var array $resources collection of App\Entities\Resource objects
+ * @var array $targets   collection of App\Entities\Material objects
+ */
 ?>
 
 <?= $this->extend('layouts/admin') ?>
@@ -22,7 +23,7 @@
 
 <div class="table" id="items">
     <?= $this->include('none') ?>
-    <?php foreach($properties as $property) {
+    <?php foreach ($properties as $property) {
         echo view('admin/property/item', [
             'id'          => $property->id,
             'value'       => $property->value,
@@ -52,19 +53,19 @@
     const items = document.getElementById('items');
 
     const propertyOpen = async (id = undefined) => {
-        const template = formTemplate.fill(id
-            ? { title: 'Update tag', submit: 'Update' }
-            : {
-                title: 'New tag',
-                submit: 'Create',
-                id: "",
-                tag: "",
-                value: "",
-                category: "",
-                description: "",
-                priority: 0,
-            }
-        );
+        const template = formTemplate.fill(id ? {
+            title: 'Update tag',
+            submit: 'Update'
+        } : {
+            title: 'New tag',
+            submit: 'Create',
+            id: "",
+            tag: "",
+            value: "",
+            category: "",
+            description: "",
+            priority: 0,
+        });
         modalOpen(id ? url.replace(/0$/, id) : undefined, template);
     }
 </script>

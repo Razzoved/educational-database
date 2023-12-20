@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
@@ -24,7 +26,7 @@ class Dashboard extends ExtendedController
         $this->materials = model(MaterialModel::class);
     }
 
-    public function index() : string
+    public function index(): string
     {
         $this->cachePage(60);
 
@@ -43,7 +45,8 @@ class Dashboard extends ExtendedController
         $data['viewsTotal'] = array_reduce(
             $this->views->findAll(),
             function ($prev, $mat) {
-                $mat->views += $prev->views; return $mat;
+                $mat->views += $prev->views;
+                return $mat;
             },
             new EntitiesMaterial()
         )->views;

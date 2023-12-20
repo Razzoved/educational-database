@@ -1,15 +1,16 @@
 <?php
-    /**
-     * MODAL: Resource assigner.
-     *
-     * @param string $title   Title of modal
-     * @param string $submit  Custom text for submit button
-     * @param array  $targets All possible materials.
-     */
-    $title = 'Add to material';
-    $submit = 'Assign';
 
-    $tmpPath = $tmpPath ?? '@tmp_path@';
+/**
+ * MODAL: Resource assigner.
+ *
+ * @param string $title   Title of modal
+ * @param string $submit  Custom text for submit button
+ * @param array  $targets All possible materials.
+ */
+$title = 'Add to material';
+$submit = 'Assign';
+
+$tmpPath = $tmpPath ?? '@tmp_path@';
 ?>
 
 <div class="modal" id="modal">
@@ -25,14 +26,7 @@
             <form class="form" method="post" action="<?= url_to('Admin\Resource::assign') ?>">
                 <input type="hidden" id="tmp_path" name="tmp_path" value="<?= $tmpPath ?>" required>
                 <label class="form__label" for="target">Assign to<i id="target-display"></i></label>
-                <input class="form__input"
-                    id="target"
-                    name="target"
-                    list="target-options"
-                    placeholder="No material selected"
-                    oninput="validate()"
-                    autocomplete="off"
-                    required>
+                <input class="form__input" id="target" name="target" list="target-options" placeholder="No material selected" oninput="validate()" autocomplete="off" required>
                 <datalist id="target-options">
                     <?php foreach ($targets as $id => $title) : ?>
                         <option value='<?= $id ?>'><?= esc($title) ?></option>

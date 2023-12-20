@@ -1,8 +1,9 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Entities\Cast\PathCast;
 use CodeIgniter\Entity\Entity;
 
 class Resource extends Entity
@@ -36,27 +37,27 @@ class Resource extends Entity
         'path' => \App\Entities\Cast\PathCast::class,
     ];
 
-    public function isLink() : bool
+    public function isLink(): bool
     {
         return $this->type == 'link' || ($this->path && substr($this->path, 0, 4) === 'http');
     }
 
-    public function isThumbnail() : bool
+    public function isThumbnail(): bool
     {
         return $this->type == 'thumbnail';
     }
 
-    public function isAsset() : bool
+    public function isAsset(): bool
     {
         return $this->path && substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX;
     }
 
-    public function isTemporary() : bool
+    public function isTemporary(): bool
     {
         return $this->tmp_path && substr($this->tmp_path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX;
     }
 
-    public function isAssigned() : bool
+    public function isAssigned(): bool
     {
         return !(
             $this->parentId <= 0 ||
@@ -64,7 +65,7 @@ class Resource extends Entity
         );
     }
 
-    public function getURL() : string
+    public function getURL(): string
     {
         if ($this->isLink()) {
             return $this->path;
@@ -75,7 +76,7 @@ class Resource extends Entity
         ));
     }
 
-    public function getRootPath() : string
+    public function getRootPath(): string
     {
         if ($this->isLink()) {
             throw new \Exception('Links are not children of root!');
@@ -93,7 +94,7 @@ class Resource extends Entity
     public static function getDefaultImage()
     {
         return new Resource([
-            'path' => model(ConfigModel::class)->find('default_image')->value,
+            'path' => model(\App\Models\ConfigModel::class)->find('default_image')->value,
             'type' => 'thumbnail',
         ]);
     }

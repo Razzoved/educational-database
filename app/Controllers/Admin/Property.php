@@ -23,7 +23,7 @@ class Property extends ResponseController
         $this->properties = model(PropertyModel::class);
     }
 
-    public function index() : string
+    public function index(): string
     {
         $this->setSort('priority');
 
@@ -44,7 +44,7 @@ class Property extends ResponseController
      *                           AJAX HANDLERS
      *  ------------------------------------------------------------------- */
 
-    public function save() : Response
+    public function save(): Response
     {
         $property = new EntitiesProperty($this->request->getPost());
         $rules = [
@@ -84,7 +84,7 @@ class Property extends ResponseController
         return $this->response->setJSON($property);
     }
 
-    public function get(int $id) : Response
+    public function get(int $id): Response
     {
         $property = $this->properties->find($id);
         if (!$property) {
@@ -96,7 +96,7 @@ class Property extends ResponseController
         return $this->response->setJSON($property);
     }
 
-    public function getAvailable() : Response
+    public function getAvailable(): Response
     {
         try {
             $properties = $this->properties->getArray(['sort' => 'priority']);
@@ -106,14 +106,16 @@ class Property extends ResponseController
         }
     }
 
-    public function delete(int $id) : Response
+    public function delete(int $id): Response
     {
         return $this->doDelete(
             $id,
             function ($i) {
                 return $this->properties->find($i);
             },
-            function ($e) { $this->properties->delete($e->id); },
+            function ($e) {
+                $this->properties->delete($e->id);
+            },
             'tag'
         );
     }

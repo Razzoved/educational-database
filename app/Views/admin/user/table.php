@@ -8,7 +8,7 @@
 
 <div class="table" id="items">
     <?= $this->include('none') ?>
-    <?php foreach($users as $user) {
+    <?php foreach ($users as $user) {
         echo view('admin/user/item', [
             'id' => $user->id,
             'name' => $user->name,
@@ -36,16 +36,16 @@
     const items = document.getElementById('items');
 
     const userOpen = async (id = undefined) => {
-        const template = formTemplate.fill(id
-            ? { title: 'Update user', submit: 'Update' }
-            : {
-                title: 'New user',
-                submit: 'Create',
-                id: "",
-                name: "",
-                email: ""
-            }
-        );
+        const template = formTemplate.fill(id ? {
+            title: 'Update user',
+            submit: 'Update'
+        } : {
+            title: 'New user',
+            submit: 'Create',
+            id: "",
+            name: "",
+            email: ""
+        });
         modalOpen(id ? url.replace(/0$/, id) : undefined, template);
     }
 </script>

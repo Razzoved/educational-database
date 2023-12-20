@@ -1,7 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
+use App\Models\MaterialModel;
 use App\Entities\Resource as EntitiesResource;
 use App\Libraries\Resource as ResourceLib;
 use App\Models\ResourceModel;
@@ -10,7 +13,7 @@ use Exception;
 
 class Resource extends ResponseController
 {
-    public function index() : string
+    public function index(): string
     {
         helper('filesystem');
 
@@ -33,7 +36,7 @@ class Resource extends ResponseController
      *                           AJAX HANDLERS
      *  ------------------------------------------------------------------- */
 
-    public function upload() : Response
+    public function upload(): Response
     {
         helper('security');
 
@@ -71,7 +74,7 @@ class Resource extends ResponseController
         return $this->response->setJSON($resource);
     }
 
-    public function assign() : Response
+    public function assign(): Response
     {
         $tmpPath = $this->request->getPost('tmp_path');
         $materialId = $this->request->getPost('target');
@@ -105,17 +108,19 @@ class Resource extends ResponseController
         return $this->response->setJSON(['id' => $tmpPath]);
     }
 
-    public function delete(int $id) : Response
+    public function delete(int $id): Response
     {
         return $this->doDelete(
             $id,
             model(ResourceModel::class)->find,
-            function ($e) { ResourceLib::delete($e); },
+            function ($e) {
+                ResourceLib::delete($e);
+            },
             'resource'
         );
     }
 
-    public function deleteUnusedAll() : Response
+    public function deleteUnusedAll(): Response
     {
         $all = ResourceLib::getUnused();
         $paths = array();
@@ -126,7 +131,7 @@ class Resource extends ResponseController
         return $this->response->setJSON($paths);
     }
 
-    public function deleteUnused(string ...$path) : Response
+    public function deleteUnused(string ...$path): Response
     {
         $prefix = TEMP_PREFIX;
         $path = implode(UNIX_SEPARATOR, $path);
@@ -157,14 +162,14 @@ class Resource extends ResponseController
             );
         }
 
-        return $this->response->setJSON([ 'id' => $path ]);
+        return $this->response->setJSON(['id' => $path]);
     }
 
     /** ----------------------------------------------------------------------
      *                               HELPERS
      *  ------------------------------------------------------------------- */
 
-    private static function resolveType($value) : string
+    private static function resolveType($value): string
     {
         switch ($value) {
             case 'thumbnail':

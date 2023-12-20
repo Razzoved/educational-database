@@ -1,10 +1,11 @@
 <?php
-    /**
-     * Partial view that generates file input in form.
-     *
-     * Expects:
-     * @param array $files An array of Resource objects
-     */
+
+/**
+ * Partial view that generates file input in form.
+ *
+ * Expects:
+ * @param array $files An array of Resource objects
+ */
 ?>
 <div class="form__group">
 
@@ -13,15 +14,15 @@
     <input id="file-uploader" type="file" onchange="uploadFile()" hidden>
 
     <div class="form__group form__group--horizontal-flex" id="file-group">
-    <?php foreach ($files as $key => $resource) {
-        $rootPath = $resource->getRootPath();
-        echo view('admin/material/form/item_file', [
-            'id'    => $key,
-            'path'  => $rootPath,
-            'value' => basename($resource->path),
-            'imageURL' => \App\Libraries\Resource::pathToFileURL($rootPath)
-        ]);
-    } ?>
+        <?php foreach ($files as $key => $resource) {
+            $rootPath = $resource->getRootPath();
+            echo view('admin/material/form/item_file', [
+                'id'    => $key,
+                'path'  => $rootPath,
+                'value' => basename($resource->path),
+                'imageURL' => \App\Libraries\Resource::pathToFileURL($rootPath)
+            ]);
+        } ?>
     </div>
 
 </div>
@@ -56,8 +57,7 @@
     }
 
     const uploadFile = () => uniqueFile() && upload(
-        '<?= url_to("Admin\Resource::upload") ?>',
-        {
+        '<?= url_to("Admin\Resource::upload") ?>', {
             selector: fileSelector,
             fileType: 'file'
         },
