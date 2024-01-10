@@ -29,8 +29,7 @@ class Property extends DefaultController
         return $this->view('property/table', [
             'meta_title' => 'Administration - Tags',
             'title'      => 'Tags',
-            'properties' => $this->getProperties(ADMIN_PAGE_SIZE),
-            'options'    => $this->getOptions(),
+            'properties' => $this->getProperties(),
             'filters'    => array($categories),
             'pager'      => $this->properties->pager,
         ]);
@@ -120,15 +119,7 @@ class Property extends DefaultController
      *                           HELPER METHODS
      *  ------------------------------------------------------------------- */
 
-    protected function getOptions(array $result = []): array
-    {
-        foreach ($this->properties->getUnique('value') as $property) {
-            $result[] = $property->value;
-        }
-        return $result;
-    }
-
-    protected function getProperties(int $perPage = 20): array
+    protected function getProperties(): array
     {
         return $this->properties->getPage(
             (int) $this->request->getGetPost('page') ?? 1,
@@ -139,7 +130,7 @@ class Property extends DefaultController
                 'sortDir'   => $this->request->getGetPost('sortDir'),
                 'usage'     => true,
             ],
-            $perPage
+            self::PAGE_SIZE
         );
     }
 }
