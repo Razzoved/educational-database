@@ -27,8 +27,7 @@ class User extends DefaultController
         return $this->view('user/table', [
             'meta_title' => 'Administration - Users',
             'title'      => 'User editor',
-            'options'    => $this->getOptions(),
-            'users'      => $this->getUsers(ADMIN_PAGE_SIZE),
+            'users'      => $this->getUsers(),
             'pager'      => $this->users->pager,
         ]);
     }
@@ -110,19 +109,7 @@ class User extends DefaultController
      *                           HELPER METHODS
      *  ------------------------------------------------------------------- */
 
-    protected function getOptions(): array
-    {
-        $result = [];
-
-        foreach ($this->users->getArray(['sort' => 'name']) as $user) {
-            $result[] = $user->name;
-            $result[] = $user->email;
-        }
-
-        return $result;
-    }
-
-    protected function getUsers(int $perPage = 20): array
+    protected function getUsers(): array
     {
         return $this->users->getPage(
             (int) $this->request->getGetPost('page') ?? 1,
@@ -131,7 +118,7 @@ class User extends DefaultController
                 'sort'      => $this->request->getGetPost('sort') ?? self::DEFAULT_SORT,
                 'sortDir'   => $this->request->getGetPost('sortDir'),
             ],
-            $perPage
+            self::PAGE_SIZE
         );
     }
 }
