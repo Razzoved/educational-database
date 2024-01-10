@@ -138,6 +138,21 @@ class Material extends DefaultController
         ]);
     }
 
+    public function suggest(): Response
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(Response::HTTP_FORBIDDEN);
+        }
+
+        return $this->response->setJSON(
+            $this->materials->getArray([
+                'search' => $this->request->getGet('search'),
+                'sort'   => 'views',
+                'sortDir' => 'DESC',
+            ], 10)
+        );
+    }
+
     /** ----------------------------------------------------------------------
      *                               HELPERS
      *  ------------------------------------------------------------------- */

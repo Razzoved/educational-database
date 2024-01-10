@@ -9,6 +9,7 @@ $routes->group('/', function ($routes) {
     $routes->add('', 'Material::index');
     $routes->add('best', 'Material::getByRating');
     $routes->add('popular', 'Material::getByViews');
+    $routes->get('suggestions', 'Material::suggest', ['filter' => 'ajax']);
 
     // SINGLE material
     $routes->get('(:num)', 'Material::get/$1');
@@ -50,14 +51,23 @@ $routes->group('admin', function ($routes) {
 
         $routes->group('material', function ($routes) {
             $routes->get('all', 'Admin\Material::getAvailable');
+            $routes->get('suggestions', 'Admin\Material::suggest');
             $routes->delete('(:num)', 'Admin\MaterialEditor::delete/$1');
         });
 
         $routes->group('tag', function ($routes) {
             $routes->post('', 'Admin\Property::save');
             $routes->get('all', 'Admin\Property::getAvailable');
+            $routes->get('suggestions', 'Admin\Property::suggest');
             $routes->get('(:num)', 'Admin\Property::get/$1');
             $routes->delete('(:num)', 'Admin\Property::delete/$1');
+        });
+
+        $routes->group('user', function ($routes) {
+            $routes->post('', 'Admin\User::save');
+            $routes->get('suggestions', 'Admin\User::suggest');
+            $routes->get('(:num)', 'Admin\User::get/$1');
+            $routes->delete('(:num)', 'Admin\User::delete/$1');
         });
 
         $routes->group('file', function ($routes) {
@@ -66,12 +76,6 @@ $routes->group('admin', function ($routes) {
             $routes->delete('(:num)', 'Admin\Resource::delete/$1');
             $routes->delete('unused', 'Admin\Resource::deleteUnusedAll');
             $routes->delete('(:any)', 'Admin\Resource::deleteUnused/$1');
-        });
-
-        $routes->group('user', function ($routes) {
-            $routes->post('', 'Admin\User::save');
-            $routes->get('(:num)', 'Admin\User::get/$1');
-            $routes->delete('(:num)', 'Admin\User::delete/$1');
         });
     });
 });

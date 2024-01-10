@@ -115,6 +115,17 @@ class Property extends DefaultController
         );
     }
 
+    public function suggest(): Response
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(Response::HTTP_FORBIDDEN);
+        }
+
+        return $this->response->setJSON(
+            $this->properties->getArray(['search' => $this->request->getGet('search')], 10)
+        );
+    }
+
     /** ----------------------------------------------------------------------
      *                           HELPER METHODS
      *  ------------------------------------------------------------------- */

@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <div class="page__controls">
-    <?= view('search_bar', ['action' => url_to('Admin\User::index'), 'options' => $options]) ?>
+    <?= view('search_bar', ['url' => url_to('Admin\User::suggest')]) ?>
     <?= view('sort_bar', ['sorters' => ['Name', 'Email'], 'create' => 'userOpen()']); ?>
 </div>
 

@@ -5,7 +5,6 @@
  *
  * Expects:
  * @param array $filters
- * @param array $options
  * @param array $materials
  * @param mixed $pager
  */
@@ -21,7 +20,7 @@
 
 <?= $this->section('content') ?>
 <div class="page__controls">
-    <?= view('search_bar', ['options' => $options]) ?>
+    <?= view('search_bar', ['url' => url_to('Material::suggest')]) ?>
 </div>
 <div id="items">
     <?= $this->include('none') ?>

@@ -17,7 +17,7 @@
 
 <?= $this->section('content') ?>
 <div class="page__controls">
-    <?= view('search_bar', ['action' => url_to('Admin\Property::index'), 'options' => $options]) ?>
+    <?= view('search_bar', ['url' => url_to('Admin\Property::suggest')]) ?>
     <?= view('sort_bar', ['sorters' => ['Id', 'Category', 'Value', 'Priority', 'Usage'], 'create' => 'propertyOpen()']) ?>
 </div>
 

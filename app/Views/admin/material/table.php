@@ -6,7 +6,7 @@
 
 <?= $this->section('content') ?>
 <div class="page__controls">
-    <?= view('search_bar', ['action' => url_to('Admin\Material::index'), 'options' => $options]) ?>
+    <?= view('search_bar', ['url' => url_to('Admin\Material::suggest')]) ?>
     <?= view('sort_bar', [
         'sorters' => [
             'ID',
