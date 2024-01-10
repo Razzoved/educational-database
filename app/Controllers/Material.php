@@ -34,16 +34,19 @@ class Material extends DefaultController
      */
     public function index(): string
     {
-        $data = [
-            'meta_title' => 'Materials',
-            'title'      => 'All materials',
-            'filters'    => $this->materialProperties->getUsed(),
-            'options'    => $this->getOptions(),
-            'materials'  => $this->getMaterials(),
-            'pager'      => $this->materials->pager,
-            'activePage' => '',
-        ];
-        return $this->view('material/all', $data);
+        return $this->_index('all', title: 'All materials');
+    }
+
+    public function getByRating(): string
+    {
+        $this->setSort('rating', 'DESC');
+        return $this->_index('all', title: 'Top rated materials');
+    }
+
+    public function getByViews(): string
+    {
+        $this->setSort('views', 'DESC');
+        return $this->_index('all', title: 'Most viewed materials');
     }
 
     /**
@@ -62,7 +65,7 @@ class Material extends DefaultController
         $session = session();
         if ($id && !$session->has('m-' . $id) && !$session->get('isLoggedIn')) {
             $session->set('m-' . $id, true);
-            model(ViewsModel::class)->increment($material);
+            $this->views->increment($material);
         }
 
         return $this->view('material/one', [
@@ -139,17 +142,27 @@ class Material extends DefaultController
      *                               HELPERS
      *  ------------------------------------------------------------------- */
 
-    protected function getOptions(): array
-    {
-        return array_map(
-            function ($mat) {
-                return $mat->title;
-            },
-            $this->materials->getArray(['sort' => 'published_at', 'callbacks' => false]),
-        );
+    protected function _index(
+        string $view,
+        string $meta = 'Materials',
+        string $title = 'Materials',
+        ?array $filters = null,
+        ?array $materials = null,
+        string $activePage = '',
+    ): string {
+        assert($view != '', 'Invalid view: cannot be empty!');
+
+        return $this->view("material/{$view}", [
+            'meta_title' => $meta,
+            'title'      => $title,
+            'filters'    => $filters ?? $this->materialProperties->getUsed(),
+            'materials'  => $materials ?? $this->getMaterials(),
+            'pager'      => $this->materials->pager,
+            'activePage' => $activePage,
+        ]);
     }
 
-    protected function getMaterials(int $perPage = 10): array
+    protected function getMaterials(): array
     {
         return $this->materials->getPage(
             (int) $this->request->getGetPost('page') ?? 1,
@@ -159,7 +172,7 @@ class Material extends DefaultController
                 'sort'      => $this->request->getGetPost('sort'),
                 'sortDir'   => $this->request->getGetPost('sortDir'),
             ],
-            $perPage
+            self::PAGE_SIZE
         );
     }
 }

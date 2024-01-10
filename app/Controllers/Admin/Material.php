@@ -4,23 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\Material as ControllersMaterial;
 use CodeIgniter\HTTP\Response;
 
-class Material extends ControllersMaterial
+class Material extends \App\Controllers\Material
 {
     public function index(): string
     {
         $this->setSort('updated_at');
-
-        return $this->view('material/table', [
-            'meta_title' => 'Administration - Materials',
-            'title'      => 'Materials',
-            'options'    => $this->getOptions(),
-            'filters'    => $this->materialProperties->getUsed(),
-            'materials'  => $this->getMaterials(ADMIN_PAGE_SIZE),
-            'pager'      => $this->materials->pager,
-        ]);
+        return $this->_index('table', meta: 'Administration - Materials');
     }
 
     public function getAvailable(): Response
