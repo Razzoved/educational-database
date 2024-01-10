@@ -16,7 +16,7 @@ const toggleOverflow = (element) => {
         : element.innerHTML.replace("less", "more");
   }
 };
-DEFAULT_SORT;
+
 const toggleGroup = (element) => {
   const parent = element.closest(".page__group");
   if (!parent) {
