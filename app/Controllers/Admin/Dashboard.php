@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\ExtendedController;
+use App\Models as M;
 use App\Entities\Material as EntitiesMaterial;
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
-class Dashboard extends ExtendedController
+class Dashboard extends DefaultController
 {
     protected const COUNT_TOP = 10;
     protected const COUNT_RECENT = 10;
@@ -18,12 +15,10 @@ class Dashboard extends ExtendedController
     protected $views;
     protected $materials;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    protected function ready()
     {
-        parent::initController($request, $response, $logger);
-
-        $this->views = model(ViewsModel::class);
-        $this->materials = model(MaterialModel::class);
+        $this->views = model(M\ViewsModel::class);
+        $this->materials = model(M\MaterialModel::class);
     }
 
     public function index(): string

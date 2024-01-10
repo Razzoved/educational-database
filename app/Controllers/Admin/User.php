@@ -6,21 +6,17 @@ namespace App\Controllers\Admin;
 
 use App\Entities\User as EntitiesUser;
 use App\Models\UserModel;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
-use Psr\Log\LoggerInterface;
 
-class User extends ResponseController
+class User extends DefaultController
 {
     const DEFAULT_SORT = 'name';
 
     private UserModel $users;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    public function ready()
     {
-        parent::initController($request, $response, $logger);
         $this->users = model(UserModel::class);
     }
 

@@ -6,7 +6,7 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 
-class Authentication extends ExtendedController
+class Authentication extends DefaultController
 {
     protected array $rules = [
         'email'    => 'required|string|user_email',

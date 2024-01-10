@@ -113,4 +113,5 @@ defined('TEMP_PATH')   || define('TEMP_PATH', ROOTPATH . TEMP_PREFIX);
 defined('UNUSED')      || define('UNUSED', 'unused' . UNIX_SEPARATOR);
 defined('UNUSED_PATH') || define('UNUSED_PATH', TEMP_PATH . UNUSED);
 
+defined('USER_PAGE_SIZE') || define('USER_PAGE_SIZE', 10);
 defined('ADMIN_PAGE_SIZE') || define('ADMIN_PAGE_SIZE', 15);

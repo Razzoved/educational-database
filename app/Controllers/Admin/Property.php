@@ -7,19 +7,15 @@ namespace App\Controllers\Admin;
 use App\Entities\Property as EntitiesProperty;
 use App\Libraries\Property as PropertyLib;
 use App\Models\PropertyModel;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 use Exception;
 
-class Property extends ResponseController
+class Property extends DefaultController
 {
     private PropertyModel $properties;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    protected function ready()
     {
-        parent::initController($request, $response, $logger);
         $this->properties = model(PropertyModel::class);
     }
 

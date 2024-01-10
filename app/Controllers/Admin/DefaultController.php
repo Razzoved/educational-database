@@ -1,15 +1,26 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\ExtendedController;
 use CodeIgniter\Entity\Entity;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\Validation\Exceptions\ValidationException;
 use Exception;
 
-class ResponseController extends ExtendedController
+/**
+ * Class DefaultController
+ *
+ * This controller is an extension of user space DefaultController, implementing
+ * additional AJAX administration helpers.
+ *
+ * For security be sure to declare any new methods as protected or private.
+ */
+abstract class DefaultController extends \App\Controllers\DefaultController
 {
+    protected const PAGE_SIZE = ADMIN_PAGE_SIZE;
+
     protected function doDelete(int $id, callable $find, callable $delete, string $entityName = 'entity'): Response
     {
         $entity = $find($id);

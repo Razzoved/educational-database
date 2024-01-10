@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Controllers\ExtendedController;
 use App\Entities\Config as EntitiesConfig;
 use App\Models\ConfigModel;
 use CodeIgniter\Files\File;
 use CodeIgniter\HTTP\Files\UploadedFile;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\Response;
-use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
 
-class Config extends ExtendedController
+class Config extends DefaultController
 {
     protected const RULES = [
         'default_image' => 'is_image[value]',
@@ -33,9 +29,8 @@ class Config extends ExtendedController
     protected $config;
     protected $materials;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    protected function ready()
     {
-        parent::initController($request, $response, $logger);
         $this->config = model(ConfigModel::class);
     }
 

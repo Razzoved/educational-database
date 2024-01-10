@@ -11,7 +11,7 @@ use App\Models\ResourceModel;
 use CodeIgniter\HTTP\Response;
 use Exception;
 
-class Resource extends ResponseController
+class Resource extends DefaultController
 {
     public function index(): string
     {

@@ -15,10 +15,8 @@ use App\Models\PropertyModel;
 use App\Models\ResourceModel;
 use CodeIgniter\Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
-use Psr\Log\LoggerInterface;
 
 /**
  * Controls the logic for handling requests on manipulation of materials.
@@ -26,7 +24,7 @@ use Psr\Log\LoggerInterface;
  *
  * @author Jan Martinek
  */
-class MaterialEditor extends ResponseController
+class MaterialEditor extends DefaultController
 {
     private const RULES = [
         'id'           => 'permit_empty|is_natural',
@@ -51,10 +49,8 @@ class MaterialEditor extends ResponseController
     private ResourceModel $resources;
     private PropertyModel $properties;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    protected function ready()
     {
-        parent::initController($request, $response, $logger);
-
         $this->materials = model(MaterialModel::class);
         $this->resources = model(ResourceModel::class, true, $this->materials->db);
         $this->properties = model(PropertyModel::class, true, $this->materials->db);
@@ -147,12 +143,12 @@ class MaterialEditor extends ResponseController
      *                           HELPER METHODS
      *  ------------------------------------------------------------------- */
 
-     /**
-      * Fills the material's fields that should contain objects with objects.
-      *
-      * @return EntitiesMaterial resulting object, subdata may be only partial
-      * @throws BadPostException if the post data is invalid
-      */
+    /**
+     * Fills the material's fields that should contain objects with objects.
+     *
+     * @return EntitiesMaterial resulting object, subdata may be only partial
+     * @throws BadPostException if the post data is invalid
+     */
     private function transformData(EntitiesMaterial $material): EntitiesMaterial
     {
         $material->related = $this->toRelations($material->id);
@@ -219,7 +215,7 @@ class MaterialEditor extends ResponseController
      *
      * @param EntitiesMaterial $material material whose resources to move
      * @return self to enable method chaining
-    */
+     */
     private function moveTemporaryFiles(EntitiesMaterial $material): MaterialEditor
     {
         foreach ($material->resources as $r) {

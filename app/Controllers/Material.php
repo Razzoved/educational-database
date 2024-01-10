@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 use App\Models\MaterialModel;
@@ -14,21 +12,20 @@ use App\Models\RatingsModel;
 use App\Models\ViewsModel;
 use CodeIgniter\HTTP\Response;
 use Exception;
-use Psr\Log\LoggerInterface;
 
-class Material extends ExtendedController
+class Material extends DefaultController
 {
     protected MaterialModel $materials;
     protected MaterialPropertyModel $materialProperties;
     protected RatingsModel $ratings;
+    protected ViewsModel $views;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger): void
+    protected function ready(): void
     {
-        parent::initController($request, $response, $logger);
-
         $this->materials = model(MaterialModel::class);
-        $this->materialProperties = model(MaterialPropertyModel::class);
-        $this->ratings = model(RatingsModel::class);
+        $this->materialProperties = model(MaterialPropertyModel::class, true, $this->materials->db);
+        $this->ratings = model(RatingsModel::class, true, $this->materials->db);
+        $this->views = model(ViewsModel::class, true, $this->materials->db);
     }
 
     /**
