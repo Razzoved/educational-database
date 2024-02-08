@@ -24,6 +24,8 @@ use CodeIgniter\Model;
  */
 abstract class QueryModel extends Model
 {
+    abstract protected function beforeQuery(array $data = []): self;
+    
     public function find($id = null, array $data = [])
     {
         $this->beforeQuery($data);
@@ -47,8 +49,55 @@ abstract class QueryModel extends Model
         return parent::paginate($perPage, $group, $page, $segment);
     }
 
-    abstract protected function beforeQuery(array $data = []): self;
+    /* -----------------------------------------------------------------------
+    *                           PREFIXED METHODS
+    * --------------------------------------------------------------------- */
+ 
+    public function where(
+        string $field,
+        $value = null,
+        $escape = null,
+        $prefix = null
+    ): self {
+        $prefix = $prefix ?? $this->table;
+        if ($prefix !== '') {
+            $prefix .= '.';
+        }
+        return parent::where($prefix . $field, $value, $escape);
+    }
 
+    public function orLike(
+        string $field,
+        string $match = '',
+        string $side = 'both',
+        $escape = null,
+        $insensitiveSearch = false,
+        $prefix = null
+    ): self {
+        $prefix = $prefix ?? "{$this->db->prefixTable($this->table)}";
+        if ($prefix !== '') {
+            $prefix .= '.';
+        }
+        return parent::orLike($prefix . $field, $match, $side, $escape, $insensitiveSearch);
+    }
+
+    public function orderBy(
+        string $field,
+        string $direction = '',
+        $escape = null,
+        $prefix = null
+    ): self {
+        $prefix = $prefix ?? $this->table;
+        if ($prefix !== '') {
+            $prefix .= '.';
+        }
+        return parent::orderBy($prefix . $field, $direction, $escape);
+    }
+
+    /* -----------------------------------------------------------------------
+    *                              HELPERS
+    * --------------------------------------------------------------------- */
+    
     protected function sortBy(array &$data, ?string $default = null)
     {
         if (!isset($data['sortBy']) || $data['sortBy'] === '' || (
