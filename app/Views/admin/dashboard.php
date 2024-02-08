@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('header') ?>
-<link rel="stylesheet" href="<?= base_url('public/css/dashboard.css') ?>">
+<link rel="stylesheet" href="<?= base_url('css/dashboard.css') ?>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <?= $this->endSection() ?>
 

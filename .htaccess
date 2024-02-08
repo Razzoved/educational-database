@@ -3,11 +3,11 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # RewriteBase /materials/
 
     # Deny root directory file access
     RewriteCond %{REQUEST_FILENAME} -f
-    RewriteCond %{REQUEST_URI} materials/[^/]+$
-    RewriteCond %{REQUEST_URI} !admin/materials/[^/]+$
+    RewriteCond %{REQUEST_URI} /[^/]+$
     RewriteRule ^(.*)$ - [F,L]
 
     # Send request to CodeIgniter root controller

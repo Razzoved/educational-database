@@ -16,7 +16,7 @@ $errors = $errors ?? [];
 
         <!-- logo with errors -->
         <div class="form__group form__group--centered">
-            <img class="form__logo" src="<?= base_url('public/assets/enai-logo-transparent.png') ?>" alt="ENAI logo">
+            <img class="form__logo" src="<?= base_url('assets/enai-logo-transparent.png') ?>" alt="ENAI logo">
             <?= $this->include('errors/one', ['errors' => $errors]) ?>
         </div>
 

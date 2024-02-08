@@ -1,104 +1,116 @@
-if (!processedFetch) {
-  console.error("AJAX calls will fail, no FETCH.js provided!");
-} else {
-  console.debug("Loaded search.js");
-}
+import { debounce } from "./modules/delay.js";
+import { processedFetch } from "./modules/fetch.js";
 
-// ---------------------------------------------------------------------------
-//                                SEARCHING
-// ---------------------------------------------------------------------------
+class Search {
+  #form;
+  #suggestion; #suggestions;
 
-const searchForm = document.getElementById("search");
-if (searchForm === undefined) {
-  return console.error("Cannot find search form!");
-}
-
-const searchBar = searchForm.querySelector(".search__bar");
-const searchSubmit = searchForm.querySelector(".search__submit");
-
-if (searchBar === undefined || searchSubmit === undefined) {
-  return console.error("Missing search form component!");
-}
-
-// Refill search bar with query params
-let lastSuggest = params.get("search") ?? "";
-searchBar.value = lastSuggest;
-
-// Execute a function when the user presses a enter
-searchBar.addEventListener("keypress", function (event) {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    searchForm.querySelector(".search__submit").click();
-  }
-});
-
-// Execute when user presses submit button
-searchSubmit.addEventListener("click", () => {
-  if (typeof appendFilters === "function") {
-    appendFilters(searchForm);
-  }
-  searchForm.submit();
-});
-
-// ---------------------------------------------------------------------------
-//                                SUGGESTING
-// ---------------------------------------------------------------------------
-
-if (typeof searchForm.dataset.url === "undefined") {
-  return console.error("Missing url for getting search suggestions!");
-}
-
-const suggestionsList = searchForm.querySelector(".search__suggestions");
-if (suggestionsList === undefined) {
-  return console.error("Missing suggestions list component!");
-}
-
-const useSuggestion = (suggestionElement) => {
-  searchBar.value = suggestionElement.textContent;
-  searchSubmit.click();
-};
-
-const debounce = (func, timeout = 300) => {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
-};
-
-const suggest = () => {
-  // ignore same value
-  if (searchBar.value === lastSuggest) return;
-
-  lastSuggest = searchBar.value;
-
-  // keep suggestions for empty value
-  if (lastSuggest === "") return;
-
-  processedFetch(
-    searchForm.dataset.url,
-    {
-      method: "GET",
-      data: lastSuggest,
-    },
-    (response) => {
-      // remove all previous suggestions
-      while (suggestionsList.firstChild) {
-        suggestionsList.lastChild.remove();
-      }
-      // add new suggestions
-      response.forEach((r) => {
-        let item = document.createElement("li");
-        item.classList = "search__suggestion";
-        item.innerHTML = r;
-        item.onclick = `${useSuggestion.name}()`;
-        suggestionsList.appendChild(item);
-      });
+  constructor (form) {
+    if (!form) {
+      throw new Error("Search form is required!");
     }
-  );
-};
 
-// Suggest on search bar change
-searchBar.addEventListener("change", () => debounce(suggest));
+    this.#form = form;
+    this.input = form.querySelector(".search__bar");
+    this.submit = form.querySelector(".search__submit");
+
+    if (!this.input || !this.submit) {
+      throw new Error("Missing search form component!");
+    }
+
+    this.#suggestions = form.querySelector(".search__suggestions");
+    this.#suggestion = params.get("search") ?? "";
+    this.input.value = this.#suggestion;
+
+    if (typeof this.#form.dataset.url === "undefined" || !this.#suggestions) {
+      return console.warn("Suggestions cannot be displayed!");
+    }
+  }
+
+  onKeypress(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.submit.click();
+    }
+  }
+
+  onSubmit(event) {
+    if (typeof appendFilters === "function") {
+      appendFilters(this.#form);
+    }
+    this.#form.submit();
+  }
+
+  enableEnter() {
+    this.input.addEventListener("keypress", this.onKeypress.bind(this));
+    return this;
+  }
+
+  enableSubmit() {
+    this.submit.addEventListener("click", this.onSubmit.bind(this));
+    return this;
+  }
+
+  disableEnter() {
+    this.input.removeEventListener("keypress", this.onKeypress.bind(this));
+    return this;
+  }
+
+  disableSubmit() {
+    this.submit.removeEventListener("click", this.onSubmit.bind(this));
+    return this;
+  }
+
+  enableSuggest() {
+    if (!this.#suggestions) {
+      console.warn('Suggestion cannot be enabled!');
+    } else {
+      this.input.addEventListener("input", debounce(this.suggest.bind(this)));
+    }
+    return this;
+  }
+
+  disableSuggest() {
+    this.input.removeEventListener("input", debounce(this.suggest.bind(this)));
+    return this;
+  }
+
+  suggest() {
+    // do not update on same value
+    if (this.input.value === this.#suggestion) return;
+
+    this.#suggestion = this.input.value;
+
+    // keep last suggestions whenever its empty
+    if (this.#suggestion === "") return;
+
+    processedFetch(
+      `${this.#form.dataset.url}?${(new URLSearchParams({search: this.#suggestion})).toString()}`,
+      { method: "GET" },
+      (response) => {
+        // remove all previous suggestions
+        while (this.#suggestions.firstChild) {
+          this.#suggestions.lastChild.remove();
+        }
+        // add new suggestions
+        response.forEach((r) => {
+          let elem = document.createElement("li");
+          elem.classList = "search__suggestion";
+          elem.innerHTML = r;
+          elem.addEventListener("click", () => {
+            this.input.value = elem.textContent;
+            this.submit.click();
+          });
+          this.#suggestions.appendChild(elem);
+        });
+      }
+    );
+  };
+}
+
+const search = new Search(document.getElementById("search"))
+  .enableEnter()
+  .enableSubmit()
+  .enableSuggest();
+
+console.debug("Loaded search: ", search);

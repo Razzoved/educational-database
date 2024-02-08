@@ -11,8 +11,8 @@ $homeURL = model(\App\Models\ConfigModel::class)->find('home_url')->value ?? url
 $url = (string) current_url(true)->setQuery('');
 
 $url_all = url_to('Material::index');
-$url_top = url_to('MaterialTopRated::index');
-$url_mst = url_to('MaterialMostViewed::index');
+$url_top = url_to('Material::getByRating');
+$url_mst = url_to('Material::getByViews');
 $url_lgn = url_to('Authentication::index');
 
 $all = $url === $url_all ? ' active' : '';
@@ -22,7 +22,7 @@ $lgn = $url === $url_lgn ? ' active' : '';
 ?>
 <nav class="navbar">
     <div class="navbar__container">
-        <img class="navbar__logo" id="link-home" src="<?= base_url('public/assets/enai-logo-transparent.png') ?>" alt="ENAI logo" href="<?= $homeURL ?>" onclick="window.location.href=this.getAttribute('href')">
+        <img class="navbar__logo" id="link-home" src="<?= base_url('assets/enai-logo-transparent.png') ?>" alt="ENAI logo" href="<?= $homeURL ?>" onclick="window.location.href=this.getAttribute('href')">
         <ul class="navbar__list">
             <li class="navbar__item<?= $all ?>">
                 <a class="navbar__button" href="<?= $url_all ?>">

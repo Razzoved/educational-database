@@ -13,7 +13,7 @@ $rating = $rating->rating_value ?? 0;
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('header') ?>
-<link rel="stylesheet" href="<?= base_url('public/css/modal.css') ?>">
+<link rel="stylesheet" href="<?= base_url('css/modal.css') ?>">
 <?= $this->endSection() ?>
 
 <?= $this->section('sidebar') ?>

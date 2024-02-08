@@ -12,6 +12,8 @@ temp/
 !assets/*
 !js/
 !js/*
+!js/modules/
+!js/modules/*
 !css/
 !.htaccess
 !favicon.ico

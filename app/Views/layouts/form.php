@@ -6,7 +6,7 @@
     <?= $this->renderSection('header') ?>
 
     <!-- custom css -->
-    <link rel="stylesheet" href="<?= base_url('public/css/form.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('css/form.css') ?>">
 </head>
 
 <body>

@@ -5,7 +5,7 @@
  */
 
 // path to root website
-$homeURL = model(\App\Models\ConfigModel::class)->find('home_url')->value ?? url_to('Admin\Material::index');
+$homeURL = model(\App\Models\ConfigModel::class)->find('home_url')->value ?? url_to('Admin\Dashboard::index');
 
 // resolve active page
 $url = (string) current_url(true)->setQuery('');
@@ -17,7 +17,7 @@ $user = $url === url_to('Admin\User::index')      ? ' active' : '';
 ?>
 <nav class="navbar">
     <div class="navbar__container">
-        <img class="navbar__logo" id="link-home" src="<?= base_url('public/assets/enai-logo-transparent.png') ?>" alt="ENAI logo" href="<?= $homeURL ?>" onclick="window.location.href=this.getAttribute('href')">
+        <img class="navbar__logo" id="link-home" src="<?= base_url('assets/enai-logo-transparent.png') ?>" alt="ENAI logo" href="<?= $homeURL ?>" onclick="window.location.href=this.getAttribute('href')">
         <ul class="navbar__list">
             <li class="navbar__item<?= $dash ?>">
                 <a class="navbar__button" href="<?= url_to('Admin\Dashboard::index') ?>" )?>

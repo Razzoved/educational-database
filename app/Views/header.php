@@ -1,7 +1,7 @@
 <!-- metadata -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="shortcut icon" type="image/png" href="<?= base_url('public/favicon.ico') ?>" />
+<link rel="shortcut icon" type="image/png" href="<?= base_url('favicon.ico') ?>" />
 
 <!-- Font Awesome kit CSS -->
 <script src="https://kit.fontawesome.com/b3b08eaee3.js" crossorigin="anonymous"></script>
@@ -19,5 +19,5 @@
     if (!params.has('sortDir')) params.set('sortDir', '<?= $_GET['sortDir'] ?? 'desc' ?>');
 </script>
 
-<script src="<?= base_url('public/js/common.js') ?>">
+<script src="<?= base_url('js/common.js') ?>">
 </script>

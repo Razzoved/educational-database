@@ -5,7 +5,7 @@
     <?= $this->include('header') ?>
 
     <!-- custom css -->
-    <link rel="stylesheet" href="<?= base_url('public/css/admin.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('css/admin.css') ?>">
 
     <?= $this->renderSection('header') ?>
 </head>

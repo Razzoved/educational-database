@@ -24,7 +24,7 @@ const NAME =
  *
  * @return {Response} returns the result of the fetch request.
  */
-const secureFetch = ((token) => {
+export const secureFetch = ((token) => {
   const CSRF_HEADER = "X-CSRF-TOKEN";
 
   const channel = new BroadcastChannel("csrf-protection");
@@ -90,7 +90,7 @@ const showError = (error) => {
  *
  * @return {void} nothing, uses callback instead
  */
-const processedFetch = (url, options, callback) => {
+export const processedFetch = (url, options, callback) => {
   secureFetch(url, options)
     .then((response) => {
       if (!response.ok) {
@@ -111,7 +111,7 @@ const processedFetch = (url, options, callback) => {
  *
  * @return {void} Does not return anything, use callback instead.
  */
-const upload = (url, props, callback) => {
+export const upload = (url, props, callback) => {
   if (url === undefined || callback === undefined || props === undefined) {
     return console.debug("Upload: missing parameters");
   }

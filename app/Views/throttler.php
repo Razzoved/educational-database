@@ -2,7 +2,7 @@
 
 <?= $this->section('header') ?>
 <?= $this->include('header') ?>
-<link rel="stylesheet" href="<?= base_url('public/css/public.css') ?>">
+<link rel="stylesheet" href="<?= base_url('css/public.css') ?>">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
