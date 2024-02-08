@@ -55,7 +55,7 @@ abstract class DefaultController extends BaseController
     protected function setSort(string $sort, ?string $sortDir = null)
     {
         $get = $this->request->getGet();
-        $get['sort'] = $this->request->getGet('sort') ?? $sort;
+        $get['sortBy'] = $this->request->getGet('sortBy') ?? $sort;
         $get['sortDir'] = $this->request->getGet('sortDir') ?? $sortDir ?? 'DESC';
         $this->request->setGlobal('get', $get);
         $_GET = $get;

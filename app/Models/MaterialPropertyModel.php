@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Entities\Cast\StatusCast;
 use App\Entities\Material;
-use App\Libraries\Cache;
 use App\Libraries\Property as PropertyLib;
 use CodeIgniter\Model;
 
@@ -16,7 +15,7 @@ use CodeIgniter\Model;
  *
  * @author Jan Martinek
  */
-class MaterialPropertyModel extends Model
+class MaterialPropertyModel extends Model 
 {
     protected $table = 'material_property';
     protected $primaryKey = 'id';
@@ -38,33 +37,22 @@ class MaterialPropertyModel extends Model
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
-    public function get(int $materialId): array
+    public function find($materialId = null): array
     {
-        $this->select('property_id')
-            ->groupBy('property_id')
-            ->having('COUNT(material_id) > 0')
+        $this->distinct()
+            ->select('property_id')
             ->where('material_id', $materialId);
 
         return PropertyLib::getFiltered(array_column($this->findAll(), 'property_id'));
     }
 
-    public function getArray(int $materialId): array
-    {
-        return model(PropertyModel::class)
-            ->join($this->table, 'property_id')
-            ->where('material_id', $materialId, null, '')
-            ->getArray();
-    }
-
     public function getUsed(): array
     {
-        $this->select('property_id')
-            ->groupBy('property_id')
-            ->having('COUNT(material_id) >', 0);
+        $this->distinct()->select('property_id');
 
         if (!session('isLoggedIn')) {
-            $this->join('materials', 'material_id')
-                ->where('material_status', StatusCast::PUBLIC);
+            $this->join('materials as m', 'm.id=material_id')
+                ->where('m.status', StatusCast::PUBLIC);
         }
 
         return PropertyLib::getFiltered(array_column($this->findAll(), 'property_id'));
@@ -141,7 +129,7 @@ class MaterialPropertyModel extends Model
     {
         if (isset($data['data']['property_id'])) {
             model(PropertyModel::class)->revalidateCache([
-                'id' => 'property_id',
+                'id' => $data['data']['property_id'],
             ]);
         }
         return $data;
@@ -157,9 +145,9 @@ class MaterialPropertyModel extends Model
         foreach ($groups as $ids) {
             $m = array_column(
                 $this->select('material_id')
-                    ->join('properties', 'property_id')
-                    ->whereIn('property_id', $ids)
-                    ->orWhereIn('property_tag', $ids)
+                    ->join('properties as p', 'p.id=property_id')
+                    ->whereIn('p.id', $ids)
+                    ->orWhereIn('p.tag', $ids)
                     ->findAll(),
                 'material_id'
             );
@@ -172,9 +160,9 @@ class MaterialPropertyModel extends Model
         foreach ($ids as $id) {
             $m = array_column(
                 $this->select('material_id')
-                    ->join('properties', 'property_id')
-                    ->where('property_id', $id)
-                    ->orWhere('property_tag', $id)
+                    ->join('properties as p', 'p.id=property_id')
+                    ->where('p.id', $id)
+                    ->orWhere('p.tag', $id)
                     ->findAll(),
                 'material_id'
             );

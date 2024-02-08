@@ -29,10 +29,10 @@ class Dashboard extends DefaultController
             'meta_title'      => 'Administration - Dashboard',
             'viewsHistory'    => $this->views->getDailyTotals(),
             'materials'       => $this->views->getTopMaterials(self::COUNT_TOP, "", 30),
-            'materialsTotal'  => $this->materials->getArray(['sort' => 'views', 'sortDir' => 'DESC'], self::COUNT_TOP),
+            'materialsTotal'  => $this->materials->findAll(self::COUNT_TOP, 0, ['sortBy' => 'views', 'sortDir' => 'DESC']),
             'editors'         => $this->materials->getBlame(),
-            'recentPublished' => $this->materials->getArray(['sort' => 'published_at', 'sortDir' => 'DESC'], self::COUNT_RECENT),
-            'recentUpdated'   => $this->materials->getArray(['sort' => 'updated_at', 'sortDir' => 'DESC'], self::COUNT_RECENT),
+            'recentPublished' => $this->materials->findAll(self::COUNT_RECENT, 0, ['sortBy' => 'published_at', 'sortDir' => 'DESC']),
+            'recentUpdated'   => $this->materials->findAll(self::COUNT_RECENT, 0, ['sortBy' => 'updated_at', 'sortDir' => 'DESC']),
             'pageClass'       => ['dashboard'],
             'hasSidebar'      => true
         ];

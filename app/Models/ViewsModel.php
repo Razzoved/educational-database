@@ -24,8 +24,8 @@ class ViewsModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
+        'views',
         'material_id',
-        'material_views'
     ];
 
     protected $useAutoIncrement = true;
@@ -33,6 +33,7 @@ class ViewsModel extends Model
     protected $dateFormat = 'date';
     protected $createdField = 'created_at';
     protected $updatedField = '';
+    protected $deletedField = '';
 
     protected $returnType = Material::class;
 
@@ -43,22 +44,21 @@ class ViewsModel extends Model
     public function getDailyTotals(int $days = 30): array
     {
         $views = $this->select('created_at')
-            ->selectSum('material_views')
+            ->selectSum('views')
             ->groupBy('created_at')
             ->orderBy('created_at', 'desc')
             ->where('created_at >', $this->date($days))
             ->findAll($days);
 
         $result = [];
-        for ($i = $days - 1; $i >= 0; $i--) {
-            $day = $day ?? array_pop($views);
-            if ($day && $day->created_at->toDateString() == $this->date($i)) {
-                $result[] = $day->views;
-                $day = null;
-            } else {
-                $result[] = 0;
-            }
+        foreach ($views as $view) {
+            $result[$view->created_at->toDateString()] = $view->views;
         }
+        for ($i = 0; $i < $days; $i++) {
+            $date = $this->date($i);
+            $result[$date] = $result[$date] ?? 0;
+        }
+
         return $result;
     }
 
@@ -72,24 +72,23 @@ class ViewsModel extends Model
      */
     public function getTopMaterials(int $n = 1, string $search = "", int $days = 30): array
     {
-        $select = 'material_id, material_status, material_title, ' .
-            'material_blame, material_content, material_rating, ' .
-            'material_rating_count, published_at, updated_at';
+        // TODO: reimplement
+        // $mTable = model(MaterialModel::class)->table;
+        // $views = model(MaterialModel::class)
+        //     ->select('*')
+        //     ->selectSum('v.views', 'views')
+        //     ->join("{$this->table} as v", "{$mTable}.id=v.material_id")
+        //     ->groupBy('v.material_id')
+        //     ->orderBy('views', 'desc')
+        //     ->where('v.created_at >', $this->date($days))
+        //     ->getArray(['callbacks' => false, 'sortBy' => 'published_at', 'sortDir' => 'desc', 'search' => $search], $n);
 
-        $views = model(MaterialModel::class)
-            ->select($select)
-            ->selectSum($this->table . '.material_views', 'material_views')
-            ->join($this->table, 'material_id')
-            ->groupBy('material_id')
-            ->orderBy('material_views', 'desc')
-            ->where('created_at >', $this->date($days))
-            ->getArray(['callbacks' => false, 'sort' => 'published_at', 'sortDir' => 'desc', 'search' => $search], $n);
+        // foreach ($views as $v) {
+        //     $v->resources = model(ResourceModel::class)->getThumbnail($v->id);
+        // }
 
-        foreach ($views as $v) {
-            $v->resources = model(ResourceModel::class)->getThumbnail($v->id);
-        }
-
-        return $views;
+        // return $views;
+        return model(MaterialModel::class)->findAll();
     }
 
     /**
@@ -105,9 +104,9 @@ class ViewsModel extends Model
             ->first();
         try {
             if (!$last || $last->created_at !== $this->date()) {
-                $this->insert(['material_id' => $material->id, 'material_views' => 1]);
+                $this->insert(['material_id' => $material->id, 'views' => 1]);
             } else {
-                $this->update($last->id, ['material_views' => $last->views + 1]);
+                $this->update($last->id, ['views' => $last->views + 1]);
             }
             $material->views++;
             model(MaterialModel::class)->update($material->id, $material);
@@ -129,13 +128,13 @@ class ViewsModel extends Model
         $this->emptyTable($this->table);
         $this->db->query('ALTER TABLE ' . $this->table . ' AUTO_INCREMENT = 1');
 
-        $materials = model(MaterialModel::class)->getArray();
+        $materials = model(MaterialModel::class)->findAll();
 
         $this->allowedFields[] = 'created_at';
         foreach ($materials as $material) {
             $this->insert([
                 'material_id' => $material->id,
-                'material_views' => $material->views,
+                'views' => $material->views,
                 'created_at' => $material->published_at->toDateString()
             ]);
         }

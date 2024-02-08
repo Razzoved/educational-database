@@ -24,7 +24,7 @@ class Authentication extends DefaultController
             return $this->view('user_login', ['errors' => $this->validator->getErrors()]);
         }
 
-        $user = model(UserModel::class)->getEmail($this->validator->getValidated()['email'] ?? "");
+        $user = model(UserModel::class)->findEmail($this->validator->getValidated()['email'] ?? "");
         unset($user->password);
 
         session()->set([
@@ -55,7 +55,7 @@ class Authentication extends DefaultController
      */
     public function reset(string $email): string
     {
-        $user = model(UserModel::class)->getEmail($email);
+        $user = model(UserModel::class)->findEmail($email);
         unset($user->password);
 
         if (!$user) {

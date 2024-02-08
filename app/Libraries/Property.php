@@ -65,7 +65,7 @@ class Property
      */
     public static function getFiltered(array $ids): array
     {
-        $tree = model(PropertyModel::class)->getTree();
+        $tree = model(PropertyModel::class)->asTree();
         self::filterByIds($tree, $ids);
         return $tree->children;
     }
@@ -78,7 +78,7 @@ class Property
      */
     public static function getCategories(): array
     {
-        $tree = model(PropertyModel::class)->getTree();
+        $tree = model(PropertyModel::class)->asTree();
         self::filterCategories($tree);
         return $tree->children;
     }

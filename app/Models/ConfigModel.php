@@ -11,10 +11,10 @@ use CodeIgniter\Model;
 class ConfigModel extends Model
 {
     protected $table         = 'config';
-    protected $primaryKey    = 'config_id';
+    protected $primaryKey    = 'id';
     protected $allowedFields = [
-        'config_id',
-        'config_value',
+        'id',
+        'value',
     ];
 
     protected $allowCallbacks = true;

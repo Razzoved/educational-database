@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Entities\User;
-use CodeIgniter\Model;
 
-class UserModel extends Model
+class UserModel extends QueryModel
 {
     protected $table         = 'users';
-    protected $primaryKey    = 'user_id';
+    protected $primaryKey    = 'id';
     protected $allowedFields = [
-        'user_name',
-        'user_email',
-        'user_password',
+        'name',
+        'email',
+        'password',
     ];
 
     protected $useAutoIncrement = true;
@@ -34,71 +33,38 @@ class UserModel extends Model
      *                           PUBLIC METHODS
      *  ------------------------------------------------------------------- */
 
-    public function get(int $id, array $data = []): ?User
-    {
-        return $this->setupQuery($data)->find($id);
-    }
-
-    public function getArray(array $data = [], int $limit = 0): array
-    {
-        return $this->setupQuery($data)->findAll($limit);
-    }
-
-    public function getPage(int $page = 1, array $data = [], int $perPage = 20): array
-    {
-        return $this->setupQuery($data)->paginate($perPage, 'default', $page);
-    }
-
-    public function getEmail(string $email): ?User
+    public function findEmail(string $email): ?User
     {
         if ($email === "") {
             return null;
         }
-        return $this->where('user_email', $email)
-            ->first();
-    }
-
-    public function deleteEmail(string $email): void
-    {
-        $this->builder()
-            ->delete(['user_email' => $email]);
+        return $this->where('email', $email)->first();
     }
 
     /** ----------------------------------------------------------------------
      *                        UNIFIED QUERY SETUP
      *  ------------------------------------------------------------------- */
 
-    protected function setupQuery(array $data = []): UserModel
+    protected function beforeQuery(array $data = []): self
     {
         return $this
-            ->setupSort($data['sort'] ?? "", $data['sortDir'] ?? "")
+            ->setupSort($data)
             ->setupFilters($data['filters'] ?? [])
             ->setupSearch($data['search'] ?? "");
     }
 
-    protected function setupSort(string $sort, string $sortDir)
+    protected function setupSort(array $data)
     {
-        if (
-            $sort !== $this->createdField &&
-            $sort !== $this->updatedField &&
-            $sort !== $this->primaryKey
-        ) {
-            $sort = 'user_' . $sort;
-            $sort = in_array($sort, $this->allowedFields) || $sort === $this->primaryKey ? $sort : "";
+        $this->sortBy($data);
+        $this->sortDir($data);
+        
+        $this->orderBy($data['sortBy'], $data['sortDir']);
+
+        if ($data['sortBy'] !== 'name') {
+            $this->orderBy('name');
         }
-
-        if ($sort === "") {
-            $sort = $this->primaryKey;
-        }
-
-        $this->orderBy($sort, strtolower($sortDir) === 'asc' ? 'ASC' : 'DESC');
-
-        if ($sort !== 'user_name') {
-            $this->orderBy('user_name');
-        }
-
-        if ($sort !== 'user_email') {
-            $this->orderBy('user_email');
+        if ($data['sortBy'] !== 'email') {
+            $this->orderBy('email');
         }
 
         return $this;
@@ -123,8 +89,9 @@ class UserModel extends Model
         if ($search === "") {
             return $this;
         }
-        return $this->orLike('user_name', $search, 'both', true, true)
-            ->orLike('user_email', $search, 'both', true, true);
+        return $this
+            ->orLike('name', $search, 'both', true, true)
+            ->orLike('email', $search, 'both', true, true);
     }
 
     /** ----------------------------------------------------------------------
@@ -133,15 +100,15 @@ class UserModel extends Model
 
     protected function hashPassword(array $data): array
     {
-        if (!isset($data['data']['user_password'])) {
+        if (!isset($data['data']['password'])) {
             return $data;
         }
         // prevent overwrite in case of empty password
-        if ($data['data']['user_password'] === '') {
-            unset($data['data']['user_password']);
+        if ($data['data']['password'] === '') {
+            unset($data['data']['password']);
         } else {
-            $data['data']['user_password'] = password_hash(
-                $data['data']['user_password'],
+            $data['data']['password'] = password_hash(
+                $data['data']['password'],
                 PASSWORD_DEFAULT
             );
         }

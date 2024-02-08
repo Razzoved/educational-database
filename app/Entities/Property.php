@@ -9,30 +9,22 @@ use CodeIgniter\Entity\Entity;
 class Property extends Entity
 {
     protected $attributes = [
-        'property_id'          => null,
-        'property_tag'         => null,
-        'property_value'       => null,
-        'property_priority'    => null,
-        'property_description' => null,
-        'category'             => null, // not part of db, but loaded
-        'children'             => null, // not part of db (on demand)
-        'usage'                => null, // not part of db (on demand)
+        'id'          => null,
+        'parent'      => null,
+        'value'       => null,
+        'priority'    => null,
+        'description' => null,
+        'category'    => null, // not part of db, but loaded
+        'children'    => null, // not part of db (on demand)
+        'usage'       => null, // not part of db (on demand)
     ];
 
     protected $casts = [
-        'property_id'          => 'int',
-        'property_priority'    => 'int',
-        'property_description' => 'string',
-        'category'             => 'string',
-        'children'             => 'array',
-        'usage'                => 'int',
-    ];
-
-    protected $datamap = [
-        'id'          => 'property_id',
-        'tag'         => 'property_tag',
-        'value'       => 'property_value',
-        'priority'    => 'property_priority',
-        'description' => 'property_description',
+        'id'          => 'int',
+        'priority'    => 'int',
+        'description' => 'string',
+        'category'    => 'string',
+        'children'    => 'array',
+        'usage'       => 'int',
     ];
 }

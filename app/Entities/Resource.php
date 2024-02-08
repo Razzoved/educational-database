@@ -9,28 +9,25 @@ use CodeIgniter\Entity\Entity;
 class Resource extends Entity
 {
     protected $attributes = [
-        'resource_id'    => null,
-        'material_id'    => null,
-        'resource_path'  => null,
-        'resource_type'  => null,
-        'created_at'     => null,
-        'updated_at'     => null,
-        'deleted_at'     => null,
-        'tmp_path'       => null, // not a part of db
+        'id'          => null,
+        'material_id' => null,
+        'path'        => null,
+        'type'        => null,
+        'created_at'  => null,
+        'updated_at'  => null,
+        'deleted_at'  => null,
+        'tmp_path'    => null, // not a part of db
     ];
 
     protected $casts = [
-        'resource_id'   => 'int',
-        'material_id'   => 'int',
-        'resource_path' => 'path',
-        'resource_type' => 'path',
+        'id'          => 'int',
+        'material_id' => 'int',
+        'path'        => 'path',
+        'type'        => 'path',
     ];
 
     protected $datamap = [
-        'id'       => 'resource_id',
         'parentId' => 'material_id',
-        'path'     => 'resource_path',
-        'type'     => 'resource_type',
     ];
 
     protected $castHandlers = [
@@ -94,7 +91,8 @@ class Resource extends Entity
     public static function getDefaultImage()
     {
         return new Resource([
-            'path' => model(\App\Models\ConfigModel::class)->find('default_image')->value,
+            'path' => model(\App\Models\ConfigModel::class)->find('default_image')->value
+                ?? base_url('assets/default_image.png'),
             'type' => 'thumbnail',
         ]);
     }

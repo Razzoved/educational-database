@@ -17,7 +17,7 @@ class Material extends \App\Controllers\Material
     public function getAvailable(): Response
     {
         try {
-            $materials = $this->materials->allowCallbacks(false)->getArray(['sort' => 'published_at']);
+            $materials = $this->materials->allowCallbacks(false)->findAll(0, 0, ['sortBy' => 'published_at']);
             return $this->response->setJSON($materials);
         } catch (\Exception $e) {
             return $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, 'Could not get available materials');

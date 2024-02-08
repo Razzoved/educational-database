@@ -57,7 +57,7 @@ class Material extends DefaultController
      */
     public function get(int $id): string
     {
-        $material = $this->materials->get($id);
+        $material = $this->materials->find($id);
         if (!$material)
             throw PageNotFoundException::forPageNotFound();
 
@@ -127,7 +127,7 @@ class Material extends DefaultController
         } catch (Exception $e) {
             return $this->response->setStatusCode(
                 Response::HTTP_INTERNAL_SERVER_ERROR,
-                'Unexpected error occured while rating, try again later!'
+                'Unexpected error occured while rating, try again later' . PHP_EOL . $e->getMessage()
             );
         }
 
@@ -144,13 +144,14 @@ class Material extends DefaultController
             return $this->response->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
-        return $this->response->setJSON(
-            $this->materials->getArray([
-                'search' => $this->request->getGet('search'),
-                'sort'   => 'views',
+        return $this->response->setJSON(array_column(
+            $this->materials->findAll(10, 0, [
+                'search'  => $this->request->getGet('search'),
+                'sortBy'  => 'views',
                 'sortDir' => 'DESC',
-            ], 10)
-        );
+            ]),
+            'title'
+        ));
     }
 
     /** ----------------------------------------------------------------------
@@ -179,15 +180,17 @@ class Material extends DefaultController
 
     protected function getMaterials(): array
     {
-        return $this->materials->getPage(
+        return $this->materials->paginate(
+            self::PAGE_SIZE,
+            'default',
             (int) $this->request->getGetPost('page') ?? 1,
+            0,
             [
                 'filters'   => \App\Libraries\Property::getFilters($this->request),
                 'search'    => $this->request->getGetPost('search'),
-                'sort'      => $this->request->getGetPost('sort'),
+                'sortBy'    => $this->request->getGetPost('sortBy'),
                 'sortDir'   => $this->request->getGetPost('sortDir'),
             ],
-            self::PAGE_SIZE
         );
     }
 }

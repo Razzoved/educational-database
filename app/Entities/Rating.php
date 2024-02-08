@@ -11,16 +11,21 @@ class Rating extends Entity
     protected $attributes = [
         'id'           => null,
         'material_id'  => null,
-        'rating_uid'   => null,
-        'rating_value' => null,
+        'user'         => null,
+        'value'        => null,
         'count'        => null, // not a part of db
     ];
 
     protected $casts = [
         'id'           => 'int',
         'material_id'  => 'int',
-        'rating_uid'   => 'string',
-        'rating_value' => 'int',
+        'user'         => 'string',
+        'value'        => 'int',
         'count'        => 'int',
+    ];
+
+    protected $datamap = [
+        'rating_uid'   => 'user',
+        'rating_value' => 'value',
     ];
 }

@@ -112,7 +112,7 @@ class User extends DefaultController
         }
 
         return $this->response->setJSON(
-            $this->users->getArray(['search' => $this->request->getGet('search')], 10)
+            $this->users->findAll(10, 0, ['search' => $this->request->getGet('search')])
         );
     }
 
@@ -122,14 +122,16 @@ class User extends DefaultController
 
     protected function getUsers(): array
     {
-        return $this->users->getPage(
+        return $this->users->paginate(
+            self::PAGE_SIZE,
+            'default',
             (int) $this->request->getGetPost('page') ?? 1,
+            0,
             [
-                'search'    => $this->request->getGetPost('search'),
-                'sort'      => $this->request->getGetPost('sort') ?? self::DEFAULT_SORT,
-                'sortDir'   => $this->request->getGetPost('sortDir'),
-            ],
-            self::PAGE_SIZE
+                'search'  => $this->request->getGetPost('search'),
+                'sortBy'  => $this->request->getGetPost('sortBy') ?? self::DEFAULT_SORT,
+                'sortDir' => $this->request->getGetPost('sortDir'),
+            ]
         );
     }
 }

@@ -11,42 +11,42 @@ use CodeIgniter\Model;
 class ResourceModel extends Model
 {
     protected $table         = 'resources';
-    protected $primaryKey    = 'resource_id';
+    protected $primaryKey    = 'id';
     protected $allowedFields = [
         'material_id',
-        'resource_id',
-        'resource_path',
-        'resource_type',
+        'path',
+        'type',
     ];
 
     protected $useAutoIncrement = true;
     protected $useSoftDeletes   = false;
     protected $useTimestamps    = true;
 
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
+    protected $deletedField = 'deleted_at';
 
     protected $returnType = Resource::class;
 
     public function getResources(int $materialId): array
     {
         return $this->where('material_id', $materialId)
-            ->orderBy('resource_type')
-            ->orderBy('resource_path')
+            ->orderBy('type')
+            ->orderBy('path')
             ->findAll();
     }
 
     public function getThumbnail(int $materialId): array
     {
         return $this->where('material_id', $materialId)
-            ->where('resource_type', 'thumbnail')
+            ->where('type', 'thumbnail')
             ->findAll();
     }
 
     public function getByPath(int $materialId, string $path): ?Resource
     {
         return $this->where('material_id', $materialId)
-            ->where('resource_path', $path)
+            ->where('path', $path)
             ->first();
     }
 }

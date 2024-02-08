@@ -14,8 +14,8 @@ class RatingsModel extends Model
     protected $primaryKey    = 'id';
     protected $allowedFields = [
         'material_id',
-        'rating_uid',
-        'rating_value'
+        'user',
+        'value'
     ];
 
     protected $returnType = Rating::class;
@@ -36,42 +36,42 @@ class RatingsModel extends Model
     {
         $old = $this->getRating($materialId, $userId);
         try {
-            if ($old && ($value === null || $value === $old->rating_value)) {
+            if ($old && ($value === null || $value === $old->value)) {
                 $this->delete($old->id);
                 return null;
             } else if ($old) {
-                $this->update($old->id, ['rating_value' => $value]);
+                $this->update($old->id, ['value' => $value]);
             } else {
-                $this->insert(['material_id' => $materialId, 'rating_uid' => $userId, 'rating_value' => $value]);
+                $this->insert(['material_id' => $materialId, 'user' => $userId, 'value' => $value]);
             }
             return $value;
         } catch (Exception $e) {
-            return $old->rating_value;
+            return $old->value;
         }
     }
 
     public function getRating(int $materialId, string $userId): ?Rating
     {
         return $this->where('material_id', $materialId)
-            ->where('rating_uid', $userId)
+            ->where('user', $userId)
             ->first();
     }
 
     public function getRatingAvg(int $materialId): float
     {
         return $this->select('material_id')
-            ->selectAvg('rating_value')
+            ->selectAvg('value')
             ->where('material_id', $materialId)
             ->groupBy('material_id')
             ->orderBy('material_id')
             ->first()
-            ->rating_value ?? 0;
+            ->value ?? 0;
     }
 
     public function getRatingCount(int $materialId): int
     {
         return $this->select('material_id')
-            ->selectCount('rating_value', 'count')
+            ->selectCount('value', 'count')
             ->where('material_id', $materialId)
             ->groupBy('material_id')
             ->orderBy('material_id')

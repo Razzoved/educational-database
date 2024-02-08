@@ -31,7 +31,7 @@ class Rules
         $model = model(Models\UserModel::class);
         return (is_numeric($id))
             ? $model->find($id)->email === $email
-            : empty($model->where('user_email', $email)->findAll(2));
+            : empty($model->where('email', $email)->findAll(2));
     }
 
     /**
@@ -39,7 +39,7 @@ class Rules
      */
     public function user_email(string $email): bool
     {
-        return model(Models\UserModel::class)->where('user_email', $email)->first() !== null;
+        return model(Models\UserModel::class)->where('email', $email)->first() !== null;
     }
 
     /**
@@ -47,7 +47,7 @@ class Rules
      */
     public function user_password(string $password, string $email): bool
     {
-        $user = model(Models\UserModel::class)->where('user_email', $email)->first();
+        $user = model(Models\UserModel::class)->where('email', $email)->first();
         return $user && password_verify($password, $user->password);
     }
 
@@ -82,8 +82,8 @@ class Rules
         }
 
         $properties = model(Models\PropertyModel::class)
-            ->where('property_tag', (int) $tag)
-            ->where('property_value', $value)
+            ->where('parent', (int) $tag)
+            ->where('value', $value)
             ->findAll(2);
         $count = sizeof($properties);
 
@@ -117,7 +117,7 @@ class Rules
 
         return !self::checkCyclic(
             $tag,
-            model(Models\PropertyModel::class)->getTreeRecursive(new Entities\Property(['id' => $id])),
+            model(Models\PropertyModel::class)->asTreeFrom(new Entities\Property(['id' => $id])),
             $error,
             lang('Validation.property_tag')
         );

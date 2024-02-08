@@ -65,7 +65,7 @@ class Property extends DefaultController
             if (!$property->id) {
                 $property->id = $this->properties->getInsertID();
             }
-            $property = $this->properties->get($property->id);
+            $property = $this->properties->find($property->id);
             unset($property->children); // can be commented to get children
         } catch (Exception $e) {
             $this->logger->error($e->getMessage(), $property->toArray() ?? []);
@@ -94,7 +94,7 @@ class Property extends DefaultController
     public function getAvailable(): Response
     {
         try {
-            $properties = $this->properties->getArray(['sort' => 'priority']);
+            $properties = $this->properties->findAll(0, 0, ['sortBy' => 'priority']);
             return $this->response->setJSON($properties);
         } catch (\Exception $e) {
             return $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, 'Could not get available materials');
@@ -122,7 +122,7 @@ class Property extends DefaultController
         }
 
         return $this->response->setJSON(
-            $this->properties->getArray(['search' => $this->request->getGet('search')], 10)
+            $this->properties->findAll(10, 0, ['searchBy' => $this->request->getGet('search')])
         );
     }
 
@@ -132,16 +132,18 @@ class Property extends DefaultController
 
     protected function getProperties(): array
     {
-        return $this->properties->getPage(
+        return $this->properties->paginate(
+            self::PAGE_SIZE,
+            'default',
             (int) $this->request->getGetPost('page') ?? 1,
+            0,
             [
-                'filters'   => \App\Libraries\Property::getFilters($this->request),
-                'search'    => $this->request->getGetPost('search'),
-                'sort'      => $this->request->getGetPost('sort'),
-                'sortDir'   => $this->request->getGetPost('sortDir'),
-                'usage'     => true,
-            ],
-            self::PAGE_SIZE
+                'filters' => \App\Libraries\Property::getFilters($this->request),
+                'search'  => $this->request->getGetPost('search'),
+                'sortBy'  => $this->request->getGetPost('sortBy'),
+                'sortDir' => $this->request->getGetPost('sortDir'),
+                'usage'   => true,
+            ]
         );
     }
 }

@@ -62,7 +62,7 @@ class MaterialEditor extends DefaultController
             'meta_title'          => "Administration - Material",
             'material'            => $material ?? new EntitiesMaterial(),
             'errors'              => $errors,
-            'availableProperties' => PropertyLib::treeMap($this->properties->getTree(), function ($p) {
+            'availableProperties' => PropertyLib::treeMap($this->properties->asTree(), function ($p) {
                 return [
                     'id'          => $p->id,
                     'tag'         => $p->tag,
@@ -76,7 +76,7 @@ class MaterialEditor extends DefaultController
 
     public function get(int $id): string
     {
-        $material = $this->materials->get($id);
+        $material = $this->materials->find($id);
         if (!$material) {
             throw PageNotFoundException::forPageNotFound();
         }
@@ -129,7 +129,7 @@ class MaterialEditor extends DefaultController
         return $this->doDelete(
             $id,
             function ($id) {
-                return $this->materials->get($id);
+                return $this->materials->find($id);
             },
             function ($e) {
                 $this->deleteResources($e);
@@ -190,7 +190,7 @@ class MaterialEditor extends DefaultController
         $result = [];
         foreach ($this->request->getPost('relation') ?? [] as $id => $unused) {
             if (is_numeric($id) && $identifier !== $id) {
-                $result[] = $this->materials->allowCallbacks(false)->get($id);
+                $result[] = $this->materials->allowCallbacks(false)->find($id);
             }
         }
         return $result;

@@ -22,13 +22,13 @@
     const toggleSort = (element) => {
         let sort = document.createElement('input');
         sort.type = 'hidden';
-        sort.name = 'sort';
+        sort.name = 'sortBy';
         sort.value = element.value;
 
         let sortDir = document.createElement('input');
         sortDir.type = 'hidden';
         sortDir.name = 'sortDir';
-        sortDir.value = params.get('sort') === element.value && params.get('sortDir') === 'ASC' ? 'DESC' : 'ASC';
+        sortDir.value = params.get('sortBy') === element.value && params.get('sortDir') === 'ASC' ? 'DESC' : 'ASC';
 
         let form = document.querySelector('form');
         form.action = "";
@@ -39,9 +39,9 @@
 
     // Sets up the active toggler (coloration and direction of arrow).
     document.addEventListener("DOMContentLoaded", () => {
-        const sortButton = document.querySelector(`.sort__button[value='${params.get('sort')}']`);
+        const sortButton = document.querySelector(`.sort__button[value='${params.get('sortBy')}']`);
         if (!sortButton) {
-            console.error(`No sort button was found for: ${params.get('sort')}`);
+            console.error(`No sort button was found for: ${params.get('sortBy')}`);
             return;
         }
         sortButton.classList.add('active');

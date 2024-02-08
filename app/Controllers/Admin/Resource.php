@@ -17,8 +17,8 @@ class Resource extends DefaultController
     {
         helper('filesystem');
 
-        $targets = array();
-        $materials = model(MaterialModel::class)->getArray(['callbacks' => false]);
+        $targets = [];
+        $materials = model(MaterialModel::class)->allowCallbacks(false)->findAll();
 
         foreach ($materials as $material) {
             $targets[$material->id] = $material->title;
