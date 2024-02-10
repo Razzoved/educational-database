@@ -88,7 +88,13 @@ vendor/
 #-------------------------
 # Docker
 #-------------------------
-docker/
+docker/*
+!docker/web
+!docker/database
+docker/web/*
+docker/database/*
+!docker/web/Dockerfile
+!docker/database/Dockerfile
 
 #-------------------------
 # IDE / Development Files
