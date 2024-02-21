@@ -64,12 +64,10 @@ class Resource
      */
     public static function toResource(?string $path, ?string $tmpPath, ?string $type) : ?EntitiesResource
     {
-        $tmpPath = $type === 'file' ? $tmpPath : $path;
-
         $resource = new EntitiesResource([
             'type'     => $type,
             'path'     => $path,
-            'tmp_path' => $tmpPath,
+            'tmp_path' => $type === 'file' ? $tmpPath : $path
         ]);
 
         if (!$resource->isAsset() && !$resource->isLink()) {

@@ -66,7 +66,7 @@
 
     const removeFile = (id) => {
         let element = document.getElementById(id);
-        let path = element.querySelector('input').name.replace(/^files\[/, '').replace(/\]$/, '');
+        let path = element.querySelector('input').name.replace(/^file\[/, '').replace(/\]$/, '');
         if (typeof addToUnused === 'function' && path !== '') {
             addToUnused(path);
         }

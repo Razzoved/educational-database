@@ -2,7 +2,7 @@
 
 namespace App\Entities;
 
-use App\Entities\Cast\PathCast;
+use App\Models\ConfigModel;
 use CodeIgniter\Entity\Entity;
 
 class Resource extends Entity

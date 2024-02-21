@@ -243,7 +243,7 @@ class MaterialEditor extends ResponseController
     private function deleteRemovedFiles(EntitiesMaterial $material) : MaterialEditor
     {
         foreach ($this->request->getPost('unused_files') ?? [] as $path) {
-            $resource = ResourceLib::toResource($path, null, 'file');
+            $resource = ResourceLib::toResource($path, $path, 'file');
             $existing = $this->resources->getByPath($material->id, $resource->path);
             ResourceLib::unassign($existing ?? $resource);
         }
