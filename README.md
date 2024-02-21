@@ -16,8 +16,9 @@ edit the 'env' file to fit your database and server environment:
     and the folder must be named other-side)
 
 2. change database credentials
-3. initialize database with php spark db:seed Initialize
-4. change enviroment (before going public - 'production', else 'development')
+3. create database table (you can use `php spark db:create <NAME>`)
+4. initialize database with `php spark db:seed Initialize`
+5. change enviroment (before going public - 'production', else 'development')
 
 If you encounter any issues, follow the instructions on CodeIgniter's website.
 
