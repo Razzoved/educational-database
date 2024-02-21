@@ -1,11 +1,12 @@
 *
 
 # self
+!.gitkeep
 !.gitignore
 
-# disallowed
-uploads/
-temp/
+!uploads/
+!temp/
+!temp/unused
 
 # allowed
 !assets/
