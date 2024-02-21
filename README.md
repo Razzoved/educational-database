@@ -37,10 +37,11 @@ The user guide corresponding to this version of the framework can be found
 
 ## Installation & updates
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+`composer install` to install vendor files
 
-When updating, check the release notes to see if there are any changes you might need to apply
+When updating by pulling from this repository, it's advised to remove `vendor/` folder and run `composer install` again.
+
+When updating by yourself, check the release notes to see if there are any changes you might need to apply
 to your `app` folder. The affected files can be copied or merged from
 `vendor/codeigniter4/framework/app`.
 
