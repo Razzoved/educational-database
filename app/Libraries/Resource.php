@@ -261,7 +261,7 @@ class Resource
                     continue;
                 }
                 self::getUnusedRecursive($target, $value, $newPath);
-            } else if (substr($value, 0, 5) !== 'index') {
+            } else if (substr($value, 0, 5) !== 'index' && substr($value, 0, 4) !== ".git") {
                 $r = new EntitiesResource();
                 $r->path = "{$newPath}/{$value}";
                 $r->type = 'file';
