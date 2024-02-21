@@ -16,7 +16,8 @@ edit the 'env' file to fit your database and server environment:
     and the folder must be named other-side)
 
 2. change database credentials
-3. change enviroment (before going public - 'production', else 'development')
+3. initialize database with php spark db:seed Initialize
+4. change enviroment (before going public - 'production', else 'development')
 
 If you encounter any issues, follow the instructions on CodeIgniter's website.
 
@@ -50,20 +51,19 @@ and any database settings.
 
 
 ## Configuration of CI4
-Development was done using XAMPP and its Apache and MySQL server.\
-Because of that there was a need to modify the default 'httpd.conf' file:
 
-1) add extension
+1) PHP add extension
 ```
 extesion=intl
 ```
 
-2) add module
+
+2) Apache add module
 ```
 LoadModule rewrite_module modules/mod_rewrite.so
 ```
 
-2) add httdocs directory ruleset
+3) Apache add httdocs directory ruleset
 ```
 #
 # CodeIgniter requirement
@@ -85,15 +85,6 @@ not to the project root. A better practice would be to configure a virtual host 
 framework are exposed.
 
 **Please** read the user guide for a better explanation of how CI4 works!
-
-## Repository Management
-
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
 
 ## Server Requirements
 
