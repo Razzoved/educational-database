@@ -15,6 +15,9 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
+# Docker files
+docker/
+
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
