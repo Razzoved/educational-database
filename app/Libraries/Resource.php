@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Entities\Resource as EntitiesResource;
+use App\Models\ResourceModel;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Files\Exceptions\FileException;
 use CodeIgniter\Files\File;

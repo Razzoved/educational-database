@@ -3,6 +3,7 @@
 namespace App\Libraries;
 
 use App\Entities\Property as EntitiesProperty;
+use App\Models\PropertyModel;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 
