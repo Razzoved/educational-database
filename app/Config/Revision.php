@@ -38,7 +38,10 @@ class Revision extends BaseRevision
      *
      * @var string[]
      */
-    public $ignoreDirs = [];
+    public $ignoreDirs = [
+        ROOTPATH . "app/Persistence",
+        ROOTPATH . "app/Presentation",
+    ];
 
     /**
      * Specific files to ignore updating.
@@ -53,7 +56,7 @@ class Revision extends BaseRevision
         ROOTPATH . "vendor/codeigniter4/framework/public/favicon.ico",
         ROOTPATH . "vendor/codeigniter4/framework/LICENSE",
         ROOTPATH . "vendor/codeigniter4/framework/app/Views/welcome_message.php",
-        ROOTPATH . "vendor/codeigniter4/framework/app/Controllers/Home.php"
+        ROOTPATH . "vendor/codeigniter4/framework/app/Controllers/Home.php",
     ];
 
     /**
@@ -94,7 +97,7 @@ class Revision extends BaseRevision
      *
      * @var string
      */
-    public $consolidator = 'Liaison\Revision\Consolidation\DefaultConsolidator';
+    public $consolidator = "Liaison\Revision\Consolidation\DefaultConsolidator";
 
     /**
      * Upgrader to use.
@@ -106,7 +109,7 @@ class Revision extends BaseRevision
      *
      * @var string
      */
-    public $upgrader = 'Liaison\Revision\Upgrade\ComposerUpgrader';
+    public $upgrader = "Liaison\Revision\Upgrade\ComposerUpgrader";
 
     /**
      * Pathfinder to use.
@@ -118,7 +121,7 @@ class Revision extends BaseRevision
      *
      * @var string
      */
-    public $pathfinder = 'Liaison\Revision\Paths\DefaultPathfinder';
+    public $pathfinder = "Liaison\Revision\Paths\DefaultPathfinder";
 
     /**
      * The diff output builder to be used by the
@@ -131,7 +134,7 @@ class Revision extends BaseRevision
      *
      * @var string
      */
-    public $diffOutputBuilder = 'SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder';
+    public $diffOutputBuilder = "SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder";
 
     /**
      * Settings to supply in the constructor
@@ -142,20 +145,20 @@ class Revision extends BaseRevision
      * @see http://github.com/sebastianbergmann/diff for the details.
      */
     public $diffOutputSettings = [
-        'uniDiff' => [
+        "uniDiff" => [
             "--- Original\n+++ New\n", // string $header
             true, // bool $addLineNumbers
         ],
-        'strictUniDiff' => [
-            'collapseRanges' => true, // bool
-            'commonLineThreshold' => 6, // int >= 0
-            'contextLines' => 3, // int > 0
-            'fromFile' => null, // string
-            'fromFileDate' => null, // null|string
-            'toFile' => null, // string
-            'toFileDate' => null, // null/string
+        "strictUniDiff" => [
+            "collapseRanges" => true, // bool
+            "commonLineThreshold" => 6, // int >= 0
+            "contextLines" => 3, // int > 0
+            "fromFile" => null, // string
+            "fromFileDate" => null, // null|string
+            "toFile" => null, // string
+            "toFileDate" => null, // null/string
         ],
-        'diffOnly' => [
+        "diffOnly" => [
             "--- Original\n+++ New\n", // string $header
         ],
     ];
@@ -190,8 +193,8 @@ class Revision extends BaseRevision
      */
     public function normalizePaths()
     {
-        $this->rootPath = realpath(rtrim($this->rootPath, '\\/ ')) . \DIRECTORY_SEPARATOR;
-        $this->writePath = realpath(rtrim($this->writePath, '\\/ ')) . \DIRECTORY_SEPARATOR;
+        $this->rootPath = realpath(rtrim($this->rootPath, "\\/ ")) . \DIRECTORY_SEPARATOR;
+        $this->writePath = realpath(rtrim($this->writePath, "\\/ ")) . \DIRECTORY_SEPARATOR;
 
         return $this;
     }

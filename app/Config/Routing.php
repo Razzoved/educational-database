@@ -35,15 +35,15 @@ class Routing extends BaseRouting
      *
      * Default: 'App\Controllers'
      */
-    public string $defaultNamespace = 'App\Controllers';
+    public string $defaultNamespace = 'App\Presentation\Controllers';
 
     /**
-     * The default controller to use when no other controller has been
+     * The default controller to use when no other controller
      * specified.
      *
      * Default: 'Home'
      */
-    public string $defaultController = 'Material';
+    public string $defaultController = 'Home';
 
     /**
      * The default method to call on the controller when no other
