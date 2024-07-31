@@ -1,21 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace App\Entities\Cast;
+namespace App\Persistence\Casts;
 
 use CodeIgniter\Entity\Cast\BaseCast;
 
-class StatusCast extends BaseCast
+/**
+ * Casts status of the entity for easier comparisons. Hides
+ * the datababase string values behind an in-app enum.
+ *
+ * @author Jan Martinek
+ */
+final class StatusCast extends BaseCast
 {
-    public const PUBLIC = 'Published';
-
-    public const VALID_VALUES = [
-        'Draft',
-        'Pending review',
-        StatusCast::PUBLIC,
-    ];
-
     public static function get($value, array $params = [])
     {
         return $value;
@@ -23,29 +19,20 @@ class StatusCast extends BaseCast
 
     public static function set($value, array $params = [])
     {
-        if (self::isValid($value)) {
+        if (gettype($value) === Status::class) {
             return $value;
-        } else if (self::isValidIndex($value)) {
-            return self::VALID_VALUES[$value];
         }
-        return self::VALID_VALUES[0];
-    }
-
-    public static function getIndex($value): int
-    {
-        return (int) array_search($value, StatusCast::VALID_VALUES) ?? 0;
-    }
-
-    public static function isValid($value): bool
-    {
-        return in_array($value, StatusCast::VALID_VALUES);
-    }
-
-    public static function isValidIndex($index): bool
-    {
-        if (!is_numeric($index)) {
-            return false;
+        if (gettype($value) === 'string' && ($type = Status::tryFrom($value)) !== null) {
+            return $type;
         }
-        return $index >= 0 && $index < sizeof(self::VALID_VALUES);
+        throw new \InvalidArgumentException('Invalid status value ' . $value);
     }
+}
+
+enum Status: string
+{
+    case INVALID = 'Invalid';
+    case DRAFT = 'Draft';
+    case PENDING = 'Pending review';
+    case VISIBLE = 'Published';
 }
