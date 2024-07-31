@@ -1,20 +1,18 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
-
-namespace App\Entities;
+namespace App\Persistence\Entities;
 
 use CodeIgniter\Entity\Entity;
 
-class Config extends Entity
+final class Config extends Entity
 {
     protected $attributes = [
-        'id'     => null,
-        'value'  => null,
+        'id' => null,
+        'value' => null,
     ];
 
     protected $casts = [
-        'id'    => 'string',
+        'id' => 'string',
         'value' => 'string',
     ];
 }

@@ -1,29 +1,29 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+namespace App\Persistence\Entities;
 
-namespace App\Entities;
-
+use App\Persistence\Casts\PathCast;
 use CodeIgniter\Entity\Entity;
 
-class Resource extends Entity
+final class Resource extends Entity
 {
     protected $attributes = [
-        'id'          => null,
+        'id' => null,
         'material_id' => null,
-        'path'        => null,
-        'type'        => null,
-        'created_at'  => null,
-        'updated_at'  => null,
-        'deleted_at'  => null,
-        'tmp_path'    => null, // not a part of db
+        'path' => null,
+        'type' => null,
+        'created_at' => null,
+        'updated_at' => null,
+        'deleted_at' => null,
+        // non-DB attributes
+        'tmp_path' => null,
     ];
 
     protected $casts = [
-        'id'          => 'int',
+        'id' => 'int',
         'material_id' => 'int',
-        'path'        => 'path',
-        'type'        => 'path',
+        'path' => 'path',
+        'type' => 'path',
     ];
 
     protected $datamap = [
@@ -31,69 +31,6 @@ class Resource extends Entity
     ];
 
     protected $castHandlers = [
-        'path' => \App\Entities\Cast\PathCast::class,
+        'path' => PathCast::class,
     ];
-
-    public function isLink(): bool
-    {
-        return $this->type == 'link' || ($this->path && substr($this->path, 0, 4) === 'http');
-    }
-
-    public function isThumbnail(): bool
-    {
-        return $this->type == 'thumbnail';
-    }
-
-    public function isAsset(): bool
-    {
-        return $this->path && substr($this->path, 0, strlen(ASSET_PREFIX)) === ASSET_PREFIX;
-    }
-
-    public function isTemporary(): bool
-    {
-        return $this->tmp_path && substr($this->tmp_path, 0, strlen(TEMP_PREFIX)) === TEMP_PREFIX;
-    }
-
-    public function isAssigned(): bool
-    {
-        return !(
-            $this->parentId <= 0 ||
-            $this->isTemporary()
-        );
-    }
-
-    public function getURL(): string
-    {
-        if ($this->isLink()) {
-            return $this->path;
-        }
-        return base_url($this->getPrefix() . ($this->isTemporary()
-            ? $this->tmpPath
-            : $this->path
-        ));
-    }
-
-    public function getRootPath(): string
-    {
-        if ($this->isLink()) {
-            throw new \Exception('Links are not children of root!');
-        }
-        return $this->getPrefix() . $this->path;
-    }
-
-    private function getPrefix()
-    {
-        return $this->isAssigned() && !$this->isAsset() && !$this->isLink()
-            ? SAVE_PREFIX . $this->parentId . UNIX_SEPARATOR
-            : '';
-    }
-
-    public static function getDefaultImage()
-    {
-        return new Resource([
-            'path' => model(\App\Models\ConfigModel::class)->find('default_image')->value
-                ?? base_url('assets/default_image.png'),
-            'type' => 'thumbnail',
-        ]);
-    }
 }
