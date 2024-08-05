@@ -6,12 +6,22 @@ use CodeIgniter\Entity\Entity;
 
 final class Property extends Entity
 {
+    /* DB MAPPING */
+
+    public const string ID = 'id';
+    public const string PARENT = 'parent';
+    public const string VALUE = 'value';
+    public const string PRIORITY = 'priority';
+    public const string DESCRIPTION = 'description';
+
+    /* ENTITY */
+
     protected $attributes = [
-        'id' => null,
-        'parent' => null,
-        'value' => null,
-        'priority' => null,
-        'description' => null,
+        self::ID => null,
+        self::PARENT => null,
+        self::VALUE => null,
+        self::PRIORITY => null,
+        self::DESCRIPTION => null,
         // non-DB attributes
         'category' => null,
         'children' => null,
@@ -19,9 +29,11 @@ final class Property extends Entity
     ];
 
     protected $casts = [
-        'id' => 'int',
-        'priority' => 'int',
-        'description' => 'string',
+        self::ID => 'int',
+        self::PARENT => 'int',
+        self::VALUE => 'string',
+        self::PRIORITY => 'int',
+        self::DESCRIPTION => 'string',
         'category' => 'string',
         'children' => 'array',
         'usage' => 'int',

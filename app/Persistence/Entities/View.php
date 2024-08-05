@@ -4,37 +4,35 @@ namespace App\Persistence\Entities;
 
 use CodeIgniter\Entity\Entity;
 
-final class Rating extends Entity
+final class View extends Entity
 {
     /* DB MAPPING */
 
     public const string ID = 'id';
     public const string PARENT = 'material_id';
-    public const string SOURCE = 'user';
-    public const string VALUE = 'value';
+    public const string COUNT = 'material_views';
+    public const string CREATED = 'created_at';
+    public const string UPDATED = '';
+    public const string DELETED = '';
 
     /* ENTITY */
 
     protected $attributes = [
         self::ID => null,
         self::PARENT => null,
-        self::SOURCE => null,
-        self::VALUE => null,
-        // non-DB attributes
-        'count' => null,
+        self::COUNT => null,
+        self::CREATED => null,
     ];
 
     protected $casts = [
         self::ID => 'int',
         self::PARENT => 'int',
-        self::SOURCE => 'string',
-        self::VALUE => 'int',
-        'count' => 'int',
+        self::COUNT => 'int',
     ];
 
     protected $datamap = [
         'parentId' => self::PARENT,
-        'ratingUid' => self::SOURCE,
-        'ratingValue' => self::VALUE,
+        'count' => self::COUNT,
+        'createdDate' => self::CREATED,
     ];
 }

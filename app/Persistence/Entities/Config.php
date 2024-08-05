@@ -6,13 +6,20 @@ use CodeIgniter\Entity\Entity;
 
 final class Config extends Entity
 {
+    /* DB MAPPING */
+
+    public const string ID = 'id'; 
+    public const string VALUE = 'value';
+
+    /* ENTITY */
+
     protected $attributes = [
-        'id' => null,
-        'value' => null,
+        self::ID => null,
+        self::VALUE => null,
     ];
 
     protected $casts = [
-        'id' => 'string',
-        'value' => 'string',
+        self::ID => 'string',
+        self::VALUE => 'string',
     ];
 }
