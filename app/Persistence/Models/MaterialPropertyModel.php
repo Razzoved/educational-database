@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
@@ -15,31 +13,36 @@ use CodeIgniter\Model;
  *
  * @author Jan Martinek
  */
-class MaterialPropertyModel extends Model 
+class MaterialPropertyModel extends Model
 {
     protected $table = 'material_property';
     protected $primaryKey = 'id';
+
     protected $allowedFields = [
         'material_id',
         'property_id'
     ];
-    protected $useAutoIncrement = true;
 
+    protected $useAutoIncrement = true;
     protected $allowCallbacks = true;
+
     protected $afterInsert = [
         'revalidatePropertyCache',
     ];
+
     protected $afterDelete = [
         'revalidatePropertyCache',
     ];
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                           PUBLIC METHODS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     public function find($materialId = null): array
     {
-        $this->distinct()
+        $this
+            ->distinct()
             ->select('property_id')
             ->where('material_id', $materialId);
 
@@ -51,7 +54,8 @@ class MaterialPropertyModel extends Model
         $this->distinct()->select('property_id');
 
         if (!session('isLoggedIn')) {
-            $this->join('materials as m', 'm.id=material_id')
+            $this
+                ->join('materials as m', 'm.id=material_id')
                 ->where('m.status', StatusCast::PUBLIC);
         }
 
@@ -90,7 +94,8 @@ class MaterialPropertyModel extends Model
     {
         $this->db->transStart();
 
-        $old = $this->select('id, property_id')
+        $old = $this
+            ->select('id, property_id')
             ->where('material_id', $material->id)
             ->findAll();
 
@@ -121,10 +126,11 @@ class MaterialPropertyModel extends Model
         return $this->db->transStatus();
     }
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                              CALLBACKS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     protected function revalidatePropertyCache(array $data)
     {
         if (isset($data['data']['property_id'])) {
@@ -135,16 +141,17 @@ class MaterialPropertyModel extends Model
         return $data;
     }
 
-
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                              HELPERS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     protected function filterOr(array &$filtered, array $groups): void
     {
         foreach ($groups as $ids) {
             $m = array_column(
-                $this->select('material_id')
+                $this
+                    ->select('material_id')
                     ->join('properties as p', 'p.id=property_id')
                     ->whereIn('p.id', $ids)
                     ->orWhereIn('p.tag', $ids)
@@ -159,7 +166,8 @@ class MaterialPropertyModel extends Model
     {
         foreach ($ids as $id) {
             $m = array_column(
-                $this->select('material_id')
+                $this
+                    ->select('material_id')
                     ->join('properties as p', 'p.id=property_id')
                     ->where('p.id', $id)
                     ->orWhere('p.tag', $id)

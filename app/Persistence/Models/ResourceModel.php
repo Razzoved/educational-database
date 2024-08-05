@@ -1,52 +1,52 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+namespace App\Persistence\Models;
 
-namespace App\Models;
-
-use App\Entities\Material;
-use App\Entities\Resource;
+use App\Persistence\Entities\Material;
+use App\Persistence\Entities\Resource;
 use CodeIgniter\Model;
 
 class ResourceModel extends Model
 {
-    protected $table         = 'resources';
-    protected $primaryKey    = 'id';
+    protected $table = 'resources';
+    protected $primaryKey = Resource::ID;
+
     protected $allowedFields = [
-        'material_id',
-        'path',
-        'type',
+        Resource::PARENT,
+        Resource::PATH,
+        Resource::TYPE,
     ];
 
     protected $useAutoIncrement = true;
-    protected $useSoftDeletes   = false;
-    protected $useTimestamps    = true;
-
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
-
+    protected $useTimestamps = true;
+    protected $useSoftDeletes = Resource::DELETED !== '';
+    protected $createdField = Resource::CREATED;
+    protected $updatedField = Resource::UPDATED;
+    protected $deletedField = Resource::DELETED;
     protected $returnType = Resource::class;
 
-    public function getResources(int $materialId): array
+    /*
+     * --------------------------------------------------------------------
+     *                           PUBLIC METHODS
+     * --------------------------------------------------------------------
+     */
+
+    public function getResources(Material $material): array
     {
-        return $this->where('material_id', $materialId)
+        return $this
+            ->select('*')
+            ->where(Resource::PARENT, $material->id)
             ->orderBy('type')
             ->orderBy('path')
             ->findAll();
     }
 
-    public function getThumbnail(int $materialId): array
+    public function getThumbnail(Material $material): array
     {
-        return $this->where('material_id', $materialId)
+        return $this
+            ->select('*')
+            ->where(Resource::PARENT, $material->id)
             ->where('type', 'thumbnail')
             ->findAll();
-    }
-
-    public function getByPath(int $materialId, string $path): ?Resource
-    {
-        return $this->where('material_id', $materialId)
-            ->where('path', $path)
-            ->first();
     }
 }

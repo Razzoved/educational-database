@@ -1,46 +1,42 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+namespace App\Persistence\Models;
 
-namespace App\Models;
-
-use App\Entities\Config;
 use App\Libraries\Cache;
+use App\Persistence\Entities\Config;
 use CodeIgniter\Model;
 
 class ConfigModel extends Model
 {
-    protected $table         = 'config';
-    protected $primaryKey    = 'id';
+    protected $table = 'config';
+    protected $primaryKey = Config::ID;
+
     protected $allowedFields = [
-        'id',
-        'value',
+        Config::ID,
+        Config::VALUE,
     ];
 
-    protected $allowCallbacks = true;
-    protected $beforeFind = [
-        'checkCache'
-    ];
-    protected $afterFind = [
-        'saveCache',
-    ];
-    protected $afterUpdate = [
-        'revalidateCache'
-    ];
-    protected $afterDelete = [
-        'revalidateCache'
-    ];
-
+    protected $useAutoIncrement = false;
+    protected $useSoftDeletes = false;
+    protected $useTimestamps = false;
     protected $returnType = Config::class;
 
-    /** ----------------------------------------------------------------------
+    /*
+     * -------------------------------------------------------------------
      *                              CALLBACKS
-     *  ------------------------------------------------------------------- */
+     * --------------------------------------------------------------------
+     */
+
+    protected $allowCallbacks = true;
+    protected $beforeFind = ['checkCache'];
+    protected $afterFind = ['saveCache'];
+    protected $afterUpdate = ['revalidateCache'];
+    protected $afterDelete = ['revalidateCache'];
 
     protected function checkCache(array $data)
     {
         if (isset($data['id']) && $item = Cache::get($data['id'], 'config')) {
-            $data['data']       = $item;
+            $data['data'] = $item;
             $data['returnData'] = true;
         }
         return $data;

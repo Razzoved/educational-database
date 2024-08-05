@@ -1,12 +1,11 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Entities\Property;
 use App\Libraries\Cache;
+use App\Persistence\Entities\Property;
 use CodeIgniter\Validation\Exceptions\ValidationException;
+use CodeIgniter\Model;
 
 /**
  * Model that handles all operations on properties.
@@ -14,47 +13,50 @@ use CodeIgniter\Validation\Exceptions\ValidationException;
  *
  * @author Jan Martinek
  */
-class PropertyModel extends QueryModel
+class PropertyModel extends Model
 {
-    private const CAT_ALIAS = 'categories';
-    private const USG_ALIAS = 'usages';
+    protected $table = 'properties';
+    protected $primaryKey = Property::ID;
 
-    protected $table         = 'properties';
-    protected $primaryKey    = 'id';
     protected $allowedFields = [
-        'parent',
-        'value',
-        'priority',
-        'description',
+        Property::PARENT,
+        Property::VALUE,
+        Property::PRIORITY,
+        Property::DESCRIPTION,
     ];
 
     protected $useAutoIncrement = true;
-    protected $useSoftDeletes   = false;
-    protected $useTimestamps    = false;
-
+    protected $useTimestamps = false;
+    protected $useSoftDeletes = false;
     protected $allowCallbacks = true;
+
     protected $beforeFind = [
         'checkCache',
     ];
+
     protected $afterFind = [
         'saveCache',
     ];
+
     protected $afterInsert = [
         'revalidateCache',
     ];
+
     protected $afterUpdate = [
         'revalidateCache',
     ];
+
     protected $afterDelete = [
         'revalidateCache',
     ];
 
     protected $returnType = Property::class;
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                           PUBLIC METHODS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     public function find($id = null, array $data = []): ?Property
     {
         // reduces the number of callback calls
@@ -86,16 +88,16 @@ class PropertyModel extends QueryModel
 
         if (!$item || (!$purge && $item->usage > 0)) {
             throw new ValidationException(
-                "Cannot delete property: <strong>{$item->value}</strong>. " .
-                    "It is used by <strong>{$item->usage}</strong> materials."
+                "Cannot delete property: <strong>{$item->value}</strong>. "
+                . "It is used by <strong>{$item->usage}</strong> materials."
             );
         }
 
         $item->children = $this->where('parent', $id)->findAll();
         if (!$purge && !empty($item->children)) {
             throw new ValidationException(
-                "Cannot delete property: <strong>{$item->value}</strong>. " .
-                    "It contains nested parents."
+                "Cannot delete property: <strong>{$item->value}</strong>. "
+                . 'It contains nested parents.'
             );
         }
 
@@ -109,15 +111,16 @@ class PropertyModel extends QueryModel
         return $result;
     }
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                        UNIFIED QUERY SETUP
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     protected function beforeQuery(array $data = []): PropertyModel
     {
         return $this
             ->setupSelect($data['id'] ?? null, $data)
-            ->setupSearch($data['search'] ?? "")
+            ->setupSearch($data['search'] ?? '')
             ->setupFilters($data['filters'] ?? [])
             ->setupSort($data);
     }
@@ -127,7 +130,8 @@ class PropertyModel extends QueryModel
         $category = self::CAT_ALIAS;
         $usage = self::USG_ALIAS;
 
-        $usageQuery = model(MaterialPropertyModel::class)->builder()
+        $usageQuery = model(MaterialPropertyModel::class)
+            ->builder()
             ->select('id')
             ->selectCount('id', 'usage')
             ->groupBy('id');
@@ -136,7 +140,8 @@ class PropertyModel extends QueryModel
         }
         $usageQuery = $usageQuery->getCompiledSelect();
 
-        $this->select("{$this->table}.*, {$usage}.usage as usage, {$category}.value as category")
+        $this
+            ->select("{$this->table}.*, {$usage}.usage as usage, {$category}.value as category")
             ->join("{$this->table} as {$category}", "{$this->table}.parent = {$category}.id", 'left')
             ->join("({$usageQuery}) as {$usage}", "{$this->table}.id = {$usage}.id", 'left');
 
@@ -200,21 +205,23 @@ class PropertyModel extends QueryModel
 
     protected function setupSearch(string $search)
     {
-        if ($search === "") {
+        if ($search === '') {
             return $this;
         }
-        return $this->orLike("value", $search, 'both', true, true, self::CAT_ALIAS)
-            ->orLike("value", $search, 'both', true, true);
+        return $this
+            ->orLike('value', $search, 'both', true, true, self::CAT_ALIAS)
+            ->orLike('value', $search, 'both', true, true);
     }
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                              CALLBACKS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     protected function checkCache(array $data)
     {
         if (isset($data['id']) && $item = Cache::get($data['id'], 'property')) {
-            $data['data']       = $item;
+            $data['data'] = $item;
             $data['returnData'] = true;
         }
         return $data;
@@ -228,11 +235,11 @@ class PropertyModel extends QueryModel
         if ($data['method'] !== 'findAll') {
             $data['data'] = Cache::check(
                 function () use ($data) {
-                    return  $this->asTreeFrom($data['data']);
+                    return $this->asTreeFrom($data['data']);
                 },
                 $data['data']->id,
                 'property',
-                115200, // 3600 * 32
+                115200,  // 3600 * 32
             );
         }
         return $data;
@@ -271,10 +278,11 @@ class PropertyModel extends QueryModel
         Cache::delete('tree', 'property');
     }
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                              HELPERS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     public function asTreeFrom(Property $property): Property
     {
         return Cache::check(
@@ -287,7 +295,7 @@ class PropertyModel extends QueryModel
                 return $property;
             },
             $property->id,
-            "property",
+            'property',
         );
     }
 

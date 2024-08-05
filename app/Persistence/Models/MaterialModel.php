@@ -1,11 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+namespace App\Persistence\Models;
 
-namespace App\Models;
-
-use App\Entities\Cast\StatusCast;
-use App\Entities\Material;
+use App\Persistence\Casts\StatusCast;
+use App\Persistence\Entities\Material;
+use CodeIgniter\Model;
 
 /**
  * This model encompases most operations on materials over the database.
@@ -15,38 +14,42 @@ use App\Entities\Material;
  *
  * @author Jan Martinek
  */
-class MaterialModel extends QueryModel
+class MaterialModel extends Model
 {
-    protected $table         = 'materials';
-    protected $primaryKey    = 'id';
+    protected $table = 'materials';
+    protected $primaryKey = Material::ID;
+
     protected $allowedFields = [
-        'status',
-        'title',
-        'content',
-        'views',
-        'rating',
-        'rating_count',
-        'published_at',
-        'updated_at',
-        'user_id',
+        Material::OLD,
+        Material::USER,
+        Material::STATUS,
+        Material::TITLE,
+        Material::CONTENT,
+        Material::CREATED,
+        Material::UPDATED,
     ];
 
     protected $useAutoIncrement = true;
-    protected $useSoftDeletes   = false;
+    protected $useTimestamps = true;
+    protected $useSoftDeletes = Material::DELETED !== '';
+    protected $createdField = Material::CREATED;
+    protected $updatedField = Material::UPDATED;
+    protected $deletedField = Material::DELETED;
 
     protected $validationRules = [
-        'title'   => 'required|string',
-        'status'  => 'required|valid_status',
+        'title' => 'required|string',
+        'status' => 'required|valid_status',
         'content' => 'string',
         'user_id' => 'required',
     ];
+
     protected $validationMessages = [
-        'title'  => [
+        'title' => [
             'required' => 'Title must be present.',
-            'string'   => 'Title must be a valid string.'
+            'string' => 'Title must be a valid string.'
         ],
         'status' => [
-            'required'     => 'Status must be present.',
+            'required' => 'Status must be present.',
             'valid_status' => 'Invalid status.'
         ],
         'content' => [
@@ -62,10 +65,11 @@ class MaterialModel extends QueryModel
 
     protected $returnType = Material::class;
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                           PUBLIC METHODS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     public function getBlame(): array
     {
         $userModel = model(UserModel::class);
@@ -115,16 +119,17 @@ class MaterialModel extends QueryModel
         return $material->id;
     }
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                        UNIFIED QUERY SETUP
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     protected function beforeQuery(array $data = []): MaterialModel
     {
         return $this
             ->setupSort($data)
             ->setupFilters($data['filters'] ?? [])
-            ->setupSearch($data['search'] ?? "")
+            ->setupSearch($data['search'] ?? '')
             ->setupShow(session()->has('isLoggedIn') && session('isLoggedIn') === true);
     }
 
@@ -165,7 +170,7 @@ class MaterialModel extends QueryModel
 
     protected function setupSearch(string $search)
     {
-        return $search === "" ? $this : $this->like('title', $search, 'both', true, true);
+        return $search === '' ? $this : $this->like('title', $search, 'both', true, true);
     }
 
     protected function setupShow(bool $admin)
@@ -178,10 +183,11 @@ class MaterialModel extends QueryModel
         return $this;
     }
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                              CALLBACKS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     protected function loadResources(array $data)
     {
         if (!isset($data['data'])) {
@@ -189,11 +195,12 @@ class MaterialModel extends QueryModel
         }
         if ($data['method'] === 'find') {
             $data['data']->resources = model(ResourceModel::class)->getResources($data['data']->id);
-        } else foreach ($data['data'] as $material) {
-            if ($material) {
-                $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
+        } else
+            foreach ($data['data'] as $material) {
+                if ($material) {
+                    $material->resources = model(ResourceModel::class)->getThumbnail($material->id);
+                }
             }
-        }
         return $data;
     }
 

@@ -1,21 +1,20 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Entities\Rating;
+use App\Persistence\Entities\Rating;
 use CodeIgniter\Model;
 use Exception;
 
 class RatingsModel extends Model
 {
-    protected $table         = 'ratings';
-    protected $primaryKey    = 'id';
+    protected $table = 'ratings';
+    protected $primaryKey = Rating::ID;
+
     protected $allowedFields = [
-        'material_id',
-        'user',
-        'value'
+        Rating::PARENT,
+        Rating::SOURCE,
+        Rating::VALUE,
     ];
 
     protected $returnType = Rating::class;
@@ -52,14 +51,16 @@ class RatingsModel extends Model
 
     public function getRating(int $materialId, string $userId): ?Rating
     {
-        return $this->where('material_id', $materialId)
+        return $this
+            ->where('material_id', $materialId)
             ->where('user', $userId)
             ->first();
     }
 
     public function getRatingAvg(int $materialId): float
     {
-        return $this->select('material_id')
+        return $this
+            ->select('material_id')
             ->selectAvg('value')
             ->where('material_id', $materialId)
             ->groupBy('material_id')
@@ -70,7 +71,8 @@ class RatingsModel extends Model
 
     public function getRatingCount(int $materialId): int
     {
-        return $this->select('material_id')
+        return $this
+            ->select('material_id')
             ->selectCount('value', 'count')
             ->where('material_id', $materialId)
             ->groupBy('material_id')

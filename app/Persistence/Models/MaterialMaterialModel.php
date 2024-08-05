@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+namespace App\Persistence\Models;
 
-namespace App\Models;
-
-use App\Entities\Material;
+use App\Persistence\Entities\Material;
 use CodeIgniter\Model;
 
 /**
@@ -18,21 +16,27 @@ class MaterialMaterialModel extends Model
 {
     protected $table = 'material_material';
     protected $primaryKey = 'id';
+
     protected $allowedFields = [
         'material_id_left',
         'material_id_right'
     ];
+
     protected $useAutoIncrement = true;
     protected $allowCallbacks = true;
+
     protected $afterFind = [
         'loadData',
         'loadThumbnail',
     ];
+
     protected $returnType = Material::class;
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                           PUBLIC METHODS
-     *  ------------------------------------------------------------------- */
+     *  -------------------------------------------------------------------
+     */
 
     /**
      * Returns all relations as an array of Material objects.
@@ -42,10 +46,12 @@ class MaterialMaterialModel extends Model
      */
     public function getRelated(int $id): array
     {
-        $left = $this->builder()
+        $left = $this
+            ->builder()
             ->select("{$this->allowedFields[0]} as id")
             ->where($this->allowedFields[1], $id);
-        $right = $this->builder()
+        $right = $this
+            ->builder()
             ->select("{$this->allowedFields[1]} as id")
             ->where($this->allowedFields[0], $id);
         return $left->union($right)->get()->getResult(Material::class);
@@ -63,7 +69,7 @@ class MaterialMaterialModel extends Model
 
         $cmp = fn($a, $b) => $a->id === $b->id;
         $material->related = $material->related ?? [];
-        
+
         $this->db->transStart();
 
         foreach (array_udiff($material->related, $saved, $cmp) as $relation) {
@@ -85,10 +91,11 @@ class MaterialMaterialModel extends Model
         return $this->db->transStatus();
     }
 
-    /** ----------------------------------------------------------------------
+    /**
+     * ----------------------------------------------------------------------
      *                              CALLBACKS
-     *  ------------------------------------------------------------------- */
-
+     *  -------------------------------------------------------------------
+     */
     protected function loadData(array $data)
     {
         if (!isset($data['data'])) {
@@ -99,12 +106,13 @@ class MaterialMaterialModel extends Model
 
         if ($data['method'] === 'find') {
             $data['data'] = $model->allowCallbacks(false)->find($data['data']->id);
-        } else foreach ($data['data'] as $k => $material) {
-            if ($material) {
-                $model = $model->allowCallbacks(false);
-                $data['data'][$k] = $model->find($material->id);
+        } else
+            foreach ($data['data'] as $k => $material) {
+                if ($material) {
+                    $model = $model->allowCallbacks(false);
+                    $data['data'][$k] = $model->find($material->id);
+                }
             }
-        }
 
         return $data;
     }
@@ -119,11 +127,12 @@ class MaterialMaterialModel extends Model
 
         if ($data['method'] === 'find') {
             $data['data'] = $model->getThumbnail($data['data']->id);
-        } else foreach ($data['data'] as $material) {
-            if ($material) {
-                $material->resources = $model->getThumbnail($material->id);
+        } else
+            foreach ($data['data'] as $material) {
+                if ($material) {
+                    $material->resources = $model->getThumbnail($material->id);
+                }
             }
-        }
 
         return $data;
     }
